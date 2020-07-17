@@ -2,10 +2,11 @@
 //
 
 #include "server/server.h"
-#include "access/test.h"
+#include "access/cbtree.h"
+#include "util/mctx.h"
 
 int main(int argc, char* argv[])
 {
-	hello();
+	btbuildempty(NULL);
 	return 0;
 }
