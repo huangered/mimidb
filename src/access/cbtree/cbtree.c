@@ -1,6 +1,14 @@
+#include "access/cbtree.h"
 
-#include <stdio.h>
+void btbuildempty(Relation rel) {
 
-void hello1() {
-    printf("hello world");
+}
+bool btinsert(Relation rel) {
+    return false;
+}
+bool btremove(Relation rel) {
+    return false;
+}
+bool btgettuple(Relation rel) {
+    return false;
 }
