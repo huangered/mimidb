@@ -1,1 +1,3 @@
-﻿add_subdirectory(cbtree)
+﻿add_subdirectory(heap)
+add_subdirectory(cbtree)
+
