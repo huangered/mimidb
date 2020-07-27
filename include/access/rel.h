@@ -9,4 +9,9 @@ typedef struct RelationData {
 
 typedef RelationData* Relation;
 
+typedef enum ForkNumber {
+    MAIN_FORKNUMBER = 0,
+    FSM_FORKNUM,
+} ForkNumber;
+
 #endif
