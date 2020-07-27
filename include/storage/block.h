@@ -5,4 +5,6 @@
 
 typedef uint32 BlockNum;
 
+#define INVALID_BLOCK   0xffff
+
 #endif // !_BLOCK_H_
