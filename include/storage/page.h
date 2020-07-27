@@ -12,10 +12,17 @@ typedef struct PageHeaderData {
     uint16 pd_checksum;
     uint16 pd_flags;
 
+    int pd_lower;
+    int pd_upper;
+    int pd_special;
+
 } PageHeaderData;
 
 typedef PageHeaderData* PageHeader;
 
-void PageInit(Page page);
+#define PageIsNew(page) (((PageHeader)(page))->pd_upper == 0)
+
+
+void PageInit(Page page, Size pageSize);
 
 #endif // !_PAGE_H_

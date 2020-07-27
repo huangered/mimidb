@@ -1,3 +1,3 @@
 ﻿FILE(GLOB sources */*.c)
 
-add_library(storage ${sources})
+add_library(storage ${sources} )
