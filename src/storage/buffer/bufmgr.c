@@ -9,7 +9,7 @@ static BufferDesc* buffDesc;
 static BufferDesc* freeBuffDesc;
 static Hash* bufHash;
 
-#define BufferDescById(buf_id)  buffDesc[buf_id]
+#define BufferDescById(buf_id)  (buffDesc + buf_id)
 
 static uint32 buftag_hash(const void* key, Size keysize);
 static bool buftag_equal(const void* left, const void* right, Size keysize);
@@ -39,7 +39,7 @@ Buffer ReadBuffer(Relation rel, ForkNumber forkNumber, BlockNum blkno) {
     buf_id = *(Buffer*)hash_search(bufHash, Search, &tag);
     if (buf_id >= 0) {
         // add ref count;
-        BufferDescById(buf_id).state += 1;
+        BufferDescById(buf_id)->state += 1;
         return buf_id;
     }
     // if find, return
@@ -57,8 +57,8 @@ Buffer ReadBuffer(Relation rel, ForkNumber forkNumber, BlockNum blkno) {
         }
     }
 
-    BufferDescById(buf_id).state += 1;
-    BufferDescById(buf_id).tag = tag;
+    BufferDescById(buf_id)->state += 1;
+    BufferDescById(buf_id)->tag = tag;
     // insert into hash
     Buffer* nBuf = (Buffer*)hash_search(bufHash, Add, &tag);
     *nBuf = buf_id;
@@ -68,7 +68,13 @@ Buffer ReadBuffer(Relation rel, ForkNumber forkNumber, BlockNum blkno) {
 }
 
 void ReleaseBuffer(Buffer buffer) {
-    BufferDescById(buffer).state -= 1;
+    BufferDesc* bd = BufferDescById(buffer);
+    bd->state -= 1;
+    // remove it from hash if its ref 
+    if (bd->state == 0) {
+        bd->freeNext = freeBuffDesc->buf_id;
+        freeBuffDesc = bd;
+    }
 }
 
 // private method
