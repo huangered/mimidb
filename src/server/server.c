@@ -18,5 +18,12 @@ int main(int argc, char* argv[])
 	char* ptr = (char*)shmem_init(100);
 	*ptr = '1';
 	shmem_close();
+
+
+	int* p = (int*)malloc(sizeof(int) * 10);
+	memset(p, 0, sizeof(int)*10);
+	for (int i = 0; i < 10; i++) {
+		printf("%d\r\n", *(p + i));
+	}
 	return 0;
 }

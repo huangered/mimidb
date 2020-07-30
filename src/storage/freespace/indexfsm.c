@@ -1,9 +1,10 @@
 #include "storage/indexfsm.h"
 #include "storage/freespace.h"
+#include "storage/page.h"
 
 BlockNum GetFreeIndexPage(Relation rel) {
 
-    BlockNum blkno = GetPageWithFreeSpace(rel, 8192 / 2);
+    BlockNum blkno = GetPageWithFreeSpace(rel, BLKSZ / 2);
 
     if (blkno != INVALID_BLOCK) {
         void RecordUsedIndexPage(rel, blkno);
