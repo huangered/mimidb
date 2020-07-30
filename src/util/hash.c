@@ -1,5 +1,5 @@
-#include "util/hash.h"
 #include "c.h"
+#include "util/hash.h"
 #include "util/mctx.h"
 
 #define NUM_PARTITIONS 8
@@ -41,13 +41,15 @@ void* hash_search(Hash* tbl, HashAction action, const void* key) {
 
     uint32 hashValue = tbl->hash(key, tbl->keysize);
     int segment = hashValue % NUM_PARTITIONS;
-    ;
+    
     switch (action) {
     case Search:
         result = _search_elem(&tbl->list[segment].next, key, tbl);
         break;
     case Add:
         result = _search_elem_or_add(&tbl->list[segment].next, key, tbl);
+        break;
+    default:
         break;
     }
 
