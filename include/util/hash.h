@@ -32,14 +32,15 @@ typedef enum HashAction {
     Search,
 } HashAction;
 
-extern Hash* hash_create(const char* name, HashValueFunc hash, HashEqualFunc equal, Size keysize);
+extern Hash* hash_create(const char* name, HashValueFunc hash, HashEqualFunc equal, Size keysize, Size entrysize);
 extern void hash_destroy(Hash* tbl);
 extern void* hash_search(Hash* tbl, HashAction action, const void* key);
 
 // string hash func
 static uint32 string_hash(const void* key, Size keysize) {
-    char* first = (char*)key;
-    return *first;
+    //char* first = (char*)key;
+    //return *first;
+    return 0;
 }
 // string equal func
 static bool string_equal(const void* left, const void* right, Size keysize) {
