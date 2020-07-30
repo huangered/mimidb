@@ -8,11 +8,13 @@
 
 typedef uint16 Buffer;
 
-static char* mockBuf = NULL;
+static Page page;
 
-#define BufferGetBlock(buffer)  mockBuf
+#define BufferGetBlock(buffer)  page[buffer]
 #define BufferGetPage(buffer)   ((Page)BufferGetBlock(buffer))
 
+// Init the buffer mgr, share mem alloc
+extern void BufferInit();
 extern Buffer ReadBuffer(Relation rel, ForkNumber forkNumber, BlockNum blkno);
 extern void ReleaseBuffer(Buffer buffer);
 
