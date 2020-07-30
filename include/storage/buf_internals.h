@@ -12,7 +12,10 @@ typedef struct BufTag {
 
 typedef struct BuffDesc {
     BufferTag tag;
-    int bu_id;
+    int buf_id;
+
+    // the buf state, include ref_count;
+    volatile int state;
 
     int freeNext;
 } BufferDesc;
