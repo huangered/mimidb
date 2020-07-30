@@ -16,7 +16,8 @@ static bool buftag_equal(const void* left, const void* right, Size keysize);
 
 void BufferInit() {
     Size size = (Size)BufferSize * BLKSZ;
-    page = shmem_init(size);
+    // will use shmem_init in the future
+    page = palloc(size);
 
     buffDesc = palloc(BufferSize * sizeof(BufferDesc));
 
