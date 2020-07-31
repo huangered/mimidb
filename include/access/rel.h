@@ -15,4 +15,6 @@ typedef enum ForkNumber {
     FSM_FORKNUM,
 } ForkNumber;
 
+char* GetRelPath(int rnode, ForkNumber fn);
+
 #endif

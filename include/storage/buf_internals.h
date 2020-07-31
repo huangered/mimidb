@@ -16,7 +16,8 @@ typedef struct BuffDesc {
 
     // the buf state, include ref_count;
     volatile int state;
-
+    // the buf is updated.
+    volatile bool dirty;
     int freeNext;
 } BufferDesc;
 
