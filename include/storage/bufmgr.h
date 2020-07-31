@@ -6,7 +6,7 @@
 #include "storage/block.h"
 #include "storage/page.h"
 
-typedef uint16 Buffer;
+typedef int Buffer;
 
 static Page page;
 
