@@ -22,7 +22,7 @@ typedef struct BuffDesc {
 
 #define INIT_BUFFERTAG(a, xx_rnode, xx_forknum, xx_blocknum) \
 ( \
-    (a).rnode = (xx_rnode),\
+    (a).rnode = (xx_rnode->rnode),\
     (a).forkNum = (xx_forknum),\
     (a).blockNum = (xx_blocknum) \
 )

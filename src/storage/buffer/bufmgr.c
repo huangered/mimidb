@@ -4,30 +4,30 @@
 #include "util/mctx.h"
 #include "util/hash.h"
 
-static int BufferSize = 16;
+static int NBuffer = 16;
 static BufferDesc* buffDesc;
 static BufferDesc* freeBuffDesc;
 static Hash* bufHash;
 
-#define BufferDescById(buf_id)  (buffDesc + buf_id)
+#define GetBufferDesc(buf_id)  (buffDesc + buf_id)
 
 static uint32 buftag_hash(const void* key, Size keysize);
 static bool buftag_equal(const void* left, const void* right, Size keysize);
 
 void BufferInit() {
-    Size size = (Size)BufferSize * BLKSZ;
+    Size size = (Size)NBuffer * BLKSZ;
     // will use shmem_init in the future
     page = palloc(size);
 
-    buffDesc = palloc(BufferSize * sizeof(BufferDesc));
+    buffDesc = palloc(NBuffer * sizeof(BufferDesc));
 
-    for (int i = 0; i < BufferSize; i++) {
+    for (int i = 0; i < NBuffer; i++) {
         buffDesc[i].buf_id = i;
         buffDesc[i].freeNext = i + 1;
         buffDesc[i].state = 0;
     }
-    buffDesc[BufferSize - 1].freeNext = -1;
-
+    buffDesc[NBuffer - 1].freeNext = -1;
+    freeBuffDesc = buffDesc;
     bufHash = hash_create("local_buf", buftag_hash, buftag_equal, sizeof(BufferTag), sizeof(BufferDesc));
 }
 
@@ -37,10 +37,16 @@ Buffer ReadBuffer(Relation rel, ForkNumber forkNumber, BlockNum blkno) {
     INIT_BUFFERTAG(tag, rel, forkNumber, blkno);
 
     // use buftag to find
-    buf_id = *(Buffer*)hash_search(bufHash, Search, &tag);
+    void* result = hash_search(bufHash, Search, &tag);
+    if (result == NULL) {
+        buf_id = -1;
+    }
+    else {
+        buf_id = *(Buffer*)result;
+    }
     if (buf_id >= 0) {
         // add ref count;
-        BufferDescById(buf_id)->state += 1;
+        GetBufferDesc(buf_id)->state += 1;
         return buf_id;
     }
     // if find, return
@@ -52,14 +58,15 @@ Buffer ReadBuffer(Relation rel, ForkNumber forkNumber, BlockNum blkno) {
             freeBuffDesc = buffDesc + freeBuffDesc->freeNext;
             bd->freeNext = -1;
             buf_id = bd->buf_id;
+            break;
         }
         else {
             // find victim to free 
         }
     }
 
-    BufferDescById(buf_id)->state += 1;
-    BufferDescById(buf_id)->tag = tag;
+    GetBufferDesc(buf_id)->state += 1;
+    GetBufferDesc(buf_id)->tag = tag;
     // insert into hash
     Buffer* nBuf = (Buffer*)hash_search(bufHash, Add, &tag);
     *nBuf = buf_id;
@@ -69,10 +76,12 @@ Buffer ReadBuffer(Relation rel, ForkNumber forkNumber, BlockNum blkno) {
 }
 
 void ReleaseBuffer(Buffer buffer) {
-    BufferDesc* bd = BufferDescById(buffer);
+    BufferDesc* bd = GetBufferDesc(buffer);
     bd->state -= 1;
     // remove it from hash if its ref 
     if (bd->state == 0) {
+        // remove from hash
+        hash_search(bufHash, Remove, &bd->tag);
         bd->freeNext = freeBuffDesc->buf_id;
         freeBuffDesc = bd;
     }
