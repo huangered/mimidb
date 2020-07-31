@@ -30,11 +30,9 @@ if (CMAKE_VERSION VERSION_LESS 2.8.11)
   include_directories("${gtest_SOURCE_DIR}/include")
 endif()
 
-# Now simply link against gtest or gtest_main as needed. Eg
-add_executable(example example.cpp test_share_memory.cpp)
-target_link_libraries(example gtest_main port)
-add_test(NAME example_test COMMAND example)
+FILE(GLOB sources *.cpp)
 
-add_executable(test_hash test_hash.cpp)
-target_link_libraries(test_hash gtest_main util)
-add_test(NAME hash_test COMMAND test_hash)
+# Now simply link against gtest or gtest_main as needed. Eg
+add_executable(example ${sources})
+target_link_libraries(example gtest_main heap cbtree port storage util)
+add_test(NAME example_test COMMAND example)

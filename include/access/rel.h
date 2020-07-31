@@ -5,6 +5,7 @@
 
 typedef struct RelationData {
     Oid oid;
+    int rnode;
 } RelationData;
 
 typedef RelationData* Relation;
