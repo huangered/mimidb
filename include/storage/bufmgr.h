@@ -8,7 +8,7 @@
 
 typedef int Buffer;
 
-static Page page;
+extern Page page;
 
 #define BufferGetBlock(buffer)  page[buffer]
 #define BufferGetPage(buffer)   ((Page)BufferGetBlock(buffer))

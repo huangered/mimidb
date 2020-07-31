@@ -8,7 +8,7 @@ static int NBuffer = 16;
 static BufferDesc* buffDesc;
 static BufferDesc* freeBuffDesc;
 static Hash* bufHash;
-
+Page page;
 #define GetBufferDesc(buf_id)  (buffDesc + buf_id)
 
 static uint32 buftag_hash(const void* key, Size keysize);
