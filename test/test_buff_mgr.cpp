@@ -20,7 +20,10 @@ TEST(hash_buff_mgr, basic)
 
     EXPECT_EQ(buf_id, 0);
 
+    Buffer buf_id_2 = ReadBuffer(rel, ForkNumber::MAIN_FORKNUMBER, 1);
+    EXPECT_EQ(buf_id_2, 1);
 
     ReleaseBuffer(buf_id);
     ReleaseBuffer(buf_id);
+    ReleaseBuffer(buf_id_2);
 }
