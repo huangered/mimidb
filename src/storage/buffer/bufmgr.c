@@ -3,6 +3,7 @@
 #include "port/shmem.h"
 #include "util/mctx.h"
 #include "util/hash.h"
+#include "storage/fd.h"
 
 #define NBuffer     16
 static BufferDesc* buffDesc;
@@ -11,17 +12,16 @@ static Hash* bufHash;
 static Page page;
 #define GetBufferDesc(buf_id)  (buffDesc + buf_id)
 
-static uint32 buftag_hash(const void* key, Size keysize);
-static bool buftag_equal(const void* left, const void* right, Size keysize);
-
 static void load_page(BufferTag tag, Buffer buf);
 
 void BufferInit() {
     Size size = (Size)NBuffer * BLKSZ;
     // will use shmem_init in the future
     page = palloc(size);
+    memset(page, 0, size);
     // will use shmem_init in the future
     buffDesc = palloc(NBuffer * sizeof(BufferDesc));
+    memset(buffDesc, 0, NBuffer * sizeof(BufferDesc));
 
     for (int i = 0; i < NBuffer; i++) {
         buffDesc[i].buf_id = i;
@@ -91,23 +91,24 @@ void ReleaseBuffer(Buffer buffer) {
     }
 }
 
-// private method
-static uint32 buftag_hash(const void* key, Size keysize) {
-    BufferTag* btag = (BufferTag*)key;
-    return btag->rnode;
-}
-static bool buftag_equal(const void* left, const void* right, Size keysize) {
-    int ret = memcmp(left, right, keysize);
-    return ret == 0;
-}
 
+// easy implement
 static void load_page(BufferTag tag, Buffer buf) {
     char* path = GetRelPath(tag.rnode, tag.forkNum);
     // read file
-    char* data = NULL;
+    fd* f = file_open(path);
+    if (f->filePtr == NULL) {
+        file_init(path);
+        f = file_open(path);
+    }
+    char* data = palloc(BLKSZ);
+    memset(data, 0, BLKSZ);
+    file_read(f, tag.blockNum, data);
     // read block;
     char* pagePtr = (page + buf * BLKSZ);
 
-    // memcpy(pagePtr, data, BLKSZ);
+    memcpy(pagePtr, data, BLKSZ);
     pfree(path);
+    pfree(data);
+    file_close(f);
 }
