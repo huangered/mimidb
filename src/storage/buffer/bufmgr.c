@@ -1,3 +1,4 @@
+#include "access/rel.h"
 #include "storage/bufmgr.h"
 #include "storage/buf_internals.h"
 #include "port/shmem.h"
