@@ -25,13 +25,15 @@ typedef PageHeaderData* PageHeader;
 
 #define PageIsNew(page)                 (((PageHeader)(page))->pd_upper == 0)
 #define SizeOfPageHeaderData            (offsetof(PageHeaderData, pd_linp))
-#define PageGetContent(page)            ((char*)(page + SizeOfPageHeaderData))
+#define PageGetHeader(page)             ((PageHeader)page)
+#define PageGetContent(page)            ((char*)(page + SizeOfPageHeaderData ))
+#define PageGetSpecial(page)            ((char*)( page + PageGetHeader(page)->pd_special ))
 #define PageGetMaxOffsetNumber(page) \
     (((PageHeader) (page))->pd_lower <= SizeOfPageHeaderData ? 0 : \
     ((((PageHeader) (page))->pd_lower - SizeOfPageHeaderData) / sizeof(ItemIdData)))
 #define PageGetItemId(page, offsetnum)  ((ItemId)(&(((PageHeader)(page))->pd_linp[offsetnum - 1])))
 #define PageGetItem(page, itemId)       (((char*)(page)) + itemId->lp_off)
 
-void PageInit(Page page, Size pageSize);
+void PageInit(Page page, Size pageSize, Size specialSize);
 
 #endif // !_PAGE_H_

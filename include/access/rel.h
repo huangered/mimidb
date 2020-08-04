@@ -2,10 +2,12 @@
 #define _REL_H_
 
 #include "mimi.h"
+#include "storage/block.h"
 
 typedef struct RelationData {
     Oid oid;
     int rnode;
+    BlockNum root_blkno;
 } RelationData;
 
 typedef RelationData* Relation;
