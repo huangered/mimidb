@@ -1,5 +1,4 @@
-#include <gtest/gtest.h>
-
+#include "g.h"
 _EXTERN_C
 #include "storage/bufmgr.h"
 #include "util/mctx.h"

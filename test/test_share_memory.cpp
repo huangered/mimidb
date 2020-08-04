@@ -1,4 +1,4 @@
-#include <gtest/gtest.h>
+#include "g.h"
 
 _EXTERN_C
 #include "port/shmem.h"
