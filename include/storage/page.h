@@ -23,9 +23,14 @@ typedef struct PageHeaderData {
 typedef PageHeaderData* PageHeader;
 
 
-#define PageIsNew(page)         (((PageHeader)(page))->pd_upper == 0)
-#define SizeOfPageHeaderData    (offsetof(PageHeaderData, pd_linp))
-#define PageGetContent(page)    ((char*)(page + SizeOfPageHeaderData))
+#define PageIsNew(page)                 (((PageHeader)(page))->pd_upper == 0)
+#define SizeOfPageHeaderData            (offsetof(PageHeaderData, pd_linp))
+#define PageGetContent(page)            ((char*)(page + SizeOfPageHeaderData))
+#define PageGetMaxOffsetNumber(page) \
+    (((PageHeader) (page))->pd_lower <= SizeOfPageHeaderData ? 0 : \
+    ((((PageHeader) (page))->pd_lower - SizeOfPageHeaderData) / sizeof(ItemIdData)))
+#define PageGetItemId(page, offsetnum)  ((ItemId)(&(((PageHeader)(page))->pd_linp[offsetnum - 1])))
+#define PageGetItem(page, itemId)       (((char*)(page)) + itemId->lp_off)
 
 void PageInit(Page page, Size pageSize);
 

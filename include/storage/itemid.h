@@ -9,4 +9,6 @@ typedef struct ItemIdData {
 
 typedef ItemIdData* ItemId;
 
+typedef void* Item;
+
 #endif
