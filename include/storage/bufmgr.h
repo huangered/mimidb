@@ -9,10 +9,10 @@
 
 typedef int Buffer;
 
-extern Page page1;
+extern char* BufferBlocks;
 extern BufferDesc* buffDesc;
 
-#define BufferGetBlock(buffer)  page1[buffer]
+#define BufferGetBlock(buffer)  (BufferBlocks + buffer * BLKSZ)
 #define BufferGetPage(buffer)   ((Page)BufferGetBlock(buffer))
 #define GetBufferDesc(buf_id)  (buffDesc + buf_id)
 
