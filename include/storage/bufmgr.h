@@ -6,9 +6,9 @@
 #include "storage/block.h"
 #include "storage/page.h"
 
-typedef uint16 Buffer;
+typedef int Buffer;
 
-static Page page;
+extern Page page;
 
 #define BufferGetBlock(buffer)  page[buffer]
 #define BufferGetPage(buffer)   ((Page)BufferGetBlock(buffer))

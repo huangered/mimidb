@@ -1,11 +1,12 @@
-#include "util/hash.h"
 #include "c.h"
+#include "util/hash.h"
 #include "util/mctx.h"
 
 #define NUM_PARTITIONS 8
 
 static HashElem* _search_elem(HashElem** elem, const void* key, Hash* tbl);
 static HashElem* _search_elem_or_add(HashElem** elem, const void* key, Hash* tbl);
+static void _remove_elem(HashElem** elem, const void* key, Hash* tbl);
 
 Hash* hash_create(const char* name, HashValueFunc hash, HashEqualFunc equal, Size keysize, Size entrysize) {
     Hash* tbl = palloc(sizeof(Hash));
@@ -41,13 +42,18 @@ void* hash_search(Hash* tbl, HashAction action, const void* key) {
 
     uint32 hashValue = tbl->hash(key, tbl->keysize);
     int segment = hashValue % NUM_PARTITIONS;
-    ;
+    
     switch (action) {
     case Search:
         result = _search_elem(&tbl->list[segment].next, key, tbl);
         break;
     case Add:
         result = _search_elem_or_add(&tbl->list[segment].next, key, tbl);
+        break;
+    case Remove:
+        _remove_elem(&tbl->list[segment].next, key, tbl);
+        break;
+    default:
         break;
     }
 
@@ -85,4 +91,19 @@ static HashElem* _search_elem_or_add(HashElem** he, const void* key, Hash* tbl) 
     *he = result;
     
     return result;
+}
+
+static void _remove_elem(HashElem** elem, const void* key, Hash* tbl) {
+    for (; *elem != NULL;) {
+        HashElem* el = *elem;
+        if (tbl->equal(el->key, key, tbl->keysize)) {
+            *elem = el->next;
+            pfree(el->key);
+            pfree(el->value);
+            pfree(el);
+        }
+        else {
+            elem = &el->next;
+        }
+    }
 }

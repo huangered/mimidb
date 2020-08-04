@@ -3,7 +3,7 @@
 #include "storage/fsm_internal.h"
 #include "storage/page.h"
 
-static Buffer fsm_readbuf(Relation rel);
+static Buffer _fsm_readbuf(Relation rel);
 
 BlockNum GetPageWithFreeSpace(Relation rel, Size spaceNeeded) {
     Buffer buf;
@@ -24,7 +24,7 @@ void RecordPageWithFreeSpace(Relation rel, BlockNum usedBlock, Size freeSpace) {
     fsm_set_value(buf, usedBlock, freeSpace);
 }
 
-Buffer fsm_readbuf(Relation rel) {
+Buffer _fsm_readbuf(Relation rel) {
     // fsm block num is 0 now.
     Buffer buf = ReadBuffer(rel, FSM_FORKNUM, 0);
 

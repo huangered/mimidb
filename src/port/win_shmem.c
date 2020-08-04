@@ -1,7 +1,8 @@
 #include "port/shmem.h"
 
-#include <Windows.h>
+#ifdef _WIN32
 #include <stdio.h>
+#include <Windows.h>
 #include <conio.h>
 #include <tchar.h>
 
@@ -10,8 +11,10 @@ TCHAR szName[] = TEXT("Local\\MyFileMappingObject");
 HANDLE hMapFile;
 LPCTSTR pBuf;
 
-void* shmem_init(Size BUF_SIZE) {
 
+
+void* shmem_init(Size BUF_SIZE) {
+    
     hMapFile = CreateFileMapping(
         INVALID_HANDLE_VALUE,    // use paging file
         NULL,                    // default security
@@ -52,3 +55,5 @@ void shmem_close() {
 
     CloseHandle(hMapFile);
 }
+
+#endif

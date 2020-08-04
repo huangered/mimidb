@@ -5,6 +5,7 @@
 
 typedef struct RelationData {
     Oid oid;
+    int rnode;
 } RelationData;
 
 typedef RelationData* Relation;
@@ -13,5 +14,7 @@ typedef enum ForkNumber {
     MAIN_FORKNUMBER = 0,
     FSM_FORKNUM,
 } ForkNumber;
+
+char* GetRelPath(int rnode, ForkNumber fn);
 
 #endif
