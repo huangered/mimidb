@@ -1,4 +1,3 @@
-#include "access/rel.h"
 #include "storage/bufmgr.h"
 #include "storage/buf_internals.h"
 #include "port/shmem.h"
@@ -7,7 +6,7 @@
 #include "storage/fd.h"
 
 #define NBuffer     16
-Page page1 = NULL;
+char* BufferBlocks = NULL;
 BufferDesc* buffDesc = NULL;
 static BufferDesc* freeBuffDesc;
 static Hash* bufHash;
@@ -18,8 +17,8 @@ static void load_page(BufferTag tag, Buffer buf);
 void BufferInit() {
     Size size = (Size)NBuffer * BLKSZ;
     // will use shmem_init in the future
-    page1 = palloc(size);
-    memset(page1, 0, size);
+    BufferBlocks = palloc(size);
+    memset(BufferBlocks, 0, size);
     // will use shmem_init in the future
     buffDesc = palloc(NBuffer * sizeof(BufferDesc));
     memset(buffDesc, 0, NBuffer * sizeof(BufferDesc));
@@ -106,7 +105,7 @@ static void load_page(BufferTag tag, Buffer buf) {
     memset(data, 0, BLKSZ);
     file_read(f, tag.blockNum, data);
     // read block;
-    char* pagePtr = (page1 + buf * BLKSZ);
+    char* pagePtr = (BufferBlocks + buf * BLKSZ);
 
     memcpy(pagePtr, data, BLKSZ);
     pfree(path);

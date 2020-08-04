@@ -1,7 +1,7 @@
 #include "access/btree.h"
 #include "util/mctx.h"
 #include "storage/indexfsm.h"
-#include "storage/buf_internals.h"
+
 
 void btbuildempty(Relation rel) {
 
@@ -31,15 +31,15 @@ Buffer _bt_get_root(Relation rel) {
     BlockNum blkno = rel->root_blkno;
     if (blkno == P_NEW) {
         // init new page;
-        Buffer root = _bt_get_buf(rel, P_NEW);
-        Page page = BufferGetPage(root);
+        Buffer rootbuf = _bt_get_buf(rel, P_NEW);
+        Page page = BufferGetPage(rootbuf);
         _bt_init_page(page);
-        BTreeSpecial special = (BTreeSpecial)PageGetSpecial(root);
+        BTreeSpecial special = (BTreeSpecial)PageGetSpecial(page);
         special->flags = BTP_ROOT | BTP_LEAF;
 
-        rel->root_blkno = GetBufferDesc(root)->tag.blockNum;
+        rel->root_blkno = GetBufferDesc(rootbuf)->tag.blockNum;
         blkno = rel->root_blkno;
-        ReleaseBuffer(root);
+        ReleaseBuffer(rootbuf);
     }
 
     buf = _bt_get_buf(rel, blkno);
