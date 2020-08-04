@@ -3,7 +3,7 @@
 
 #include "access/rel.h"
 #include "storage/block.h"
-#include "bufmgr.h"
+#include "storage/bufmgr.h"
 
 struct FSMPageData {
     int items[20];
