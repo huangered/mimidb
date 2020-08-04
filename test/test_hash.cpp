@@ -1,6 +1,4 @@
-#include <gtest/gtest.h>
-#include <numeric>
-#include <vector>
+#include "g.h"
 
 _EXTERN_C
 #include "util/hash.h"

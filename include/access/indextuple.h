@@ -4,8 +4,8 @@
 typedef struct IndexTupleData {
     int t_tid;
     int t_info;
-    int key;
-    int value;
+    int key;    // will remove when heap is ready.
+    int value;  // will remove when heap is ready.
 } IndexTupleData;
 
 typedef IndexTupleData* IndexTuple;

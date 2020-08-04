@@ -1,34 +1,115 @@
+#include "access/rel.h"
 #include "storage/bufmgr.h"
 #include "storage/buf_internals.h"
 #include "port/shmem.h"
 #include "util/mctx.h"
+#include "util/hash.h"
+#include "storage/fd.h"
 
-static int BufferSize = 16;
+#define NBuffer     16
 static BufferDesc* buffDesc;
+static BufferDesc* freeBuffDesc;
+static Hash* bufHash;
+static Page page;
+#define GetBufferDesc(buf_id)  (buffDesc + buf_id)
 
+static void load_page(BufferTag tag, Buffer buf);
 
 void BufferInit() {
-    Size size = BufferSize * BLKSZ;
-    page = shmem_init(size);
+    Size size = (Size)NBuffer * BLKSZ;
+    // will use shmem_init in the future
+    page = palloc(size);
+    memset(page, 0, size);
+    // will use shmem_init in the future
+    buffDesc = palloc(NBuffer * sizeof(BufferDesc));
+    memset(buffDesc, 0, NBuffer * sizeof(BufferDesc));
 
-    buffDesc = palloc(BufferSize * sizeof(BufferDesc));
-
-    for (int i = 0; i < BufferSize; i++) {
-        buffDesc[i].bu_id = i;
+    for (int i = 0; i < NBuffer; i++) {
+        buffDesc[i].buf_id = i;
         buffDesc[i].freeNext = i + 1;
+        buffDesc[i].state = 0;
     }
-    buffDesc[BufferSize - 1].freeNext = 0;
+    buffDesc[NBuffer - 1].freeNext = -1;
+    freeBuffDesc = buffDesc;
+    bufHash = hash_create("local_buf", buftag_hash, buftag_equal, sizeof(BufferTag), sizeof(BufferDesc));
 }
 
 Buffer ReadBuffer(Relation rel, ForkNumber forkNumber, BlockNum blkno) {
+    Buffer buf_id;
     BufferTag tag;
-
     INIT_BUFFERTAG(tag, rel, forkNumber, blkno);
 
+    // use buftag to find
+    void* result = hash_search(bufHash, Search, &tag);
+    if (result == NULL) {
+        buf_id = -1;
+    }
+    else {
+        buf_id = *(Buffer*)result;
+    }
+    if (buf_id >= 0) {
+        // add ref count;
+        GetBufferDesc(buf_id)->state += 1;
+        return buf_id;
+    }
+    // if find, return
+    // create new one and find a valid buffdesc or find a victim;
+    while (true) {
 
+        if (freeBuffDesc != NULL) {
+            BufferDesc* bd = freeBuffDesc;
+            freeBuffDesc = buffDesc + freeBuffDesc->freeNext;
+            bd->freeNext = -1;
+            buf_id = bd->buf_id;
+            break;
+        }
+        else {
+            // find victim to free 
+        }
+    }
+    // load page data into page ptr;
+    load_page(tag, buf_id);
 
-    return 0;
+    GetBufferDesc(buf_id)->state += 1;
+    GetBufferDesc(buf_id)->tag = tag;
+    // insert into hash
+    Buffer* nBuf = (Buffer*)hash_search(bufHash, Add, &tag);
+    *nBuf = buf_id;
+    // return buf
+
+    return buf_id;
 }
 
 void ReleaseBuffer(Buffer buffer) {
+    BufferDesc* bd = GetBufferDesc(buffer);
+    bd->state -= 1;
+    // remove it from hash if its ref 
+    if (bd->state == 0) {
+        // remove from hash
+        hash_search(bufHash, Remove, &bd->tag);
+        bd->freeNext = freeBuffDesc->buf_id;
+        freeBuffDesc = bd;
+    }
+}
+
+
+// easy implement
+static void load_page(BufferTag tag, Buffer buf) {
+    char* path = GetRelPath(tag.rnode, tag.forkNum);
+    // read file
+    fd* f = file_open(path);
+    if (f->filePtr == NULL) {
+        file_init(path);
+        f = file_open(path);
+    }
+    char* data = palloc(BLKSZ);
+    memset(data, 0, BLKSZ);
+    file_read(f, tag.blockNum, data);
+    // read block;
+    char* pagePtr = (page + buf * BLKSZ);
+
+    memcpy(pagePtr, data, BLKSZ);
+    pfree(path);
+    pfree(data);
+    file_close(f);
 }

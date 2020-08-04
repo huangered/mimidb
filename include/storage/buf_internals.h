@@ -12,16 +12,30 @@ typedef struct BufTag {
 
 typedef struct BuffDesc {
     BufferTag tag;
-    int bu_id;
+    int buf_id;
 
+    // the buf state, include ref_count;
+    volatile int state;
+    // the buf is updated.
+    volatile bool dirty;
     int freeNext;
 } BufferDesc;
 
 #define INIT_BUFFERTAG(a, xx_rnode, xx_forknum, xx_blocknum) \
 ( \
-    (a).rnode = (xx_rnode),\
+    (a).rnode = (xx_rnode->rnode),\
     (a).forkNum = (xx_forknum),\
     (a).blockNum = (xx_blocknum) \
 )
+
+// private method
+inline uint32 buftag_hash(const void* key, Size keysize) {
+    BufferTag* btag = (BufferTag*)key;
+    return btag->rnode;
+}
+inline bool buftag_equal(const void* left, const void* right, Size keysize) {
+    int ret = memcmp(left, right, keysize);
+    return ret == 0;
+}
 
 #endif // !_buf_internals_h_
