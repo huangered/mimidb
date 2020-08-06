@@ -33,6 +33,6 @@ endif()
 FILE(GLOB sources *.cpp)
 
 # Now simply link against gtest or gtest_main as needed. Eg
-add_executable(example ${sources})
-target_link_libraries(example gtest_main heap cbtree common port storage util)
-add_test(NAME example_test COMMAND example)
+add_executable(unittest ${sources})
+target_link_libraries(unittest gtest_main access common port storage util)
+add_test(NAME unit_test COMMAND unittest)
