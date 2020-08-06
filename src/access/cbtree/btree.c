@@ -63,8 +63,30 @@ Buffer _bt_get_buf(Relation rel, BlockNum blkno) {
 
 void _bt_init_page(Page page) {
     PageInit(page, BLKSZ, sizeof(BTreeSpecialData));
+    BTreeSpecial special = PageGetSpecial(page);
+    special->level = 0;
+    special->block_prev = INVALID_BLOCK;
+    special->block_next = INVALID_BLOCK;
+    special->flags = P_NONE;
 }
 
-Buffer _bt_moveright(Relation rel, IndexTuple itup, Buffer buf) {
-    return 0;
+Buffer _bt_moveright(Relation rel, BTreeInsert key, Buffer buf) {
+    for (;;) {
+        Page page = BufferGetPage(buf);
+        PageHeader header = PageGetHeader(page);
+        BTreeSpecial special = PageGetSpecial(page);
+
+        if (P_RIGHTMOST(special)) {
+            break;
+        }
+        
+        if (_bt_compare(rel, key, page, P_HIKEY) >= 0) {
+           // buf = _bt_relandgetbuf(rel, buf, special->block_next);
+            continue;
+        }
+       /* else {
+            break;
+        }*/
+    }
+    return buf;
 }
