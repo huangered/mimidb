@@ -1,5 +1,9 @@
 #include "util/mctx.h"
 
+void MemoryContextInit() {
+
+}
+
 void* palloc(Size size) {
     return malloc(size);
 }

@@ -3,6 +3,7 @@
 
 #include "mimi.h"
 #include "storage/itemid.h"
+#include "access/offset.h"
 
 #define BLKSZ   8012
 
@@ -13,9 +14,9 @@ typedef struct PageHeaderData {
     uint16 pd_checksum;
     uint16 pd_flags;
 
-    int pd_lower;
-    int pd_upper;
-    int pd_special;
+    OffsetNumber pd_lower;
+    OffsetNumber pd_upper;
+    OffsetNumber pd_special;
 
     ItemIdData pd_linp[1];
 } PageHeaderData;
@@ -36,4 +37,10 @@ typedef PageHeaderData* PageHeader;
 
 void PageInit(Page page, Size pageSize, Size specialSize);
 
+OffsetNumber PageAddItem(Page page, Item item, Size size, OffsetNumber offsetNumber);
+void PageRemoveItem(Page page, OffsetNumber offsetNum);
+
+Page GetTempPage(Page page);
+Size PageGetFreeSpace(Page page);
+void PageRestoreTempPage(Page temp, Page origin);
 #endif // !_PAGE_H_
