@@ -1,3 +1,3 @@
-﻿add_subdirectory(heap)
-add_subdirectory(cbtree)
+﻿FILE(GLOB sources */*.c)
 
+add_library(access ${sources} )

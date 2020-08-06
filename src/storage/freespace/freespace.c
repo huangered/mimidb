@@ -9,7 +9,7 @@ BlockNum GetPageWithFreeSpace(Relation rel, Size spaceNeeded) {
     Buffer buf;
     BlockNum block;
 
-    buf = fsm_readbuf(rel);
+    buf = _fsm_readbuf(rel);
 
     block = fsm_search_avail(buf, spaceNeeded);
 
@@ -19,7 +19,7 @@ BlockNum GetPageWithFreeSpace(Relation rel, Size spaceNeeded) {
 void RecordPageWithFreeSpace(Relation rel, BlockNum usedBlock, Size freeSpace) {
     Buffer buf;
 
-    buf = fsm_readbuf(rel);
+    buf = _fsm_readbuf(rel);
 
     fsm_set_value(buf, usedBlock, freeSpace);
 }
@@ -29,7 +29,7 @@ Buffer _fsm_readbuf(Relation rel) {
     Buffer buf = ReadBuffer(rel, FSM_FORKNUM, 0);
 
     if (PageIsNew(BufferGetPage(buf))) {
-        PageInit(BufferGetPage(buf), BLKSZ);
+        PageInit(BufferGetPage(buf), BLKSZ, 0);
     }
 
     return buf;
