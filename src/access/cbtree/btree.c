@@ -80,12 +80,12 @@ Buffer _bt_moveright(Relation rel, BTreeInsert key, Buffer buf) {
         }
         
         if (_bt_compare(rel, key, page, P_HIKEY) >= 0) {
-           // buf = _bt_relandgetbuf(rel, buf, special->block_next);
+            buf = _bt_relandgetbuf(rel, buf, special->block_next);
             continue;
         }
-       /* else {
+        else {
             break;
-        }*/
+        }
     }
     return buf;
 }
