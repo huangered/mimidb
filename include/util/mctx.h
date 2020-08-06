@@ -3,6 +3,8 @@
 
 #include "c.h"
 
+void MemoryContextInit();
+
 void* palloc(Size size);
 void pfree(void* ptr);
 

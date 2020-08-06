@@ -9,11 +9,13 @@ _EXTERN_C
 _END_EXTERN_C
 
 // test the basic usage in buff mgr.
-TEST(cbtree, basic)
+TEST(btree, basic)
 {
+    MemoryContextInit();
+    BufferInit();
     Relation rel = (Relation)palloc(sizeof(Relation));
     rel->rnode = 1;
-    BufferInit();
+
 
     for (int i = 0; i < 1000; i++) {
         bool result = btinsert(rel, i, i * 10);
