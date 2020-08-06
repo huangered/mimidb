@@ -11,5 +11,13 @@ int _bt_compare(Relation rel, BTreeInsert key, Page page, OffsetNumber offset) {
 
     IndexTuple itup = (IndexTuple)PageGetItem(page, itemId);
 
-    return memcmp(key->itup, itup, key->itemsz);
+    if (itup->key == key->itup->key) {
+        return 0;
+    }
+    else if (itup->key < key->itup->key) {
+        return 1;
+    }
+    else {
+        return -1;
+    }
 }

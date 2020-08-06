@@ -31,18 +31,17 @@ Buffer _bt_get_root(Relation rel) {
     BlockNum blkno = rel->root_blkno;
     if (blkno == P_NEW) {
         // init new page;
-        Buffer rootbuf = _bt_get_buf(rel, P_NEW);
-        Page page = BufferGetPage(rootbuf);
+        buf = _bt_get_buf(rel, P_NEW);
+        Page page = BufferGetPage(buf);
         _bt_init_page(page);
         BTreeSpecial special = (BTreeSpecial)PageGetSpecial(page);
         special->flags = BTP_ROOT | BTP_LEAF;
 
-        rel->root_blkno = GetBufferDesc(rootbuf)->tag.blockNum;
-        blkno = rel->root_blkno;
-        ReleaseBuffer(rootbuf);
+        rel->root_blkno = GetBufferDesc(buf)->tag.blockNum;
     }
-
-    buf = _bt_get_buf(rel, blkno);
+    else {
+        buf = _bt_get_buf(rel, blkno);
+    }
     return buf;
 }
 
