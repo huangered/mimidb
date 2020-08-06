@@ -1,4 +1,3 @@
-#include "access/rel.h"
 #include "storage/bufmgr.h"
 #include "storage/buf_internals.h"
 #include "port/shmem.h"
@@ -7,19 +6,19 @@
 #include "storage/fd.h"
 
 #define NBuffer     16
-static BufferDesc* buffDesc;
+char* BufferBlocks = NULL;
+BufferDesc* buffDesc = NULL;
 static BufferDesc* freeBuffDesc;
 static Hash* bufHash;
-static Page page;
-#define GetBufferDesc(buf_id)  (buffDesc + buf_id)
+
 
 static void load_page(BufferTag tag, Buffer buf);
 
 void BufferInit() {
     Size size = (Size)NBuffer * BLKSZ;
     // will use shmem_init in the future
-    page = palloc(size);
-    memset(page, 0, size);
+    BufferBlocks = palloc(size);
+    memset(BufferBlocks, 0, size);
     // will use shmem_init in the future
     buffDesc = palloc(NBuffer * sizeof(BufferDesc));
     memset(buffDesc, 0, NBuffer * sizeof(BufferDesc));
@@ -60,6 +59,7 @@ Buffer ReadBuffer(Relation rel, ForkNumber forkNumber, BlockNum blkno) {
             BufferDesc* bd = freeBuffDesc;
             freeBuffDesc = buffDesc + freeBuffDesc->freeNext;
             bd->freeNext = -1;
+            bd->tag = tag;
             buf_id = bd->buf_id;
             break;
         }
@@ -83,13 +83,6 @@ Buffer ReadBuffer(Relation rel, ForkNumber forkNumber, BlockNum blkno) {
 void ReleaseBuffer(Buffer buffer) {
     BufferDesc* bd = GetBufferDesc(buffer);
     bd->state -= 1;
-    // remove it from hash if its ref 
-    if (bd->state == 0) {
-        // remove from hash
-        hash_search(bufHash, Remove, &bd->tag);
-        bd->freeNext = freeBuffDesc->buf_id;
-        freeBuffDesc = bd;
-    }
 }
 
 
@@ -106,7 +99,7 @@ static void load_page(BufferTag tag, Buffer buf) {
     memset(data, 0, BLKSZ);
     file_read(f, tag.blockNum, data);
     // read block;
-    char* pagePtr = (page + buf * BLKSZ);
+    char* pagePtr = (BufferBlocks + buf * BLKSZ);
 
     memcpy(pagePtr, data, BLKSZ);
     pfree(path);
