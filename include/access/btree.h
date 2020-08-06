@@ -56,7 +56,7 @@ extern bool btgettuple(Relation rel, int key, int* value);
 #define IID_USE   ( 1 << 0 )
 #define IID_DEL   ( 1 << 1 )
 
-#define P_ISLEAF(special)       true
+#define P_ISLEAF(special)       ((special->flags & BTP_LEAF) != 0 )
 #define P_ISROOT(special)       ((special->flags & BTP_ROOT) != 0 )
 
 #define P_HIKEY                 ((OffsetNumber) 1)
@@ -92,4 +92,5 @@ extern OffsetNumber _bt_find_split_offset(Buffer buf);
 extern int _bt_compare(Relation rel, BTreeInsert key, Page page, OffsetNumber offset);
 
 extern void _bt_freestack(BTStack stack);
+
 #endif

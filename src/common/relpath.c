@@ -10,7 +10,7 @@ char* GetRelPath(int rnode, ForkNumber fn) {
     char* str = palloc(256);
     char* fnum = forkNames[fn];
 
-    sprintf(str, "data/%d_%s", rnode, fnum);
+    sprintf(str, "%d_%s", rnode, fnum);
 
     return str;
 }
