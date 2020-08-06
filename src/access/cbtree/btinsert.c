@@ -112,15 +112,6 @@ void _bt_insertonpg(Relation rel, Buffer buffer, OffsetNumber newitemoffset, BTr
     _bt_addtup(page, itup_key->itup, itup_key->itemsz, newitemoffset);
 }
 
-void _bt_freestack(BTStack stack) {
-    while (stack != NULL) {
-        BTStack parent = stack->parent;
-        pfree(stack);
-        stack = parent;
-    }
-}
-
-
 Buffer _bt_split(Relation rel, IndexTuple itup, Buffer buf, OffsetNumber newitemoff) {
     OffsetNumber splitoff = _bt_find_split_offset(buf);
     Page originpage = BufferGetPage(buf);

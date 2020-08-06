@@ -36,7 +36,7 @@ void pprint(Relation rel, Page page) {
             BlockNum blkno = tuple->value;
             Buffer buf = _bt_get_buf(rel, blkno);
             Page p2 = BufferGetPage(buf);
-            pprint(rel, p2);
+            //pprint(rel, p2);
         }
     }
 }

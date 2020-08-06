@@ -25,12 +25,12 @@ TEST(btree, basic)
     }
 
     for (int i = 0; i < 1000; i++) {
-        //printf("%d\r\n", i);
-        bool result = btinsert(rel, i, i * 10);
+        printf("%d\r\n", i);
+        bool result = btinsert(rel, 1000-i, 1000-i);
         EXPECT_TRUE(result);
     }
 
-    //debug_rel(rel);
+    debug_rel(rel);
     int value;
 
     for (int i = 0; i < 1000; i++) {
