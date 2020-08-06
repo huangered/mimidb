@@ -55,7 +55,6 @@ void PageRemoveItem(Page page, OffsetNumber itemoffset) {
 
 Page GetTempPage(Page page) {
     char* temp = (char*)palloc(BLKSZ);
-    PageInit(temp, BLKSZ, 0);
     return temp;
 }
 

@@ -6,6 +6,7 @@ IndexTuple _bt_make_tuple(int key, int value) {
     IndexTuple tup = palloc(sizeof(IndexTupleData));
     tup->key = key;
     tup->value = value;
+    tup->ctid = 0;
     return tup;
 }
 bool _bt_do_insert(Relation rel, IndexTuple itup) {
@@ -124,6 +125,7 @@ Buffer _bt_split(Relation rel, IndexTuple itup, Buffer buf, OffsetNumber newitem
     OffsetNumber splitoff = _bt_find_split_offset(buf);
     Page originpage = BufferGetPage(buf);
     Page leftpage = GetTempPage(originpage);
+    _bt_init_page(leftpage);
     Buffer rbuf = _bt_get_buf(rel, P_NEW);
     Page rightpage = BufferGetPage(rbuf);
     _bt_init_page(rightpage);

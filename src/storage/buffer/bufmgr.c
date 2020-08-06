@@ -59,6 +59,7 @@ Buffer ReadBuffer(Relation rel, ForkNumber forkNumber, BlockNum blkno) {
             BufferDesc* bd = freeBuffDesc;
             freeBuffDesc = buffDesc + freeBuffDesc->freeNext;
             bd->freeNext = -1;
+            bd->tag = tag;
             buf_id = bd->buf_id;
             break;
         }
@@ -82,13 +83,6 @@ Buffer ReadBuffer(Relation rel, ForkNumber forkNumber, BlockNum blkno) {
 void ReleaseBuffer(Buffer buffer) {
     BufferDesc* bd = GetBufferDesc(buffer);
     bd->state -= 1;
-    // remove it from hash if its ref 
-    if (bd->state == 0) {
-        // remove from hash
-        hash_search(bufHash, Remove, &bd->tag);
-        bd->freeNext = freeBuffDesc->buf_id;
-        freeBuffDesc = bd;
-    }
 }
 
 

@@ -28,7 +28,7 @@ typedef PageHeaderData* PageHeader;
 #define SizeOfPageHeaderData            (offsetof(PageHeaderData, pd_linp))
 #define PageGetHeader(page)             ((PageHeader)page)
 #define PageGetContent(page)            ((char*)(page + SizeOfPageHeaderData ))
-#define PageGetSpecial(page)            ((char*)( page + PageGetHeader(page)->pd_special ))
+#define PageGetSpecial(page)            ((char*)(page + PageGetHeader(page)->pd_special ))
 #define PageGetMaxOffsetNumber(page) \
     (((PageHeader) (page))->pd_lower <= SizeOfPageHeaderData ? 0 : \
     ((((PageHeader) (page))->pd_lower - SizeOfPageHeaderData) / sizeof(ItemIdData)))
