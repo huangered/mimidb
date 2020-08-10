@@ -37,8 +37,3 @@ OffsetNumber _bt_binsrch(Relation rel, Page page, BTreeInsert key) {
     return low - 1;
 }
 
-Buffer _bt_relandgetbuf(Relation rel, Buffer obuf, BlockNum blkno) {
-    ReleaseBuffer(obuf);
-    Buffer buffer = ReadBuffer(rel, MAIN_FORKNUMBER, blkno);
-    return buffer;
-}

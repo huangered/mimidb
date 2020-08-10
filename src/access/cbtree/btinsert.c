@@ -2,13 +2,11 @@
 #include "util/mctx.h"
 #include "storage/bufmgr.h"
 
-IndexTuple _bt_make_tuple(int key, int value) {
-    IndexTuple tup = palloc(sizeof(IndexTupleData));
-    tup->key = key;
-    tup->value = value;
-    tup->ctid = 0;
-    return tup;
-}
+static bool _bt_addtup(Page page, Item item, Size itemsz, OffsetNumber newitemoffset);
+static void _bt_insertonpg(Relation rel, Buffer buffer, OffsetNumber newitemoffset, BTreeInsert itup_key, BTStack stack);
+static void _bt_insert_parent(Relation rel, Buffer lbuf, Buffer rbuf, BTStack stack, bool is_root);
+
+
 bool _bt_do_insert(Relation rel, IndexTuple itup) {
     BTStack stack = NULL;
     bool fastpath = false;
@@ -38,12 +36,6 @@ top:
     return true;
 }
 
-BTreeInsert _bt_make_scankey(Relation rel, IndexTuple itup) {
-    BTreeInsert key = palloc(sizeof(BTreeInsertData));
-    key->itup = itup;
-    key->itemsz = sizeof(IndexTupleData);
-    return key;
-}
 BTStack _bt_search(Relation rel, BTreeInsert itup_key, Buffer* bufp) {
     BTStack stack_in = NULL;
 
@@ -86,13 +78,7 @@ BTStack _bt_search(Relation rel, BTreeInsert itup_key, Buffer* bufp) {
 
     return stack_in;
 }
-OffsetNumber _bt_findinsertloc(Relation rel, Buffer buffer, BTreeInsert key) {
-    Page page = BufferGetPage(buffer);
 
-    OffsetNumber offset = _bt_binsrch(rel, page, key);
-
-    return offset;
-}
 void _bt_insertonpg(Relation rel, Buffer buffer, OffsetNumber newitemoffset, BTreeInsert itup_key, BTStack stack) {
     Page page = BufferGetPage(buffer);
 
@@ -232,13 +218,7 @@ void _bt_insert_parent(Relation rel, Buffer buf, Buffer rbuf, BTStack stack, boo
     }
 }
 
-// refact
-OffsetNumber _bt_find_split_offset(Buffer buf) {
-    // use half for simple
-    Page page = BufferGetPage(buf);
-    OffsetNumber offset = PageGetMaxOffsetNumber(page);
-    return offset / 2;
-}
+
 
 // ?? 
 Buffer _bt_newroot(Relation rel, Buffer lbuf, Buffer rbuf) {
