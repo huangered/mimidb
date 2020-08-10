@@ -75,33 +75,34 @@ extern bool btgettuple(Relation rel, int key, int* value);
 #define BTreeTupleGetDownLink(itup) (itup->value)
 
 
-// internal methods
+// methods in btpage.c
 extern void _bt_init_page(Page page);
 extern Buffer _bt_get_root(Relation rel);
 extern Buffer _bt_get_buf(Relation rel, BlockNum blkno);
 extern Buffer _bt_newroot(Relation rel, Buffer lbuf, Buffer rbuf);
-// action
 extern Buffer _bt_moveright(Relation rel, BTreeInsert key, Buffer buf);
 extern Buffer _bt_relandgetbuf(Relation rel, Buffer obuf, BlockNum blkno);
 
-
-// search
+// methods in btsearch.c
+extern bool _bt_first();
+extern bool _bt_next();
 extern OffsetNumber _bt_binsrch(Relation rel, Page page, BTreeInsert key);
-// insert
-extern bool _bt_do_insert(Relation rel, IndexTuple itup);
-extern BTreeInsert _bt_make_scankey(Relation rel, IndexTuple itup);
-extern BTStack _bt_search(Relation rel, BTreeInsert itup_key, Buffer* bufp);
-
-extern Buffer _bt_split(Relation rel, IndexTuple itup, Buffer buf, OffsetNumber newitemoff);
-
-extern OffsetNumber _bt_find_split_offset(Buffer buf);
-// split
 extern OffsetNumber _bt_findinsertloc(Relation rel, Buffer buffer, BTreeInsert key);
 
-// compare
+// insert
+extern bool _bt_do_insert(Relation rel, IndexTuple itup);
+extern BTStack _bt_search(Relation rel, BTreeInsert itup_key, Buffer* bufp);
+
+// btsplit.c
+extern OffsetNumber _bt_find_split_offset(Buffer buf);
+extern Buffer _bt_split(Relation rel, IndexTuple itup, Buffer buf, OffsetNumber newitemoff);
+
+// btcompare.c
 extern int _bt_compare(Relation rel, BTreeInsert key, Page page, OffsetNumber offset);
-// util
+
+// methods in btutils.c
 extern IndexTuple _bt_make_tuple(int key, int value);
+extern BTreeInsert _bt_make_scankey(Relation rel, IndexTuple itup);
 extern void _bt_freestack(BTStack stack);
 
 #endif
