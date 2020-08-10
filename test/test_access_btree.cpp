@@ -11,11 +11,11 @@ _EXTERN_C
 _END_EXTERN_C
 
 // test the basic usage in buff mgr.
-TEST(btree, basic)
+TEST(btree, incr_insert)
 {
     MemoryContextInit();
     BufferInit();
-    
+
     Relation rel = (Relation)palloc(sizeof(Relation));
     rel->rnode = 1;
     rel->root_blkno = INVALID_BLOCK;
@@ -25,12 +25,40 @@ TEST(btree, basic)
     }
 
     for (int i = 0; i < 1000; i++) {
-        printf("%d\r\n", i);
-        bool result = btinsert(rel, 1000-i, 1000-i);
+        //printf("%d\r\n", i);
+        bool result = btinsert(rel, i, i);
         EXPECT_TRUE(result);
     }
 
-    debug_rel(rel);
+    //debug_rel(rel);
+    int value;
+
+    for (int i = 0; i < 1000; i++) {
+        btgettuple(rel, i, &value);
+        EXPECT_EQ(value, i * 10);
+    }
+}
+
+TEST(btree, decr_insert)
+{
+    MemoryContextInit();
+    BufferInit();
+
+    Relation rel = (Relation)palloc(sizeof(Relation));
+    rel->rnode = 1;
+    rel->root_blkno = INVALID_BLOCK;
+
+    for (int i = 0; i < 100; i++) {
+        RecordPageWithFreeSpace(rel, i, BLKSZ);
+    }
+
+    for (int i = 0; i < 1000; i++) {
+        //printf("%d\r\n", i);
+        bool result = btinsert(rel, 1000 - i, 1000 - i);
+        EXPECT_TRUE(result);
+    }
+
+    //debug_rel(rel);
     int value;
 
     for (int i = 0; i < 1000; i++) {
