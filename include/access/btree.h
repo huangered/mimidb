@@ -7,6 +7,8 @@
 #include "storage/block.h"
 #include "storage/bufmgr.h"
 
+#define BTREE_METAPAGE  0
+
 typedef struct BTreeMetaData {
     BlockNum root;
 } BTreeMetaData;
