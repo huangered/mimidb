@@ -4,7 +4,7 @@ BlockNum fsm_search_avail(Buffer buf, Size spaceNeed) {
     Page page = BufferGetPage(buf);
     FSMPage fsm = (FSMPage)PageGetContent(page);
 
-    for (int i = 0; i < 100; i++) {
+    for (int i = 1; i < 100; i++) {
         if (fsm->items[i] > spaceNeed) {
             return i;
         }

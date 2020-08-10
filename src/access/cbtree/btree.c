@@ -4,8 +4,19 @@
 
 
 void btbuildempty(Relation rel) {
+    Page metap = palloc(BLKSZ);
+    _bt_init_page(metap);
 
+    BTreeMetaData* metad = PageGetContent(metap);
+    metad->root = P_NONE;
+
+    // write to local file system
+    Buffer buf = ReadBuffer(rel, MAIN_FORKNUMBER, BTREE_METAPAGE);
+    Page page = BufferGetPage(buf);
+    memcpy(page, metap, BLKSZ);
+    pfree(metap);
 }
+
 bool btinsert(Relation rel, int key, int value) {
     bool result;
     IndexTuple tup;
@@ -26,39 +37,6 @@ bool btgettuple(Relation rel, int key, int* value) {
     return true;
 }
 
-Buffer _bt_get_root(Relation rel) {
-    Buffer buf;
-    BlockNum blkno = rel->root_blkno;
-    if (blkno == P_NEW) {
-        // init new page;
-        buf = _bt_get_buf(rel, P_NEW);
-        Page page = BufferGetPage(buf);
-        _bt_init_page(page);
-        BTreeSpecial special = (BTreeSpecial)PageGetSpecial(page);
-        special->flags = BTP_ROOT | BTP_LEAF;
-
-        rel->root_blkno = GetBufferDesc(buf)->tag.blockNum;
-    }
-    else {
-        buf = _bt_get_buf(rel, blkno);
-    }
-    return buf;
-}
-
-Buffer _bt_get_buf(Relation rel, BlockNum blkno) {
-    Buffer buf;
-    if (blkno != P_NEW) {
-        buf = ReadBuffer(rel, MAIN_FORKNUMBER, blkno);
-    }
-    else {
-        // create new block for cbtree
-        blkno = GetFreeIndexPage(rel);
-        buf = ReadBuffer(rel, MAIN_FORKNUMBER, blkno);
-        Page page = BufferGetPage(buf);
-        _bt_init_page(page);
-    }
-    return buf;
-}
 
 void _bt_init_page(Page page) {
     PageInit(page, BLKSZ, sizeof(BTreeSpecialData));

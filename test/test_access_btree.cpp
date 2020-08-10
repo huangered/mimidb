@@ -18,7 +18,8 @@ TEST(btree, incr_insert)
 
     Relation rel = (Relation)palloc(sizeof(Relation));
     rel->rnode = 1;
-    rel->root_blkno = INVALID_BLOCK;
+    rel->root_blkno = P_NONE;
+    btbuildempty(rel);
 
     for (int i = 0; i < 100; i++) {
         RecordPageWithFreeSpace(rel, i, BLKSZ);
@@ -46,7 +47,8 @@ TEST(btree, decr_insert)
 
     Relation rel = (Relation)palloc(sizeof(Relation));
     rel->rnode = 1;
-    rel->root_blkno = INVALID_BLOCK;
+    rel->root_blkno = P_NONE;
+    btbuildempty(rel);
 
     for (int i = 0; i < 100; i++) {
         RecordPageWithFreeSpace(rel, i, BLKSZ);
