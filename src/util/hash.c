@@ -29,11 +29,10 @@ void hash_destroy(Hash* tbl) {
         for (; he != NULL;) {
             HashElem* cur = he;
             he = he->next;
-            pfree(cur->key);
-            pfree(cur->value);
             pfree(cur);
         }
     }
+    pfree(tbl->list);
     pfree(tbl);
 }
 
@@ -57,12 +56,13 @@ void* hash_search(Hash* tbl, HashAction action, const void* key) {
         break;
     }
 
-    return result == NULL ? NULL : result->value;
+    return result == NULL ? NULL : GetEntryValue(tbl, result);
 }
 
 HashElem* _search_elem(HashElem** he, const void* key, Hash* tbl) {
     for (; *he != NULL;) {
-        if (tbl->equal( (*he)->key, key, tbl->keysize)) {
+        void* k2 = GetEntryKey(tbl, *he);
+        if (tbl->equal(k2, key, tbl->keysize)) {
             return *he;
         }
         else {
@@ -74,32 +74,32 @@ HashElem* _search_elem(HashElem** he, const void* key, Hash* tbl) {
 
 
 static HashElem* _search_elem_or_add(HashElem** he, const void* key, Hash* tbl) {
+
     for (; *he != NULL;) {
-        if (tbl->equal((*he)->key, key, tbl->keysize)) {
+        void* key1 = GetEntryKey(tbl, he);
+        if (tbl->equal(key1, key, tbl->keysize)) {
             return *he;
         }
         else {
             he = &(*he)->next;
         }
     }
-    HashElem* result = palloc(sizeof(HashElem));
-    result->key = palloc(tbl->keysize);
-    memcpy(result->key, key, tbl->keysize);
-    result->value = palloc(tbl->entrysize);
-    memset(result->value, 0, tbl->entrysize);
+    HashElem* result = palloc(sizeof(HashElem) + tbl->keysize + tbl->entrysize);
     result->next = NULL;
+    memcpy(GetEntryKey(tbl, result), key, tbl->keysize);
+    memset(GetEntryValue(tbl, result), 0, tbl->entrysize);
+
     *he = result;
-    
+
     return result;
 }
 
 static void _remove_elem(HashElem** elem, const void* key, Hash* tbl) {
     for (; *elem != NULL;) {
         HashElem* el = *elem;
-        if (tbl->equal(el->key, key, tbl->keysize)) {
+        void* k2 = GetEntryKey(tbl, el);
+        if (tbl->equal(k2, key, tbl->keysize)) {
             *elem = el->next;
-            pfree(el->key);
-            pfree(el->value);
             pfree(el);
         }
         else {
