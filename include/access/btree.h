@@ -58,6 +58,7 @@ extern void btbuildempty(Relation rel);
 extern bool btinsert(Relation rel, int key, int value);
 extern bool btremove(Relation rel, int key);
 extern bool btgettuple(Relation rel, int key, int* value);
+extern void btvaccum(Relation rel);
 
 #define P_NEW                   INVALID_BLOCK
 #define P_NONE                  0

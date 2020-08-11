@@ -11,7 +11,6 @@ BufferDesc* BuffDesc = NULL;
 static BufferDesc* freeBuffDesc;
 static Hash* bufHash;
 
-
 static void load_page(BufferTag tag, Buffer buf);
 
 void BufferInit() {
