@@ -37,3 +37,10 @@ OffsetNumber _bt_binsrch(Relation rel, Page page, BTreeInsert key) {
     return low - 1;
 }
 
+bool _bt_first(BTreeSearchKey key) {
+    return false;
+}
+
+bool _bt_next(BTreeSearchKey key) {
+    return false;
+}
