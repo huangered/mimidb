@@ -6,11 +6,17 @@
 typedef uint32 (*HashValueFunc)(const void* key, Size keysize);
 typedef bool (*HashEqualFunc)(const void* left, const void* right, Size keysize);
 
+/*
+structure layout:
+-  next ptr
+- key region
+- value region
+*/
 typedef struct HashElem {
     struct HashElem* next;
-    void* key;
-    void* value;
 } HashElem;
+
+
 
 typedef struct HashSegment {
     HashElem* next;
@@ -31,6 +37,9 @@ typedef enum HashAction {
     Remove,
     Search,
 } HashAction;
+
+#define GetEntryKey(tbl, elem)   (char*)((char*)elem + sizeof(HashElem))
+#define GetEntryValue(tbl, elem)   (char*)((char*)elem + sizeof(HashElem) + tbl->keysize)
 
 extern Hash* hash_create(const char* name, HashValueFunc hash, HashEqualFunc equal, Size keysize, Size entrysize);
 extern void hash_destroy(Hash* tbl);

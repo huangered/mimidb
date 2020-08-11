@@ -1,4 +1,5 @@
 #include "access/btree.h"
+#include "storage/indexfsm.h"
 
 static BTreeMetaData* _bt_getmeta(Relation rel, Buffer metabuf);
 static void _bt_updatemeta(Buffer metabuf);
@@ -9,10 +10,20 @@ BTreeMetaData* _bt_getmeta(Relation rel, Buffer metabuf) {
     return metad;
 }
 
+/*
+update the metapage and save to disk.
+*/
 void _bt_updatemeta(Buffer metabuf) {
 
 }
 
+/*
+Get the relation root page buffer
+
+1. load the relation cache block num.
+2. if the cache is empty , load from meta page.
+3. if block num is null in meta, create new root.
+ */
 Buffer _bt_get_root(Relation rel) {
     Buffer metabuf;
     Buffer rootbuf;

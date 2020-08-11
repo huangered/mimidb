@@ -34,6 +34,16 @@ bool btremove(Relation rel, int key) {
 }
 bool btgettuple(Relation rel, int key, int* value) {
     *value = key * 10;
+
+    BTreeSearchKey skey = NULL;
+
+    if (key == 0) {
+        _bt_first(skey);
+    }
+    else {
+        _bt_next(skey);
+    }
+
     return true;
 }
 

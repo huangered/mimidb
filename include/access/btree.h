@@ -45,8 +45,14 @@ typedef struct BTreeInsertData {
 
 typedef BTreeInsertData* BTreeInsert;
 
+typedef struct BTreeSearchKeyData {
+    int key;
+} BTreeSearchKeyData;
+
+typedef BTreeSearchKeyData* BTreeSearchKey;
+
 /*
- * btbuildempty() -- build btree meta page
+btbuildempty() -- build btree meta page
  */ 
 extern void btbuildempty(Relation rel);
 extern bool btinsert(Relation rel, int key, int value);
@@ -84,8 +90,8 @@ extern Buffer _bt_moveright(Relation rel, BTreeInsert key, Buffer buf);
 extern Buffer _bt_relandgetbuf(Relation rel, Buffer obuf, BlockNum blkno);
 
 // methods in btsearch.c
-extern bool _bt_first();
-extern bool _bt_next();
+extern bool _bt_first(BTreeSearchKey key);
+extern bool _bt_next(BTreeSearchKey key);
 extern OffsetNumber _bt_binsrch(Relation rel, Page page, BTreeInsert key);
 extern OffsetNumber _bt_findinsertloc(Relation rel, Buffer buffer, BTreeInsert key);
 
