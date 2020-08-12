@@ -47,27 +47,24 @@ bool _bt_first(IndexScanDesc scan) {
     OffsetNumber offset;
     Buffer buf;
     
-    BTreeScan itup_key = palloc(sizeof(BTreeScanData));
-    itup_key->itup = palloc(sizeof(IndexTupleData));
-    itup_key->itup->key = scan->key;
-    itup_key->itemsz = sizeof(IndexTupleData);
-    // todo: for equal stratgy, nextkey is false;
-    // will do more job
-    itup_key->nextkey = false;
+    IndexTuple itup = _bt_make_tuple(scan->key, scan->value);
+
+    BTreeScan itup_key = _bt_make_scankey(scan->index_rel, itup);
     stack = _bt_search(scan->index_rel, itup_key, &buf);
 
-    Page page = BufferGetPage(buf);
     BufferDesc* desc = GetBufferDesc(buf);
-    offset = _bt_findinsertloc(scan->index_rel, buf, itup_key);
+    Page page = BufferGetPage(buf);
+    offset = _bt_binsrch(scan->index_rel, page, itup_key);
+
     scan->block = desc->tag.blockNum;
     scan->offset = offset;
 
     Item item = PageGetItem(page, PageGetItemId(page, offset));
 
-    IndexTuple itup = (IndexTuple)item;
-    scan->value = itup->value;
+    IndexTuple itup1 = (IndexTuple)item;
+    scan->value = itup1->value;
 
-    pfree(itup_key->itup);
+    pfree(itup);
     pfree(itup_key);
     
     _bt_freestack(stack);
