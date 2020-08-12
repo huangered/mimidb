@@ -11,13 +11,5 @@ int _bt_compare(Relation rel, BTreeScan key, Page page, OffsetNumber offset) {
 
     IndexTuple itup = (IndexTuple)PageGetItem(page, itemId);
 
-    if (itup->key == key->itup->key) {
-        return 0;
-    }
-    else if (itup->key < key->itup->key) {
-        return 1;
-    }
-    else {
-        return -1;
-    }
+    return key->scankeys[0].sk_comp(itup->key, key->itup->key);
 }
