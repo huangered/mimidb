@@ -1,6 +1,6 @@
 #include "access/btree.h"
 
-int _bt_compare(Relation rel, BTreeInsert key, Page page, OffsetNumber offset) {
+int _bt_compare(Relation rel, BTreeScan key, Page page, OffsetNumber offset) {
     ItemId itemId = PageGetItemId(page, offset);
 
     BTreeSpecial special = PageGetSpecial(page);

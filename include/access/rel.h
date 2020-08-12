@@ -15,6 +15,7 @@ typedef RelationData* Relation;
 typedef enum ForkNumber {
     MAIN_FORKNUMBER = 0,
     FSM_FORKNUM,
+    INIT_FORKNUM,
 } ForkNumber;
 
 char* GetRelPath(int rnode, ForkNumber fn);

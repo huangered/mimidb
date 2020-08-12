@@ -10,11 +10,11 @@
 typedef int Buffer;
 
 extern char* BufferBlocks;
-extern BufferDesc* buffDesc;
+extern BufferDesc* BuffDesc;
 
-#define BufferGetBlock(buffer)  (BufferBlocks + buffer * BLKSZ)
+#define BufferGetBlock(buffer)  (BufferBlocks + (Size)buffer * BLKSZ)
 #define BufferGetPage(buffer)   ((Page)BufferGetBlock(buffer))
-#define GetBufferDesc(buf_id)  (buffDesc + buf_id)
+#define GetBufferDesc(buf_id)  (BuffDesc + buf_id)
 
 // Init the buffer mgr, share mem alloc
 extern void BufferInit();
