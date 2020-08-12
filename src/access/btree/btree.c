@@ -32,19 +32,14 @@ bool btinsert(Relation rel, int key, int value) {
 bool btremove(Relation rel, int key) {
     return false;
 }
-bool btgettuple(Relation rel, int key, int* value) {
-    *value = key * 10;
+bool btgettuple(IndexScanDesc scan) {
 
-    BTreeSearchKey skey = NULL;
-
-    if (key == 0) {
-        _bt_first(skey);
+    if (scan->block == INVALID_BLOCK) {
+        return _bt_first(scan);
     }
     else {
-        _bt_next(skey);
+        return _bt_next(scan);
     }
-
-    return true;
 }
 
 
@@ -57,7 +52,7 @@ void _bt_init_page(Page page) {
     special->flags = P_NONE;
 }
 
-Buffer _bt_moveright(Relation rel, BTreeInsert key, Buffer buf) {
+Buffer _bt_moveright(Relation rel, BTreeScan key, Buffer buf) {
     for (;;) {
         Page page = BufferGetPage(buf);
         PageHeader header = PageGetHeader(page);
