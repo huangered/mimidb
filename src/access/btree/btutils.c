@@ -6,6 +6,9 @@ BTreeScan _bt_make_scankey(Relation rel, IndexTuple itup) {
     key->itup = itup;
     key->itemsz = sizeof(IndexTupleData);
     key->nextkey = false;
+    key->keysz = 1;
+    key->scankeys[0].sk_data = itup->key;
+    key->scankeys[0].sk_comp = int_cmp;
     return key;
 }
 
