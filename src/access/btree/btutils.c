@@ -1,10 +1,11 @@
 #include "access/btree.h"
 #include "util/mctx.h"
 
-BTreeInsert _bt_make_scankey(Relation rel, IndexTuple itup) {
-    BTreeInsert key = palloc(sizeof(BTreeInsertData));
+BTreeScan _bt_make_scankey(Relation rel, IndexTuple itup) {
+    BTreeScan key = palloc(sizeof(BTreeScanData));
     key->itup = itup;
     key->itemsz = sizeof(IndexTupleData);
+    key->nextkey = false;
     return key;
 }
 

@@ -32,12 +32,6 @@ TEST(btree, incr_insert)
     }
 
     //debug_rel(rel);
-    int value;
-
-    for (int i = 0; i < 1000; i++) {
-        btgettuple(rel, i, &value);
-        EXPECT_EQ(value, i * 10);
-    }
 }
 
 TEST(btree, decr_insert)
@@ -56,15 +50,22 @@ TEST(btree, decr_insert)
 
     for (int i = 0; i < 1000; i++) {
         //printf("%d\r\n", i);
-        bool result = btinsert(rel, 1000 - i, 1000 - i);
+        bool result = btinsert(rel, i, i);
         EXPECT_TRUE(result);
     }
 
     //debug_rel(rel);
-    int value;
-
+ 
     for (int i = 0; i < 1000; i++) {
-        btgettuple(rel, i, &value);
-        EXPECT_EQ(value, i * 10);
+        IndexScanDesc scan = (IndexScanDesc)palloc(sizeof(IndexScanDescData));
+        scan->index_rel = rel;
+        scan->key = i;
+        scan->block = INVALID_BLOCK;
+        bool result = btgettuple(scan);
+        EXPECT_TRUE(result);
+        EXPECT_EQ(scan->value, i);
+        result = btgettuple(scan);
+        EXPECT_FALSE(result);
+        pfree(scan);
     }
 }
