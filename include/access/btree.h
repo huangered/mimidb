@@ -6,6 +6,7 @@
 #include "access/rel.h"
 #include "storage/block.h"
 #include "storage/bufmgr.h"
+#include "access/scankey.h"
 
 #define BTREE_METAPAGE  0
 
@@ -42,6 +43,8 @@ typedef struct BTreeScanData {
     IndexTuple itup;
     Size itemsz;
     bool nextkey;
+    int keysz;
+    ScanKeyData scankeys[128];
 } BTreeScanData;
 
 typedef BTreeScanData* BTreeScan;
@@ -61,6 +64,7 @@ typedef struct IndexScanDescData {
 } IndexScanDescData;
 
 typedef IndexScanDescData* IndexScanDesc;
+
 
 /*
 btbuildempty() -- build btree meta page

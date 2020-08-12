@@ -54,6 +54,9 @@ bool _bt_first(IndexScanDesc scan) {
     // todo: for equal stratgy, nextkey is false;
     // will do more job
     itup_key->nextkey = false;
+    itup_key->keysz = 1;
+    itup_key->scankeys[0].sk_data = scan->key;
+    itup_key->scankeys[0].sk_comp = int_cmp;
     stack = _bt_search(scan->index_rel, itup_key, &buf);
 
     Page page = BufferGetPage(buf);
