@@ -8,7 +8,7 @@ OffsetNumber _bt_find_split_offset(Buffer buf) {
     return offset / 2;
 }
 
-OffsetNumber _bt_findinsertloc(Relation rel, Buffer buffer, BTreeInsert key) {
+OffsetNumber _bt_findinsertloc(Relation rel, Buffer buffer, BTreeScan key) {
     Page page = BufferGetPage(buffer);
 
     OffsetNumber offset = _bt_binsrch(rel, page, key);

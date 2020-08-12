@@ -3,7 +3,7 @@
 #include "storage/bufmgr.h"
 
 static bool _bt_addtup(Page page, Item item, Size itemsz, OffsetNumber newitemoffset);
-static void _bt_insertonpg(Relation rel, Buffer buffer, OffsetNumber newitemoffset, BTreeInsert itup_key, BTStack stack);
+static void _bt_insertonpg(Relation rel, Buffer buffer, OffsetNumber newitemoffset, BTreeScan itup_key, BTStack stack);
 static void _bt_insert_parent(Relation rel, Buffer lbuf, Buffer rbuf, BTStack stack, bool is_root);
 
 
@@ -13,7 +13,7 @@ bool _bt_do_insert(Relation rel, IndexTuple itup) {
     OffsetNumber newitemoffset;
     Buffer buf;
 
-    BTreeInsert itup_key = _bt_make_scankey(rel, itup);
+    BTreeScan itup_key = _bt_make_scankey(rel, itup);
 
 top:
     /*if rel cache buffer */{
@@ -36,7 +36,7 @@ top:
     return true;
 }
 
-BTStack _bt_search(Relation rel, BTreeInsert itup_key, Buffer* bufp) {
+BTStack _bt_search(Relation rel, BTreeScan itup_key, Buffer* bufp) {
     BTStack stack_in = NULL;
 
     *bufp = _bt_get_root(rel);
@@ -79,7 +79,7 @@ BTStack _bt_search(Relation rel, BTreeInsert itup_key, Buffer* bufp) {
     return stack_in;
 }
 
-void _bt_insertonpg(Relation rel, Buffer buffer, OffsetNumber newitemoffset, BTreeInsert itup_key, BTStack stack) {
+void _bt_insertonpg(Relation rel, Buffer buffer, OffsetNumber newitemoffset, BTreeScan itup_key, BTStack stack) {
     Page page = BufferGetPage(buffer);
 
     // size enough
@@ -208,7 +208,7 @@ void _bt_insert_parent(Relation rel, Buffer buf, Buffer rbuf, BTStack stack, boo
         Page page = BufferGetPage(buf);
         IndexTuple ritem = (IndexTuple)PageGetItem(page, PageGetItemId(page, P_HIKEY));
         IndexTuple itup = _bt_make_tuple(ritem->key, GetBufferDesc(rbuf)->tag.blockNum);
-        BTreeInsert itup_key = _bt_make_scankey(rel, itup);
+        BTreeScan itup_key = _bt_make_scankey(rel, itup);
         Buffer pbuf = _bt_get_buf(rel, stack->blkno);
         _bt_insertonpg(rel, pbuf, stack->offset + 1, itup_key, stack->parent);
         pfree(itup);
