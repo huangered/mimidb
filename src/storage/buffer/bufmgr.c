@@ -7,10 +7,9 @@
 
 #define NBuffer     16
 char* BufferBlocks = NULL;
-BufferDesc* buffDesc = NULL;
+BufferDesc* BuffDesc = NULL;
 static BufferDesc* freeBuffDesc;
 static Hash* bufHash;
-
 
 static void load_page(BufferTag tag, Buffer buf);
 
@@ -20,16 +19,16 @@ void BufferInit() {
     BufferBlocks = palloc(size);
     memset(BufferBlocks, 0, size);
     // will use shmem_init in the future
-    buffDesc = palloc(NBuffer * sizeof(BufferDesc));
-    memset(buffDesc, 0, NBuffer * sizeof(BufferDesc));
+    BuffDesc = palloc(NBuffer * sizeof(BufferDesc));
+    memset(BuffDesc, 0, NBuffer * sizeof(BufferDesc));
 
     for (int i = 0; i < NBuffer; i++) {
-        buffDesc[i].buf_id = i;
-        buffDesc[i].freeNext = i + 1;
-        buffDesc[i].state = 0;
+        BuffDesc[i].buf_id = i;
+        BuffDesc[i].freeNext = i + 1;
+        BuffDesc[i].state = 0;
     }
-    buffDesc[NBuffer - 1].freeNext = -1;
-    freeBuffDesc = buffDesc;
+    BuffDesc[NBuffer - 1].freeNext = -1;
+    freeBuffDesc = BuffDesc;
     bufHash = hash_create("local_buf", buftag_hash, buftag_equal, sizeof(BufferTag), sizeof(BufferDesc));
 }
 
@@ -57,7 +56,7 @@ Buffer ReadBuffer(Relation rel, ForkNumber forkNumber, BlockNum blkno) {
 
         if (freeBuffDesc != NULL) {
             BufferDesc* bd = freeBuffDesc;
-            freeBuffDesc = buffDesc + freeBuffDesc->freeNext;
+            freeBuffDesc = BuffDesc + freeBuffDesc->freeNext;
             bd->freeNext = -1;
             bd->tag = tag;
             buf_id = bd->buf_id;
@@ -99,7 +98,7 @@ static void load_page(BufferTag tag, Buffer buf) {
     memset(data, 0, BLKSZ);
     file_read(f, tag.blockNum, data);
     // read block;
-    char* pagePtr = (BufferBlocks + buf * BLKSZ);
+    char* pagePtr = BufferGetPage(buf);
 
     memcpy(pagePtr, data, BLKSZ);
     pfree(path);

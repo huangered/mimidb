@@ -4,6 +4,7 @@
 #include "storage/block.h"
 #include "access/rel.h"
 
+// find a free index page
 BlockNum GetFreeIndexPage(Relation rel);
 void RecordUsedIndexPage(Relation rel, BlockNum usedBlock);
 
