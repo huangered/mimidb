@@ -2,17 +2,6 @@
 #include "storage/page.h"
 #include "storage/bufmgr.h"
 
-typedef struct HeapTupleData {
-    int xmin;
-    int xmax;
-    int ctid;
-    int tag;
-    int key;
-    int value;
-} HeapTupleData;
-
-typedef HeapTupleData* HeapTuple;
-
 #define HOT_UPDATED 0
 #define HOT_REMOVED 1
 #define HOT_NORMAL 2
@@ -25,8 +14,12 @@ void heapbuildempty(Relation rel) {
 }
 
 bool heapinsert(Relation rel, int key, int value) {
+    HeapTuple htup = _heap_buildtuple(key, value);
+    Buffer buffer;
 
-    return false;
+    buffer = GetBufferForTuple(rel, htup->len);
+    RelationPutHeapTuple(rel, buffer, htup);
+    return true;
 }
 bool heapremove(Relation rel, int key) {
 
