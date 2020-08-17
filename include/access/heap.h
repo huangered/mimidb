@@ -28,5 +28,8 @@ HeapTuple _heap_buildtuple(int key, int value);
 Buffer GetBufferForTuple(Relation rel, Size len);
 void RelationPutHeapTuple(Relation rel, Buffer buf, HeapTuple htup);
 
+// for debug
+void print_heap(Relation rel);
+
 
 #endif // !_HEAP_H_

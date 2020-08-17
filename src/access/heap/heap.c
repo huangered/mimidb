@@ -74,3 +74,16 @@ bool heapgettuple(Relation rel, int key, int* value) {
 
     return false;
 }
+
+// for debug
+void print_heap(Relation rel) {
+    BlockNum blkno = rel->root_blkno;
+    Buffer buf = ReadBuffer(rel, MAIN_FORKNUMBER, blkno);
+    Page page = BufferGetPage(buf);
+    OffsetNumber max = PageGetMaxOffsetNumber(page);
+    for (OffsetNumber offset = 1; offset <= max; offset++) {
+        Item item = PageGetItem(page, PageGetItemId(page, offset));
+        HeapTuple tup = (HeapTuple)item;
+        printf("%d %d\r\n", tup->key, tup->value);
+    }
+}
