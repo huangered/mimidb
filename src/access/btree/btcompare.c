@@ -3,7 +3,7 @@
 int _bt_compare(Relation rel, BTreeScan key, Page page, OffsetNumber offset) {
     ItemId itemId = PageGetItemId(page, offset);
 
-    BTreeSpecial special = PageGetSpecial(page);
+    BTreeSpecial special = (BTreeSpecial)PageGetSpecial(page);
 
     if (!P_ISLEAF(special) && offset == P_FIRSTDATAKEY(special)) {
         return 1;

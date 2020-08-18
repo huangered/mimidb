@@ -1,3 +1,4 @@
+#include <limits.h>
 #include "access/btree.h"
 #include "util/mctx.h"
 #include "storage/bufmgr.h"
@@ -54,7 +55,7 @@ BTStack _bt_search(Relation rel, BTreeScan itup_key, Buffer* bufp) {
         page = BufferGetPage(*bufp);
 
         PageHeader header = PageGetHeader(page);
-        BTreeSpecial special = PageGetSpecial(page);
+        BTreeSpecial special = (BTreeSpecial)PageGetSpecial(page);
 
         if (P_ISLEAF(special)) {
             break;
@@ -62,7 +63,7 @@ BTStack _bt_search(Relation rel, BTreeScan itup_key, Buffer* bufp) {
 
         offsetnum = _bt_binsrch(rel, page, itup_key);
         itemid = PageGetItemId(page, offsetnum);
-        itup = PageGetItem(page, itemid);
+        itup = (IndexTuple)PageGetItem(page, itemid);
         blkno = BTreeTupleGetDownLink(itup);
         par_blkno = GetBufferDesc(*bufp)->tag.blockNum;
 
@@ -84,7 +85,7 @@ void _bt_insertonpg(Relation rel, Buffer buffer, OffsetNumber newitemoffset, BTr
 
     // size enough
     PageHeader header = PageGetHeader(page);
-    BTreeSpecial special = PageGetSpecial(page);
+    BTreeSpecial special = (BTreeSpecial)PageGetSpecial(page);
     // if size not enough
     // split and insert into parent
     if (PageGetFreeSpace(page) < itup_key->itemsz) {
@@ -107,9 +108,9 @@ Buffer _bt_split(Relation rel, IndexTuple itup, Buffer buf, OffsetNumber newitem
     Page rightpage = BufferGetPage(rbuf);
     _bt_init_page(rightpage);
 
-    BTreeSpecial originspecial = PageGetSpecial(originpage);
-    BTreeSpecial leftspecial = PageGetSpecial(leftpage);
-    BTreeSpecial rightspecial = PageGetSpecial(rightpage);
+    BTreeSpecial originspecial = (BTreeSpecial)PageGetSpecial(originpage);
+    BTreeSpecial leftspecial = (BTreeSpecial)PageGetSpecial(leftpage);
+    BTreeSpecial rightspecial = (BTreeSpecial)PageGetSpecial(rightpage);
 
     // update right / left point
     leftspecial->block_next = GetBufferDesc(rbuf)->tag.blockNum;
