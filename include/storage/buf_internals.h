@@ -29,11 +29,11 @@ typedef struct BuffDesc {
 )
 
 // private method
-inline uint32 buftag_hash(const void* key, Size keysize) {
+static inline uint32 buftag_hash(const void* key, Size keysize) {
     BufferTag* btag = (BufferTag*)key;
     return btag->rnode;
 }
-inline bool buftag_equal(const void* left, const void* right, Size keysize) {
+static inline bool buftag_equal(const void* left, const void* right, Size keysize) {
     int ret = memcmp(left, right, keysize);
     return ret == 0;
 }
