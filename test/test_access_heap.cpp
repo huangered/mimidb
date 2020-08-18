@@ -37,7 +37,7 @@ TEST(heap, incr_insert)
     scan->inited = false;
     scan->num_blocks = 1;
     scan->key = 10;
-    heapgettuple(scan);
+    EXPECT_TRUE(heapgettuple(scan));
     EXPECT_EQ(scan->value[0], 10);
     EXPECT_EQ(scan->num_value, 1);
 }
