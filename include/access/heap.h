@@ -5,17 +5,7 @@
 #include "rel.h"
 #include "storage/bufmgr.h"
 
-typedef struct HeapTupleData {
-    int len;
-    int xmin;
-    int xmax;
-    int ctid;
-    int tag;
-    int key;
-    int value;
-} HeapTupleData;
 
-typedef HeapTupleData* HeapTuple;
 
 extern void heapbuildempty(Relation rel);
 extern bool heapinsert(Relation rel, int key, int value);
