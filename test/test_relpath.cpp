@@ -1,7 +1,7 @@
 #include "g.h"
 _EXTERN_C
 
-#include "access/rel.h"
+#include "access/relpath.h"
 #include "util/mctx.h"
 
 _END_EXTERN_C

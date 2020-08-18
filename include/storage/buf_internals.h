@@ -3,6 +3,7 @@
 
 #include "storage/block.h"
 #include "access/rel.h"
+#include "access/relpath.h"
 
 typedef struct BufTag {
     int rnode;
