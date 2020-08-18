@@ -24,7 +24,7 @@ TEST(heap, incr_insert)
         RecordPageWithFreeSpace(rel, i, BLKSZ);
     }
 
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 100; i++) {
         //printf("%d\r\n", i);
         bool result = heapinsert(rel, i, i);
         EXPECT_TRUE(result);
