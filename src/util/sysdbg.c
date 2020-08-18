@@ -17,7 +17,7 @@ void debug_rel(Relation rel) {
 void pprint(Relation rel, Page page) {
 
     PageHeader header = PageGetHeader(page);
-    BTreeSpecial special = PageGetSpecial(page);
+    BTreeSpecial special = (BTreeSpecial)PageGetSpecial(page);
 
     int max = PageGetMaxOffsetNumber(page);
 
