@@ -18,7 +18,9 @@ bool heapinsert(Relation rel, int key, int value) {
     Buffer buffer;
 
     buffer = GetBufferForTuple(rel, htup->len);
+
     RelationPutHeapTuple(rel, buffer, htup);
+    
     return true;
 }
 bool heapremove(Relation rel, int key) {
@@ -84,6 +86,6 @@ void print_heap(Relation rel) {
     for (OffsetNumber offset = 1; offset <= max; offset++) {
         Item item = PageGetItem(page, PageGetItemId(page, offset));
         HeapTuple tup = (HeapTuple)item;
-        printf("%d %d\r\n", tup->key, tup->value);
+        printf("blkno: %d, offset: %d, key: %d, value: %d\r\n", HighKeyHot(tup), LowKeyHot(tup), tup->key, tup->value);
     }
 }
