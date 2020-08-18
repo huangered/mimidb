@@ -17,10 +17,25 @@ typedef struct HeapTupleData {
 
 typedef HeapTupleData* HeapTuple;
 
+typedef struct HeapScanDescData {
+    Relation rel;
+
+    BlockNum num_blocks;    /* max block to scan */
+
+    bool inited;        /* false = scan not init'd yet */
+    BlockNum cblock;    /* current block # in scan */
+    Buffer cbuf;        /* current buf # in scan */
+    int key;
+    int* value;
+    int num_value;
+} HeapScanDescData;
+
+typedef HeapScanDescData* HeapScanDesc;
+
 extern void heapbuildempty(Relation rel);
 extern bool heapinsert(Relation rel, int key, int value);
 extern bool heapremove(Relation rel, int key);
-extern bool heapgettuple(Relation rel, int key, int* value);
+extern bool heapgettuple(HeapScanDesc scan);
 
 // internal methods
 HeapTuple _heap_buildtuple(int key, int value);
