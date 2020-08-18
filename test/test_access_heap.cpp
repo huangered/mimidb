@@ -7,6 +7,7 @@ _EXTERN_C
 #include "util/mctx.h"
 #include "storage/freespace.h"
 #include "util/sysdbg.h"
+#include "util/mctx.h"
 
 _END_EXTERN_C
 
@@ -18,7 +19,6 @@ TEST(heap, incr_insert)
 
     Relation rel = (Relation)palloc(sizeof(Relation));
     rel->rnode = 2;
-    rel->root_blkno = 1;
 
     for (int i = 0; i < 100; i++) {
         RecordPageWithFreeSpace(rel, i, BLKSZ);
@@ -31,4 +31,13 @@ TEST(heap, incr_insert)
     }
 
     print_heap(rel);
+
+    HeapScanDesc scan = (HeapScanDesc)palloc(sizeof(HeapScanDescData));
+    scan->rel = rel;
+    scan->inited = false;
+    scan->num_blocks = 1;
+    scan->key = 10;
+    heapgettuple(scan);
+    EXPECT_EQ(scan->value[0], 10);
+    EXPECT_EQ(scan->num_value, 1);
 }
