@@ -7,5 +7,8 @@ HeapTuple _heap_buildtuple(int key, int value) {
     htup->key = key;
     htup->value = value;
     htup->len = sizeof(HeapTupleData);
+    htup->xmax = 0;
+    htup->xmin = 0;
+    htup->ctid = 0;
     return htup;
 }

@@ -10,6 +10,10 @@ Buffer GetBufferForTuple(Relation rel, Size len) {
 
     if (blkno != INVALID_BLOCK) {
         buf = ReadBuffer(rel, MAIN_FORKNUMBER, blkno);
+        Page page = BufferGetPage(buf);
+        Size avail = PageGetFreeSpace(page) - len;
+        BlockNum blkno = GetBufferDesc(buf)->tag.blockNum;
+        RecordPageWithFreeSpace(rel, blkno, avail);
         return buf;
     }
 
@@ -26,10 +30,8 @@ void RelationPutHeapTuple(Relation rel, Buffer buf, HeapTuple htup) {
     OffsetNumber max = PageGetMaxOffsetNumber(page);
     max = OffsetNumberNext(max);
 
+    htup->ctid = (htup->ctid & 0x00ff) | (GetBufferDesc(buf)->tag.blockNum << 8);
+    htup->ctid = (htup->ctid & 0xff00) | max;
+
     PageAddItem(page, htup, htup->len, max);
-
-    Size avail = PageGetFreeSpace(page);
-    BlockNum blkno = GetBufferDesc(buf)->tag.blockNum;
-    RecordPageWithFreeSpace(rel, blkno, avail);
-
 }
