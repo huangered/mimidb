@@ -2,6 +2,16 @@
 #include "util/mctx.h"
 #include "storage/indexfsm.h"
 
+IndexAmRoute* buildRoute() {
+    IndexAmRoute* route = palloc(sizeof(IndexAmRoute));
+    route->buildempty = btbuildempty;
+    route->insert = btinsert;
+    route->remove = btremove;
+    route->gettuple = btgettuple;
+    route->vacuum = btvacuum;
+
+    return route;
+}
 
 void btbuildempty(Relation rel) {
     Page metap = palloc(BLKSZ);

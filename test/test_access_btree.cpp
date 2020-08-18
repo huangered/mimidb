@@ -19,6 +19,7 @@ TEST(btree, incr_insert)
     Relation rel = (Relation)palloc(sizeof(Relation));
     rel->rnode = 1;
     rel->root_blkno = P_NONE;
+    rel->index_am = buildRoute();
     btbuildempty(rel);
 
     for (int i = 0; i < 100; i++) {
@@ -27,7 +28,7 @@ TEST(btree, incr_insert)
 
     for (int i = 0; i < 1000; i++) {
         //printf("%d\r\n", i);
-        bool result = btinsert(rel, i, i);
+        bool result = rel->index_am->insert(rel, i, i);
         EXPECT_TRUE(result);
     }
 
@@ -50,7 +51,7 @@ TEST(btree, decr_insert)
 
     for (int i = 0; i < 1000; i++) {
         //printf("%d\r\n", i);
-        bool result = btinsert(rel, i, i);
+        bool result = rel->index_am->insert(rel, i, i);
         EXPECT_TRUE(result);
     }
 
@@ -61,10 +62,10 @@ TEST(btree, decr_insert)
         scan->index_rel = rel;
         scan->key = i;
         scan->block = INVALID_BLOCK;
-        bool result = btgettuple(scan);
+        bool result = rel->index_am->gettuple(scan);
         EXPECT_TRUE(result);
         EXPECT_EQ(scan->value, i);
-        result = btgettuple(scan);
+        result = rel->index_am->gettuple(scan);
         EXPECT_FALSE(result);
         pfree(scan);
     }
