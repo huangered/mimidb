@@ -20,7 +20,7 @@ TEST(btree, incr_insert)
     rel->rnode = 1;
     rel->root_blkno = P_NONE;
     rel->index_am = buildRoute();
-    btbuildempty(rel);
+    rel->index_am->ambuildempty(rel);
 
     for (int i = 0; i < 100; i++) {
         RecordPageWithFreeSpace(rel, i, BLKSZ);
@@ -33,6 +33,8 @@ TEST(btree, incr_insert)
     }
 
     //debug_rel(rel);
+    pfree(rel->index_am);
+    pfree(rel);
 }
 
 TEST(btree, decr_insert)
@@ -44,7 +46,7 @@ TEST(btree, decr_insert)
     rel->rnode = 1;
     rel->root_blkno = P_NONE;
     rel->index_am = buildRoute();
-    btbuildempty(rel);
+    rel->index_am->ambuildempty(rel);
 
     for (int i = 0; i < 100; i++) {
         RecordPageWithFreeSpace(rel, i, BLKSZ);
@@ -70,4 +72,6 @@ TEST(btree, decr_insert)
         EXPECT_FALSE(result);
         pfree(scan);
     }
+    pfree(rel->index_am);
+    pfree(rel);
 }
