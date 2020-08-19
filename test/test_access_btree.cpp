@@ -27,8 +27,8 @@ TEST(btree, incr_insert)
     }
 
     for (int i = 0; i < 1000; i++) {
-        //printf("%d\r\n", i);
-        bool result = rel->index_am->insert(rel, i, i);
+        printf("%d\r\n", i);
+        bool result = rel->index_am->aminsert(rel, i, i);
         EXPECT_TRUE(result);
     }
 
@@ -51,7 +51,7 @@ TEST(btree, decr_insert)
 
     for (int i = 0; i < 1000; i++) {
         //printf("%d\r\n", i);
-        bool result = rel->index_am->insert(rel, i, i);
+        bool result = rel->index_am->aminsert(rel, i, i);
         EXPECT_TRUE(result);
     }
 
@@ -62,10 +62,10 @@ TEST(btree, decr_insert)
         scan->index_rel = rel;
         scan->key = i;
         scan->block = INVALID_BLOCK;
-        bool result = rel->index_am->gettuple(scan);
+        bool result = rel->index_am->amgettuple(scan);
         EXPECT_TRUE(result);
         EXPECT_EQ(scan->value, i);
-        result = rel->index_am->gettuple(scan);
+        result = rel->index_am->amgettuple(scan);
         EXPECT_FALSE(result);
         pfree(scan);
     }
