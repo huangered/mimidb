@@ -8,6 +8,7 @@ _EXTERN_C
 #include "storage/freespace.h"
 #include "util/sysdbg.h"
 #include "util/mctx.h"
+#include "access/tbapi.h"
 
 _END_EXTERN_C
 
@@ -19,6 +20,7 @@ TEST(heap, incr_insert)
 
     Relation rel = (Relation)palloc(sizeof(RelationData));
     rel->rnode = 2;
+    rel->tb_am = table_route();
 
     for (int i = 0; i < 100; i++) {
         RecordPageWithFreeSpace(rel, i, BLKSZ);
@@ -26,7 +28,7 @@ TEST(heap, incr_insert)
 
     for (int i = 0; i < 100; i++) {
         //printf("%d\r\n", i);
-        bool result = heapinsert(rel, i, i);
+        bool result = rel->tb_am->tuple_insert(rel, i, i);
         EXPECT_TRUE(result);
     }
 
@@ -42,4 +44,6 @@ TEST(heap, incr_insert)
     EXPECT_EQ(scan->num_value, 1);
     pfree(scan->value);
     pfree(scan);
+    pfree(rel->tb_am);
+    pfree(rel);
 }
