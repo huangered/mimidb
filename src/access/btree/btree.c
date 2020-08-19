@@ -4,11 +4,11 @@
 
 IndexAmRoute* buildRoute() {
     IndexAmRoute* route = palloc(sizeof(IndexAmRoute));
-    route->buildempty = btbuildempty;
-    route->insert = btinsert;
-    route->remove = btremove;
-    route->gettuple = btgettuple;
-    route->vacuum = btvacuum;
+    route->ambuildempty = btbuildempty;
+    route->aminsert = btinsert;
+    route->amremove = btremove;
+    route->amgettuple = btgettuple;
+    route->amvacuum = btvacuum;
 
     return route;
 }

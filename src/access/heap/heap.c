@@ -14,9 +14,9 @@
 TableAmRoute* table_route() {
     TableAmRoute* route = palloc(sizeof(TableAmRoute));
     route->buildempty = heapbuildempty;
-    route->insert = heapinsert;
+    route->tuple_insert = heapinsert;
     route->gettuple = heapgettuple;
-    route->remove = heapremove;
+    route->tuple_remove = heapremove;
     return route;
 }
 
