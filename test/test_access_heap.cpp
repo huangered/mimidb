@@ -17,7 +17,7 @@ TEST(heap, incr_insert)
     MemoryContextInit();
     BufferInit();
 
-    Relation rel = (Relation)palloc(sizeof(Relation));
+    Relation rel = (Relation)palloc(sizeof(RelationData));
     rel->rnode = 2;
 
     for (int i = 0; i < 100; i++) {
@@ -40,4 +40,6 @@ TEST(heap, incr_insert)
     EXPECT_TRUE(heapgettuple(scan));
     EXPECT_EQ(scan->value[0], 10);
     EXPECT_EQ(scan->num_value, 1);
+    pfree(scan->value);
+    pfree(scan);
 }

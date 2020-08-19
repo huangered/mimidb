@@ -2,12 +2,11 @@
 #define _BUFMGR_H_
 
 #include "mimi.h"
-#include "access/rel.h"
+#include "access/relcache.h"
 #include "storage/block.h"
 #include "storage/page.h"
 #include "storage/buf_internals.h"
-
-typedef int Buffer;
+#include "storage/buf.h"
 
 extern char* BufferBlocks;
 extern BufferDesc* BuffDesc;
