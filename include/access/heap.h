@@ -4,7 +4,7 @@
 #include "mimi.h"
 #include "rel.h"
 #include "storage/bufmgr.h"
-
+#include "access/heaptuple.h"
 
 
 extern void heapbuildempty(Relation rel);

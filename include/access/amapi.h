@@ -16,18 +16,14 @@ typedef struct IndexScanDescData {
 
 typedef IndexScanDescData* IndexScanDesc;
 
-typedef void (*Buildempty)(Relation rel);
-typedef bool (*Insert)(Relation rel, int key, int value);
-typedef bool (*Remove)(Relation rel, int key);
-typedef bool (*Gettuple)(IndexScanDesc scan);
-typedef void (*Vacuum)(Relation rel);
+
 
 typedef struct IndexAmRoute {
-    Buildempty buildempty;
-    Insert insert;
-    Remove remove;
-    Gettuple gettuple;
-    Vacuum vacuum;
+    void (*ambuildempty)(Relation rel);
+    bool (*aminsert)(Relation rel, int key, int value);
+    bool (*amremove)(Relation rel, int key);
+    bool (*amgettuple)(IndexScanDesc scan);
+    void (*amvacuum)(Relation rel);
 } IndexAmRoute;
 
 extern IndexAmRoute* buildRoute();

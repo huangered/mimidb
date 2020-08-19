@@ -19,16 +19,13 @@ typedef struct HeapScanDescData {
 typedef HeapScanDescData* HeapScanDesc;
 
 
-typedef void (*buildempty)(Relation);
-typedef bool (*insert)(Relation, int, int);
-typedef bool (*hremove)(Relation, int);
-typedef bool (*gettuple)(HeapScanDesc);
+
 
 typedef struct TableAmRoute {
-    buildempty buildempty;
-    insert insert;
-    hremove remove;
-    gettuple gettuple;
+    void (*buildempty)(Relation rel);
+    bool (*tuple_insert)(Relation rel, int key, int value);
+    bool (*tuple_remove)(Relation rel, int key);
+    bool (*gettuple)(HeapScanDesc scan);
 } TableAmRoute;
 
 TableAmRoute* table_route();
