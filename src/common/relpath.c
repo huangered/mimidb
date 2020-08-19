@@ -1,5 +1,5 @@
-#include "access/rel.h"
 #include "util/mctx.h"
+#include "access/relpath.h"
 
 const char* const forkNames[] = {
     "main",						/* MAIN_FORKNUM */

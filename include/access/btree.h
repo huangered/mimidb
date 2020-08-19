@@ -7,6 +7,7 @@
 #include "storage/block.h"
 #include "storage/bufmgr.h"
 #include "access/scankey.h"
+#include "access/amapi.h"
 
 #define BTREE_METAPAGE  0
 
@@ -54,17 +55,6 @@ typedef struct BTreeSearchKeyData {
 } BTreeSearchKeyData;
 
 typedef BTreeSearchKeyData* BTreeSearchKey;
-
-typedef struct IndexScanDescData {
-    Relation index_rel;
-    int key;
-    int value;
-    BlockNum block;
-    OffsetNumber offset;
-} IndexScanDescData;
-
-typedef IndexScanDescData* IndexScanDesc;
-
 
 /*
 btbuildempty() -- build btree meta page
