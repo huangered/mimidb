@@ -2,6 +2,7 @@
 #include "storage/page.h"
 #include "storage/bufmgr.h"
 #include "util/mctx.h"
+#include "access/tbapi.h"
 
 #define HOT_UPDATED 0
 #define HOT_REMOVED 1
@@ -9,6 +10,15 @@
 
 #define HighKeyHot(hot) (( hot->ctid & 0xff00 ) >> 8 )
 #define LowKeyHot(hot)  ( hot->ctid & 0x00ff )
+
+TableAmRoute* table_route() {
+    TableAmRoute* route = palloc(sizeof(TableAmRoute));
+    route->buildempty = heapbuildempty;
+    route->tuple_insert = heapinsert;
+    route->gettuple = heapgettuple;
+    route->tuple_remove = heapremove;
+    return route;
+}
 
 void heapbuildempty(Relation rel) {
     // create relation file;
