@@ -16,7 +16,7 @@ TEST(btree, incr_insert)
     MemoryContextInit();
     BufferInit();
 
-    Relation rel = (Relation)palloc(sizeof(Relation));
+    Relation rel = (Relation)palloc(sizeof(RelationData));
     rel->rnode = 1;
     rel->root_blkno = P_NONE;
     rel->index_am = buildRoute();
@@ -27,7 +27,7 @@ TEST(btree, incr_insert)
     }
 
     for (int i = 0; i < 1000; i++) {
-        printf("%d\r\n", i);
+        //printf("%d\r\n", i);
         bool result = rel->index_am->aminsert(rel, i, i);
         EXPECT_TRUE(result);
     }
@@ -40,9 +40,10 @@ TEST(btree, decr_insert)
     MemoryContextInit();
     BufferInit();
 
-    Relation rel = (Relation)palloc(sizeof(Relation));
+    Relation rel = (Relation)palloc(sizeof(RelationData));
     rel->rnode = 1;
     rel->root_blkno = P_NONE;
+    rel->index_am = buildRoute();
     btbuildempty(rel);
 
     for (int i = 0; i < 100; i++) {
