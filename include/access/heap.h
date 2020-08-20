@@ -8,7 +8,7 @@
 
 
 extern void heapbuildempty(Relation rel);
-extern bool heapinsert(Relation rel, int key, int value);
+extern bool heapinsert(Relation rel, TupleSlotDesc* slot);
 extern bool heapremove(Relation rel, int key);
 extern bool heapgettuple(HeapScanDesc scan);
 
