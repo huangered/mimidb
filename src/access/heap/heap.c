@@ -24,14 +24,15 @@ void heapbuildempty(Relation rel) {
     // create relation file;
 }
 
-bool heapinsert(Relation rel, int key, int value) {
-    HeapTuple htup = _heap_buildtuple(key, value);
+bool heapinsert(Relation rel, TupleSlotDesc* slot) {
+    HeapTuple htup = _heap_buildtuple(rel, slot);
     Buffer buffer;
 
     buffer = GetBufferForTuple(rel, htup->len);
 
     RelationPutHeapTuple(rel, buffer, htup);
     
+    slot->tts_tid = htup->ctid;
     return true;
 }
 bool heapremove(Relation rel, int key) {

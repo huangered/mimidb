@@ -47,7 +47,10 @@ bool _bt_first(IndexScanDesc scan) {
     OffsetNumber offset;
     Buffer buf;
     
-    IndexTuple itup = _bt_make_tuple(scan->key, scan->value);
+    IndexTuple itup = palloc(sizeof(IndexTupleData));
+    itup->key = scan->key;
+    itup->ctid = scan->value;
+    itup->tuple_size = sizeof(IndexTupleData);
 
     BTreeScan itup_key = _bt_make_scankey(scan->index_rel, itup);
     stack = _bt_search(scan->index_rel, itup_key, &buf);
@@ -62,7 +65,7 @@ bool _bt_first(IndexScanDesc scan) {
     Item item = PageGetItem(page, PageGetItemId(page, offset));
 
     IndexTuple itup1 = (IndexTuple)item;
-    scan->value = itup1->value;
+    scan->value = itup1->ctid;
 
     pfree(itup);
     pfree(itup_key);
@@ -90,7 +93,7 @@ bool _bt_next(IndexScanDesc scan) {
     Item item = PageGetItem(page, itemid);
     IndexTuple itup = (IndexTuple)item;
     if (itup->key == scan->key) {
-        scan->value = itup->value;
+        scan->value = itup->ctid;
         scan->offset = offset;
         return true;
     }
