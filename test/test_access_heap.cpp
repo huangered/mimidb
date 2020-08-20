@@ -28,8 +28,12 @@ TEST(heap, incr_insert)
 
     for (int i = 0; i < 100; i++) {
         //printf("%d\r\n", i);
-        bool result = rel->tb_am->tuple_insert(rel, i, i);
+        TupleSlotDesc* slot = (TupleSlotDesc*)palloc(sizeof(TupleSlotDesc));
+        slot->key = i;
+        slot->value = i;
+        bool result = rel->tb_am->tuple_insert(rel, slot);
         EXPECT_TRUE(result);
+        pfree(slot);
     }
 
     print_heap(rel);
