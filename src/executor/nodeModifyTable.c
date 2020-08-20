@@ -21,5 +21,5 @@ void ExecInsertTuple(Relation rel, TupleSlotDesc* slot) {
 
 void ExecInsertIndex(Relation rel, TupleSlotDesc* slot) {
     // find index rel
-    rel->index_am->aminsert(rel, slot);
+    rel->index_am->aminsert(rel, slot->key, slot->tts_tid);
 }
