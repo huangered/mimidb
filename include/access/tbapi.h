@@ -2,6 +2,7 @@
 #define _table_api_h_
 
 #include "storage/buf.h"
+#include "executor/tuptable.h"
 
 typedef struct HeapScanDescData {
     Relation rel;
@@ -23,7 +24,7 @@ typedef HeapScanDescData* HeapScanDesc;
 
 typedef struct TableAmRoute {
     void (*buildempty)(Relation rel);
-    bool (*tuple_insert)(Relation rel, int key, int value);
+    bool (*tuple_insert)(Relation rel, TupleSlotDesc *slot);
     bool (*tuple_remove)(Relation rel, int key);
     bool (*gettuple)(HeapScanDesc scan);
 } TableAmRoute;

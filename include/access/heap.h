@@ -13,7 +13,7 @@ extern bool heapremove(Relation rel, int key);
 extern bool heapgettuple(HeapScanDesc scan);
 
 // internal methods
-HeapTuple _heap_buildtuple(int key, int value);
+HeapTuple _heap_buildtuple(Relation rel, TupleSlotDesc* slot);
 
 Buffer GetBufferForTuple(Relation rel, Size len);
 void RelationPutHeapTuple(Relation rel, Buffer buf, HeapTuple htup);
