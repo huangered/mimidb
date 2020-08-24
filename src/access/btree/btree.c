@@ -27,11 +27,11 @@ void btbuildempty(Relation rel) {
     pfree(metap);
 }
 
-bool btinsert(Relation rel, int key, int value) {
+bool btinsert(Relation rel, int key, int ht_id) {
     bool result;
     IndexTuple tup;
 
-    tup = _bt_make_tuple(key, value);
+    tup = _bt_make_tuple(key, ht_id);
 
     result = _bt_do_insert(rel, tup);
 
