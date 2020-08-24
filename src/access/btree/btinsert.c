@@ -210,7 +210,7 @@ void _bt_insert_parent(Relation rel, Buffer buf, Buffer rbuf, BTStack stack, boo
         IndexTuple ritem = (IndexTuple)PageGetItem(page, PageGetItemId(page, P_HIKEY));
         IndexTuple itup = palloc(sizeof(IndexTupleData));
         itup->key = ritem->key;
-        itup->ctid = GetBufferDesc(rbuf)->tag.blockNum;
+        itup->ht_id = GetBufferDesc(rbuf)->tag.blockNum;
         itup->tuple_size = sizeof(IndexTupleData);
         BTreeScan itup_key = _bt_make_scankey(rel, itup);
         Buffer pbuf = _bt_get_buf(rel, stack->blkno);
@@ -242,7 +242,7 @@ Buffer _bt_newroot(Relation rel, Buffer lbuf, Buffer rbuf) {
     // get left page high key
     IndexTuple hkey = palloc(sizeof(IndexTupleData));
     hkey->key = INT_MIN;
-    hkey->ctid = GetBufferDesc(lbuf)->tag.blockNum;
+    hkey->ht_id = GetBufferDesc(lbuf)->tag.blockNum;
     hkey->tuple_size = sizeof(IndexTupleData);
     // set first item
     _bt_addtup(rootpage, hkey, sizeof(IndexTupleData), P_HIKEY);
@@ -254,7 +254,7 @@ Buffer _bt_newroot(Relation rel, Buffer lbuf, Buffer rbuf) {
 
     second = palloc(sizeof(IndexTupleData));
     second->key = lphkey->key;
-    second->ctid = GetBufferDesc(rbuf)->tag.blockNum;
+    second->ht_id = GetBufferDesc(rbuf)->tag.blockNum;
     second->tuple_size = sizeof(IndexTupleData);
     _bt_addtup(rootpage, second, sizeof(IndexTupleData), P_FIRSTKEY);
 

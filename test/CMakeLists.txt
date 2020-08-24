@@ -31,8 +31,8 @@ if (CMAKE_VERSION VERSION_LESS 2.8.11)
 endif()
 
 FILE(GLOB sources *.cpp)
-
+FILE(GLOB catalog_sources catalog/*.cpp)
 # Now simply link against gtest or gtest_main as needed. Eg
-add_executable(unittest ${sources})
+add_executable(unittest ${sources} ${catalog_sources})
 target_link_libraries(unittest gtest_main access catalog common port storage util)
 add_test(NAME unit_test COMMAND unittest)

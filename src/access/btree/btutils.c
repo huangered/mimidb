@@ -15,7 +15,7 @@ BTreeScan _bt_make_scankey(Relation rel, IndexTuple itup) {
 IndexTuple _bt_make_tuple(int key, int ht_id) {
     IndexTuple tup = palloc(sizeof(IndexTupleData));
     tup->key = key;
-    tup->ctid = ht_id;
+    tup->ht_id = ht_id;
     tup->tuple_size = sizeof(IndexTupleData);
     return tup;
 }
