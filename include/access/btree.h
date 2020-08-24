@@ -16,9 +16,10 @@ typedef struct BTreeMetaData {
 } BTreeMetaData;
 
 typedef struct IndexTupleData {
+    int ht_id;          // record heap tuple id
+    int tuple_size;     // temporarily value;
     int key;
-    int ctid;
-    int tuple_size;
+    // data part
 } IndexTupleData;
 
 typedef IndexTupleData* IndexTuple;
@@ -84,7 +85,7 @@ extern void btvacuum(Relation rel);
 #define P_FIRSTKEY              ((OffsetNumber) 2)
 #define P_FIRSTDATAKEY(special) (P_RIGHTMOST(special) ? P_HIKEY:P_FIRSTKEY)
 
-#define BTreeTupleGetDownLink(itup) (itup->ctid)
+#define BTreeTupleGetDownLink(itup) (itup->ht_id)
 
 
 // methods in btpage.c
