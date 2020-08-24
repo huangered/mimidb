@@ -16,9 +16,10 @@ typedef struct BTreeMetaData {
 } BTreeMetaData;
 
 typedef struct IndexTupleData {
+    int ht_id;          // record heap tuple id
+    int tuple_size;     // temporarily value;
     int key;
-    int value;
-    int ctid;
+    // data part
 } IndexTupleData;
 
 typedef IndexTupleData* IndexTuple;
@@ -60,7 +61,7 @@ typedef BTreeSearchKeyData* BTreeSearchKey;
 btbuildempty() -- build btree meta page
  */ 
 extern void btbuildempty(Relation rel);
-extern bool btinsert(Relation rel, int key, int value);
+extern bool btinsert(Relation rel, int key, int ht_id);
 extern bool btremove(Relation rel, int key);
 extern bool btgettuple(IndexScanDesc scan);
 extern void btvacuum(Relation rel);
@@ -84,7 +85,7 @@ extern void btvacuum(Relation rel);
 #define P_FIRSTKEY              ((OffsetNumber) 2)
 #define P_FIRSTDATAKEY(special) (P_RIGHTMOST(special) ? P_HIKEY:P_FIRSTKEY)
 
-#define BTreeTupleGetDownLink(itup) (itup->value)
+#define BTreeTupleGetDownLink(itup) (itup->ht_id)
 
 
 // methods in btpage.c
@@ -113,7 +114,7 @@ extern Buffer _bt_split(Relation rel, IndexTuple itup, Buffer buf, OffsetNumber 
 extern int _bt_compare(Relation rel, BTreeScan key, Page page, OffsetNumber offset);
 
 // methods in btutils.c
-extern IndexTuple _bt_make_tuple(int key, int value);
+extern IndexTuple _bt_make_tuple(int key, int ht_id);
 extern BTreeScan _bt_make_scankey(Relation rel, IndexTuple itup);
 extern void _bt_freestack(BTStack stack);
 
