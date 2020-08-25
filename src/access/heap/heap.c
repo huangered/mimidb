@@ -82,20 +82,21 @@ bool heapgettuple(HeapScanDesc scan) {
         offset = OffsetNumberNext(scan->offset);
     }
 
-    if (blkno > scan->num_blocks) {
-        return false;
-    }
-
     for (;;) {
+        if (blkno > scan->num_blocks) {
+            return false;
+        }
+
         buf = ReadBuffer(scan->rel, MAIN_FORKNUMBER, blkno);
 
         Page page = BufferGetPage(buf);
         OffsetNumber max = PageGetMaxOffsetNumber(page);
         for (; offset <= max; offset++) {
-            Item item = PageGetItem(page, PageGetItemId(page, offset));
-            HeapTuple tup = (HeapTuple)item;
+            ItemId itemid = PageGetItemId(page, offset);
+            Item item = PageGetItem(page, itemid);
+            HeapTupleHeader tup = (HeapTupleHeader)item;
 
-            char* data = (char*)((char*)(tup->t_data) + tup->t_data->t_hoff);
+            char* data = (char*)tup + tup->t_hoff;
             int key = *((int*)data);
             int value = *(((int*)data) + 1 );
 
@@ -121,8 +122,13 @@ void print_heap(Relation rel) {
     Page page = BufferGetPage(buf);
     OffsetNumber max = PageGetMaxOffsetNumber(page);
     for (OffsetNumber offset = 1; offset <= max; offset++) {
-        Item item = PageGetItem(page, PageGetItemId(page, offset));
-        HeapTuple tup = (HeapTuple)item;
-     //   printf("blkno: %d, offset: %d, key: %d, value: %d\r\n", HighKeyHot(tup), LowKeyHot(tup), tup->key, tup->value);
+        ItemId itemid = PageGetItemId(page, offset);
+        Item item = PageGetItem(page, itemid);
+        printf("itemid: %d %d", itemid->lp_len, itemid->lp_off);
+        HeapTupleHeader tup = (HeapTupleHeader)item;
+        int* ptr = (char*)tup + tup->t_hoff;
+        int key = *ptr;
+        int value = *(ptr + 1);
+        printf("key %d, value %d", key, value);
     }
 }
