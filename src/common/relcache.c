@@ -3,6 +3,7 @@
 #include "util/hash.h"
 #include "catalog/mimi_attribute.h"
 #include "catalog/mimi_code.h"
+#include "util/mctx.h"
 
 Hash* relhash;
 
@@ -76,5 +77,5 @@ Relation BuildRelation(Oid oid, const char* relname, TupleDesc tupdesc) {
         heaprel->tupleDesc->attr[i].type = tupdesc->attr[i].type;
         memcpy(heaprel->tupleDesc->attr[i].name, tupdesc->attr[i].name, 64);
     }
-
+    return heaprel;
 }
