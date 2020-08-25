@@ -8,11 +8,9 @@ _EXTERN_C
 _END_EXTERN_C
 
 TEST(Catalog, heap) {
-    TupleDesc desc = (TupleDesc)palloc(sizeof(TupleDescData));
-    desc->natts = 0;
-    Relation rel = heap_create("test", 1, desc);
+    RelationCacheInit();
+
+//    Relation rel = heap_create("test", 1, desc);
     //EXPECT_NE(rel, nullptr);
 
-    pfree(desc);
-    pfree(rel);
 }
