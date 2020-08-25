@@ -5,4 +5,6 @@
 
 typedef unsigned long long Oid;
 
+typedef uintptr_t Datum;
+
 #endif
