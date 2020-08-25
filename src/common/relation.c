@@ -2,7 +2,7 @@
 #include "access/rel.h"
 
 Relation relation_open(Oid relid) {
-
+    return NULL;
 }
 
 void relation_close(Relation rel) {
