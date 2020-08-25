@@ -21,7 +21,7 @@ TEST(heap, incr_insert)
     Relation rel = (Relation)palloc(sizeof(RelationData));
     rel->rnode = 2;
     rel->tb_am = table_route();
-
+    rel->root_blkno = 1;
     for (int i = 0; i < 100; i++) {
         RecordPageWithFreeSpace(rel, i, BLKSZ);
     }

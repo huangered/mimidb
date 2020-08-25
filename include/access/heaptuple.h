@@ -30,4 +30,6 @@ typedef struct HeapTupleData {
 
 typedef HeapTupleData* HeapTuple;
 
+#define HEAP_TUPLE_SIZE     sizeof(HeapTupleData)
+
 #endif // !_heaptuple_h_
