@@ -10,7 +10,7 @@ _END_EXTERN_C
 TEST(Catalog, heap) {
     RelationCacheInit();
 
-//    Relation rel = heap_create("test", 1, desc);
+    //Relation rel = heap_create("test", 1, desc);
     //EXPECT_NE(rel, nullptr);
 
 }

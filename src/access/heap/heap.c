@@ -28,11 +28,12 @@ bool heapinsert(Relation rel, TupleSlotDesc* slot) {
     HeapTuple htup = _heap_buildtuple(rel, slot);
     Buffer buffer;
 
-    buffer = GetBufferForTuple(rel, htup->len);
+    buffer = GetBufferForTuple(rel, htup->t_len);
 
     RelationPutHeapTuple(rel, buffer, htup);
     
-    slot->tts_tid = htup->ctid;
+    // todo
+    //slot->tts_tid = ;
     return true;
 }
 bool heapremove(Relation rel, int key) {
@@ -50,14 +51,14 @@ bool heapremove(Relation rel, int key) {
         Item item = PageGetItem(page, itemId);
 
         HeapTuple tup = (HeapTuple)item;
-        if (tup->xmax == 0) { // for now , only get latest one.
-            tup->xmax = cur_tran;
+        if (tup->t_data->t_heap.t_xmax == 0) { // for now , only get latest one.
+            tup->t_data->t_heap.t_xmax = cur_tran;
             // add new deleted record?!
             return true;
         }
         else {
-            blkNum = HighKeyHot(tup);
-            offset = LowKeyHot(tup);
+            blkNum = tup->t_data->t_ctid.blocknum;
+            offset = tup->t_data->t_ctid.offset;
         }
     }
 
@@ -93,8 +94,13 @@ bool heapgettuple(HeapScanDesc scan) {
         for (; offset <= max; offset++) {
             Item item = PageGetItem(page, PageGetItemId(page, offset));
             HeapTuple tup = (HeapTuple)item;
-            if (tup->key == scan->key) {
-                scan->value = tup->value;
+
+            char* data = (char*)((char*)(tup->t_data) + tup->t_data->t_hoff);
+            int key = *((int*)data);
+            int value = *(((int*)data) + 1 );
+
+            if (key == scan->key) {
+                scan->value = value;
                 scan->cblock = blkno;
                 scan->offset = offset;
                 return true;
@@ -117,6 +123,6 @@ void print_heap(Relation rel) {
     for (OffsetNumber offset = 1; offset <= max; offset++) {
         Item item = PageGetItem(page, PageGetItemId(page, offset));
         HeapTuple tup = (HeapTuple)item;
-        printf("blkno: %d, offset: %d, key: %d, value: %d\r\n", HighKeyHot(tup), LowKeyHot(tup), tup->key, tup->value);
+     //   printf("blkno: %d, offset: %d, key: %d, value: %d\r\n", HighKeyHot(tup), LowKeyHot(tup), tup->key, tup->value);
     }
 }

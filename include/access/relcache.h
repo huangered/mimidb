@@ -10,7 +10,7 @@ extern void RelationCacheInit();
 
 extern Relation RelationIdGetRelation(Oid relid);
 extern void RelationClose(Relation rel);
-extern Relation BuildRelationDesc(Oid oid, const char* name, TupleDesc tupDesc);
-extern Relation BuildRelation(Oid oid);
+extern Relation BuildLocalRelation(Oid oid, const char* name, TupleDesc tupDesc);
+extern Relation BuildRelationDesc(Oid oid, bool insert);
 
 #endif // !_rel_cache_h_
