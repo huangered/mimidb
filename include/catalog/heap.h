@@ -3,7 +3,8 @@
 
 #include "mimi.h"
 #include "access/relcache.h"
+#include "access/tupledesc.h"
 
-Relation heap_create(const char* relname, Oid relid);
+Relation heap_create(const char* relname, Oid relid, TupleDesc tupDesc);
 
 #endif

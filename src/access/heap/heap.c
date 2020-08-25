@@ -66,40 +66,46 @@ bool heapremove(Relation rel, int key) {
 bool heapgettuple(HeapScanDesc scan) {
 
     BlockNum blkno;
+    OffsetNumber offset;
+    Page page;
     Buffer buf;
 
     if (!scan->inited) {
         BlockNum start = 1;
         blkno = start;
+        offset = FirstOffsetNumber;
         scan->inited = true;
     }
     else {
-        blkno = scan->cblock + 1;
+        blkno = scan->cblock;
+        offset = OffsetNumberNext(scan->offset);
     }
 
     if (blkno > scan->num_blocks) {
         return false;
     }
 
-    buf = ReadBuffer(scan->rel, MAIN_FORKNUMBER, blkno);
+    for (;;) {
+        buf = ReadBuffer(scan->rel, MAIN_FORKNUMBER, blkno);
 
-    scan->value = palloc(BLKSZ);
-    int index = 0;
-    Page page = BufferGetPage(buf);
-    OffsetNumber max = PageGetMaxOffsetNumber(page);
-    for (OffsetNumber offset = 1; offset <= max; offset++) {
-        Item item = PageGetItem(page, PageGetItemId(page, offset));
-        HeapTuple tup = (HeapTuple)item;
-        if (tup->key == scan->key) {
-            scan->value[index] = tup->value;
-            index++;
+        Page page = BufferGetPage(buf);
+        OffsetNumber max = PageGetMaxOffsetNumber(page);
+        for (; offset <= max; offset++) {
+            Item item = PageGetItem(page, PageGetItemId(page, offset));
+            HeapTuple tup = (HeapTuple)item;
+            if (tup->key == scan->key) {
+                scan->value = tup->value;
+                scan->cblock = blkno;
+                scan->offset = offset;
+                return true;
+            }
         }
+        // current page is exhausted.
+        // goto next page
+        blkno = blkno + 1;
+        offset = FirstOffsetNumber;
     }
-    scan->num_value = index;
-
-    scan->cblock = blkno;
-
-    return true;
+    return false;
 }
 
 // for debug
