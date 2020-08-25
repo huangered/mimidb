@@ -3,6 +3,7 @@
 #include "util/mctx.h"
 #include "catalog/storage.h"
 #include "catalog/mimi_code.h"
+
 static void AddRelationPgClass(Relation pgclassdesc, Relation heaprel);
 
 Relation heap_create(const char* name, Oid relid, TupleDesc tupDesc) {

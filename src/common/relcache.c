@@ -1,15 +1,19 @@
 #include "access/relcache.h"
 #include "access/rel.h"
+#include "common/relation.h"
 #include "util/hash.h"
 #include "catalog/mimi_attribute.h"
 #include "catalog/mimi_code.h"
 #include "util/mctx.h"
+#include "access/heaptuple.h"
 
 Hash* relhash;
 
 static void formrdesc(const char* relname, Oid reltype, int natts, const FormData_mimi_attribute* attrs);
 static void relationCacheInsert(Relation rel);
 static Relation relationCacheLookup(Oid relid);
+static void RelationBuildTuple(Relation rel);
+static HeapTuple ScanMimiRelation(Oid relid);
 
 typedef struct RelCacheEntry {
     Oid oid;
@@ -59,7 +63,7 @@ Relation RelationIdGetRelation(Oid relid) {
         rel->refcount += 1;
     }
 
-    rel = BuildRelation(relid);
+    rel = BuildRelationDesc(relid, true);
 
     return rel;
 }
@@ -90,12 +94,34 @@ void formrdesc(const char* relname, Oid reltype, int natts, const FormData_mimi_
 
 }
 
-Relation BuildRelation(Oid oid) {
-    Relation mimi_class_desc;
-    // find the relation in the mimi_class;
-    const char* relname;
-    TupleDesc tupdesc;
+/*
+1. find a relation from raw data
+2. if insert == true, insert into cache
+*/
+Relation BuildRelationDesc(Oid oid, bool insert) {
+    HeapTuple heap_tup;
+    Form_mimi_class rel_class;
 
+    heap_tup = ScanMimiRelation(oid);
+    rel_class = (Form_mimi_class)(heap_tup->t_data);
+
+    Relation heaprel = palloc(sizeof(RelationData));
+    heaprel->oid = oid;
+    heaprel->rd_rel = palloc(sizeof(FormData_mimi_class));
+    strcpy(heaprel->rd_rel->name, rel_class->name);
+
+    RelationBuildTuple(heaprel);
+
+    heaprel->refcount = 0;
+    if (insert) {
+        relationCacheInsert(heaprel);
+    }
+    return heaprel;
+}
+
+// ======== private methods ==========
+
+Relation BuildLocalRelation(Oid oid, const char* relname, TupleDesc tupdesc) {
     Relation heaprel = palloc(sizeof(RelationData));
     heaprel->oid = oid;
     heaprel->rd_rel = palloc(sizeof(FormData_mimi_class));
@@ -114,11 +140,9 @@ Relation BuildRelation(Oid oid) {
     return heaprel;
 }
 
-Relation BuildRelationDesc(Oid oid, const char* relname, TupleDesc tupdesc) {
-    Relation heaprel = palloc(sizeof(RelationData));
-    heaprel->oid = oid;
-    heaprel->rd_rel = palloc(sizeof(FormData_mimi_class));
-    strcpy(heaprel->rd_rel->name, relname);
+void RelationBuildTuple(Relation heaprel) {
+    // find tuple desc from meta data
+    TupleDesc tupdesc;
 
     heaprel->tupleDesc = palloc(sizeof(TupleDescData));
     heaprel->tupleDesc->natts = tupdesc->natts;
@@ -128,7 +152,8 @@ Relation BuildRelationDesc(Oid oid, const char* relname, TupleDesc tupdesc) {
         heaprel->tupleDesc->attr[i].type = tupdesc->attr[i].type;
         strcpy(heaprel->tupleDesc->attr[i].name, tupdesc->attr[i].name);
     }
+}
 
-    heaprel->refcount = 0;
-    return heaprel;
+HeapTuple ScanMimiRelation(Oid relid) {
+    return NULL;
 }
