@@ -3,6 +3,7 @@
 
 #include "storage/buf.h"
 #include "executor/tuptable.h"
+#include "access/offset.h"
 
 typedef struct HeapScanDescData {
     Relation rel;
@@ -12,9 +13,9 @@ typedef struct HeapScanDescData {
     bool inited;        /* false = scan not init'd yet */
     BlockNum cblock;    /* current block # in scan */
     Buffer cbuf;        /* current buf # in scan */
+    OffsetNumber offset; /* current offset # in scan */
     int key;
-    int* value;
-    int num_value;
+    int value;
 } HeapScanDescData;
 
 typedef HeapScanDescData* HeapScanDesc;
