@@ -5,7 +5,7 @@
 
 typedef struct FormData_mimi_attribute {
     Oid oid;
-    char name[64];
+    char name[NAME_LIMIT];
     int length;
     int type;
 } FormData_mimi_attribute;
