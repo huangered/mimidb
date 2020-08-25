@@ -7,4 +7,6 @@ typedef unsigned long long Oid;
 
 typedef uintptr_t Datum;
 
+#define NAME_LIMIT  64
+
 #endif

@@ -7,15 +7,17 @@
 #include "access/tbapi.h"
 #include "access/amapi.h"
 #include "access/tupledesc.h"
+#include "catalog/mimi_class.h"
 #include "catalog/mimi_attribute.h"
 
 typedef struct RelationData {
     Oid oid;
     int rnode;
     BlockNum root_blkno;
-    char* name;
-    TupleDesc tupleDesc;
 
+    Form_mimi_class rd_rel; /* relation tuple */
+    TupleDesc tupleDesc;    /* retuple descriptor */
+    int refcount;
     TableAmRoute* tb_am;
     IndexAmRoute* index_am;
 } RelationData;
