@@ -42,11 +42,9 @@ TEST(heap, incr_insert)
     scan->rel = rel;
     scan->inited = false;
     scan->num_blocks = 1;
-    scan->key = 10;
+    scan->key = 99;
     EXPECT_TRUE(heapgettuple(scan));
-    EXPECT_EQ(scan->value[0], 10);
-    EXPECT_EQ(scan->num_value, 1);
-    pfree(scan->value);
+    EXPECT_EQ(scan->value, 99);
     pfree(scan);
     pfree(rel->tb_am);
     pfree(rel);
