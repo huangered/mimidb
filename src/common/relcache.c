@@ -1,35 +1,73 @@
 #include "access/relcache.h"
 #include "access/rel.h"
 #include "util/hash.h"
+#include "catalog/mimi_attribute.h"
+#include "catalog/mimi_code.h"
 
 Hash* relhash;
 
+static void formrdesc(const char* relname, Oid reltype, int natts, const FormData_mimi_attribute* attrs);
+
 void RelationCacheInit();
 
-struct RelEntry {
+typedef struct RelCacheEntry {
     Oid oid;
     Relation rel;
-};
+} RelCacheEntry;
 
+/*
+1. init the relation cache
+2. insert the basic system relation
+*/
 void RelationCacheInit() {
-    relhash = hash_create("rel_cache_hash", NULL, NULL, sizeof(Oid), sizeof(struct RelEntry));
+    relhash = hash_create("rel_cache_hash", NULL, NULL, sizeof(Oid), sizeof(struct RelCacheEntry));
+
+    formrdesc("mimi_class", ClassRelationId, 20, NULL);
+    formrdesc("mimi_attribute", AttributeRelationId, 20, NULL);
 }
 
 Relation RelationIdGetRelation(Oid relid) {
-    return NULL;
+    RelCacheEntry* entry = (RelCacheEntry*)hash_search(relhash, Search, &relid);
+    if (entry) {
+        return entry->rel;
+    }
+    else {
+        return NULL;
+    }
 }
 
 void RelationClose(Relation rel) {
+    rel->refcount -= 1;
+    if (rel->refcount == 0) {
+        //remove from cache;
+    }
+}
+
+/*
+1. this method is for load system relation (mimi_class, mimi_attribute, etc)
+2. insert the rel into relcache by hardcode
+*/
+void formrdesc(const char* relname, Oid reltype, int natts, const FormData_mimi_attribute* attrs) {
+    Relation rel = palloc(sizeof(RelationData));
+
+    /*
+    init the ref count: 1 because it needs keep in cache
+    */
+    rel->refcount = 1;
+
+    rel->rd_rel = palloc(sizeof(FormData_mimi_class));
+    strcpy(rel->rd_rel->name, relname);
+
+    rel->tb_am = table_route();
 
 }
 
-
-Relation BuildRelation(Oid oid, const char* name, TupleDesc tupdesc) {
+Relation BuildRelation(Oid oid, const char* relname, TupleDesc tupdesc) {
     Relation heaprel = palloc(sizeof(RelationData));
     heaprel->oid = oid;
-    heaprel->name = palloc(strlen(name));
-    memset(heaprel->name, 0, strlen(name));
-    strcpy(heaprel->name, name);
+    heaprel->rd_rel = palloc(sizeof(FormData_mimi_class));
+    strcpy(heaprel->rd_rel->name, relname);
+
     heaprel->tupleDesc = palloc(sizeof(TupleDescData));
     heaprel->tupleDesc->natts = tupdesc->natts;
     for (int i = 0; i < heaprel->tupleDesc->natts; i++) {
