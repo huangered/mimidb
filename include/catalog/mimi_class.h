@@ -5,7 +5,7 @@
 
 typedef struct FormData_mimi_class {
     Oid oid;
-    char name[64];
+    char name[NAME_LIMIT];
 } FormData_mimi_class;
 
 typedef FormData_mimi_class* Form_mimi_class;
