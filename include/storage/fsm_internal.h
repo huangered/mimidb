@@ -5,12 +5,18 @@
 #include "storage/block.h"
 #include "storage/bufmgr.h"
 
+struct FsmAddress {
+    int level;
+};
+
 struct FSMPageData {
     int items[20];
 };
 
 typedef struct FSMPageData* FSMPage;
 
-BlockNum fsm_search_avail(Buffer buf, Size spaceNeed);
-void fsm_set_value(Buffer buf, BlockNum usedBlock, Size freeSpace);
+extern BlockNum fsm_search_avail(Relation rel, Size spaceNeed);
+extern void fsm_set_value(Relation rel, BlockNum usedBlock, Size freeSpace);
+
+
 #endif // !_fsm_internal_h_
