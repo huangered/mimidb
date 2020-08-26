@@ -11,7 +11,9 @@ extern void heapbuildempty(Relation rel);
 extern bool heapinsert(Relation rel, TupleSlotDesc* slot);
 extern bool heapremove(Relation rel, int key);
 extern bool heapgettuple(HeapScanDesc scan);
-
+extern bool heapbeginscan(HeapScanDesc scan);
+extern HeapTuple heapgetnext(HeapScanDesc scan);
+extern bool heapendscan(HeapScanDesc scan);
 // internal methods
 HeapTuple _heap_buildtuple(Relation rel, TupleSlotDesc* slot);
 
