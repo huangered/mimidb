@@ -4,6 +4,7 @@
 #include "storage/buf.h"
 #include "executor/tuptable.h"
 #include "access/offset.h"
+#include "access/heaptuple.h"
 
 typedef struct HeapScanDescData {
     Relation rel;
@@ -20,14 +21,14 @@ typedef struct HeapScanDescData {
 
 typedef HeapScanDescData* HeapScanDesc;
 
-
-
-
 typedef struct TableAmRoute {
     void (*buildempty)(Relation rel);
     bool (*tuple_insert)(Relation rel, TupleSlotDesc *slot);
     bool (*tuple_remove)(Relation rel, int key);
     bool (*gettuple)(HeapScanDesc scan);
+    bool (*beginscan)(HeapScanDesc scan);
+    HeapTuple (*getnext)(HeapScanDesc scan);
+    bool (*endscan)(HeapScanDesc scan);
 } TableAmRoute;
 
 TableAmRoute* table_route();
