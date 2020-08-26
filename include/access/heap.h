@@ -8,12 +8,16 @@
 
 
 extern void heapbuildempty(Relation rel);
-extern bool heapinsert(Relation rel, TupleSlotDesc* slot);
+extern bool heap_tuple_insert(Relation rel, TupleSlotDesc* slot);
 extern bool heapremove(Relation rel, int key);
 extern bool heapgettuple(HeapScanDesc scan);
 extern bool heapbeginscan(HeapScanDesc scan);
 extern HeapTuple heapgetnext(HeapScanDesc scan);
 extern bool heapendscan(HeapScanDesc scan);
+
+// for catalog usage
+extern void simple_heap_insert(Relation rel, HeapTuple tup);
+
 // internal methods
 HeapTuple _heap_buildtuple(Relation rel, TupleSlotDesc* slot);
 

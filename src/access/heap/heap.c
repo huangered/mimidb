@@ -8,13 +8,16 @@
 #define HOT_REMOVED     1
 #define HOT_NORMAL      2
 
+static bool heap_insert(Relation rel, HeapTuple tup);
+
+
 static const TableAmRoute route = {
     .buildempty = heapbuildempty,
-    .tuple_insert = heapinsert,
+    .tuple_insert = heap_tuple_insert,
     .gettuple = heapgettuple,
     .tuple_remove = heapremove,
     .beginscan = heapbeginscan,
-    .endscan = heapendscan, 
+    .endscan = heapendscan,
     .getnext = heapgetnext
 };
 
@@ -26,17 +29,13 @@ void heapbuildempty(Relation rel) {
     // create relation file;
 }
 
-bool heapinsert(Relation rel, TupleSlotDesc* slot) {
+bool heap_tuple_insert(Relation rel, TupleSlotDesc* slot) {
     HeapTuple htup = _heap_buildtuple(rel, slot);
-    Buffer buffer;
-
-    buffer = GetBufferForTuple(rel, htup->t_len);
-
-    RelationPutHeapTuple(rel, buffer, htup);
+    
     
     // todo
     //slot->tts_tid = ;
-    return true;
+    return heap_insert(rel, htup);
 }
 bool heapremove(Relation rel, int key) {
 
@@ -126,6 +125,24 @@ HeapTuple heapgetnext(HeapScanDesc scan) {
 bool heapendscan(HeapScanDesc scan) {
     // do nothing now.
     return true;
+}
+
+/*
+for catalog operation
+*/
+void
+simple_heap_insert(Relation rel, HeapTuple tup) {
+    heap_insert(rel, tup);
+}
+
+// ========= private 
+
+bool heap_insert(Relation rel, HeapTuple htup) {
+    Buffer buffer;
+
+    buffer = GetBufferForTuple(rel, htup->t_len);
+
+    RelationPutHeapTuple(rel, buffer, htup);
 }
 
 // for debug

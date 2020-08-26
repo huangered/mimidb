@@ -10,7 +10,12 @@ _END_EXTERN_C
 TEST(Catalog, heap) {
     RelationCacheInit();
 
-    //Relation rel = heap_create("test", 1, desc);
-    //EXPECT_NE(rel, nullptr);
+    TupleDesc tupdesc = (TupleDesc)palloc(sizeof(TupleDescData));
+    tupdesc->natts = 0;
+    Relation rel = heap_create("test", 100, tupdesc);
+    
+    EXPECT_NE(rel, nullptr);
 
+    pfree(rel);
+    pfree(tupdesc);
 }
