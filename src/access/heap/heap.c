@@ -4,20 +4,22 @@
 #include "util/mctx.h"
 #include "access/tbapi.h"
 
-#define HOT_UPDATED 0
-#define HOT_REMOVED 1
-#define HOT_NORMAL 2
+#define HOT_UPDATED     0
+#define HOT_REMOVED     1
+#define HOT_NORMAL      2
 
-#define HighKeyHot(hot) (( hot->ctid & 0xff00 ) >> 8 )
-#define LowKeyHot(hot)  ( hot->ctid & 0x00ff )
+static const TableAmRoute route = {
+    .buildempty = heapbuildempty,
+    .tuple_insert = heapinsert,
+    .gettuple = heapgettuple,
+    .tuple_remove = heapremove,
+    .beginscan = heapbeginscan,
+    .endscan = heapendscan, 
+    .getnext = heapgetnext
+};
 
 TableAmRoute* table_route() {
-    TableAmRoute* route = palloc(sizeof(TableAmRoute));
-    route->buildempty = heapbuildempty;
-    route->tuple_insert = heapinsert;
-    route->gettuple = heapgettuple;
-    route->tuple_remove = heapremove;
-    return route;
+    return &route;
 }
 
 void heapbuildempty(Relation rel) {
@@ -113,6 +115,17 @@ bool heapgettuple(HeapScanDesc scan) {
         offset = FirstOffsetNumber;
     }
     return false;
+}
+
+bool heapbeginscan(HeapScanDesc scan) {
+    return false;
+}
+HeapTuple heapgetnext(HeapScanDesc scan) {
+    return NULL;
+}
+bool heapendscan(HeapScanDesc scan) {
+    // do nothing now.
+    return true;
 }
 
 // for debug

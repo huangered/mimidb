@@ -36,7 +36,7 @@ TEST(heap, incr_insert)
         pfree(slot);
     }
 
-    print_heap(rel);
+    //print_heap(rel);
 
     HeapScanDesc scan = (HeapScanDesc)palloc(sizeof(HeapScanDescData));
     scan->rel = rel;
@@ -46,6 +46,5 @@ TEST(heap, incr_insert)
     EXPECT_TRUE(heapgettuple(scan));
     EXPECT_EQ(scan->value, 99);
     pfree(scan);
-    pfree(rel->tb_am);
     pfree(rel);
 }
