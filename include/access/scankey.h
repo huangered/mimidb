@@ -1,9 +1,9 @@
 #ifndef _scankey_h_
 #define _scankey_h_
 
-#include <stdint.h>
+#include "mimi.h"
 #include "access/strategynumber.h"
-typedef uintptr_t Datum;
+
 
 typedef int (*cmp1)(Datum l, Datum r);
 

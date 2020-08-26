@@ -30,8 +30,8 @@ void RelationPutHeapTuple(Relation rel, Buffer buf, HeapTuple htup) {
     OffsetNumber max = PageGetMaxOffsetNumber(page);
     max = OffsetNumberNext(max);
 
-    htup->ctid |= (GetBufferDesc(buf)->tag.blockNum << 8);
-    htup->ctid |= max;
+    htup->t_data->t_ctid.blocknum = GetBufferDesc(buf)->tag.blockNum;
+    htup->t_data->t_ctid.offset = max;
 
-    PageAddItem(page, htup, htup->len, max);
+    PageAddItem(page, (htup->t_data), htup->t_len, max);
 }

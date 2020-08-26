@@ -21,7 +21,7 @@ TEST(heap, incr_insert)
     Relation rel = (Relation)palloc(sizeof(RelationData));
     rel->rnode = 2;
     rel->tb_am = table_route();
-
+    rel->root_blkno = 1;
     for (int i = 0; i < 100; i++) {
         RecordPageWithFreeSpace(rel, i, BLKSZ);
     }
@@ -36,18 +36,15 @@ TEST(heap, incr_insert)
         pfree(slot);
     }
 
-    print_heap(rel);
+    //print_heap(rel);
 
     HeapScanDesc scan = (HeapScanDesc)palloc(sizeof(HeapScanDescData));
     scan->rel = rel;
     scan->inited = false;
     scan->num_blocks = 1;
-    scan->key = 10;
+    scan->key = 99;
     EXPECT_TRUE(heapgettuple(scan));
-    EXPECT_EQ(scan->value[0], 10);
-    EXPECT_EQ(scan->num_value, 1);
-    pfree(scan->value);
+    EXPECT_EQ(scan->value, 99);
     pfree(scan);
-    pfree(rel->tb_am);
     pfree(rel);
 }

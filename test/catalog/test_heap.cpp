@@ -3,10 +3,14 @@
 _EXTERN_C
 
 #include "catalog/heap.h"
+#include "util/mctx.h"
 
 _END_EXTERN_C
 
 TEST(Catalog, heap) {
-    Relation rel = heap_create("test", 1);
-    EXPECT_EQ(rel, nullptr);
+    RelationCacheInit();
+
+    //Relation rel = heap_create("test", 1, desc);
+    //EXPECT_NE(rel, nullptr);
+
 }
