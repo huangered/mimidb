@@ -46,6 +46,32 @@ static Relation relationCacheLookup(Oid relid) {
     }
 }
 
+static FormData_mimi_attribute pg_class_attrs[4] = {
+    {
+        .oid = 1,
+        .name = "oid",
+        .length = sizeof(int),
+        .type = 1
+    },
+        {
+        .oid = 2,
+        .name = "relkind",
+        .length = sizeof(int),
+        .type = 1
+    },
+        {
+        .oid = 3,
+        .name = "relpages",
+        .length = sizeof(int),
+        .type = 1
+    },
+        {
+        .oid = 4,
+        .name = "tuples",
+        .length = sizeof(int),
+        .type = 1
+    }
+};
 
 /*
 1. init the relation cache
@@ -54,8 +80,8 @@ static Relation relationCacheLookup(Oid relid) {
 void RelationCacheInit() {
     relhash = hash_create("rel_cache_hash", OidHashValue, OidHashEqual, sizeof(Oid), sizeof(struct RelCacheEntry));
 
-    formrdesc("mimi_class", ClassRelationId, 20, NULL);
-    formrdesc("mimi_attribute", AttributeRelationId, 20, NULL);
+    formrdesc("mimi_class", ClassRelationId, 4, pg_class_attrs);
+    //formrdesc("mimi_attribute", AttributeRelationId, 20, NULL);
 }
 
 Relation RelationIdGetRelation(Oid relid) {
@@ -63,6 +89,7 @@ Relation RelationIdGetRelation(Oid relid) {
 
     if (rel != NULL) {
         rel->refcount += 1;
+        return rel;
     }
 
     rel = BuildRelationDesc(relid, true);
@@ -93,7 +120,13 @@ void formrdesc(const char* relname, Oid reltype, int natts, const FormData_mimi_
     strcpy(rel->rd_rel->name, relname);
 
     rel->tb_am = table_route();
+    // build relation tuple desc
+    rel->tupleDesc = CreateTempTupleDesc(natts);
+    for (int i = 0; i < natts; i++) {
+        FormData_mimi_attribute* attr = attrs + i;
+        memcpy(&rel->tupleDesc->attr[i], attr, sizeof(FormData_mimi_attribute));
 
+    }
     relationCacheInsert(rel);
 }
 

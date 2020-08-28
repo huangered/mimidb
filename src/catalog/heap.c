@@ -5,6 +5,7 @@
 #include "util/mctx.h"
 #include "catalog/storage.h"
 #include "catalog/mimi_code.h"
+#include "access/heaptuple.h"
 
 static void AddRelationPgClass(Relation mimiclassdesc, Relation heaprel);
 static void InsertMimiClassTuple(Relation mimiclassdesc, Form_mimi_class heaprel);
@@ -44,8 +45,15 @@ void AddRelationPgClass(Relation mimi_class_desc, Relation heap_rel) {
 
 void
 InsertMimiClassTuple(Relation mimi_class_desc, Form_mimi_class new_rel_reltup) {
-    HeapTuple tuple = palloc(sizeof(HeapTupleData));
-    tuple->t_len = 100;
+    Datum values[4];
+    values[0] = IntGetDatum(new_rel_reltup->oid);
+    values[1] = IntGetDatum(new_rel_reltup->relkind);
+    values[2] = IntGetDatum(new_rel_reltup->relpages);
+    values[3] = IntGetDatum(new_rel_reltup->tuples);
+
+    HeapTuple tuple = heap_form_tuple(mimi_class_desc->tupleDesc, &values);
 
     simple_heap_insert(mimi_class_desc, tuple);
+
+    pfree(tuple);
 }
