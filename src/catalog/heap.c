@@ -51,7 +51,7 @@ InsertMimiClassTuple(Relation mimi_class_desc, Form_mimi_class new_rel_reltup) {
     values[2] = IntGetDatum(new_rel_reltup->relpages);
     values[3] = IntGetDatum(new_rel_reltup->tuples);
 
-    HeapTuple tuple = heap_form_tuple(mimi_class_desc->tupleDesc, &values);
+    HeapTuple tuple = heap_form_tuple(mimi_class_desc->tupleDesc, values);
 
     simple_heap_insert(mimi_class_desc, tuple);
 
