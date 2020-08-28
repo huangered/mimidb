@@ -4,10 +4,12 @@ _EXTERN_C
 
 #include "catalog/heap.h"
 #include "util/mctx.h"
+#include "storage/bufmgr.h"
 
 _END_EXTERN_C
 
 TEST(Catalog, heap) {
+    BufferInit();
     RelationCacheInit();
 
     TupleDesc tupdesc = (TupleDesc)palloc(sizeof(TupleDescData));
