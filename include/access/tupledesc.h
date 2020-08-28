@@ -12,4 +12,6 @@ typedef struct TupleDescData {
 
 typedef struct TupleDescData* TupleDesc;
 
+extern TupleDesc CreateTempTupleDesc(int natts);
+
 #endif // !_TupleDesc_h_
