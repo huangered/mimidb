@@ -116,6 +116,8 @@ void formrdesc(const char* relname, Oid reltype, int natts, const FormData_mimi_
     */
     rel->refcount = 1;
     rel->oid = reltype;
+    rel->rnode = reltype;
+    rel->root_blkno = 0;
     rel->rd_rel = palloc(sizeof(FormData_mimi_class));
     strcpy(rel->rd_rel->name, relname);
 
