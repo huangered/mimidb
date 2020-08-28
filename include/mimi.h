@@ -7,6 +7,8 @@ typedef unsigned long long Oid;
 
 typedef uintptr_t Datum;
 
+#define IntGetDatum(X)      ((Datum)(X))
+
 #define NAME_LIMIT  64
 
 #endif

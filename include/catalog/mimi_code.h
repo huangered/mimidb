@@ -1,7 +1,9 @@
 #ifndef _mimi_code_h_
 #define _mimi_code_h_
 
-#define ClassRelationId         0
-#define AttributeRelationId     1
+#define ClassRelationId         100
+#define AttributeRelationId     101
+
+#define IsSystemCatalog(oid)    ( oid < 1000 )
 
 #endif // !_mimi_code_h_

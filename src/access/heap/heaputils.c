@@ -13,7 +13,6 @@ HeapTuple _heap_buildtuple(Relation rel, TupleSlotDesc* slot) {
     htup->t_data = td = (HeapTupleHeader)((char*)htup + HEAP_TUPLE_SIZE);
     htup->t_data->t_hoff = hoff;
 
-
     // for simple, we only have (key,value) now.
     memcpy(((char*)td + hoff), &slot->key, sizeof(int));
     memcpy(((char*)td + hoff + sizeof(int)), &slot->value, sizeof(int));

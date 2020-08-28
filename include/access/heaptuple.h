@@ -1,6 +1,9 @@
 #ifndef _heaptuple_h_
 #define _heaptuple_h_
 
+#include "mimi.h"
+#include "access/tupledesc.h"
+
 typedef struct HeapTupleFields {
     int t_xmin;
     int t_xmax;
@@ -31,5 +34,7 @@ typedef struct HeapTupleData {
 typedef HeapTupleData* HeapTuple;
 
 #define HEAP_TUPLE_SIZE     sizeof(HeapTupleData)
+
+extern HeapTuple heap_form_tuple(TupleDesc desc, Datum* values);
 
 #endif // !_heaptuple_h_
