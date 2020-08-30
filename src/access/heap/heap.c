@@ -18,7 +18,8 @@ static const TableAmRoute route = {
     .tuple_remove = heapremove,
     .beginscan = heapbeginscan,
     .endscan = heapendscan,
-    .getnext = heapgetnext
+    .getnext = heapgetnext,
+    .vacuum = heap_vacuum
 };
 
 TableAmRoute* table_route() {
@@ -125,6 +126,10 @@ HeapTuple heapgetnext(HeapScanDesc scan) {
 bool heapendscan(HeapScanDesc scan) {
     // do nothing now.
     return true;
+}
+
+void heap_vacuum(Relation rel) {
+
 }
 
 /*
