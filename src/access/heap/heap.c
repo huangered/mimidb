@@ -128,6 +128,10 @@ bool heapendscan(HeapScanDesc scan) {
     return true;
 }
 
+void heap_vacuum(Relation rel) {
+
+}
+
 /*
 1. run the heap page vacuu
 2. update the fsm page
