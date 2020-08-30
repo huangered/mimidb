@@ -157,9 +157,14 @@ void print_heap(Relation rel) {
         Item item = PageGetItem(page, itemid);
         printf("itemid: %d %d", itemid->lp_len, itemid->lp_off);
         HeapTupleHeader tup = (HeapTupleHeader)item;
-        int* ptr = (char*)tup + tup->t_hoff;
-        int key = *ptr;
-        int value = *(ptr + 1);
-        printf("key %d, value %d", key, value);
+
+        int offset = 0;
+        for (int i = 0; i < tupdesc->natts; i++) {
+            FormData_mimi_attribute attr = tupdesc->attr[i];
+
+            int* ptr = ((char*)tup + tup->t_hoff + offset);
+            printf("value: %d", *ptr);
+            offset += attr.length;
+        }
     }
 }
