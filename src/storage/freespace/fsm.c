@@ -18,3 +18,8 @@ void fsm_set_value(Buffer buf, BlockNum usedBlock, Size freeSpace) {
     FSMPage fsm = (FSMPage)PageGetContent(page);
     fsm->items[usedBlock] = freeSpace;
 }
+
+void
+fsm_extend() {
+
+}

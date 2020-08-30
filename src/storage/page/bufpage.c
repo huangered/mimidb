@@ -3,7 +3,11 @@
 #include "util/mctx.h"
 #include "access/offset.h"
 
-void PageInit(Page page, Size pageSize, Size specialSize) {
+/*
+init the raw page
+*/
+void 
+PageInit(Page page, Size pageSize, Size specialSize) {
     memset(page, 0, pageSize);
 
     PageHeader header = PageGetHeader(page);
@@ -14,8 +18,14 @@ void PageInit(Page page, Size pageSize, Size specialSize) {
 
 }
 
+OffsetNumber 
+PageAddItem(Page page, Item item, Size itemsz, OffsetNumber offsetNumber) {
+    // if the offset == invalid, find a new one
+    if (offsetNumber == InvalidOffsetNumber) {
+        offsetNumber = PageGetMaxOffsetNumber(page);
+        offsetNumber = OffsetNumberNext(offsetNumber);
+    }
 
-OffsetNumber PageAddItem(Page page, Item item, Size itemsz, OffsetNumber offsetNumber) {
     PageHeader header = PageGetHeader(page);
     // move item
 

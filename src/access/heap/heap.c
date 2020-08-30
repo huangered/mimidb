@@ -148,6 +148,7 @@ bool heap_insert(Relation rel, HeapTuple htup) {
 // for debug
 void print_heap(Relation rel) {
     BlockNum blkno = rel->root_blkno;
+    TupleDesc tupdesc = rel->tupleDesc;
     Buffer buf = ReadBuffer(rel, MAIN_FORKNUMBER, blkno);
     Page page = BufferGetPage(buf);
     OffsetNumber max = PageGetMaxOffsetNumber(page);
