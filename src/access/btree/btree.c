@@ -83,7 +83,7 @@ Buffer _bt_moveright(Relation rel, BTreeScan key, Buffer buf) {
     return buf;
 }
 
-Buffer _bt_relandgetbuf(Relation rel, Buffer obuf, BlockNum blkno) {
+Buffer _bt_relandgetbuf(Relation rel, Buffer obuf, BlockNumber blkno) {
     ReleaseBuffer(obuf);
     Buffer buffer = ReadBuffer(rel, MAIN_FORKNUMBER, blkno);
     return buffer;

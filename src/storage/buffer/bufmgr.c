@@ -32,7 +32,7 @@ void BufferInit() {
     bufHash = hash_create("local_buf", buftag_hash, buftag_equal, sizeof(BufferTag), sizeof(BufferDesc));
 }
 
-Buffer ReadBuffer(Relation rel, ForkNumber forkNumber, BlockNum blkno) {
+Buffer ReadBuffer(Relation rel, ForkNumber forkNumber, BlockNumber blkno) {
     Buffer buf_id;
     BufferTag tag;
     INIT_BUFFERTAG(tag, rel, forkNumber, blkno);
