@@ -5,7 +5,6 @@
 #include "storage/block.h"
 #include "storage/bufmgr.h"
 
-
 typedef struct FsmAddress {
     int level;
     int block;
