@@ -16,7 +16,6 @@ struct FSMPageData {
 
 typedef struct FSMPageData* FSMPage;
 
-
 extern BlockNum fsm_search_avail(Relation rel, Size spaceNeed);
 extern void fsm_set_value(Relation rel, BlockNum usedBlock, Size freeSpace);
 extern void fsm_extend();

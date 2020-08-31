@@ -47,4 +47,3 @@ void
 fsm_extend(Relation rel, BlockNum block) {
 
 }
-
