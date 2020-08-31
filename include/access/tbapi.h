@@ -9,10 +9,10 @@
 typedef struct HeapScanDescData {
     Relation rel;
 
-    BlockNum num_blocks;    /* max block to scan */
+    BlockNumber num_blocks;    /* max block to scan */
 
     bool inited;        /* false = scan not init'd yet */
-    BlockNum cblock;    /* current block # in scan */
+    BlockNumber cblock;    /* current block # in scan */
     Buffer cbuf;        /* current buf # in scan */
     OffsetNumber offset; /* current offset # in scan */
     int key;

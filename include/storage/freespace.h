@@ -7,7 +7,7 @@
 /*
 find a page with available free space
 */
-BlockNum GetPageWithFreeSpace(Relation rel, Size spaceNeeded);
-void RecordPageWithFreeSpace(Relation rel, BlockNum usedBlock, Size freeSpace);
+BlockNumber GetPageWithFreeSpace(Relation rel, Size spaceNeeded);
+void RecordPageWithFreeSpace(Relation rel, BlockNumber usedBlock, Size freeSpace);
 
 #endif // !_freespace_h_
