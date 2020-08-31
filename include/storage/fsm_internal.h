@@ -29,7 +29,8 @@ struct FSMPageData {
 typedef struct FSMPageData* FSMPage;
 
 extern Buffer fsm_readbuf(Relation rel, FSMAddress addr, bool extend);
-extern BlockNumber fsm_search_avail(Buffer buf, Size spaceNeed);
+extern BlockNumber fsm_search(Buffer buf, Size spaceNeed);
+extern int fsm_search_avail(Buffer buf, Size spaceNeed);
 extern void fsm_set_value(Buffer buf, BlockNumber usedBlock, Size freeSpace);
 extern void fsm_extend(Relation rel, BlockNumber blkno);
 

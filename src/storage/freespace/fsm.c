@@ -3,6 +3,8 @@
 
 static BlockNumber fsm_logic_to_physical(FSMAddress addr);
 
+static BlockNumber fsm_get_heap_blk(FSMAddress addr, int slot);
+static FSMAddress fsm_get_child(FSMAddress addr, int slot);
 /*
 1. find a available block
 2. if no block find , fsm_extend new page and search again
@@ -42,13 +44,35 @@ fsm_readbuf(Relation rel, FSMAddress addr, bool extend) {
     return INVALID_BUFFER;
 }
 
-BlockNumber fsm_search_avail(Buffer buf, Size spaceNeed) {
-    Page page = BufferGetPage(buf);
-    FSMPage fsm = (FSMPage)PageGetContent(page);
+BlockNumber fsm_search(Relation rel, Size spaceNeed) {
+    FSMAddress address = FSM_ROOT_ADDRESS;
 
-    for (int i = 1; i < 100; i++) {
-        if (fsm->fp_nodes[i] > spaceNeed) {
-            return i;
+    for (;;) {
+        int slot;
+        Buffer buf;
+
+        buf = fsm_readbuf(rel, address, false);
+
+        if (!BufferIsInvalid(buf)) {
+            slot = fsm_search_avail(buf, spaceNeed);
+        }
+        else
+            slot = -1;
+
+        if (slot != -1) {
+            if (address.level == FSM_BOTTOM_LEVEL)
+                return fsm_get_heap_blk(address, slot);
+
+            address = fsm_get_child(address, slot);
+        }
+        else if (address.level == FSM_ROOT_LEVEL) {
+            /*
+            at the root, failure means there is no enough space, return invalid.
+            */
+            return INVALID_BLOCK;
+        }
+        else {
+            // create new fsm page
         }
     }
 
@@ -67,6 +91,10 @@ void fsm_set_value(Relation rel, BlockNumber usedBlock, Size freeSpace) {
 void
 fsm_extend(Relation rel, BlockNumber blkno) {
 
+}
+
+int fsm_search_avail(Buffer buf, Size spaceNeed) {
+    return 0;
 }
 
 // private methods
@@ -89,4 +117,11 @@ fsm_logic_to_physical(FSMAddress addr) {
 
     pages -= addr.level;
     return pages - 1;
+}
+
+BlockNumber fsm_get_heap_blk(FSMAddress addr, int slot) {
+    return 0;
+}
+FSMAddress fsm_get_child(FSMAddress addr, int slot) {
+    return FSM_ROOT_ADDRESS;
 }

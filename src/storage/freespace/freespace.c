@@ -5,10 +5,9 @@
 
 
 BlockNumber GetPageWithFreeSpace(Relation rel, Size spaceNeeded) {
-    Buffer buf;
     BlockNumber block;
 
-    block = fsm_search_avail(rel, spaceNeeded);
+    block = fsm_search(rel, spaceNeeded);
 
     return block;
 }
