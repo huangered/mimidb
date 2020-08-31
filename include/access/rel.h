@@ -20,6 +20,8 @@ typedef struct RelationData {
     int refcount;
     TableAmRoute* tb_am;
     IndexAmRoute* index_am;
+
+    struct SMgrRelationData* rd_smgr;
 } RelationData;
 
 

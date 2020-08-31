@@ -16,7 +16,7 @@ BlockNumber GetPageWithFreeSpace(Relation rel, Size spaceNeeded) {
 void RecordPageWithFreeSpace(Relation rel, BlockNumber usedBlock, Size freeSpace) {
     Buffer buf;
     FSMAddress addr;
-    buf = fsm_readbuf(rel, addr);
+    buf = fsm_readbuf(rel, addr, true);
 
     fsm_set_value(buf, usedBlock, freeSpace);
 
