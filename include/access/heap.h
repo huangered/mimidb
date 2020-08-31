@@ -14,7 +14,7 @@ extern bool heapgettuple(HeapScanDesc scan);
 extern bool heapbeginscan(HeapScanDesc scan);
 extern HeapTuple heapgetnext(HeapScanDesc scan);
 extern bool heapendscan(HeapScanDesc scan);
-
+extern void heap_vacuum(Relation rel);
 // for catalog usage
 extern void simple_heap_insert(Relation rel, HeapTuple tup);
 

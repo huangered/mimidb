@@ -10,10 +10,17 @@
 static void AddRelationPgClass(Relation mimiclassdesc, Relation heaprel);
 static void InsertMimiClassTuple(Relation mimiclassdesc, Form_mimi_class heaprel);
 
-Relation heap_create(const char* name, Oid relid, TupleDesc tupDesc) {
+/*
+Create a heap relation
+1. build relation local
+2. create storage folder
+3. add relation tup into mimi_class table
+4. close the relation
+*/
+Relation 
+heap_create(const char* name, Oid relid, TupleDesc tupDesc) {
     Relation pg_class_rel;
     Relation heap_rel;
-
 
     pg_class_rel = relation_open(ClassRelationId);
     // build relation
