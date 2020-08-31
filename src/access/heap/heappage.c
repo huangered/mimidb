@@ -17,21 +17,22 @@ Buffer GetBufferForTuple(Relation rel, Size len) {
         return buf;
     }
 
-    return -1;
+    return INVALID_BUFFER;
 }
 
+/*
+insert the heap tuple into relation
+*/
 void RelationPutHeapTuple(Relation rel, Buffer buf, HeapTuple htup) {
+    OffsetNumber offset;
     Page page = BufferGetPage(buf);
 
     if (PageIsNew(page)) {
         PageInit(page, BLKSZ, 0);
     }
 
-    OffsetNumber max = PageGetMaxOffsetNumber(page);
-    max = OffsetNumberNext(max);
+    offset = PageAddItem(page, (htup->t_data), htup->t_len, InvalidOffsetNumber);
 
     htup->t_data->t_ctid.blocknum = GetBufferDesc(buf)->tag.blockNum;
-    htup->t_data->t_ctid.offset = max;
-
-    PageAddItem(page, (htup->t_data), htup->t_len, max);
+    htup->t_data->t_ctid.offset = offset;
 }

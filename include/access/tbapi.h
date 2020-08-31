@@ -29,6 +29,7 @@ typedef struct TableAmRoute {
     bool (*beginscan)(HeapScanDesc scan);
     HeapTuple (*getnext)(HeapScanDesc scan);
     bool (*endscan)(HeapScanDesc scan);
+    void (*vacuum)(Relation rel);
 } TableAmRoute;
 
 TableAmRoute* table_route();
