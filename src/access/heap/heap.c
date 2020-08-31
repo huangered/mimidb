@@ -18,7 +18,8 @@ static const TableAmRoute route = {
     .tuple_remove = heapremove,
     .beginscan = heapbeginscan,
     .endscan = heapendscan,
-    .getnext = heapgetnext
+    .getnext = heapgetnext,
+    .vacuum = heap_vacuum
 };
 
 TableAmRoute* table_route() {
@@ -128,6 +129,15 @@ bool heapendscan(HeapScanDesc scan) {
 }
 
 /*
+1. run the heap page vacuu
+2. update the fsm page
+*/
+void 
+heap_vacuum(Relation rel) {
+
+}
+
+/*
 for catalog operation
 */
 void
@@ -148,6 +158,7 @@ bool heap_insert(Relation rel, HeapTuple htup) {
 // for debug
 void print_heap(Relation rel) {
     BlockNum blkno = rel->root_blkno;
+    TupleDesc tupdesc = rel->tupleDesc;
     Buffer buf = ReadBuffer(rel, MAIN_FORKNUMBER, blkno);
     Page page = BufferGetPage(buf);
     OffsetNumber max = PageGetMaxOffsetNumber(page);
@@ -156,9 +167,14 @@ void print_heap(Relation rel) {
         Item item = PageGetItem(page, itemid);
         printf("itemid: %d %d", itemid->lp_len, itemid->lp_off);
         HeapTupleHeader tup = (HeapTupleHeader)item;
-        int* ptr = (char*)tup + tup->t_hoff;
-        int key = *ptr;
-        int value = *(ptr + 1);
-        printf("key %d, value %d", key, value);
+
+        int offset = 0;
+        for (int i = 0; i < tupdesc->natts; i++) {
+            FormData_mimi_attribute attr = tupdesc->attr[i];
+
+            int* ptr = ((char*)tup + tup->t_hoff + offset);
+            printf("value: %d", *ptr);
+            offset += attr.length;
+        }
     }
 }
