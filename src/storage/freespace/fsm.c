@@ -1,7 +1,6 @@
 #include "storage/fsm_internal.h"
 
 static Buffer fsm_readbuf(Relation rel);
-static void fsm_extend(Relation rel, BlockNum block);
 
 /*
 1. find a available block
