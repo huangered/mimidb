@@ -13,7 +13,7 @@
 typedef struct RelationData {
     Oid oid;
     int rnode;
-    BlockNum root_blkno;
+    BlockNumber root_blkno;
 
     Form_mimi_class rd_rel; /* relation tuple */
     TupleDesc tupleDesc;    /* retuple descriptor */

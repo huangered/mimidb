@@ -45,8 +45,8 @@ BTStack _bt_search(Relation rel, BTreeScan itup_key, Buffer* bufp) {
     for (;;) {
         Page page;
         OffsetNumber offsetnum;
-        BlockNum blkno;
-        BlockNum par_blkno;
+        BlockNumber blkno;
+        BlockNumber par_blkno;
         IndexTuple itup;
         ItemId itemid;
 

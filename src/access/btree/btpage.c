@@ -36,7 +36,7 @@ Buffer _bt_get_root(Relation rel) {
         rel->root_blkno = metad->root;
     }
 
-    BlockNum blkno = rel->root_blkno;
+    BlockNumber blkno = rel->root_blkno;
     if (blkno == P_NONE) {
         // init new page;
         rootbuf = _bt_get_buf(rel, P_NEW);
@@ -54,7 +54,7 @@ Buffer _bt_get_root(Relation rel) {
     return rootbuf;
 }
 
-Buffer _bt_get_buf(Relation rel, BlockNum blkno) {
+Buffer _bt_get_buf(Relation rel, BlockNumber blkno) {
     Buffer buf;
     if (blkno != P_NEW) {
         buf = ReadBuffer(rel, MAIN_FORKNUMBER, blkno);

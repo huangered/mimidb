@@ -8,7 +8,7 @@
 typedef struct BufTag {
     int rnode;
     ForkNumber forkNum;
-    BlockNum blockNum;
+    BlockNumber blockNum;
 } BufferTag;
 
 typedef struct BuffDesc {

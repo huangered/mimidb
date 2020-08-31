@@ -17,7 +17,7 @@ extern BufferDesc* BuffDesc;
 
 // Init the buffer mgr, share mem alloc
 extern void BufferInit();
-extern Buffer ReadBuffer(Relation rel, ForkNumber forkNumber, BlockNum blkno);
+extern Buffer ReadBuffer(Relation rel, ForkNumber forkNumber, BlockNumber blkno);
 extern void ReleaseBuffer(Buffer buffer);
 
 // for debug

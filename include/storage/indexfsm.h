@@ -5,7 +5,7 @@
 #include "access/rel.h"
 
 // find a free index page
-BlockNum GetFreeIndexPage(Relation rel);
-void RecordUsedIndexPage(Relation rel, BlockNum usedBlock);
+BlockNumber GetFreeIndexPage(Relation rel);
+void RecordUsedIndexPage(Relation rel, BlockNumber usedBlock);
 
 #endif // !_index_fsm_h_

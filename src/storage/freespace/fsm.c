@@ -1,15 +1,20 @@
 #include "storage/fsm_internal.h"
 
-static Buffer fsm_readbuf(Relation rel);
+static BlockNumber fsm_logic_to_physical(FSMAddress addr);
 
 /*
 1. find a available block
 2. if no block find , fsm_extend new page and search again
 */
-BlockNum fsm_search_avail(Relation rel, Size spaceNeed) {
-    Buffer buf;
+Buffer
+fsm_readbuf(Relation rel, FSMAddress addr) {
+    BlockNumber blkno = fsm_logic_to_physical(addr);
+    Buffer      buf;
 
-    buf = fsm_readbuf(rel);
+    return INVALID_BUFFER;
+}
+
+BlockNumber fsm_search_avail(Buffer buf, Size spaceNeed) {
     Page page = BufferGetPage(buf);
     FSMPage fsm = (FSMPage)PageGetContent(page);
 
@@ -22,27 +27,38 @@ BlockNum fsm_search_avail(Relation rel, Size spaceNeed) {
     return INVALID_BLOCK;
 }
 
-void fsm_set_value(Relation rel, BlockNum usedBlock, Size freeSpace) {
+void fsm_set_value(Relation rel, BlockNumber usedBlock, Size freeSpace) {
     Buffer buf;
-
-    buf = fsm_readbuf(rel); 
+    FSMAddress addr;
+    buf = fsm_readbuf(rel, addr); 
     Page page = BufferGetPage(buf);
     FSMPage fsm = (FSMPage)PageGetContent(page);
     fsm->items[usedBlock] = freeSpace;
 }
 
-Buffer fsm_readbuf(Relation rel) {
-    // fsm block num is 0 now.
-    Buffer buf = ReadBuffer(rel, FSM_FORKNUM, 0);
+void
+fsm_extend(Relation rel, BlockNumber blkno) {
 
-    if (PageIsNew(BufferGetPage(buf))) {
-        PageInit(BufferGetPage(buf), BLKSZ, 0);
-    }
-
-    return buf;
 }
 
-void
-fsm_extend(Relation rel, BlockNum block) {
+// private methods
+BlockNumber
+fsm_logic_to_physical(FSMAddress addr) {
+    BlockNumber pages;
+    int         leafno;
+    int         l;
 
+    leafno = addr.logpageno;
+    for (l = 0; l < addr.level; l++) {
+        leafno *= 4;
+    }
+
+    pages = 0;
+    for (l = 0; l < FSM_TREE_DEPTH; l++) {
+        pages += leafno + 1;
+        leafno /= 4;
+    }
+
+    pages -= addr.level;
+    return pages - 1;
 }
