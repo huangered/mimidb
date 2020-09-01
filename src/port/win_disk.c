@@ -1,10 +1,6 @@
 #include "port/disk.h"
 
-#ifdef _WIN32
-#include <Windows.h>
-#include "Shlwapi.h"
-#pragma comment(lib, "Shlwapi.lib")
-#endif
+#include <sys/stat.h>
 
 void mcreate(const char* path) {
     FILE* f = fopen(path, "wb");
@@ -37,5 +33,6 @@ void mclose(FILE* f) {
 }
 
 bool mexist(const char* path) {
-    return PathFileExists(path);
+    struct stat buffer;
+    return (stat(path, &buffer) == 0);
 }
