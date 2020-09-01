@@ -23,8 +23,7 @@ void RecordPageWithFreeSpace(Relation rel, BlockNumber usedBlock, Size freeSpace
 }
 
 void FreeSpaceMapVacuumRange(Relation rel, BlockNumber start, BlockNumber end) {
-    bool dummy;
     if (end > start) {
-        fsm_vacuum_page(rel, FSM_ROOT_ADDRESS, start, end, &dummy);
+        fsm_vacuum_page(rel, FSM_ROOT_ADDRESS, start, end);
     }
 }
