@@ -13,4 +13,10 @@ typedef size_t Size;
 typedef unsigned short uint16;
 typedef unsigned int uint32;
 
+/*
+ * Max
+ *		Return the maximum of two numbers.
+ */
+#define Max(x, y)		((x) > (y) ? (x) : (y))
+
 #endif // !_C_H_

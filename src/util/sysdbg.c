@@ -33,7 +33,7 @@ void pprint(Relation rel, Page page) {
             IndexTuple tuple = (IndexTuple)(PageGetItem(page, PageGetItemId(page, i)));
 
             printf("No-leaf index: %d , off: %d , len: %d , key: %d , blkno: %d\r\n", i, item.lp_off, item.lp_len, tuple->key, tuple->ht_id);
-            BlockNum blkno = tuple->ht_id;
+            BlockNumber blkno = tuple->ht_id;
             Buffer buf = _bt_get_buf(rel, blkno);
             Page p2 = BufferGetPage(buf);
             //pprint(rel, p2);

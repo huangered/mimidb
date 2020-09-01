@@ -12,7 +12,7 @@
 #define BTREE_METAPAGE  0
 
 typedef struct BTreeMetaData {
-    BlockNum root;
+    BlockNumber root;
 } BTreeMetaData;
 
 typedef struct IndexTupleData {
@@ -25,8 +25,8 @@ typedef struct IndexTupleData {
 typedef IndexTupleData* IndexTuple;
 
 typedef struct BTreeSpecialData {
-    BlockNum block_next;
-    BlockNum block_prev;
+    BlockNumber block_next;
+    BlockNumber block_prev;
     uint16 level;
     uint16 flags;
 } BTreeSpecialData;
@@ -34,7 +34,7 @@ typedef struct BTreeSpecialData {
 typedef BTreeSpecialData* BTreeSpecial;
 
 typedef struct BTStackData {
-    BlockNum blkno;
+    BlockNumber blkno;
     OffsetNumber offset;
     struct BTStackData* parent;
 } BTStackData;
@@ -91,10 +91,10 @@ extern void btvacuum(Relation rel);
 // methods in btpage.c
 extern void _bt_init_page(Page page);
 extern Buffer _bt_get_root(Relation rel);
-extern Buffer _bt_get_buf(Relation rel, BlockNum blkno);
+extern Buffer _bt_get_buf(Relation rel, BlockNumber blkno);
 extern Buffer _bt_newroot(Relation rel, Buffer lbuf, Buffer rbuf);
 extern Buffer _bt_moveright(Relation rel, BTreeScan key, Buffer buf);
-extern Buffer _bt_relandgetbuf(Relation rel, Buffer obuf, BlockNum blkno);
+extern Buffer _bt_relandgetbuf(Relation rel, Buffer obuf, BlockNumber blkno);
 
 // methods in btsearch.c
 extern bool _bt_first(IndexScanDesc scan);

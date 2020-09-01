@@ -3,7 +3,7 @@
 #include "storage/bufmgr.h"
 
 Buffer GetBufferForTuple(Relation rel, Size len) {
-    BlockNum blkno;
+    BlockNumber blkno;
     Buffer buf;
 
     blkno = GetPageWithFreeSpace(rel, len);
@@ -11,8 +11,13 @@ Buffer GetBufferForTuple(Relation rel, Size len) {
     if (blkno != INVALID_BLOCK) {
         buf = ReadBuffer(rel, MAIN_FORKNUMBER, blkno);
         Page page = BufferGetPage(buf);
+
+        if (PageIsNew(page)) {
+            PageInit(page, BLKSZ, 0);
+        }
+
         Size avail = PageGetFreeSpace(page) - len;
-        BlockNum blkno = GetBufferDesc(buf)->tag.blockNum;
+        BlockNumber blkno = GetBufferDesc(buf)->tag.blockNum;
         RecordPageWithFreeSpace(rel, blkno, avail);
         return buf;
     }

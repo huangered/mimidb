@@ -2,9 +2,9 @@
 #include "storage/freespace.h"
 #include "storage/page.h"
 
-BlockNum GetFreeIndexPage(Relation rel) {
+BlockNumber GetFreeIndexPage(Relation rel) {
 
-    BlockNum blkno = GetPageWithFreeSpace(rel, BLKSZ / 2);
+    BlockNumber blkno = GetPageWithFreeSpace(rel, BLKSZ / 2);
 
     if (blkno != INVALID_BLOCK) {
         RecordUsedIndexPage(rel, blkno);
@@ -13,6 +13,6 @@ BlockNum GetFreeIndexPage(Relation rel) {
     return blkno;
 }
 
-void RecordUsedIndexPage(Relation rel, BlockNum usedBlock) {
+void RecordUsedIndexPage(Relation rel, BlockNumber usedBlock) {
     RecordPageWithFreeSpace(rel, usedBlock, 0);
 }

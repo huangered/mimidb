@@ -40,7 +40,7 @@ bool heap_tuple_insert(Relation rel, TupleSlotDesc* slot) {
 }
 bool heapremove(Relation rel, int key) {
 
-    BlockNum blkNum = 0;
+    BlockNumber blkNum = 0;
     int offset = 0;
     int cur_tran = 0xffff;
     Buffer buf = ReadBuffer(rel, MAIN_FORKNUMBER, blkNum);
@@ -68,13 +68,13 @@ bool heapremove(Relation rel, int key) {
 }
 bool heapgettuple(HeapScanDesc scan) {
 
-    BlockNum blkno;
+    BlockNumber blkno;
     OffsetNumber offset;
     Page page;
     Buffer buf;
 
     if (!scan->inited) {
-        BlockNum start = 1;
+        BlockNumber start = 0;
         blkno = start;
         offset = FirstOffsetNumber;
         scan->inited = true;
@@ -157,7 +157,7 @@ bool heap_insert(Relation rel, HeapTuple htup) {
 
 // for debug
 void print_heap(Relation rel) {
-    BlockNum blkno = rel->root_blkno;
+    BlockNumber blkno = rel->root_blkno;
     TupleDesc tupdesc = rel->tupleDesc;
     Buffer buf = ReadBuffer(rel, MAIN_FORKNUMBER, blkno);
     Page page = BufferGetPage(buf);
@@ -165,7 +165,7 @@ void print_heap(Relation rel) {
     for (OffsetNumber offset = 1; offset <= max; offset++) {
         ItemId itemid = PageGetItemId(page, offset);
         Item item = PageGetItem(page, itemid);
-        printf("itemid: %d %d", itemid->lp_len, itemid->lp_off);
+        printf("\r\nitemid: %d %d\r\n", itemid->lp_len, itemid->lp_off);
         HeapTupleHeader tup = (HeapTupleHeader)item;
 
         int offset = 0;
