@@ -311,8 +311,7 @@ fsm_vacuum_page(Relation rel, FSMAddress addr, BlockNumber start, BlockNumber en
             /* After we hit end-of-file, just clear the rest of the slots */
             if (!eof)
                 child_avail = fsm_vacuum_page(rel, fsm_get_child(addr, slot),
-                    start, end,
-                    &eof);
+                    start, end);
             else
                 child_avail = 0;
 
