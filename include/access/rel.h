@@ -22,6 +22,7 @@ typedef struct RelationData {
     IndexAmRoute* index_am;
 
     struct SMgrRelationData* rd_smgr;
+
 } RelationData;
 
 

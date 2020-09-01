@@ -16,5 +16,7 @@ TEST(fd, basic)
     char* other = (char*)malloc(BLKSZ);
     memset(other, 0, BLKSZ);
     file_read(one1, 0, other);
+    int size = file_size(one1);
+    EXPECT_EQ(size, BLKSZ);
     file_close(one1);
 }

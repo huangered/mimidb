@@ -6,6 +6,7 @@ _EXTERN_C
 #include "util/mctx.h"
 #include "storage/bufmgr.h"
 #include "storage/freespace.h"
+#include "storage/smgr.h"
 #include "catalog/mimi_code.h"
 
 _END_EXTERN_C
@@ -16,10 +17,11 @@ TEST(Catalog, heap) {
 
     Relation mrel = (Relation)palloc(sizeof(RelationData));
     mrel->rnode = ClassRelationId;
+    mrel->rd_smgr = (SmgrRelation)palloc(sizeof(SMgrRelationData));
+    mrel->rd_smgr->smgr_fsm_nblocks = 0;
 
-    for (int i = 0; i < 100; i++) {
-        RecordPageWithFreeSpace(mrel, i, BLKSZ);
-    }
+    RecordPageWithFreeSpace(mrel, 0, BLKSZ);
+    FreeSpaceMapVacuumRange(mrel, 0, 1);
 
     pfree(mrel);
 

@@ -11,6 +11,11 @@ Buffer GetBufferForTuple(Relation rel, Size len) {
     if (blkno != INVALID_BLOCK) {
         buf = ReadBuffer(rel, MAIN_FORKNUMBER, blkno);
         Page page = BufferGetPage(buf);
+
+        if (PageIsNew(page)) {
+            PageInit(page, BLKSZ, 0);
+        }
+
         Size avail = PageGetFreeSpace(page) - len;
         BlockNumber blkno = GetBufferDesc(buf)->tag.blockNum;
         RecordPageWithFreeSpace(rel, blkno, avail);
