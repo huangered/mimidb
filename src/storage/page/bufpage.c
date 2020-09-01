@@ -5,6 +5,8 @@
 
 /*
 init the raw page
+1. set the page header
+2. set the page version
 */
 void 
 PageInit(Page page, Size pageSize, Size specialSize) {

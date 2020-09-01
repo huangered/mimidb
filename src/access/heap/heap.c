@@ -74,7 +74,7 @@ bool heapgettuple(HeapScanDesc scan) {
     Buffer buf;
 
     if (!scan->inited) {
-        BlockNumber start = 1;
+        BlockNumber start = 0;
         blkno = start;
         offset = FirstOffsetNumber;
         scan->inited = true;
@@ -165,7 +165,7 @@ void print_heap(Relation rel) {
     for (OffsetNumber offset = 1; offset <= max; offset++) {
         ItemId itemid = PageGetItemId(page, offset);
         Item item = PageGetItem(page, itemid);
-        printf("itemid: %d %d", itemid->lp_len, itemid->lp_off);
+        printf("\r\nitemid: %d %d\r\n", itemid->lp_len, itemid->lp_off);
         HeapTupleHeader tup = (HeapTupleHeader)item;
 
         int offset = 0;

@@ -13,10 +13,18 @@ BlockNumber GetPageWithFreeSpace(Relation rel, Size spaceNeeded) {
 }
 
 void RecordPageWithFreeSpace(Relation rel, BlockNumber usedBlock, Size freeSpace) {
-    Buffer buf;
+
     FSMAddress addr;
-    buf = fsm_readbuf(rel, addr, true);
+    int slot = 0;
 
-    fsm_set_value(buf, usedBlock, freeSpace);
+    addr = fsm_get_location(usedBlock, &slot);
+    fsm_set_and_search(rel, addr, slot, freeSpace, 0);
 
+}
+
+void FreeSpaceMapVacuumRange(Relation rel, BlockNumber start, BlockNumber end) {
+    bool dummy;
+    if (end > start) {
+        fsm_vacuum_page(rel, FSM_ROOT_ADDRESS, start, end, &dummy);
+    }
 }

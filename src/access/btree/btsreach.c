@@ -43,7 +43,7 @@ OffsetNumber _bt_binsrch(Relation rel, Page page, BTreeScan key) {
 bool _bt_first(IndexScanDesc scan) {
     // bin_srch the point
     BTStack stack = NULL;
-    BlockNumber blkno;
+    
     OffsetNumber offset;
     Buffer buf;
     
