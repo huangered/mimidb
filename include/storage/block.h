@@ -3,7 +3,7 @@
 
 #include "mimi.h"
 
-typedef uint32 BlockNum;
+typedef uint32 BlockNumber;
 
 #define INVALID_BLOCK   0xffff
 

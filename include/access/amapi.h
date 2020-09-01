@@ -10,7 +10,7 @@ typedef struct IndexScanDescData {
     Relation index_rel;
     int key;
     int value;
-    BlockNum block;
+    BlockNumber block;
     OffsetNumber offset;
 } IndexScanDescData;
 

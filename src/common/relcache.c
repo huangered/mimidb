@@ -6,6 +6,7 @@
 #include "catalog/mimi_code.h"
 #include "util/mctx.h"
 #include "access/heaptuple.h"
+#include "storage/smgr.h"
 
 Hash* relhash;
 
@@ -129,6 +130,8 @@ void formrdesc(const char* relname, Oid reltype, int natts, const FormData_mimi_
         memcpy(&rel->tupleDesc->attr[i], attr, sizeof(FormData_mimi_attribute));
 
     }
+    rel->rd_smgr = palloc(sizeof(SMgrRelationData));
+    rel->rd_smgr->smgr_fsm_nblocks = 0;
     relationCacheInsert(rel);
 }
 
