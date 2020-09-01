@@ -11,7 +11,11 @@
 #define FSM_ROOT_LEVEL      (FSM_TREE_DEPTH - 1)
 #define FSM_BOTTOM_LEVEL    0
 
-#define FLEXIBLE_ARRAY_MEMBER
+#define FLEXIBLE_ARRAY_MEMBER 7
+
+#define NodesPerPage            7
+#define NonLeafNodesPerPage     3
+#define LeafNodesPerPage        (NodesPerPage - NonLeafNodesPerPage)
 
 typedef struct FsmAddress {
     int level;      /* level */
@@ -29,9 +33,12 @@ struct FSMPageData {
 typedef struct FSMPageData* FSMPage;
 
 extern Buffer fsm_readbuf(Relation rel, FSMAddress addr, bool extend);
-extern BlockNumber fsm_search(Buffer buf, Size spaceNeed);
+extern BlockNumber fsm_search(Relation rel, Size spaceNeed);
 extern int fsm_search_avail(Buffer buf, Size spaceNeed);
-extern void fsm_set_value(Buffer buf, BlockNumber usedBlock, Size freeSpace);
+extern int fsm_get_avail(Page page, int slot);
+extern bool fsm_set_avail(Page page, int slot, int value);
 extern void fsm_extend(Relation rel, BlockNumber blkno);
-
+int fsm_set_and_search(Relation rel, FSMAddress addr, int slot, int newValue, int minValue);
+FSMAddress fsm_get_location(BlockNumber heapblk, int* slot);
+int fsm_vacuum_page(Relation rel, FSMAddress addr, BlockNumber start, BlockNumber end);
 #endif // !_fsm_internal_h_

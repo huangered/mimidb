@@ -10,4 +10,5 @@ find a page with available free space
 BlockNumber GetPageWithFreeSpace(Relation rel, Size spaceNeeded);
 void RecordPageWithFreeSpace(Relation rel, BlockNumber usedBlock, Size freeSpace);
 
+void FreeSpaceMapVacuumRange(Relation rel, BlockNumber start, BlockNumber end);
 #endif // !_freespace_h_
