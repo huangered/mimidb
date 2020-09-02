@@ -7,13 +7,16 @@
 #include "storage/page.h"
 #include "storage/buf_internals.h"
 #include "storage/buf.h"
+#include "util/hash.h"
 
 extern char* BufferBlocks;
 extern BufferDesc* BuffDesc;
+extern Hash* bufHash;
+extern BufferDesc* freeBuffDesc;
 
-#define BufferGetBlock(buffer)  (BufferBlocks + (Size)buffer * BLKSZ)
+#define BufferGetBlock(buffer)  (void*)(BufferBlocks + (Size)(buffer - 1) * BLKSZ)
 #define BufferGetPage(buffer)   ((Page)BufferGetBlock(buffer))
-#define GetBufferDesc(buf_id)   (BuffDesc + buf_id)
+#define GetBufferDesc(buf_id)   (&BuffDesc[buf_id])
 
 // Init the buffer mgr, share mem alloc
 extern void BufferInit();
