@@ -2,15 +2,16 @@
 #include "util/mctx.h"
 #include "storage/indexfsm.h"
 
-IndexAmRoute* buildRoute() {
-    IndexAmRoute* route = palloc(sizeof(IndexAmRoute));
-    route->ambuildempty = btbuildempty;
-    route->aminsert = btinsert;
-    route->amremove = btremove;
-    route->amgettuple = btgettuple;
-    route->amvacuum = btvacuum;
+static const IndexAmRoute route = {
+    .ambuildempty = btbuildempty,
+    .aminsert = btinsert,
+    .amremove = btremove,
+    .amgettuple = btgettuple,
+    .amvacuum = btvacuum
+};
 
-    return route;
+IndexAmRoute* buildRoute() {
+    return &route;
 }
 
 void btbuildempty(Relation rel) {
