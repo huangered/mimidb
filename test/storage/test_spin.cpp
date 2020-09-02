@@ -7,7 +7,7 @@ _EXTERN_C
 _END_EXTERN_C
 
 // test the basic usage in buff mgr.
-TEST(spin, spin)
+TEST(Storage, spin)
 {
     slock_t a;
     SpinLockInit(&a);
