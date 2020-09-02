@@ -16,8 +16,6 @@ typedef struct IndexScanDescData {
 
 typedef IndexScanDescData* IndexScanDesc;
 
-
-
 typedef struct IndexAmRoute {
     void (*ambuildempty)(Relation rel);
     bool (*aminsert)(Relation rel, int key, int ht_id);

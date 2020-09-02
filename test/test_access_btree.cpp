@@ -35,7 +35,6 @@ TEST(btree, incr_insert)
     }
 
     //debug_rel(rel);
-    pfree(rel->index_am);
     pfree(rel->rd_smgr);
     pfree(rel);
 }
@@ -78,7 +77,6 @@ TEST(btree, decr_insert)
         EXPECT_FALSE(result);
         pfree(scan);
     }
-    pfree(rel->index_am);
     pfree(rel->rd_smgr);
     pfree(rel);
 }
