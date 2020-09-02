@@ -97,13 +97,13 @@ fsm_get_avail(Page page, int slot) {
     FSMPage		fsmpage = (FSMPage)PageGetContent(page);
 
 
-    return fsmpage->fp_nodes[3 + slot];
+    return fsmpage->fp_nodes[NonLeafNodesPerPage + slot];
 }
 
 bool
 fsm_set_avail(Page page, int slot, int value) {
     
-    int nodeno = slot + 3;
+    int nodeno = slot + NonLeafNodesPerPage;
     FSMPage fsmpage = (FSMPage)PageGetContent(page);
     int oldvalue;
 
@@ -116,16 +116,16 @@ fsm_set_avail(Page page, int slot, int value) {
 
     do
     {
-        int		newvalue = 0;
-        int			lchild;
-        int			rchild;
+        int newvalue = 0;
+        int lchild;
+        int rchild;
 
         nodeno = parentof(nodeno);
         lchild = left_children(nodeno);
         rchild = lchild + 1;
 
         newvalue = fsmpage->fp_nodes[lchild];
-        if (rchild < 7)
+        if (rchild < NodesPerPage)
             newvalue = Max(newvalue,
                 fsmpage->fp_nodes[rchild]);
 
@@ -144,7 +144,7 @@ fsm_extend(Relation rel, BlockNumber blkno) {
     char data[BLKSZ];
     PageInit(&data, BLKSZ, 0);
 
-    int fsm_blocks = smgrblocks(rel, FSM_FORKNUM);
+    BlockNumber fsm_blocks = smgrblocks(rel, FSM_FORKNUM);
     while (fsm_blocks < blkno) {
         smgrextend(rel, &data, fsm_blocks, FSM_FORKNUM);
         fsm_blocks++;
@@ -163,7 +163,7 @@ int fsm_search_avail(Buffer buf, Size spaceNeed) {
         return -1;
     }
 
-    while (no < 3) {
+    while (no < NonLeafNodesPerPage) {
         int left = left_children(no);
         int right = right_children(no);
         if (fsm->fp_nodes[left] >= spaceNeed) {
@@ -173,7 +173,7 @@ int fsm_search_avail(Buffer buf, Size spaceNeed) {
             no = right;
         }
     }
-    slot = no - 3;
+    slot = no - NonLeafNodesPerPage;
 
     return slot;
 }
@@ -187,13 +187,13 @@ fsm_logic_to_physical(FSMAddress addr) {
 
     leafno = addr.logpageno;
     for (l = 0; l < addr.level; l++) {
-        leafno *= 4;
+        leafno *= LeafNodesPerPage;
     }
 
     pages = 0;
     for (l = 0; l < FSM_TREE_DEPTH; l++) {
         pages += leafno + 1;
-        leafno /= 4;
+        leafno /= LeafNodesPerPage;
     }
 
     pages -= addr.level;
@@ -204,12 +204,12 @@ fsm_logic_to_physical(FSMAddress addr) {
 get real block number
 */
 BlockNumber fsm_get_heap_blk(FSMAddress addr, int slot) {
-    return addr.logpageno * 4 + slot;
+    return addr.logpageno * LeafNodesPerPage + slot;
 }
 FSMAddress fsm_get_child(FSMAddress addr, int slot) {
     FSMAddress child;
     child.level = addr.level - 1;
-    child.logpageno = addr.logpageno * 4 + slot;
+    child.logpageno = addr.logpageno * LeafNodesPerPage + slot;
     return child;
 }
 
@@ -218,8 +218,8 @@ fsm_get_parent(FSMAddress child, int* slot) {
     FSMAddress parent;
 
     parent.level = child.level + 1;
-    parent.logpageno = child.logpageno / 4;
-    *slot = child.logpageno % 4;
+    parent.logpageno = child.logpageno / LeafNodesPerPage;
+    *slot = child.logpageno % LeafNodesPerPage;
 
     return parent;
 }
@@ -244,8 +244,8 @@ fsm_get_location(BlockNumber heapblk, int* slot) {
     FSMAddress	addr;
 
     addr.level = FSM_BOTTOM_LEVEL;
-    addr.logpageno = heapblk / 4;
-    *slot = heapblk % 4;
+    addr.logpageno = heapblk / LeafNodesPerPage;
+    *slot = heapblk % LeafNodesPerPage;
 
     return addr;
 }
@@ -265,14 +265,14 @@ fsm_vacuum_page(Relation rel, FSMAddress addr, BlockNumber start, BlockNumber en
     page = BufferGetPage(buf);
 
     if (addr.level > FSM_BOTTOM_LEVEL) {
-        FSMAddress	fsm_start,
-            fsm_end;
-        int		fsm_start_slot,
+        FSMAddress fsm_start,
+                   fsm_end;
+        int fsm_start_slot,
             fsm_end_slot;
-        int			slot,
+        int slot,
             start_slot,
             end_slot;
-        bool		eof = false;
+        bool eof = false;
 
         /*
          * Compute the range of slots we need to update on this page, given
@@ -293,14 +293,14 @@ fsm_vacuum_page(Relation rel, FSMAddress addr, BlockNumber start, BlockNumber en
         if (fsm_start.logpageno == addr.logpageno)
             start_slot = fsm_start_slot;
         else if (fsm_start.logpageno > addr.logpageno)
-            start_slot = 4;	/* shouldn't get here... */
+            start_slot = LeafNodesPerPage;	/* shouldn't get here... */
         else
             start_slot = 0;
 
         if (fsm_end.logpageno == addr.logpageno)
             end_slot = fsm_end_slot;
         else if (fsm_end.logpageno > addr.logpageno)
-            end_slot = 4 - 1;
+            end_slot = LeafNodesPerPage - 1;
         else
             end_slot = -1;		/* shouldn't get here... */
 
