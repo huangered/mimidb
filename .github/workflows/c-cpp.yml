@@ -18,4 +18,4 @@ jobs:
     - name: make
       run: cmake --build .
     - name: make check
-      run: ./test/unittest
+      run: ./bin/unittest
