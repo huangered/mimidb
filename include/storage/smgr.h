@@ -13,6 +13,7 @@ typedef struct SMgrRelationData {
 typedef SMgrRelationData* SmgrRelation;
 
 extern bool smgrexists(Relation rel, ForkNumber number);
+extern void smgrcreate(Relation rel, ForkNumber number);
 extern BlockNumber smgrblocks(Relation rel, ForkNumber number);
 extern void smgrextend(Relation rel, Page page, BlockNumber blkno, ForkNumber number);
 #endif // !_smgr_h_

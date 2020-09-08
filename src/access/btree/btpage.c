@@ -57,12 +57,12 @@ Buffer _bt_get_root(Relation rel) {
 Buffer _bt_get_buf(Relation rel, BlockNumber blkno) {
     Buffer buf;
     if (blkno != P_NEW) {
-        buf = ReadBuffer(rel, MAIN_FORKNUMBER, blkno);
+        buf = ReadBuffer(rel, MAIN_FORKNUM, blkno);
     }
     else {
         // create new block for cbtree
         blkno = GetFreeIndexPage(rel);
-        buf = ReadBuffer(rel, MAIN_FORKNUMBER, blkno);
+        buf = ReadBuffer(rel, MAIN_FORKNUM, blkno);
         Page page = BufferGetPage(buf);
         _bt_init_page(page);
     }

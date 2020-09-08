@@ -9,13 +9,15 @@
 #include "storage/buf.h"
 #include "util/hash.h"
 
-extern int NBuffer;
+extern int NBuffers;
 extern char* BufferBlocks;
 extern BufferDesc* BuffDesc;
 extern Hash* bufHash;
 extern BufferDesc* freeBuffDesc;
 
-#define BufferGetBlock(buffer)  (void*)(BufferBlocks + ((buffer) - 1) * BLKSZ)
+typedef void* Block;
+
+#define BufferGetBlock(buffer)  (Block)(BufferBlocks + ((buffer) - 1) * BLKSZ)
 #define BufferGetPage(buffer)   ((Page)BufferGetBlock(buffer))
 #define GetBufferDesc(buf_id)   (&BuffDesc[buf_id])
 

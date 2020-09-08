@@ -22,7 +22,7 @@ void btbuildempty(Relation rel) {
     metad->root = P_NONE;
 
     // write to local file system
-    Buffer buf = ReadBuffer(rel, MAIN_FORKNUMBER, BTREE_METAPAGE);
+    Buffer buf = ReadBuffer(rel, MAIN_FORKNUM, BTREE_METAPAGE);
     Page page = BufferGetPage(buf);
     memcpy(page, metap, BLKSZ);
     pfree(metap);
@@ -86,6 +86,6 @@ Buffer _bt_moveright(Relation rel, BTreeScan key, Buffer buf) {
 
 Buffer _bt_relandgetbuf(Relation rel, Buffer obuf, BlockNumber blkno) {
     ReleaseBuffer(obuf);
-    Buffer buffer = ReadBuffer(rel, MAIN_FORKNUMBER, blkno);
+    Buffer buffer = ReadBuffer(rel, MAIN_FORKNUM, blkno);
     return buffer;
 }

@@ -11,20 +11,20 @@ BufferDesc* freeBuffDesc;
 Hash* bufHash;
 
 void BufferInit() {
-    Size size = (Size)NBuffer * BLKSZ;
+    Size size = (Size)NBuffers * BLKSZ;
     // will use shmem_init in the future
     BufferBlocks = palloc(size);
     memset(BufferBlocks, 0, size);
     // will use shmem_init in the future
-    BuffDesc = palloc(NBuffer * sizeof(BufferDesc));
-    memset(BuffDesc, 0, NBuffer * sizeof(BufferDesc));
+    BuffDesc = palloc(NBuffers * sizeof(BufferDesc));
+    memset(BuffDesc, 0, NBuffers * sizeof(BufferDesc));
 
-    for (int i = 0; i < NBuffer; i++) {
+    for (int i = 0; i < NBuffers; i++) {
         BuffDesc[i].buf_id = i;
         BuffDesc[i].freeNext = i + 1;
         BuffDesc[i].state = 0;
     }
-    BuffDesc[NBuffer - 1].freeNext = -1;
+    BuffDesc[NBuffers - 1].freeNext = -1;
     freeBuffDesc = BuffDesc;
     bufHash = hash_create("local_buf", buftag_hash, buftag_equal, sizeof(BufferTag), sizeof(BufferDesc));
 }
