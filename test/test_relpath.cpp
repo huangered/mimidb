@@ -8,7 +8,7 @@ _END_EXTERN_C
 
 TEST(Common, relpath_main)
 {
-    char* path = GetRelPath(1, ForkNumber::MAIN_FORKNUMBER);
+    char* path = GetRelPath(1, ForkNumber::MAIN_FORKNUM);
     EXPECT_STREQ("1_main", path);
     pfree(path);
 }
