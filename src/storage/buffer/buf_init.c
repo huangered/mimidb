@@ -5,7 +5,6 @@
 #include "util/hash.h"
 #include "storage/fd.h"
 
-#define NBuffer     16
 char* BufferBlocks = NULL;
 BufferDesc* BuffDesc = NULL;
 BufferDesc* freeBuffDesc;

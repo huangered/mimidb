@@ -5,7 +5,7 @@
 #include "storage/itemid.h"
 #include "access/offset.h"
 
-#define BLKSZ   8012
+#define BLKSZ   8192
 
 typedef char* Page;
 
