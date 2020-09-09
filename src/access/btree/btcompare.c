@@ -1,15 +1,17 @@
 #include "access/btree.h"
+#include "util/builtins.h"
 
-int _bt_compare(Relation rel, BTreeScan key, Page page, OffsetNumber offset) {
-    ItemId itemId = PageGetItemId(page, offset);
+Datum intcmp(FunctionCallInfo fcinfo) {
+    int a = fcinfo->args[0];
+    int b = fcinfo->args[1];
 
-    BTreeSpecial special = (BTreeSpecial)PageGetSpecial(page);
-
-    if (!P_ISLEAF(special) && offset == P_FIRSTDATAKEY(special)) {
-        return 1;
+    if (a > b) {
+        return (Datum)1;
     }
-
-    IndexTuple itup = (IndexTuple)PageGetItem(page, itemId);
-
-    return key->scankeys[0].sk_comp(itup->key, key->itup->key);
+    else if (a == b) {
+        return (Datum)0;
+    }
+    else {
+        return (Datum)(-1);
+    }
 }
