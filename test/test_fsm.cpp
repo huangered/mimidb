@@ -29,6 +29,6 @@ TEST(fsm, leaf)
     rel.rd_smgr->smgr_fsm_nblocks = 0;
     RecordPageWithFreeSpace(&rel, 0, BLKSZ);
     FreeSpaceMapVacuumRange(&rel, 0, 1);
-    Buffer buf = fsm_search(&rel, 1024);
-    printf("buf %d", buf);
+    BlockNumber blk = fsm_search(&rel, 1024);
+    EXPECT_EQ(blk, 0);
 }

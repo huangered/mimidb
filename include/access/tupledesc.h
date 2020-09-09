@@ -13,5 +13,8 @@ typedef struct TupleDescData {
 typedef struct TupleDescData* TupleDesc;
 
 extern TupleDesc CreateTempTupleDesc(int natts);
+extern TupleDesc CreateTupleDesc(int natts, Form_mimi_attribute* attrs);
+
+extern void FreeTupleDesc(TupleDesc tupdesc);
 
 #endif // !_TupleDesc_h_

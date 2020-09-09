@@ -59,7 +59,7 @@ BlockNumber fsm_search(Relation rel, Size spaceNeed) {
 
         buf = fsm_readbuf(rel, address, false);
 
-        if (!BufferIsInvalid(buf)) {
+        if (BufferIsValid(buf)) {
             slot = fsm_search_avail(buf, spaceNeed);
         }
         else
@@ -94,7 +94,7 @@ BlockNumber fsm_search(Relation rel, Size spaceNeed) {
 
 int
 fsm_get_avail(Page page, int slot) {
-    FSMPage		fsmpage = (FSMPage)PageGetContent(page);
+    FSMPage fsmpage = (FSMPage)PageGetContent(page);
 
 
     return fsmpage->fp_nodes[NonLeafNodesPerPage + slot];
@@ -323,7 +323,7 @@ fsm_vacuum_page(Relation rel, FSMAddress addr, BlockNumber start, BlockNumber en
         }
     }
 
-    FSMPage		fsmpage = (FSMPage)PageGetContent(page);
+    FSMPage fsmpage = (FSMPage)PageGetContent(page);
 
     max_avail = fsmpage->fp_nodes[0];
 
