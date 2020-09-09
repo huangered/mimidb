@@ -9,7 +9,7 @@ Buffer GetBufferForTuple(Relation rel, Size len) {
     blkno = GetPageWithFreeSpace(rel, len);
 
     if (blkno != INVALID_BLOCK) {
-        buf = ReadBuffer(rel, MAIN_FORKNUMBER, blkno);
+        buf = ReadBuffer(rel, MAIN_FORKNUM, blkno);
         Page page = BufferGetPage(buf);
 
         if (PageIsNew(page)) {

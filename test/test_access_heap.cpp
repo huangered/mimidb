@@ -36,7 +36,7 @@ TEST(heap, incr_insert)
     FreeSpaceMapVacuumRange(rel, 0, 1);
 
     for (int i = 0; i < 10; i++) {
-        printf("%d\r\n", i);
+        //printf("%d\r\n", i);
         TupleSlotDesc* slot = (TupleSlotDesc*)palloc(sizeof(TupleSlotDesc));
         slot->key = i;
         slot->value = i;
@@ -45,7 +45,7 @@ TEST(heap, incr_insert)
         pfree(slot);
     }
 
-    print_heap(rel);
+    //print_heap(rel);
 
     HeapScanDesc scan = (HeapScanDesc)palloc(sizeof(HeapScanDescData));
     scan->rel = rel;

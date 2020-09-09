@@ -43,7 +43,7 @@ bool heapremove(Relation rel, int key) {
     BlockNumber blkNum = 0;
     int offset = 0;
     int cur_tran = 0xffff;
-    Buffer buf = ReadBuffer(rel, MAIN_FORKNUMBER, blkNum);
+    Buffer buf = ReadBuffer(rel, MAIN_FORKNUM, blkNum);
 
     Page page = BufferGetPage(buf);
 
@@ -89,7 +89,7 @@ bool heapgettuple(HeapScanDesc scan) {
             return false;
         }
 
-        buf = ReadBuffer(scan->rel, MAIN_FORKNUMBER, blkno);
+        buf = ReadBuffer(scan->rel, MAIN_FORKNUM, blkno);
 
         Page page = BufferGetPage(buf);
         OffsetNumber max = PageGetMaxOffsetNumber(page);
@@ -159,7 +159,7 @@ bool heap_insert(Relation rel, HeapTuple htup) {
 void print_heap(Relation rel) {
     BlockNumber blkno = rel->root_blkno;
     TupleDesc tupdesc = rel->tupleDesc;
-    Buffer buf = ReadBuffer(rel, MAIN_FORKNUMBER, blkno);
+    Buffer buf = ReadBuffer(rel, MAIN_FORKNUM, blkno);
     Page page = BufferGetPage(buf);
     OffsetNumber max = PageGetMaxOffsetNumber(page);
     for (OffsetNumber offset = 1; offset <= max; offset++) {

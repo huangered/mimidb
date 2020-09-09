@@ -14,6 +14,14 @@ bool smgrexists(Relation rel, ForkNumber number) {
     return result;
 }
 
+void
+smgrcreate(Relation rel, ForkNumber number) {
+    char* path = GetRelPath(rel->rnode, number);
+    file_init(path);
+    pfree(path);
+}
+
+
 BlockNumber smgrblocks(Relation rel, ForkNumber number) {
     char* path = GetRelPath(rel->rnode, number);
 

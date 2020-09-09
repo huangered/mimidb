@@ -100,3 +100,37 @@ bool _bt_next(IndexScanDesc scan) {
 
     return false;
 }
+
+int _bt_compare(Relation rel, BTreeScan key, Page page, OffsetNumber offset) {
+    int result;
+    int keysz;
+    ScanKey skey;
+
+    ItemId itemId = PageGetItemId(page, offset);
+
+    BTreeSpecial special = (BTreeSpecial)PageGetSpecial(page);
+
+    if (!P_ISLEAF(special) && offset == P_FIRSTDATAKEY(special)) {
+        return 1;
+    }
+
+    IndexTuple itup = (IndexTuple)PageGetItem(page, itemId);
+
+    keysz = key->keysz;
+    skey = key->scankeys;
+    
+    for (int i = 0; i < keysz; i++) {
+
+        FmgrInfo info = skey->sk_func;
+
+        Datum result = DirectFunctionCall2Coll(info.fn_addr, itup->key, key->itup->key);
+
+        result = DatumGetInt(result);
+
+        if (result != 0) {
+            return result;
+        }
+    }
+
+    return 0;
+}
