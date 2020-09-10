@@ -102,7 +102,7 @@ bool _bt_next(IndexScanDesc scan) {
 }
 
 int _bt_compare(Relation rel, BTreeScan key, Page page, OffsetNumber offset) {
-    int result;
+
     int keysz;
     ScanKey skey;
 

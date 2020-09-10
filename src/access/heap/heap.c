@@ -153,6 +153,8 @@ bool heap_insert(Relation rel, HeapTuple htup) {
     buffer = GetBufferForTuple(rel, htup->t_len);
 
     RelationPutHeapTuple(rel, buffer, htup);
+
+    return true;
 }
 
 // for debug

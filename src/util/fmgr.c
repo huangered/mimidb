@@ -8,7 +8,8 @@ typedef struct FmgrBuildin {
 }FmgrBuildin;
 
 const FmgrBuildin fmgr_buildins[] = {
-    {0, "int32cmp", int32cmp},
+    {0, "int8cmp", int8cmp},
+    {0, "int16cmp", int16cmp},
     {1, "int32cmp", int32cmp}
 };
 
