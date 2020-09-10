@@ -8,8 +8,8 @@ typedef struct FmgrBuildin {
 }FmgrBuildin;
 
 const FmgrBuildin fmgr_buildins[] = {
-    {0, "intcmp", intcmp},
-    {1, "intcmp", intcmp}
+    {0, "int32cmp", int32cmp},
+    {1, "int32cmp", int32cmp}
 };
 
 static FmgrBuildin* fmgr_isbuildin(Oid functionId) {

@@ -1,10 +1,10 @@
 #include "access/btree.h"
 #include "util/builtins.h"
 
-Datum intcmp(FunctionCallInfo fcinfo) {
-    int a = fcinfo->args[0];
-    int b = fcinfo->args[1];
-
+Datum int32cmp(FunctionCallInfo fcinfo) {
+    int32_t a = fcinfo->args[0];
+    int32_t b = fcinfo->args[1];
+    
     if (a > b) {
         return (Datum)1;
     }

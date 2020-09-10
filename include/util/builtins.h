@@ -4,6 +4,8 @@
 #include "mimi.h"
 #include "util/fmgr.h"
 
-extern Datum intcmp(FunctionCallInfo fcinfo);
+extern Datum int8cmp(FunctionCallInfo fcinfo);
+extern Datum int16cmp(FunctionCallInfo fcinfo);
+extern Datum int32cmp(FunctionCallInfo fcinfo);
 
 #endif;
