@@ -12,4 +12,7 @@ typedef uintptr_t Datum;
 
 #define NAME_LIMIT  64
 
+#define TYPEALIGN(ALIGNVAL,LEN)  \
+	(((uintptr_t) (LEN) + ((ALIGNVAL) - 1)) & ~((uintptr_t) ((ALIGNVAL) - 1)))
+
 #endif
