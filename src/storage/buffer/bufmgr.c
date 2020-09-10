@@ -34,20 +34,8 @@ BufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno) {
     }
     // if find, return
     // create new one and find a valid buffdesc or find a victim;
-    while (true) {
 
-        if (freeBuffDesc != NULL) {
-            BufferDesc* bd = freeBuffDesc;
-            freeBuffDesc = BuffDesc + freeBuffDesc->freeNext;
-            bd->freeNext = -1;
-            bd->tag = tag;
-            buf_id = bd->buf_id;
-            break;
-        }
-        else {
-            // find victim to free 
-        }
-    }
+    buf_id = StrategyGetBuffer();
     // load page data into page ptr;
     load_page(tag, buf_id);
 
