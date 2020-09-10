@@ -30,6 +30,7 @@ typedef struct BuffDesc {
 )
 
 /* freelist.c */
+extern void StrategyInitialize();
 extern Buffer StrategyGetBuffer();
 extern void StrategyFreeBuffer(Buffer buffer);
 

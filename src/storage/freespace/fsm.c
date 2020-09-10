@@ -139,14 +139,18 @@ fsm_set_avail(Page page, int slot, int value) {
     return true;
 }
 
+struct Asdf {
+    char data[BLKSZ];
+};
+
 void
 fsm_extend(Relation rel, BlockNumber blkno) {
-    char data[BLKSZ];
-    PageInit(&data, BLKSZ, 0);
+    struct Asdf data;
+    PageInit((Page)data.data, BLKSZ, 0);
 
     BlockNumber fsm_blocks = smgrblocks(rel, FSM_FORKNUM);
     while (fsm_blocks < blkno) {
-        smgrextend(rel, &data, fsm_blocks, FSM_FORKNUM);
+        smgrextend(rel, (Page)data.data, fsm_blocks, FSM_FORKNUM);
         fsm_blocks++;
     }
     rel->rd_smgr->smgr_fsm_nblocks = fsm_blocks;
@@ -157,7 +161,7 @@ int fsm_search_avail(Buffer buf, Size spaceNeed) {
     int slot;
 
     Page page = BufferGetPage(buf);
-    FSMPage fsm = PageGetContent(page);
+    FSMPage fsm = (FSMPage)PageGetContent(page);
 
     if (fsm->fp_nodes[no] < spaceNeed) {
         return -1;
