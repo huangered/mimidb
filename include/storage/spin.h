@@ -1,3 +1,6 @@
+/* 
+自旋锁相关代码
+*/
 #ifndef _spin_h_
 #define _spin_h_
 

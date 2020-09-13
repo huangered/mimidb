@@ -139,13 +139,13 @@ fsm_set_avail(Page page, int slot, int value) {
     return true;
 }
 
-struct Asdf {
+typedef struct PgData {
     char data[BLKSZ];
-};
+} PgData;
 
 void
 fsm_extend(Relation rel, BlockNumber blkno) {
-    struct Asdf data;
+    PgData data;
     PageInit((Page)data.data, BLKSZ, 0);
 
     BlockNumber fsm_blocks = smgrblocks(rel, FSM_FORKNUM);
