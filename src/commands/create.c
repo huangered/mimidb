@@ -7,7 +7,7 @@ void DefineRelation(CreateStmt* stmt) {
 	const char* name;
 	Oid id;
 	TupleDesc tupdesc;
-	heap_create(name, id, tupdesc);
+	heap_create_with_catalog(name, id, tupdesc);
 
 	DefineIndex(id, NULL);
 }

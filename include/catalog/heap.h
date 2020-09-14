@@ -5,6 +5,6 @@
 #include "access/relcache.h"
 #include "access/tupledesc.h"
 
-Relation heap_create(const char* relname, Oid relid, TupleDesc tupDesc);
+Relation heap_create_with_catalog(const char* relname, Oid relid, TupleDesc tupDesc);
 
 #endif

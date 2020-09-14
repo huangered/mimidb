@@ -7,6 +7,7 @@
 #include "catalog/mimi_code.h"
 #include "access/heaptuple.h"
 
+static Relation heap_create(Oid relid, const char* name, TupleDesc tupdesc);
 static void AddRelationPgClass(Relation mimiclassdesc, Relation heaprel);
 static void InsertMimiClassTuple(Relation mimiclassdesc, Form_mimi_class heaprel);
 
@@ -18,22 +19,29 @@ Create a heap relation
 4. close the relation
 */
 Relation 
-heap_create(const char* name, Oid relid, TupleDesc tupDesc) {
+heap_create_with_catalog(const char* name, Oid relid, TupleDesc tupDesc) {
     Relation pg_class_rel;
     Relation heap_rel;
 
     pg_class_rel = relation_open(ClassRelationId);
     // build relation
-    heap_rel = BuildLocalRelation(relid, name, tupDesc);
-
-    // create storage file
-    RelationCreateStorage(heap_rel);
+    heap_rel = heap_create(relid, name, tupDesc);
 
     // create tuple in mimi_class
     AddRelationPgClass(pg_class_rel, heap_rel);
 
     relation_close(pg_class_rel);
     relation_close(heap_rel);
+
+    return heap_rel;
+}
+
+Relation
+heap_create(Oid relid, const char* name, TupleDesc tupdesc) {
+    Relation heap_rel = BuildLocalRelation(relid, name, tupdesc);
+
+    // create storage file
+    RelationCreateStorage(heap_rel);
 
     return heap_rel;
 }
