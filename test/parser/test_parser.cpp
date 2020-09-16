@@ -8,4 +8,6 @@ _END_EXTERN_C
 TEST(parser, basic)
 {
 	aaa();
+
+	printf("ok");
 }

@@ -1,10 +1,10 @@
 ﻿find_package(BISON)
 find_package(FLEX)
 
-BISON_TARGET(MyParser parser.y ${CMAKE_CURRENT_BINARY_DIR}/parser.c
-             DEFINES_FILE ${CMAKE_CURRENT_BINARY_DIR}/parser.h)
+BISON_TARGET(MyParser parser.y ${CMAKE_CURRENT_BINARY_DIR}/parser.tab.c
+             DEFINES_FILE ${CMAKE_CURRENT_BINARY_DIR}/parser.tab.h)
 
-FLEX_TARGET(MyScanner lexer.l  ${CMAKE_CURRENT_BINARY_DIR}/lexer.c)
+FLEX_TARGET(MyScanner flex.l  ${CMAKE_CURRENT_BINARY_DIR}/lexer.c COMPILE_FLAGS "--nounistd")
 
 ADD_FLEX_BISON_DEPENDENCY(MyScanner MyParser)
 
