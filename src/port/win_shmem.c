@@ -11,8 +11,6 @@ TCHAR szName[] = TEXT("Local\\MyFileMappingObject");
 HANDLE hMapFile;
 LPCTSTR pBuf;
 
-
-
 void* shmem_init(Size BUF_SIZE) {
     
     hMapFile = CreateFileMapping(

@@ -1,5 +1,5 @@
-#ifndef _HEAP_H_
-#define _HEAP_H_
+#ifndef _ACCESS_HEAP_H_
+#define _ACCESS_HEAP_H_
 
 #include "mimi.h"
 #include "rel.h"

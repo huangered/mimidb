@@ -1,6 +1,8 @@
 #ifndef _index_tuple_h_
 #define _index_tuple_h_
 
+#include "access/tupledesc.h"
+
 typedef struct IndexTupleData {
     int t_tid;
     int t_info;
@@ -9,5 +11,7 @@ typedef struct IndexTupleData {
 } IndexTupleData;
 
 typedef IndexTupleData* IndexTuple;
+
+extern IndexTuple index_form_tuple(TupleDesc tupdesc, Datum* values);
 
 #endif // !_index_tuple_h_
