@@ -1,45 +1,68 @@
-/* simplest version of calculator */
-%{
-#include <stdio.h>
+%code requires {
 #include "parser/tokens.h"
-extern int yylex();
-extern int yyparse();
-void yyerror(const char* s);
+}
+/* simplest version of calculator */
+%code {
+#include <stdio.h>
 
-%}
+void yyerror(YYLTYPE* a, void* b, const char* s);
+
+}
+
+%locations
+%pure_parser
+%parse-param {NodeWrap* yyscanner}
+%lex-param   {NodeWrap* yyscanner}
+
+%union {
+    Node *s;
+    char* m;
+}
+
 /* declare tokens */
-%token NUMBER
-%token ADD SUB MUL DIV ABS
 %token EOL
+%token SELECT
+%token FROM
+%token TEXT
+%type <m> term
+%type <s> stmt
 %%
-calclist: 
-  | calclist exp EOL { printf("= %d %d\n", $1 , $2); } 
+
+stmt: /* nothing */
+  | SELECT term FROM term EOL { printf("hello %s %s\n", $2, $4); yyscanner->node = makeSelectStmt($2, $4);}
   ;
-exp: factor { $$ = $1;}
-  | exp ADD factor { $$ = $1 + $3; }
-  | exp SUB factor { $$ = $1 - $3; }
+term:
+  | TEXT {}
   ;
-factor: term { $$ = $1;}
-  | factor MUL term { $$ = $1 * $3; }
-  | factor DIV term { $$ = $1 / $3; }
-  ;
-term: NUMBER { $$ = $1;}
-  | ABS term { $$ = $2 >= 0? $2 : - $2; }
-  ;
+%start stmt;
 %%
-int aaa()
+
+Node*
+raw_parse(const char* str)
 {
-  char tstr[] = "1+2+3\n";
   // note yy_scan_buffer is is looking for a double null string
-  yy_scan_string(tstr);
-  
-  int i = yyparse();
-  printf("%d", i);
-    return 0;
+  yy_scan_string(str);
+  NodeWrap p;
+
+  int i = yyparse(&p);
+  if(i==0) {
+    return p.node;
+  }
+  return NULL;
 }
 
 void
-yyerror(const char *s)
+yyerror(YYLTYPE* a, void* b, const char *s)
 {
     printf("error: %s\n", s);
+}
+
+Node*
+makeSelectStmt(char* a1, char* a2) {
+	printf("makeSelectStmt");
+	SelectStmt* stmt = (SelectStmt*)malloc(sizeof(SelectStmt));
+	stmt->nodetag = 1;
+	stmt->relname = a2;
+	stmt->column = a1;
+	return (Node*)stmt;
 }

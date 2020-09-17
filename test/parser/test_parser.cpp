@@ -7,7 +7,6 @@ _END_EXTERN_C
 // test the basic usage in buff mgr.
 TEST(parser, basic)
 {
-	aaa();
-
-	printf("ok");
+	Node* raw = raw_parse("select s from a;");
+	EXPECT_EQ(raw->nodetag, 1);
 }

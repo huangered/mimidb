@@ -1,6 +1,8 @@
 #ifndef _token_h_
 #define _token_h_
 
-int aaa();
+#include "node/node.h"
+
+Node* raw_parse(const char* str);
 
 #endif
