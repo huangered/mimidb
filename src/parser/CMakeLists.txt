@@ -1,13 +1,12 @@
-﻿
-find_package(BISON)
-if (${BISON_FOUND}) 
-    message(STATUS "Found bison")
-    execute_process(COMMAND bison "--help")
-endif ()
-
+﻿find_package(BISON)
 find_package(FLEX)
-if (${FLEX_FOUND}) 
-    message(STATUS "Found flex")
-    execute_process(COMMAND flex)
-endif()
 
+BISON_TARGET(MyParser parser.y ${CMAKE_CURRENT_BINARY_DIR}/parser.tab.c
+             DEFINES_FILE ${CMAKE_CURRENT_BINARY_DIR}/parser.tab.h)
+
+FLEX_TARGET(MyScanner flex.l  ${CMAKE_CURRENT_BINARY_DIR}/lexer.c COMPILE_FLAGS "--nounistd")
+
+ADD_FLEX_BISON_DEPENDENCY(MyScanner MyParser)
+
+
+add_library(parser ${BISON_MyParser_OUTPUTS}  ${FLEX_MyScanner_OUTPUTS})

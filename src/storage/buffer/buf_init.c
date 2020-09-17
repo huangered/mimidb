@@ -27,4 +27,6 @@ void BufferInit() {
     BuffDesc[NBuffers - 1].freeNext = -1;
     freeBuffDesc = BuffDesc;
     bufHash = hash_create("local_buf", buftag_hash, buftag_equal, sizeof(BufferTag), sizeof(BufferDesc));
+
+    StrategyInitialize();
 }

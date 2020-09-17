@@ -1,3 +1,8 @@
+/*
+自旋锁实现，只支持一下编译器
+1. gcc, intel 
+2. mvc
+*/
 #ifndef _s_lock_h_
 #define _s_lock_h_
     #if defined(__GNUC__) || defined(__INTEL_COMPILER)

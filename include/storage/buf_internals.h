@@ -29,6 +29,11 @@ typedef struct BuffDesc {
     (a).blockNum = (xx_blocknum) \
 )
 
+/* freelist.c */
+extern void StrategyInitialize();
+extern Buffer StrategyGetBuffer();
+extern void StrategyFreeBuffer(Buffer buffer);
+
 // private method
 static inline uint32 buftag_hash(const void* key, Size keysize) {
     BufferTag* btag = (BufferTag*)key;

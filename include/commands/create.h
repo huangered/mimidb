@@ -1,6 +1,8 @@
 #ifndef _create_h_
 #define _create_h_
 
-void DefineRelation();
+#include "node/parsenode.h"
+
+void DefineRelation(CreateStmt* stmt);
 
 #endif // !_create_h_
