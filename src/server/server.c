@@ -1,9 +1,10 @@
 #include "server/server.h"
 #include "mimi.h"
 
+#ifdef _WIN32
 #include <winsock2.h>
-
 #pragma comment(lib, "Ws2_32.lib")
+#endif
 #include "foo.h"
 int
 main(int argc, char* argv[]) {
@@ -11,7 +12,7 @@ main(int argc, char* argv[]) {
     printf("%d", NAME_INCLUDE);
 	Startup();
 
-    
+#ifdef _WIN32
     WSADATA wsaData;
     WSAStartup(MAKEWORD(2, 2), &wsaData);
     
@@ -49,6 +50,7 @@ main(int argc, char* argv[]) {
     closesocket(servSock);
     
     WSACleanup();
+#endif
     return 0;
 }
 
