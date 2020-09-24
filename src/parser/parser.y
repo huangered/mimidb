@@ -15,7 +15,7 @@ void yyerror(YYLTYPE* a, void* b, const char* s);
 %lex-param   {NodeWrap* yyscanner}
 
 %union {
-    Node *s;
+    Node *node;
     char* m;
 }
 
@@ -25,7 +25,7 @@ void yyerror(YYLTYPE* a, void* b, const char* s);
 %token FROM
 %token TEXT
 %type <m> term
-%type <s> stmt
+%type <node> stmt
 %%
 
 stmt: /* nothing */
@@ -61,7 +61,7 @@ Node*
 makeSelectStmt(char* a1, char* a2) {
 	printf("makeSelectStmt");
 	SelectStmt* stmt = (SelectStmt*)malloc(sizeof(SelectStmt));
-	stmt->nodetag = 1;
+	stmt->nodetag = NT_SelectStmt;
 	stmt->relname = a2;
 	stmt->column = a1;
 	return (Node*)stmt;
