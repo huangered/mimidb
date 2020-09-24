@@ -3,7 +3,10 @@
 
 #include "mimi.h"
 
-typedef int NodeTag;
+typedef enum NodeTag {
+	NT_SelectStmt,
+	NT_CreateStmt,
+} NodeTag;
 
 typedef struct Node {
 	NodeTag nodetag;
