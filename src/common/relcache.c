@@ -1,4 +1,4 @@
-#include "access/relcache.h"
+﻿#include "access/relcache.h"
 #include "access/rel.h"
 #include "common/relation.h"
 #include "util/hash.h"
@@ -47,7 +47,7 @@ static Relation relationCacheLookup(Oid relid) {
     }
 }
 
-static FormData_mimi_attribute pg_class_attrs[4] = {
+static const FormData_mimi_attribute desc_pg_class[4] = {
     {
         .oid = 1,
         .name = "oid",
@@ -55,20 +55,37 @@ static FormData_mimi_attribute pg_class_attrs[4] = {
         .type = 1
     },
         {
-        .oid = 2,
+        .oid = 1,
         .name = "relkind",
         .length = sizeof(int),
         .type = 1
     },
         {
-        .oid = 3,
+        .oid = 1,
         .name = "relpages",
         .length = sizeof(int),
         .type = 1
     },
         {
-        .oid = 4,
+        .oid = 1,
         .name = "tuples",
+        .length = sizeof(int),
+        .type = 1
+    }
+};
+
+static const FormData_mimi_attribute desc_pg_attribute[24] = {
+    {
+        .oid = 2,
+        .name = "oid",
+        .length = sizeof(int),
+        .type = 1
+    } 
+};
+static const FormData_mimi_attribute desc_pg_type[24] = {
+    {
+        .oid = 3,
+        .name = "oid",
         .length = sizeof(int),
         .type = 1
     }
@@ -81,7 +98,7 @@ static FormData_mimi_attribute pg_class_attrs[4] = {
 void RelationCacheInit() {
     relhash = hash_create("rel_cache_hash", OidHashValue, OidHashEqual, sizeof(Oid), sizeof(struct RelCacheEntry));
 
-    formrdesc("mimi_class", ClassRelationId, 4, pg_class_attrs);
+    formrdesc("mimi_class", ClassRelationId, 4, desc_pg_class);
     //formrdesc("mimi_attribute", AttributeRelationId, 20, NULL);
 }
 
@@ -199,6 +216,9 @@ void RelationBuildTuple(Relation heaprel) {
     }
 }
 
+/*
+ * 扫描 mm_class 表，获取 relation tuple 信息
+ */
 HeapTuple ScanMimiRelation(Oid relid) {
     HeapTuple tup = palloc(sizeof(HeapTupleData));
     tup->t_data = palloc(sizeof(FormData_mimi_class));
