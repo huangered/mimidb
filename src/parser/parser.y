@@ -29,7 +29,7 @@ void yyerror(YYLTYPE* a, void* b, const char* s);
 %%
 
 stmt: /* nothing */
-  | SELECT term FROM term EOL { printf("hello %s %s\n", $2, $4); yyscanner->node = makeSelectStmt($2, $4);}
+  | SELECT term FROM term EOL { yyscanner->node = makeSelectStmt($2, $4);}
   ;
 term:
   | TEXT {}
@@ -45,7 +45,7 @@ raw_parse(const char* str)
   NodeWrap p;
 
   int i = yyparse(&p);
-  if(i==0) {
+  if(i == 0) {
     return p.node;
   }
   return NULL;

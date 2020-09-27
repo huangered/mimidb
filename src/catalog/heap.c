@@ -1,4 +1,4 @@
-#include "access/heap.h"
+﻿#include "access/heap.h"
 #include "catalog/heap.h"
 #include "access/rel.h"
 #include "common/relation.h"
@@ -6,11 +6,13 @@
 #include "catalog/storage.h"
 #include "catalog/mimi_code.h"
 #include "access/heaptuple.h"
+#include "catalog/mimi_attribute.h"
 
 static Relation heap_create(Oid relid, const char* name, TupleDesc tupdesc);
 static void AddRelationPgClass(Relation mimiclassdesc, Relation heaprel);
+static void AddRelationMimiAttribute(Relation mimiclassdesc, Relation heaprel);
 static void InsertMimiClassTuple(Relation mimiclassdesc, Form_mimi_class heaprel);
-
+static void InsertMimiAttributeTuple(Relation mimi_attribute_rel, FormData_mimi_attribute new_attribute);
 /*
 Create a heap relation
 1. build relation local
@@ -40,9 +42,13 @@ Relation
 heap_create(Oid relid, const char* name, TupleDesc tupdesc) {
     Relation heap_rel = BuildLocalRelation(relid, name, tupdesc);
 
-    // create storage file
-    RelationCreateStorage(heap_rel);
-
+    switch (heap_rel->rd_rel->relkind) {
+    case RELKIND_INDEX:
+    case RELKIND_RELATION:
+        // create storage file
+        RelationCreateStorage(heap_rel);
+        break;
+    }
     return heap_rel;
 }
 
@@ -71,4 +77,12 @@ InsertMimiClassTuple(Relation mimi_class_desc, Form_mimi_class new_rel_reltup) {
     simple_heap_insert(mimi_class_desc, tuple);
 
     pfree(tuple);
+}
+
+/*
+构造和插入mimi attribute tuple
+*/
+void
+InsertMimiAttributeTuple(Relation mimi_attribute_rel, FormData_mimi_attribute new_attribute) {
+
 }

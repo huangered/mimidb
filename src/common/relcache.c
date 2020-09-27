@@ -74,7 +74,7 @@ static const FormData_mimi_attribute desc_pg_class[4] = {
     }
 };
 
-static const FormData_mimi_attribute desc_pg_attribute[24] = {
+static const FormData_mimi_attribute desc_pg_attribute[1] = {
     {
         .oid = 2,
         .name = "oid",
@@ -82,7 +82,7 @@ static const FormData_mimi_attribute desc_pg_attribute[24] = {
         .type = 1
     } 
 };
-static const FormData_mimi_attribute desc_pg_type[24] = {
+static const FormData_mimi_attribute desc_pg_type[1] = {
     {
         .oid = 3,
         .name = "oid",
@@ -99,7 +99,8 @@ void RelationCacheInit() {
     relhash = hash_create("rel_cache_hash", OidHashValue, OidHashEqual, sizeof(Oid), sizeof(struct RelCacheEntry));
 
     formrdesc("mimi_class", ClassRelationId, 4, desc_pg_class);
-    //formrdesc("mimi_attribute", AttributeRelationId, 20, NULL);
+    formrdesc("mimi_attribute", AttributeRelationId, 1, desc_pg_attribute);
+    formrdesc("mimi_type", TypeRelationId, 1, desc_pg_type);
 }
 
 Relation RelationIdGetRelation(Oid relid) {
