@@ -1,4 +1,4 @@
-#include "storage/smgr.h"
+﻿#include "storage/smgr.h"
 #include "access/rel.h"
 #include "access/relpath.h"
 #include "util/mctx.h"
@@ -38,4 +38,12 @@ void smgrextend(Relation rel, Page page, BlockNumber blkno, ForkNumber number) {
     file_write(fd, blkno, page);
     file_close(fd);
     pfree(path);
+}
+
+/*
+将buf写到物理盘上
+*/
+void
+smgrwrite(Relation rel, ForkNumber number, BlockNumber blkno, const char* buf) {
+
 }

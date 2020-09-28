@@ -16,4 +16,5 @@ extern bool smgrexists(Relation rel, ForkNumber number);
 extern void smgrcreate(Relation rel, ForkNumber number);
 extern BlockNumber smgrblocks(Relation rel, ForkNumber number);
 extern void smgrextend(Relation rel, Page page, BlockNumber blkno, ForkNumber number);
+extern void smgrwrite(Relation rel, ForkNumber number, BlockNumber blkno, const char* buf);
 #endif // !_smgr_h_
