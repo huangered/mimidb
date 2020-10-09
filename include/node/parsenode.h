@@ -31,5 +31,6 @@ typedef struct CreateStmt {
 
 Node* makeSelectStmt(char* tbl_name, List* a2);
 Node* makeInsertStmt(char* tbl_name, List* a2);
+Node* makeUpdateStmt(char* tbl_name);
 
 #endif

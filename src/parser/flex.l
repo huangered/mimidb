@@ -12,6 +12,8 @@ into		{ return INTO; }
 values		{ return VALUES; }
 select	    { return SELECT; }
 from		{ return FROM; }
+update		{ return UPDATE; }
+set			{ return SET; }
 [(),]       { return yytext[0]; }
 [a-zA-Z]*	{ yylval->str = strdup(yytext); return TEXT ;}
 \n			{ return EOL; }
