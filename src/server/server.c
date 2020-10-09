@@ -1,25 +1,17 @@
 #include "server/server.h"
 #include "mimi.h"
 #include "foo.h"
-
-enum G {
-	a,
-	b,
-	c,
-};
+#include "util/mctx.h"
 
 int
 main(int argc, char* argv[]) {
-	
-    printf("%d", NAME_INCLUDE);
-	Startup();
-	printf("%d", sizeof(enum G));
-	printf("%d", sizeof(int));
 
+	Startup();
     return 0;
 }
 
 void
 Startup() {
-	printf("start up");
+	printf("start up mctx");
+	MemoryContextInit();
 }
