@@ -45,5 +45,9 @@ void smgrextend(Relation rel, Page page, BlockNumber blkno, ForkNumber number) {
 */
 void
 smgrwrite(Relation rel, ForkNumber number, BlockNumber blkno, const char* buf) {
-
+    char* path = GetRelPath(rel->rnode, number);
+    fd* fd = file_open(path);
+    file_write(fd, blkno, buf);
+    file_close(fd);
+    pfree(path);
 }

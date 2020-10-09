@@ -16,6 +16,6 @@ TEST(hash_test, add)
     value = (char*)hash_search(tbl, Search, key);
 
     EXPECT_EQ(*value, '2');
-
+    
     hash_destroy(tbl);
 }

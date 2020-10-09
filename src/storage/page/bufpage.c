@@ -1,7 +1,7 @@
-#include "storage/page.h"
 #include "access/indextuple.h"
-#include "util/mctx.h"
 #include "access/offset.h"
+#include "storage/page.h"
+#include "util/mctx.h"
 
 /*
 init the raw page

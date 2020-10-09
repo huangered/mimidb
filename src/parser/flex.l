@@ -7,9 +7,13 @@
 %}
 
 %%
-select	    { return SELECT;}
+insert		{ return INSERT; }
+into		{ return INTO; }
+values		{ return VALUES; }
+select	    { return SELECT; }
 from		{ return FROM; }
-[a-zA-Z]*	{ yylval->m = strdup(yytext); return TEXT ;}
+[(),]       { return yytext[0]; }
+[a-zA-Z]*	{ yylval->str = strdup(yytext); return TEXT ;}
 \n			{ return EOL; }
 ";"			{ return EOL; }
 "//".*      { /* ignore white space */ }

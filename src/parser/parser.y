@@ -1,5 +1,6 @@
 %code requires {
 #include "parser/tokens.h"
+#include "node/parsenode.h"
 }
 /* simplest version of calculator */
 %code {
@@ -16,23 +17,47 @@ void yyerror(YYLTYPE* a, void* b, const char* s);
 
 %union {
     Node *node;
-    char* m;
+    char* str;
+	List* list;
 }
 
 /* declare tokens */
 %token EOL
+%token INSERT
+%token INTO
+%token VALUES
 %token SELECT
 %token FROM
 %token TEXT
-%type <m> term
-%type <node> stmt
+%type <str> term
+%type <str> tbl_name
+%type <list> value_list
+%type <list> term_list
+%type <node> stmt InsertStmt SelectStmt
 %%
 
 stmt: /* nothing */
-  | SELECT term FROM term EOL { yyscanner->node = makeSelectStmt($2, $4);}
+  InsertStmt
+  | SelectStmt
   ;
-term:
-  | TEXT {}
+SelectStmt:
+  SELECT value_list FROM tbl_name EOL { yyscanner->node = makeSelectStmt($4, $2); }
+  ;
+InsertStmt:
+  INSERT INTO tbl_name VALUES value_list EOL { yyscanner->node = makeInsertStmt($3, $5); }
+  ;
+tbl_name:
+  term { $$ = $1; };
+
+value_list:
+  '(' term_list ')' { $$ = $2; }
+  ;
+
+term_list: 
+   term { $$ = new_list($1, 100) ; }
+  | term_list ',' term { $$ = append_list($1, $3); }
+  ;
+term: TEXT {}
   ;
 %start stmt;
 %%
@@ -58,11 +83,21 @@ yyerror(YYLTYPE* a, void* b, const char *s)
 }
 
 Node*
-makeSelectStmt(char* a1, char* a2) {
-	printf("makeSelectStmt");
+makeSelectStmt(char* tbl_name, List* a2) {
+	printf("makeSelectStmt\n");
 	SelectStmt* stmt = (SelectStmt*)malloc(sizeof(SelectStmt));
 	stmt->nodetag = NT_SelectStmt;
-	stmt->relname = a2;
-	stmt->column = a1;
+	stmt->relname = tbl_name;
+	stmt->column = a2;
+	return (Node*)stmt;
+}
+
+Node*
+makeInsertStmt(char* tbl_name, List* a2) {
+	printf("makeInsertStmt\n");
+	InsertStmt* stmt = (InsertStmt*)malloc(sizeof(InsertStmt));
+	stmt->nodetag = NT_InsertStmt;
+	stmt->relname = tbl_name;
+	stmt->column = a2;
 	return (Node*)stmt;
 }
