@@ -1,12 +1,16 @@
 %code requires {
 #include "parser/tokens.h"
 #include "node/parsenode.h"
+#include "util/mctx.h"
 }
 /* simplest version of calculator */
 %code {
 #include <stdio.h>
 
 void yyerror(YYLTYPE* a, void* b, const char* s);
+
+#define YYMALLOC palloc
+#define YYFREE   pfree
 
 }
 
@@ -29,22 +33,28 @@ void yyerror(YYLTYPE* a, void* b, const char* s);
 %token SELECT
 %token FROM
 %token TEXT
+%token UPDATE
+%token SET
 %type <str> term
 %type <str> tbl_name
 %type <list> value_list
 %type <list> term_list
-%type <node> stmt InsertStmt SelectStmt
+%type <node> stmt InsertStmt SelectStmt UpdateStmt
 %%
 
 stmt: /* nothing */
   InsertStmt
   | SelectStmt
+  | UpdateStmt
   ;
 SelectStmt:
   SELECT value_list FROM tbl_name EOL { yyscanner->node = makeSelectStmt($4, $2); }
   ;
 InsertStmt:
   INSERT INTO tbl_name VALUES value_list EOL { yyscanner->node = makeInsertStmt($3, $5); }
+  ;
+UpdateStmt:
+  UPDATE tbl_name SET value_list EOL { yyscanner->node = makeUpdateStmt($2); }
   ;
 tbl_name:
   term { $$ = $1; };
@@ -100,4 +110,9 @@ makeInsertStmt(char* tbl_name, List* a2) {
 	stmt->relname = tbl_name;
 	stmt->column = a2;
 	return (Node*)stmt;
+}
+
+Node*
+makeUpdateStmt(char* tbl_name) {
+    return NULL;
 }
