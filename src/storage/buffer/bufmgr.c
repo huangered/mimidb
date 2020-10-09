@@ -4,6 +4,7 @@
 #include "util/mctx.h"
 #include "util/hash.h"
 #include "storage/fd.h"
+#include "storage/smgr.h"
 
 static BufferDesc* BufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno);
 static void load_page(BufferTag tag, Buffer buf);
@@ -54,6 +55,13 @@ void ReleaseBuffer(Buffer buffer) {
     bd->state -= 1;
 }
 
+void
+FlushBuffer(BufferDesc* buffDesc) {
+
+    char* buf = BufferGetPage(buffDesc->buf_id);
+
+    smgrwrite(buffDesc->tag.rnode, buffDesc->tag.forkNum, buffDesc->tag.blockNum, buf);
+}
 
 // easy implement
 static void load_page(BufferTag tag, Buffer buf) {

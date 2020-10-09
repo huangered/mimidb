@@ -25,6 +25,7 @@ typedef void* Block;
 extern void BufferInit();
 extern Buffer ReadBuffer(Relation rel, ForkNumber forkNumber, BlockNumber blkno);
 extern void ReleaseBuffer(Buffer buffer);
+extern void FlushBuffer(BufferDesc* buffDesc);
 
 // for debug
 extern void print_bufflist();

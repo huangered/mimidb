@@ -7,13 +7,17 @@
 %}
 
 %%
-select	    { printf("1\n"); return SELECT;}
-from		{ printf("2\n"); return FROM; }
-[a-zA-Z]*	{ printf("3\n"); yylval->m = strdup(yytext); return TEXT ;}
-\n			{ printf("4\n"); return EOL; }
-";"			{ printf("5\n"); return EOL; }
-"//".*      { printf("6\n"); }
-[\t]		{ printf("7\n"); /* ignore white space */ }
-[ ]			{ printf("8\n"); /* ignore white space */ }
+insert		{ return INSERT; }
+into		{ return INTO; }
+values		{ return VALUES; }
+select	    { return SELECT; }
+from		{ return FROM; }
+[(),]       { return yytext[0]; }
+[a-zA-Z]*	{ yylval->str = strdup(yytext); return TEXT ;}
+\n			{ return EOL; }
+";"			{ return EOL; }
+"//".*      { /* ignore white space */ }
+[\t]		{ /* ignore white space */ }
+[ ]			{ /* ignore white space */ }
 .			{ printf("Mystery character %c\n", *yytext); }
 %%
