@@ -27,6 +27,8 @@ void yyerror(YYLTYPE* a, void* b, const char* s);
 
 /* declare tokens */
 %token EOL
+%token CREATE
+%token TABLE
 %token INSERT
 %token INTO
 %token VALUES
@@ -39,13 +41,16 @@ void yyerror(YYLTYPE* a, void* b, const char* s);
 %type <str> tbl_name
 %type <list> value_list
 %type <list> term_list
-%type <node> stmt InsertStmt SelectStmt UpdateStmt
+%type <list> param_list
+%type <node> param
+%type <node> stmt InsertStmt SelectStmt UpdateStmt CreateTableStmt
 %%
 
 stmt: /* nothing */
   InsertStmt
   | SelectStmt
   | UpdateStmt
+  | CreateTableStmt
   ;
 SelectStmt:
   SELECT value_list FROM tbl_name EOL { yyscanner->node = makeSelectStmt($4, $2); }
@@ -56,6 +61,9 @@ InsertStmt:
 UpdateStmt:
   UPDATE tbl_name SET value_list EOL { yyscanner->node = makeUpdateStmt($2); }
   ;
+CreateTableStmt:
+  CREATE TABLE tbl_name '(' param_list ')' EOL { yyscanner->node = makeCreateTableStmt($3, $5); }
+  ;
 tbl_name:
   term { $$ = $1; };
 
@@ -64,10 +72,18 @@ value_list:
   ;
 
 term_list: 
-   term { $$ = new_list($1, 100) ; }
+   term { List* list = new_list(NT_List); $$ = append_list(list, $1); }
   | term_list ',' term { $$ = append_list($1, $3); }
   ;
-term: TEXT {}
+
+param_list:
+    param { List* list = new_list(NT_List); $$ = append_list(list, $1); }
+  | param_list ',' param { $$ = append_list($1, $3); }
+  ;
+param:
+  term term { $$ = makeParam($1, $2); }
+  ;
+term: TEXT { }
   ;
 %start stmt;
 %%
@@ -92,27 +108,3 @@ yyerror(YYLTYPE* a, void* b, const char *s)
     printf("error: %s\n", s);
 }
 
-Node*
-makeSelectStmt(char* tbl_name, List* a2) {
-	printf("makeSelectStmt\n");
-	SelectStmt* stmt = (SelectStmt*)malloc(sizeof(SelectStmt));
-	stmt->nodetag = NT_SelectStmt;
-	stmt->relname = tbl_name;
-	stmt->column = a2;
-	return (Node*)stmt;
-}
-
-Node*
-makeInsertStmt(char* tbl_name, List* a2) {
-	printf("makeInsertStmt\n");
-	InsertStmt* stmt = (InsertStmt*)malloc(sizeof(InsertStmt));
-	stmt->nodetag = NT_InsertStmt;
-	stmt->relname = tbl_name;
-	stmt->column = a2;
-	return (Node*)stmt;
-}
-
-Node*
-makeUpdateStmt(char* tbl_name) {
-    return NULL;
-}

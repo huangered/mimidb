@@ -5,10 +5,10 @@
 
 static TupleDesc formTupleDesc(char* columns);
 
-void DefineRelation(CreateStmt* stmt) {
+void DefineRelation(CreateTableStmt* stmt) {
 	const char* name = stmt->relname;
 	Oid id = 1;
-	TupleDesc tupdesc = formTupleDesc(stmt->column);
+	TupleDesc tupdesc = formTupleDesc(stmt->columns);
 	heap_create_with_catalog(name, id, tupdesc);
 
 	DefineIndex(id, NULL);
