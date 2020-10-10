@@ -4,16 +4,20 @@
 #include "mimi.h"
 #include "node/node.h"
 
-typedef union ListCell {
-	char* value;
+typedef struct ListCell {
+	union {
+		int int_value;
+		void* ptr_value;
+	} data;
+	struct ListCell* next;
 } ListCell;
 
 typedef struct List {
 	NodeTag type;
 	int length;
-	ListCell elements[100];
+	ListCell* head;
 } List;
 
-extern List* new_list(char* value, int size);
-extern List* append_list(List* list, char* value);
+extern List* new_list(NodeTag tag);
+extern List* append_list(List* list, void* value);
 #endif

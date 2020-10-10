@@ -3,6 +3,7 @@
 #include "common/relation.h"
 #include "util/hash.h"
 #include "catalog/mimi_attribute.h"
+#include "catalog/mimi_type.h"
 #include "catalog/mimi_code.h"
 #include "util/mctx.h"
 #include "access/heaptuple.h"
@@ -50,44 +51,43 @@ static Relation relationCacheLookup(Oid relid) {
 static const FormData_mimi_attribute desc_pg_class[4] = {
     {
         .oid = 1,
-        .name = "oid",
-        .length = sizeof(int),
-        .type = 1
+        .attname = "oid",
+        .attlen = sizeof(int),
+        .typid = 1
     },
         {
         .oid = 1,
-        .name = "relkind",
-        .length = sizeof(int),
-        .type = 1
+        .attname = "relkind",
+        .attlen = sizeof(int),
+        .typid = 1
     },
         {
         .oid = 1,
-        .name = "relpages",
-        .length = sizeof(int),
-        .type = 1
+        .attname = "relpages",
+        .attlen = sizeof(int),
+        .typid = 1
     },
         {
         .oid = 1,
-        .name = "tuples",
-        .length = sizeof(int),
-        .type = 1
+        .attname = "tuples",
+        .attlen = sizeof(int),
+        .typid = 1
     }
 };
 
 static const FormData_mimi_attribute desc_pg_attribute[1] = {
     {
         .oid = 2,
-        .name = "oid",
-        .length = sizeof(int),
-        .type = 1
+        .attname = "oid",
+        .attlen = sizeof(int),
+        .typid = 1
     } 
 };
 static const FormData_mimi_attribute desc_pg_type[1] = {
     {
         .oid = 3,
-        .name = "oid",
-        .length = sizeof(int),
-        .type = 1
+        .attname = "oid",
+        .attlen = sizeof(int),
     }
 };
 
@@ -194,9 +194,9 @@ Relation BuildLocalRelation(Oid oid, const char* relname, TupleDesc tupdesc) {
     heaprel->tupleDesc->natts = tupdesc->natts;
     for (int i = 0; i < heaprel->tupleDesc->natts; i++) {
         heaprel->tupleDesc->attr[i].oid = tupdesc->attr[i].oid;
-        heaprel->tupleDesc->attr[i].length = tupdesc->attr[i].length;
-        heaprel->tupleDesc->attr[i].type = tupdesc->attr[i].type;
-        strcpy(heaprel->tupleDesc->attr[i].name, tupdesc->attr[i].name);
+        heaprel->tupleDesc->attr[i].attlen = tupdesc->attr[i].attlen;
+        heaprel->tupleDesc->attr[i].typid = tupdesc->attr[i].typid;
+        strcpy(heaprel->tupleDesc->attr[i].attname, tupdesc->attr[i].attname);
     }
 
     heaprel->refcount = 0;
@@ -211,9 +211,9 @@ void RelationBuildTuple(Relation heaprel) {
     heaprel->tupleDesc->natts = tupdesc->natts;
     for (int i = 0; i < heaprel->tupleDesc->natts; i++) {
         heaprel->tupleDesc->attr[i].oid = tupdesc->attr[i].oid;
-        heaprel->tupleDesc->attr[i].length = tupdesc->attr[i].length;
-        heaprel->tupleDesc->attr[i].type = tupdesc->attr[i].type;
-        strcpy(heaprel->tupleDesc->attr[i].name, tupdesc->attr[i].name);
+        heaprel->tupleDesc->attr[i].attlen = tupdesc->attr[i].attlen;
+        heaprel->tupleDesc->attr[i].typid = tupdesc->attr[i].typid;
+        strcpy(heaprel->tupleDesc->attr[i].attname, tupdesc->attr[i].attname);
     }
 }
 

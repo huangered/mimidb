@@ -1,20 +1,23 @@
 #include "util/list.h"
 #include "util/mctx.h"
 
-List* new_list(char* value, int size) {
-	List* newlist = palloc(offsetof(List, elements) +
-		size * sizeof(ListCell));
-	//newlist->type = type;
-	newlist->length = 1;
-	newlist->elements[0].value = value;
+List* new_list(NodeTag type) {
+	List* newlist = palloc(sizeof(List));
+	newlist->type = type;
+	newlist->length = 0;
+	newlist->head = NULL;
 	return newlist;
 }
 
 List*
-append_list(List* list, char* cell) {
+append_list(List* list, void* cell) {
 
-	int len = list->length;
-	list->elements[len].value = cell;
+	ListCell* new_head;
+
+	new_head = (ListCell*)palloc(sizeof(ListCell));
+	new_head->next = list->head;
+	new_head->data.ptr_value = cell;
+	list->head = new_head;
 	list->length += 1;
 	return list;
 }

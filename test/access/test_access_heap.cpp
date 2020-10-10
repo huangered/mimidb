@@ -29,8 +29,8 @@ TEST(heap, incr_insert)
 
     rel->tupleDesc = (TupleDesc)palloc(sizeof(TupleDescData));
     rel->tupleDesc->natts = 2;
-    rel->tupleDesc->attr[0].length = 4;
-    rel->tupleDesc->attr[1].length = 4;
+    rel->tupleDesc->attr[0].attlen = 4;
+    rel->tupleDesc->attr[1].attlen = 4;
 
     RecordPageWithFreeSpace(rel, 0, BLKSZ);
     FreeSpaceMapVacuumRange(rel, 0, 1);

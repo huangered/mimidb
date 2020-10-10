@@ -7,6 +7,10 @@
 %}
 
 %%
+
+create		{ return CREATE; }
+table		{ return TABLE; }
+
 insert		{ return INSERT; }
 into		{ return INTO; }
 values		{ return VALUES; }
