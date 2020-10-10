@@ -7,3 +7,19 @@ Node* makeExpr(char* param) {
 	node->key = param;
 	return node;
 }
+
+Node*
+makeIntValue(int i) {
+	IntValue* v = palloc(sizeof(IntValue));
+	v->nodetag = NT_IntValue;
+	v->number = i;
+	return v;
+}
+
+Node*
+makeStrValue(char* str) {
+	StrValue* v = palloc(sizeof(StrValue));
+	v->nodetag = NT_StrValue;
+	v->str = str;
+	return v;
+}

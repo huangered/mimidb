@@ -26,6 +26,18 @@ typedef struct InsertStmt {
 	List* columns;
 } InsertStmt;
 
+typedef struct UpdateStmt {
+	NodeTag nodetag;
+	char* relname;
+	List* columns;
+	Node* where_cause;
+} UpdateStmt;
+
+typedef struct AssignStmt {
+	NodeTag nodetag;
+	char* col_name;
+	Node* value;
+} AssignStmt;
 
 typedef struct CreateTableStmt {
 	NodeTag nodetag;
@@ -39,11 +51,30 @@ typedef struct ParamStmt {
 	char* type;
 } ParamStmt;
 
+typedef struct WhereStmt {
+	NodeTag nodetag;
+	List* columns;
+} WhereStmt;
+
+typedef struct IntValue {
+	NodeTag nodetag;
+	int number;
+} IntValue;
+
+typedef struct StrValue {
+	NodeTag nodetag;
+	char* str;
+} StrValue;
+
+Node* makeIntValue(int i);
+Node* makeStrValue(char* str);
 Node* makeExpr(char* key);
 Node* makeParam(char* param1, char* param2);
+Node* makeAssignStmt(char* col_name, Node* value);
 Node* makeSelectStmt(char* tbl_name, List* cols);
 Node* makeInsertStmt(char* tbl_name, List* cols);
-Node* makeUpdateStmt(char* tbl_name);
+Node* makeUpdateStmt(char* tbl_name, List* cols, Node* where_cause);
 Node* makeCreateTableStmt(char* tbl_name, List* cols);
+Node* makeWhereStmt(List* cols);
 
 #endif
