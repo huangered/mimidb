@@ -22,6 +22,7 @@ void yyerror(YYLTYPE* a, void* b, const char* s);
 %union {
     Node *node;
     char* str;
+    int integer;
 	List* list;
 }
 
@@ -35,15 +36,33 @@ void yyerror(YYLTYPE* a, void* b, const char* s);
 %token SELECT
 %token FROM
 %token TEXT
+%token INTEGER
 %token UPDATE
 %token SET
+%token WHERE
+%token QUOTE
+%token AND
+%token EQ
+%token IDENT
 %type <str> term
+%type <str> ident
+%type <integer> number
 %type <str> tbl_name
 %type <list> value_list
+%type <list> column_list
 %type <list> term_list
 %type <list> param_list
 %type <node> param
+%type <node> where_cause
+%type <list> where_col_ref_list
+%type <node> where_col_ref
+%type <list> update_col_ref_list
+%type <node> update_col_ref
+%type <node> update_param
+%type <list> insert_value_list
+%type <list> insert_value_list2
 %type <node> stmt InsertStmt SelectStmt UpdateStmt CreateTableStmt
+
 %%
 
 stmt: /* nothing */
@@ -53,22 +72,48 @@ stmt: /* nothing */
   | CreateTableStmt
   ;
 SelectStmt:
-  SELECT value_list FROM tbl_name EOL { yyscanner->node = makeSelectStmt($4, $2); }
+  SELECT column_list FROM tbl_name EOL { yyscanner->node = makeSelectStmt($4, $2); }
   ;
 InsertStmt:
-  INSERT INTO tbl_name VALUES value_list EOL { yyscanner->node = makeInsertStmt($3, $5); }
+  INSERT INTO tbl_name VALUES insert_value_list EOL { yyscanner->node = makeInsertStmt($3, $5); }
   ;
 UpdateStmt:
-  UPDATE tbl_name SET value_list EOL { yyscanner->node = makeUpdateStmt($2); }
+    UPDATE tbl_name SET update_col_ref_list EOL { yyscanner->node = makeUpdateStmt($2, $4, NULL); }
+  | UPDATE tbl_name SET update_col_ref_list where_cause EOL { yyscanner->node = makeUpdateStmt($2, $4, $5); }
+  ;
+update_col_ref_list:
+    update_col_ref { List* list = new_list(NT_List); $$ = append_list(list, $1); }
+  | update_col_ref_list ',' update_col_ref { $$ = append_list($1, $3); }
+  ;
+update_col_ref:
+  ident EQ update_param { $$ = makeAssignStmt($1, $3); }
+  ;
+update_param:
+    term { $$ = makeStrValue($1); }
+  | number { $$ = makeIntValue($1); }
   ;
 CreateTableStmt:
   CREATE TABLE tbl_name '(' param_list ')' EOL { yyscanner->node = makeCreateTableStmt($3, $5); }
   ;
 tbl_name:
-  term { $$ = $1; };
+  ident { $$ = $1; };
 
 value_list:
   '(' term_list ')' { $$ = $2; }
+  ;
+
+insert_value_list:
+  '(' insert_value_list2 ')' { $$ = $2; }
+  ;
+
+insert_value_list2:
+    update_param { List* list = new_list(NT_List); $$ = append_list(list, $1); }
+  | insert_value_list2 ',' update_param { $$ = append_list($1, $3); }
+  ;
+
+column_list: 
+    ident { List* list = new_list(NT_List); $$ = append_list(list, $1); }
+  | column_list ',' ident { $$ = append_list($1, $3); }
   ;
 
 term_list: 
@@ -81,7 +126,22 @@ param_list:
   | param_list ',' param { $$ = append_list($1, $3); }
   ;
 param:
-  term term { $$ = makeParam($1, $2); }
+  ident ident { $$ = makeParam($1, $2); }
+  ;
+where_cause:
+  WHERE where_col_ref_list { $$ = makeWhereStmt($2); }
+  ;
+where_col_ref_list:
+    where_col_ref { List* list = new_list(NT_List); $$ = append_list(list, $1); }
+  | where_col_ref_list AND where_col_ref { $$ = append_list($1, $3); }
+  ;
+where_col_ref:
+  ident EQ term { $$ = makeParam($1, $3); }
+  ;
+
+number: INTEGER { }
+  ;
+ident: IDENT { }
   ;
 term: TEXT { }
   ;

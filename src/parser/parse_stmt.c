@@ -1,6 +1,9 @@
-#include "node/parsenode.h"
+﻿#include "node/parsenode.h"
 #include "util/mctx.h"
 
+/* 
+ * 解析create table sql
+ */
 Node*
 makeCreateTableStmt(char* tbl_name, List* cols) {
 	CreateTableStmt* stmt = palloc(sizeof(CreateTableStmt));
@@ -14,7 +17,7 @@ makeCreateTableStmt(char* tbl_name, List* cols) {
 Node*
 makeSelectStmt(char* tbl_name, List* cols) {
 	printf("makeSelectStmt\n");
-	SelectStmt* stmt = (SelectStmt*)malloc(sizeof(SelectStmt));
+	SelectStmt* stmt = (SelectStmt*)palloc(sizeof(SelectStmt));
 	stmt->nodetag = NT_SelectStmt;
 	stmt->relname = tbl_name;
 	stmt->columns = cols;
@@ -24,7 +27,7 @@ makeSelectStmt(char* tbl_name, List* cols) {
 Node*
 makeInsertStmt(char* tbl_name, List* cols) {
 	printf("makeInsertStmt\n");
-	InsertStmt* stmt = (InsertStmt*)malloc(sizeof(InsertStmt));
+	InsertStmt* stmt = (InsertStmt*)palloc(sizeof(InsertStmt));
 	stmt->nodetag = NT_InsertStmt;
 	stmt->relname = tbl_name;
 	stmt->columns = cols;
@@ -32,6 +35,36 @@ makeInsertStmt(char* tbl_name, List* cols) {
 }
 
 Node*
-makeUpdateStmt(char* tbl_name) {
-	return NULL;
+makeUpdateStmt(char* tbl_name, List* cols, Node* where_cause) {
+	UpdateStmt* stmt = (UpdateStmt*)palloc(sizeof(UpdateStmt));
+	stmt->nodetag = NT_UpdateStmt;
+	stmt->relname = tbl_name;
+	stmt->columns = cols;
+	stmt->where_cause = where_cause;
+	return (Node*)stmt;
+}
+
+/*
+update sql的赋值语句 a='abcd' or a=123
+*/
+Node*
+makeAssignStmt(char* col_name, Node* value) {
+	AssignStmt* stmt = (AssignStmt*)palloc(sizeof(AssignStmt));
+	stmt->nodetag = NT_AssignStmt;
+	stmt->col_name = col_name;
+	stmt->value = value;
+	return stmt;
+}
+
+
+/*
+解析where从句
+*/
+Node*
+makeWhereStmt(List* cols) {
+	WhereStmt* stmt = (WhereStmt*)palloc(sizeof(WhereStmt));
+	stmt->nodetag = NT_WhereStmt;
+	stmt->columns = cols;
+
+	return (Node*)stmt;
 }
