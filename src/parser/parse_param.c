@@ -6,5 +6,5 @@ Node* makeParam(char* param1, char* param2) {
 	node->nodetag = NT_ParamStmt;
 	node->key = param1;
 	node->type = param2;
-	return node;
+	return (Node*)node;
 }

@@ -18,6 +18,8 @@ typedef struct List {
 	ListCell* head;
 } List;
 
+#define list_len(l)	(l->length)
+
 extern List* new_list(NodeTag tag);
 extern List* append_list(List* list, void* value);
 #endif

@@ -11,7 +11,7 @@ makeCreateTableStmt(char* tbl_name, List* cols) {
 	stmt->relname = tbl_name;
 	stmt->columns = cols;
 
-	return stmt;
+	return (Node*)stmt;
 }
 
 Node*
@@ -53,7 +53,7 @@ makeAssignStmt(char* col_name, Node* value) {
 	stmt->nodetag = NT_AssignStmt;
 	stmt->col_name = col_name;
 	stmt->value = value;
-	return stmt;
+	return (Node*)stmt;
 }
 
 
