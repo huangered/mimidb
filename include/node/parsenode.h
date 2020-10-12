@@ -45,6 +45,13 @@ typedef struct CreateTableStmt {
 	List* columns;
 } CreateTableStmt;
 
+typedef struct CreateTableParam {
+	NodeTag nodetag;
+	char* colname;
+	char* type;
+	bool primary;
+} CreateTableParam;
+
 typedef struct ParamStmt {
 	NodeTag nodetag;
 	char* key;
@@ -75,6 +82,7 @@ Node* makeSelectStmt(char* tbl_name, List* cols);
 Node* makeInsertStmt(char* tbl_name, List* cols);
 Node* makeUpdateStmt(char* tbl_name, List* cols, Node* where_cause);
 Node* makeCreateTableStmt(char* tbl_name, List* cols);
+Node* makeCreateTableParam(char* col_name, char* type, bool primary);
 Node* makeWhereStmt(List* cols);
 
 #endif

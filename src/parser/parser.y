@@ -44,6 +44,7 @@ void yyerror(YYLTYPE* a, void* b, const char* s);
 %token AND
 %token EQ
 %token IDENT
+%token PRIMARY KEY
 %type <str> term
 %type <str> ident
 %type <integer> number
@@ -51,8 +52,8 @@ void yyerror(YYLTYPE* a, void* b, const char* s);
 %type <list> value_list
 %type <list> column_list
 %type <list> term_list
-%type <list> param_list
-%type <node> param
+%type <list> create_table_param_list
+%type <node> create_table_param
 %type <node> where_cause
 %type <list> where_col_ref_list
 %type <node> where_col_ref
@@ -93,7 +94,7 @@ update_param:
   | number { $$ = makeIntValue($1); }
   ;
 CreateTableStmt:
-  CREATE TABLE tbl_name '(' param_list ')' EOL { yyscanner->node = makeCreateTableStmt($3, $5); }
+  CREATE TABLE tbl_name '(' create_table_param_list ')' EOL { yyscanner->node = makeCreateTableStmt($3, $5); }
   ;
 tbl_name:
   ident { $$ = $1; };
@@ -121,12 +122,13 @@ term_list:
   | term_list ',' term { $$ = append_list($1, $3); }
   ;
 
-param_list:
-    param { List* list = new_list(NT_List); $$ = append_list(list, $1); }
-  | param_list ',' param { $$ = append_list($1, $3); }
+create_table_param_list:
+    create_table_param { List* list = new_list(NT_List); $$ = append_list(list, $1); }
+  | create_table_param_list ',' create_table_param { $$ = append_list($1, $3); }
   ;
-param:
-  ident ident { $$ = makeParam($1, $2); }
+create_table_param:
+    ident ident PRIMARY KEY { $$ = makeCreateTableParam($1, $2, true); }
+  | ident ident { $$ = makeCreateTableParam($1, $2, false); }
   ;
 where_cause:
   WHERE where_col_ref_list { $$ = makeWhereStmt($2); }
