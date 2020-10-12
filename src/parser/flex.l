@@ -11,6 +11,9 @@
 create		{ return CREATE; }
 table		{ return TABLE; }
 
+primary		{ return PRIMARY; }
+key			{ return KEY; }
+
 insert		{ return INSERT; }
 into		{ return INTO; }
 values		{ return VALUES; }

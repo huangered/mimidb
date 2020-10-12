@@ -2,6 +2,7 @@
 #include "catalog/heap.h"
 #include "catalog/index.h"
 #include "commands/indexcmds.h"
+#include "util/mctx.h"
 
 static TupleDesc formTupleDesc(List* columns);
 
@@ -16,5 +17,7 @@ void DefineRelation(CreateTableStmt* stmt) {
 
 TupleDesc
 formTupleDesc(List* columns) {
-	return NULL;
+	TupleDesc tupdesc = palloc(sizeof(TupleDescData));
+	tupdesc->natts = list_len(columns);
+	return tupdesc;
 }
