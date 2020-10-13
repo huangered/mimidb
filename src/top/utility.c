@@ -10,6 +10,7 @@ ProcessUtility(Node* pstmt) {
 	switch (pstmt->nodetag)
 	{
 	case NT_CreateTableStmt:
+	{
 		List* stmts = NULL;
 
 		// 拆解create table sql
@@ -22,6 +23,7 @@ ProcessUtility(Node* pstmt) {
 
 		// process other.
 		// todo:
-		break;
+	}
+	break;
 	}
 }
