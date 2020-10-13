@@ -13,7 +13,7 @@ ProcessUtility(Node* pstmt) {
 		List* stmts = NULL;
 
 		// 拆解create table sql
-		stmts = transformCreateStmt(pstmt);
+		stmts = transformCreateStmt((CreateTableStmt*)pstmt);
 
 		Node* stmt = (Node*)stmts->head;
 		if (stmt->nodetag == NT_CreateTableStmt) {
