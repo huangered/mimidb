@@ -127,8 +127,8 @@ create_table_param_list:
   | create_table_param_list ',' create_table_param { $$ = append_list($1, $3); }
   ;
 create_table_param:
-    ident ident PRIMARY KEY { $$ = makeCreateTableParam($1, $2, true); }
-  | ident ident { $$ = makeCreateTableParam($1, $2, false); }
+    ident ident PRIMARY KEY { $$ = makeColumnDef($1, makeTypeName($2), true);  }
+  | ident ident { $$ = makeColumnDef($1, makeTypeName($2), false); }
   ;
 where_cause:
   WHERE where_col_ref_list { $$ = makeWhereStmt($2); }
