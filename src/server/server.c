@@ -1,25 +1,25 @@
-#include "server/server.h"
 #include "mimi.h"
 #include "foo.h"
-
-enum G {
-	a,
-	b,
-	c,
-};
+#include "access/relcache.h"
+#include "server/server.h"
+#include "storage/bufmgr.h"
+#include "util/mctx.h"
 
 int
 main(int argc, char* argv[]) {
-	
-    printf("%d", NAME_INCLUDE);
-	Startup();
-	printf("%d", sizeof(enum G));
-	printf("%d", sizeof(int));
 
+	Startup();
     return 0;
 }
 
 void
 Startup() {
-	printf("start up");
+	printf("start up mctx");
+	MemoryContextInit();
+
+	printf("start up buffer mgr");
+	BufferInit();
+
+	printf("start relation cache");
+	RelationCacheInit();
 }
