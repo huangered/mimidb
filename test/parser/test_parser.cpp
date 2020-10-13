@@ -30,16 +30,13 @@ TEST(parser, basic_create_table)
 	EXPECT_TRUE(raw != NULL);
 	EXPECT_EQ(raw->nodetag, NT_CreateTableStmt);
 	EXPECT_STREQ(raw->relname, "test");
-	CreateTableParam* param = (CreateTableParam*)raw->columns->head->data.ptr_value;
+
+	ColumnDef* param = (ColumnDef*)raw->columns->head->data.ptr_value;
 	EXPECT_STREQ(param->colname, "c");
-	EXPECT_STREQ(param->type, "text");
-	EXPECT_FALSE(param->primary);
-
-	param = (CreateTableParam*)raw->columns->head->next->next->data.ptr_value;
-	EXPECT_STREQ(param->colname, "a");
-	EXPECT_STREQ(param->type, "int");
-	EXPECT_TRUE(param->primary);
-
+	
+	TypeName* tname = param->typeName;
+	EXPECT_STREQ(tname->name, "text");
+	
 }
 
 TEST(parser, update_row)

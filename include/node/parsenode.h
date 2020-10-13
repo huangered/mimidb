@@ -73,6 +73,18 @@ typedef struct StrValue {
 	char* str;
 } StrValue;
 
+typedef struct TypeName {
+	NodeTag nodetag;
+	char* name;
+	Oid typeOid;
+} TypeName;
+
+typedef struct ColumnDef {
+	NodeTag nodetag;
+	char* colname;
+	TypeName* typeName;
+} ColumnDef;
+
 Node* makeIntValue(int i);
 Node* makeStrValue(char* str);
 Node* makeExpr(char* key);
@@ -84,5 +96,6 @@ Node* makeUpdateStmt(char* tbl_name, List* cols, Node* where_cause);
 Node* makeCreateTableStmt(char* tbl_name, List* cols);
 Node* makeCreateTableParam(char* col_name, char* type, bool primary);
 Node* makeWhereStmt(List* cols);
-
+NodePtr makeTypeName(char* type_name);
+NodePtr makeColumnDef(char* col_name, TypeName* type_name, bool primary);
 #endif

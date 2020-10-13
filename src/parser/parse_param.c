@@ -18,3 +18,18 @@ makeCreateTableParam(char* col_name, char* type, bool primary) {
 	node->primary = primary;
 	return (Node*)node;
 }
+
+NodePtr
+makeTypeName(char* type_name) {
+	TypeName* name = palloc(sizeof(TypeName));
+	name->name = type_name;
+	return (NodePtr)name;
+}
+
+NodePtr
+makeColumnDef(char* col_name, TypeName* type_name, bool primary) {
+	ColumnDef* def = palloc(sizeof(ColumnDef));
+	def->colname = col_name;
+	def->typeName = type_name;
+	return (NodePtr)def;
+}

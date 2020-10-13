@@ -4,3 +4,8 @@
 void RelationCreateStorage(Relation rel) {
     smgrcreate(rel, MAIN_FORKNUM);
 }
+
+void
+RelationDropStorage(Relation rel) {
+
+}
