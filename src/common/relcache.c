@@ -1,6 +1,7 @@
 ﻿#include "access/relcache.h"
 #include "access/rel.h"
-#include "common/relation.h"
+#include "access/relation.h"
+#include "access/genam.h"
 #include "util/hash.h"
 #include "catalog/mimi_attribute.h"
 #include "catalog/mimi_type.h"
@@ -8,6 +9,7 @@
 #include "util/mctx.h"
 #include "access/heaptuple.h"
 #include "storage/smgr.h"
+#include "access/scankey.h"
 
 Hash* relhash;
 
@@ -217,13 +219,26 @@ void RelationBuildTuple(Relation heaprel) {
     }
 }
 
+
+
 /*
  * 扫描 mm_class 表，获取 relation tuple 信息
  */
 HeapTuple ScanMimiRelation(Oid relid) {
-    HeapTuple tup = palloc(sizeof(HeapTupleData));
-    tup->t_data = palloc(sizeof(FormData_mimi_class));
-    Form_mimi_class fmc = tup->t_data;
-    strcpy(fmc->name, "asdf");
+    HeapTuple tup = NULL;
+    ScanKeyData key[1];
+    Relation pg_class_relation;
+
+    FmgrInfo info;
+
+    ScanKeyInit(&key, 1, BTEqualStrategyNumber, NULL, info);
+    pg_class_relation = relation_open(1);
+
+    systable_beginscan();
+    tup = systable_getnext();
+    systable_endscan();
+
+    relation_close(pg_class_relation);
+
     return tup;
 }
