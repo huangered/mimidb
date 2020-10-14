@@ -1,7 +1,7 @@
 ﻿#include "access/heap.h"
 #include "catalog/heap.h"
 #include "access/rel.h"
-#include "common/relation.h"
+#include "access/relation.h"
 #include "util/mctx.h"
 #include "catalog/storage.h"
 #include "catalog/mimi_code.h"
