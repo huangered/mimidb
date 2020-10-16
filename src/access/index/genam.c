@@ -1,7 +1,17 @@
 #include "access/genam.h"
+#include "access/relcache.h"
+#include "access/scankey.h"
 
-struct A* systable_beginscan() { return NULL; };
-HeapTuple systable_getnext() {
+SystemTableScan
+systable_beginscan(Relation sysrelation, int nkeys, ScanKey key) {
+    return NULL; 
+};
+
+HeapTuple
+systable_getnext(SystemTableScan scan) {
     return NULL;
 };
-void systable_endscan() {};
+
+void
+systable_endscan(SystemTableScan scan) {
+};
