@@ -1,15 +1,16 @@
-﻿#include "access/relcache.h"
+﻿#include "access/genam.h"
+#include "access/heaptuple.h"
+#include "access/scankey.h"
+#include "access/relcache.h"
 #include "access/rel.h"
 #include "access/relation.h"
-#include "access/genam.h"
-#include "util/hash.h"
 #include "catalog/mimi_attribute.h"
 #include "catalog/mimi_type.h"
 #include "catalog/mimi_code.h"
-#include "util/mctx.h"
-#include "access/heaptuple.h"
 #include "storage/smgr.h"
-#include "access/scankey.h"
+#include "util/builtins.h"
+#include "util/hash.h"
+#include "util/mctx.h"
 
 Hash* relhash;
 
@@ -140,7 +141,7 @@ void formrdesc(const char* relname, Oid reltype, int natts, const FormData_mimi_
     rel->rnode = reltype;
     rel->root_blkno = 0;
     rel->rd_rel = palloc(sizeof(FormData_mimi_class));
-    strcpy(rel->rd_rel->name, relname);
+    strcpy(rel->rd_rel->relname, relname);
 
     rel->tb_am = table_route();
     // build relation tuple desc
@@ -169,7 +170,7 @@ Relation BuildRelationDesc(Oid oid, bool insert) {
     Relation heaprel = palloc(sizeof(RelationData));
     heaprel->oid = oid;
     heaprel->rd_rel = palloc(sizeof(FormData_mimi_class));
-    strcpy(heaprel->rd_rel->name, rel_class->name);
+    strcpy(heaprel->rd_rel->relname, rel_class->relname);
 
     //RelationBuildTuple(heaprel);
 
@@ -190,7 +191,7 @@ Relation BuildLocalRelation(Oid oid, const char* relname, TupleDesc tupdesc) {
     heaprel->oid = oid;
     heaprel->rnode = oid;
     heaprel->rd_rel = palloc(sizeof(FormData_mimi_class));
-    strcpy(heaprel->rd_rel->name, relname);
+    strcpy(heaprel->rd_rel->relname, relname);
 
     heaprel->tupleDesc = palloc(sizeof(TupleDescData));
     heaprel->tupleDesc->natts = tupdesc->natts;
@@ -228,15 +229,14 @@ HeapTuple ScanMimiRelation(Oid relid) {
     HeapTuple tup = NULL;
     ScanKeyData key[1];
     Relation pg_class_relation;
+    SystemTableScan scan;
 
-    FmgrInfo info;
+    ScanKeyInit(key, MIMI_CLASS_OID_LOCATION, BTEqualStrategyNumber, relid, OIDEQ_OID);
+    pg_class_relation = relation_open(ClassRelationId);
 
-    ScanKeyInit(&key, 1, BTEqualStrategyNumber, NULL, info);
-    pg_class_relation = relation_open(1);
-
-    systable_beginscan();
-    tup = systable_getnext();
-    systable_endscan();
+    scan = systable_beginscan(pg_class_relation, 1, key);
+    tup = systable_getnext(scan);
+    systable_endscan(scan);
 
     relation_close(pg_class_relation);
 
