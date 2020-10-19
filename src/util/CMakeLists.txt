@@ -1,3 +1,5 @@
-﻿AUX_SOURCE_DIRECTORY(. DIR_SRCS)
+﻿FILE(GLOB sources */*.c)
 
-add_library(util ${DIR_SRCS})
+AUX_SOURCE_DIRECTORY(. DIR_SRCS)
+
+add_library(util ${sources} ${DIR_SRCS})
