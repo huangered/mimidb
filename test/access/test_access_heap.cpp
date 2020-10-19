@@ -48,7 +48,7 @@ TEST(heap, incr_insert)
     //print_heap(rel);
 
     HeapScanDesc scan = (HeapScanDesc)palloc(sizeof(HeapScanDescData));
-    scan->rel = rel;
+    scan->rs_base.rs_rel = rel;
     scan->inited = false;
     scan->num_blocks = 1;
     scan->key = 9;

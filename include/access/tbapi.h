@@ -6,9 +6,10 @@
 #include "access/offset.h"
 #include "access/heaptuple.h"
 #include "access/scankey.h"
+#include "access/scan.h"
 
 typedef struct HeapScanDescData {
-    Relation rel;
+    TableScanDescData rs_base;
 
     BlockNumber num_blocks;    /* max block to scan */
 
