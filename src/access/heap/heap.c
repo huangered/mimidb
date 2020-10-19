@@ -134,7 +134,7 @@ HeapTuple heapgetnext(HeapScanDesc scan) {
 bool heapendscan(HeapScanDesc scan) {
     // descease the relation ref count
 
-    pfree(scan->key);
+    pfree(scan->rs_base.rs_key);
 
     pfree(scan);
     return true;
