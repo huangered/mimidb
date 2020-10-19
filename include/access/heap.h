@@ -5,13 +5,13 @@
 #include "rel.h"
 #include "storage/bufmgr.h"
 #include "access/heaptuple.h"
-
+#include "access/scankey.h"
 
 extern void heapbuildempty(Relation rel);
 extern bool heap_tuple_insert(Relation rel, TupleSlotDesc* slot);
 extern bool heapremove(Relation rel, int key);
 extern bool heapgettuple(HeapScanDesc scan);
-extern bool heapbeginscan(HeapScanDesc scan);
+extern HeapScanDesc heapbeginscan(Relation rel, int nkeys, ScanKey key);
 extern HeapTuple heapgetnext(HeapScanDesc scan);
 extern bool heapendscan(HeapScanDesc scan);
 extern void heap_vacuum(Relation rel);
