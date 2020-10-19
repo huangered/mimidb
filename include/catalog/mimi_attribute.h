@@ -4,7 +4,7 @@
 #include "mimi.h"
 
 typedef struct FormData_mimi_attribute {
-    Oid oid;
+    Oid att_relid;
     char attname[NAME_LIMIT];
     int attlen;
     Oid typid;

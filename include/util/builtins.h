@@ -9,6 +9,7 @@
 #define INT32CMP_OID	2
 #define OIDEQ_OID		3
 
+// 各种int比较函数
 extern Datum int8cmp(FunctionCallInfo fcinfo);
 extern Datum int16cmp(FunctionCallInfo fcinfo);
 extern Datum int32cmp(FunctionCallInfo fcinfo);
