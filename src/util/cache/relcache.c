@@ -17,7 +17,7 @@ Hash* relhash;
 static void formrdesc(const char* relname, Oid reltype, int natts, const FormData_mimi_attribute* attrs);
 static void relationCacheInsert(Relation rel);
 static Relation relationCacheLookup(Oid relid);
-static void RelationBuildTuple(Relation rel);
+static void RelationBuildTuple(Relation rel, TupleDesc tupleDesc);
 static HeapTuple ScanMimiRelation(Oid relid);
 
 typedef struct RelCacheEntry {
@@ -187,21 +187,14 @@ Relation BuildLocalRelation(Oid oid, const char* relname, TupleDesc tupdesc) {
     heaprel->rd_rel = palloc(sizeof(FormData_mimi_class));
     strcpy(heaprel->rd_rel->relname, relname);
 
-    heaprel->tupleDesc = palloc(sizeof(TupleDescData));
-    heaprel->tupleDesc->natts = tupdesc->natts;
-    for (int i = 0; i < heaprel->tupleDesc->natts; i++) {
-        heaprel->tupleDesc->attr[i].attlen = tupdesc->attr[i].attlen;
-        heaprel->tupleDesc->attr[i].typid = tupdesc->attr[i].typid;
-        strcpy(heaprel->tupleDesc->attr[i].attname, tupdesc->attr[i].attname);
-    }
+    RelationBuildTuple(heaprel, tupdesc);
 
     heaprel->refcount = 0;
     return heaprel;
 }
 
-void RelationBuildTuple(Relation heaprel) {
+void RelationBuildTuple(Relation heaprel, TupleDesc tupdesc) {
     // find tuple desc from meta data
-    TupleDesc tupdesc;
 
     heaprel->tupleDesc = palloc(sizeof(TupleDescData));
     heaprel->tupleDesc->natts = tupdesc->natts;
@@ -211,8 +204,6 @@ void RelationBuildTuple(Relation heaprel) {
         strcpy(heaprel->tupleDesc->attr[i].attname, tupdesc->attr[i].attname);
     }
 }
-
-
 
 /*
  * 扫描 mm_class 表，获取 relation tuple 信息
