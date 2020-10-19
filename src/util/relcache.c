@@ -53,25 +53,21 @@ static Relation relationCacheLookup(Oid relid) {
 
 static const FormData_mimi_attribute desc_pg_class[4] = {
     {
-        .oid = 1,
         .attname = "oid",
         .attlen = sizeof(int),
         .typid = 1
     },
         {
-        .oid = 1,
         .attname = "relkind",
         .attlen = sizeof(int),
         .typid = 1
     },
         {
-        .oid = 1,
         .attname = "relpages",
         .attlen = sizeof(int),
         .typid = 1
     },
         {
-        .oid = 1,
         .attname = "tuples",
         .attlen = sizeof(int),
         .typid = 1
@@ -80,7 +76,6 @@ static const FormData_mimi_attribute desc_pg_class[4] = {
 
 static const FormData_mimi_attribute desc_pg_attribute[1] = {
     {
-        .oid = 2,
         .attname = "oid",
         .attlen = sizeof(int),
         .typid = 1
@@ -88,7 +83,6 @@ static const FormData_mimi_attribute desc_pg_attribute[1] = {
 };
 static const FormData_mimi_attribute desc_pg_type[1] = {
     {
-        .oid = 3,
         .attname = "oid",
         .attlen = sizeof(int),
     }
@@ -196,7 +190,6 @@ Relation BuildLocalRelation(Oid oid, const char* relname, TupleDesc tupdesc) {
     heaprel->tupleDesc = palloc(sizeof(TupleDescData));
     heaprel->tupleDesc->natts = tupdesc->natts;
     for (int i = 0; i < heaprel->tupleDesc->natts; i++) {
-        heaprel->tupleDesc->attr[i].oid = tupdesc->attr[i].oid;
         heaprel->tupleDesc->attr[i].attlen = tupdesc->attr[i].attlen;
         heaprel->tupleDesc->attr[i].typid = tupdesc->attr[i].typid;
         strcpy(heaprel->tupleDesc->attr[i].attname, tupdesc->attr[i].attname);
@@ -213,7 +206,6 @@ void RelationBuildTuple(Relation heaprel) {
     heaprel->tupleDesc = palloc(sizeof(TupleDescData));
     heaprel->tupleDesc->natts = tupdesc->natts;
     for (int i = 0; i < heaprel->tupleDesc->natts; i++) {
-        heaprel->tupleDesc->attr[i].oid = tupdesc->attr[i].oid;
         heaprel->tupleDesc->attr[i].attlen = tupdesc->attr[i].attlen;
         heaprel->tupleDesc->attr[i].typid = tupdesc->attr[i].typid;
         strcpy(heaprel->tupleDesc->attr[i].attname, tupdesc->attr[i].attname);

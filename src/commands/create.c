@@ -1,4 +1,8 @@
+﻿/*
+* create table实现
+*/
 #include "commands/create.h"
+#include "catalog/catalog.h"
 #include "catalog/heap.h"
 #include "catalog/index.h"
 #include "commands/indexcmds.h"
@@ -7,9 +11,13 @@
 static TupleDesc formTupleDesc(List* columns);
 static void formAttr(FormData_mimi_attribute* attr, ColumnDef* def);
 
-void DefineRelation(CreateTableStmt* stmt) {
+/*
+创建表
+*/
+void
+DefineRelation(CreateTableStmt* stmt) {
 	const char* name = stmt->relname;
-	Oid id = 1;
+	Oid id = GetNewOid();
 	TupleDesc tupdesc = (TupleDesc)formTupleDesc(stmt->columns);
 	heap_create_with_catalog(name, id, tupdesc);
 }

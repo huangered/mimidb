@@ -1,3 +1,4 @@
+#include "mimi.h"
 #include "port/mmsocket.h"
 
 #ifdef _WIN32
