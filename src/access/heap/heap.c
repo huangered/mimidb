@@ -117,8 +117,14 @@ bool heapgettuple(HeapScanDesc scan) {
     return false;
 }
 
-bool heapbeginscan(HeapScanDesc scan) {
-    return false;
+HeapScanDesc
+heapbeginscan(Relation rel, int nkeys, ScanKey key) {
+    HeapScanDesc scan;
+
+    // increase relation ref count
+    scan = (HeapScanDesc)palloc(sizeof(HeapScanDescData));
+
+    return scan;
 }
 HeapTuple heapgetnext(HeapScanDesc scan) {
     return NULL;

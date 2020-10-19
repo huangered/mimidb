@@ -5,6 +5,7 @@
 #include "executor/tuptable.h"
 #include "access/offset.h"
 #include "access/heaptuple.h"
+#include "access/scankey.h"
 
 typedef struct HeapScanDescData {
     Relation rel;
@@ -26,7 +27,7 @@ typedef struct TableAmRoute {
     bool (*tuple_insert)(Relation rel, TupleSlotDesc *slot);
     bool (*tuple_remove)(Relation rel, int key);
     bool (*gettuple)(HeapScanDesc scan);
-    bool (*beginscan)(HeapScanDesc scan);
+    HeapScanDesc (*beginscan)(Relation rel, int nkeys, ScanKey keys);
     HeapTuple (*getnext)(HeapScanDesc scan);
     bool (*endscan)(HeapScanDesc scan);
     void (*vacuum)(Relation rel);
