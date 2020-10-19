@@ -132,7 +132,11 @@ HeapTuple heapgetnext(HeapScanDesc scan) {
     return NULL;
 }
 bool heapendscan(HeapScanDesc scan) {
-    // do nothing now.
+    // descease the relation ref count
+
+    pfree(scan->key);
+
+    pfree(scan);
     return true;
 }
 
