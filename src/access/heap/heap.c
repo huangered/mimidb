@@ -89,7 +89,7 @@ bool heapgettuple(HeapScanDesc scan) {
             return false;
         }
 
-        buf = ReadBuffer(scan->rel, MAIN_FORKNUM, blkno);
+        buf = ReadBuffer(scan->rs_base.rs_rel, MAIN_FORKNUM, blkno);
 
         Page page = BufferGetPage(buf);
         OffsetNumber max = PageGetMaxOffsetNumber(page);
@@ -123,7 +123,9 @@ heapbeginscan(Relation rel, int nkeys, ScanKey key) {
 
     // increase relation ref count
     scan = (HeapScanDesc)palloc(sizeof(HeapScanDescData));
-
+    scan->rs_base.rs_rel = rel;
+    scan->rs_base.rs_nkeys = nkeys;
+    scan->rs_base.rs_key = key;
     return scan;
 }
 HeapTuple heapgetnext(HeapScanDesc scan) {
