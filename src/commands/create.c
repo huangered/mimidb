@@ -41,6 +41,6 @@ formTupleDesc(List* columns) {
 void
 formAttr(FormData_mimi_attribute* attr, ColumnDef* def) {
 	attr->typid = def->typeName->typeOid;
-	attr->attlen = 255;
+	attr->att_len = 255;
 	//memcpy(attr->attname, def->colname, attr->attlen);
 }

@@ -100,8 +100,8 @@ void
 InsertMimiAttributeTuple(Relation mimi_attribute_rel, Form_mimi_attribute new_attribute) {
     Datum values[5];
     values[0] = IntGetDatum(new_attribute->att_relid);
-    values[1] = IntGetDatum(new_attribute->attlen);
-    values[2] = PointerGetDatum(new_attribute->attname);
+    values[1] = IntGetDatum(new_attribute->att_len);
+    values[2] = PointerGetDatum(new_attribute->att_name);
     values[3] = IntGetDatum(new_attribute->typid);
 
     HeapTuple tuple = heap_form_tuple(mimi_attribute_rel->tupleDesc, values);

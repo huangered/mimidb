@@ -2,11 +2,8 @@
 #define _indexcmds_h_
 
 #include "mimi.h"
+#include "node/parsenode.h"
 
-typedef struct IndexStmt {
-    int i;
-} IndexStmt;
-
-void DefineIndex(Oid relationId, IndexStmt* stmt);
+void DefineIndex(Oid relationId, CreateIndexStmt* stmt);
 
 #endif // !_indexcmds_h_
