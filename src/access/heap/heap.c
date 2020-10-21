@@ -1,4 +1,4 @@
-#include "access/heap.h"
+﻿#include "access/heap.h"
 #include "storage/page.h"
 #include "storage/bufmgr.h"
 #include "util/mctx.h"
@@ -9,7 +9,7 @@
 #define HOT_NORMAL      2
 
 static bool heap_insert(Relation rel, HeapTuple tup);
-
+static HeapTuple heaptuple_prepare_insert(Relation rel, HeapTuple tup, int xmin);
 
 static const TableAmRoute route = {
     .buildempty = heapbuildempty,
@@ -31,6 +31,7 @@ void heapbuildempty(Relation rel) {
 }
 
 bool heap_tuple_insert(Relation rel, TupleSlotDesc* slot) {
+
     HeapTuple htup = _heap_buildtuple(rel, slot);
     
     
@@ -160,13 +161,27 @@ simple_heap_insert(Relation rel, HeapTuple tup) {
 // ========= private 
 
 bool heap_insert(Relation rel, HeapTuple htup) {
+    // get current transition id.
+    int xid = 0;
     Buffer buffer;
+
+    htup = heaptuple_prepare_insert(rel, htup, xid);
 
     buffer = GetBufferForTuple(rel, htup->t_len);
 
     RelationPutHeapTuple(rel, buffer, htup);
 
     return true;
+}
+
+/*
+给heaptup的事务id赋值
+*/
+HeapTuple
+heaptuple_prepare_insert(Relation rel, HeapTuple tup, int xmin) {
+    tup->t_data->t_heap.t_xmin = xmin;
+    tup->t_data->t_heap.t_xmax = 0;
+    return tup;
 }
 
 // for debug
