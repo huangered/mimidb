@@ -1,4 +1,4 @@
-#ifndef _PARSENODE_H_
+﻿#ifndef _PARSENODE_H_
 #define _PARSENODE_H_
 
 #include "node/node.h"
@@ -51,6 +51,15 @@ typedef struct CreateTableParam {
 	char* type;
 	bool primary;
 } CreateTableParam;
+
+/*
+index 描述
+*/
+typedef struct CreateIndexStmt {
+	NodeTag nodetag;
+	char* relname;
+	List* columns;
+} CreateIndexStmt;
 
 typedef struct ParamStmt {
 	NodeTag nodetag;

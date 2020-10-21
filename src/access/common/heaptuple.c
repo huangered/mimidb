@@ -10,7 +10,7 @@ heap_form_tuple(TupleDesc tupdesc, Datum* values) {
     int natts = tupdesc->natts;
     for (int i = 0; i < natts; i++) {
         FormData_mimi_attribute attr = tupdesc->attr[i];
-        data_size += attr.attlen;
+        data_size += attr.att_len;
     }
 
     int hoff = sizeof(HeapTupleHeaderData);

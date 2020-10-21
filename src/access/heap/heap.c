@@ -203,7 +203,7 @@ void print_heap(Relation rel) {
 
             int* ptr = ((char*)tup + tup->t_hoff + offset);
             printf("value: %d", *ptr);
-            offset += attr.attlen;
+            offset += attr.att_len;
         }
     }
 }

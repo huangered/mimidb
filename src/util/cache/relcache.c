@@ -199,9 +199,9 @@ void RelationBuildTuple(Relation heaprel, TupleDesc tupdesc) {
     heaprel->tupleDesc = palloc(sizeof(TupleDescData));
     heaprel->tupleDesc->natts = tupdesc->natts;
     for (int i = 0; i < heaprel->tupleDesc->natts; i++) {
-        heaprel->tupleDesc->attr[i].attlen = tupdesc->attr[i].attlen;
+        heaprel->tupleDesc->attr[i].att_len = tupdesc->attr[i].att_len;
         heaprel->tupleDesc->attr[i].typid = tupdesc->attr[i].typid;
-        strcpy(heaprel->tupleDesc->attr[i].attname, tupdesc->attr[i].attname);
+        strcpy(heaprel->tupleDesc->attr[i].att_name, tupdesc->attr[i].att_name);
     }
 }
 
