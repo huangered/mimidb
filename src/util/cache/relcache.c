@@ -53,38 +53,38 @@ static Relation relationCacheLookup(Oid relid) {
 
 static const FormData_mimi_attribute desc_pg_class[4] = {
     {
-        .attname = "oid",
-        .attlen = sizeof(int),
+        .att_name = "oid",
+        .att_len = sizeof(int),
         .typid = 1
     },
         {
-        .attname = "relkind",
-        .attlen = sizeof(int),
+        .att_name = "relkind",
+        .att_len = sizeof(int),
         .typid = 1
     },
         {
-        .attname = "relpages",
-        .attlen = sizeof(int),
+        .att_name = "relpages",
+        .att_len = sizeof(int),
         .typid = 1
     },
         {
-        .attname = "tuples",
-        .attlen = sizeof(int),
+        .att_name = "tuples",
+        .att_len = sizeof(int),
         .typid = 1
     }
 };
 
 static const FormData_mimi_attribute desc_pg_attribute[1] = {
     {
-        .attname = "oid",
-        .attlen = sizeof(int),
+        .att_name = "oid",
+        .att_len = sizeof(int),
         .typid = 1
     } 
 };
 static const FormData_mimi_attribute desc_pg_type[1] = {
     {
-        .attname = "oid",
-        .attlen = sizeof(int),
+        .att_name = "oid",
+        .att_len = sizeof(int),
     }
 };
 
