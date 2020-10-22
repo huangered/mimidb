@@ -1,7 +1,8 @@
+%skeleton "lalr1.cc"
 %code requires {
 #include "parser/tokens.h"
-#include "node/parsenode.h"
-#include "util/mctx.h"
+#include "node/parsenode.hpp"
+#include "util/mctx.hpp"
 }
 /* simplest version of calculator */
 %code {

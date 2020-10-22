@@ -1,0 +1,20 @@
+#ifndef _smgr_h_
+#define _smgr_h_
+
+#include "storage/block.hpp"
+#include "access/relcache.hpp"
+#include "access/relpath.hpp"
+#include "storage/page.hpp"
+
+typedef struct SMgrRelationData {
+    BlockNumber smgr_fsm_nblocks;	/* last known size of fsm fork */
+} SMgrRelationData;
+
+typedef SMgrRelationData* SmgrRelation;
+
+extern bool smgrexists(Relation rel, ForkNumber number);
+extern void smgrcreate(Relation rel, ForkNumber number);
+extern BlockNumber smgrblocks(Relation rel, ForkNumber number);
+extern void smgrextend(Relation rel, Page page, BlockNumber blkno, ForkNumber number);
+extern void smgrwrite(Relation rel, ForkNumber number, BlockNumber blkno, const char* buf);
+#endif // !_smgr_h_

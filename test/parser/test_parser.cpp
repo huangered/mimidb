@@ -1,9 +1,10 @@
-#include "../g.h"
+#include "../g.hpp"
 
-_EXTERN_C
+extern "C" {
 #include "parser/tokens.h"
-#include "node/parsenode.h"
-_END_EXTERN_C
+}
+#include "node/parsenode.hpp"
+
 
  //test the basic usage in buff mgr.
 TEST(parser, basic)

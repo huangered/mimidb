@@ -1,8 +1,8 @@
-#include "../g.h"
+#include "../g.hpp"
 
-_EXTERN_C
-#include "util/hash.h"
-_END_EXTERN_C
+
+#include "util/hash.hpp"
+
 
 TEST(hash_test, add)
 {

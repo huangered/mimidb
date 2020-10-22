@@ -1,17 +1,16 @@
-#include "../g.h"
+#include "../g.hpp"
 
-_EXTERN_C
 
-#include "storage/bufmgr.h"
-#include "access/heap.h"
-#include "util/mctx.h"
-#include "storage/freespace.h"
-#include "storage/smgr.h"
-#include "util/sysdbg.h"
-#include "util/mctx.h"
-#include "access/tbapi.h"
+#include "storage/bufmgr.hpp"
+#include "access/heap.hpp"
+#include "util/mctx.hpp"
+#include "storage/freespace.hpp"
+#include "storage/smgr.hpp"
+#include "util/sysdbg.hpp"
+#include "util/mctx.hpp"
+#include "access/tbapi.hpp"
 
-_END_EXTERN_C
+
 
 // test the basic usage in buff mgr.
 TEST(heap, incr_insert)
