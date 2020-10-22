@@ -1,8 +1,8 @@
-#include "../g.h"
+#include "../g.hpp"
 
-_EXTERN_C
-#include "port/shmem.h"
-_END_EXTERN_C
+
+#include "port/shmem.hpp"
+
 
 TEST(share_memory_test, ShareMem) {
     shmem_init(100);

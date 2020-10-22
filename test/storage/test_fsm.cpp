@@ -1,12 +1,12 @@
-#include "../g.h"
+#include "../g.hpp"
 
-_EXTERN_C
-#include "storage/bufmgr.h"
-#include "storage/fsm_internal.h"
-#include "storage/freespace.h"
-#include "util/mctx.h"
-#include "storage/smgr.h"
-_END_EXTERN_C
+
+#include "storage/bufmgr.hpp"
+#include "storage/fsm_internal.hpp"
+#include "storage/freespace.hpp"
+#include "util/mctx.hpp"
+#include "storage/smgr.hpp"
+
 
 // test the basic usage in buff mgr.
 TEST(fsm, root)

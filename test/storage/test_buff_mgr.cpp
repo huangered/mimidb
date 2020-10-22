@@ -1,8 +1,8 @@
-#include "../g.h"
-_EXTERN_C
-#include "storage/bufmgr.h"
-#include "util/mctx.h"
-_END_EXTERN_C
+#include "../g.hpp"
+
+#include "storage/bufmgr.hpp"
+#include "util/mctx.hpp"
+
 
 // test the basic usage in buff mgr.
 TEST(hash_buff_mgr, basic)

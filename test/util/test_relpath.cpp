@@ -1,10 +1,10 @@
-#include "../g.h"
-_EXTERN_C
+#include "../g.hpp"
 
-#include "access/relpath.h"
-#include "util/mctx.h"
 
-_END_EXTERN_C
+#include "access/relpath.hpp"
+#include "util/mctx.hpp"
+
+
 
 TEST(Common, relpath_main)
 {

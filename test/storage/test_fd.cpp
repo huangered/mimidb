@@ -1,9 +1,9 @@
-#include "../g.h"
+#include "../g.hpp"
 
-_EXTERN_C
-#include "storage/fd.h"
-#include "storage/page.h"
-_END_EXTERN_C
+
+#include "storage/fd.hpp"
+#include "storage/page.hpp"
+
 
 // test the basic usage in buff mgr.
 TEST(fd, basic)

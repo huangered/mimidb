@@ -1,10 +1,10 @@
-#include "../g.h"
+#include "../g.hpp"
 
-_EXTERN_C
 
-#include "storage/spin.h"
 
-_END_EXTERN_C
+#include "storage/spin.hpp"
+
+
 
 // test the basic usage in buff mgr.
 TEST(Storage, spin)

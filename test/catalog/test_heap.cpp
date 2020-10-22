@@ -1,15 +1,15 @@
-#include "../g.h"
+#include "../g.hpp"
 
-_EXTERN_C
 
-#include "catalog/heap.h"
-#include "util/mctx.h"
-#include "storage/bufmgr.h"
-#include "storage/freespace.h"
-#include "storage/smgr.h"
-#include "catalog/mimi_code.h"
 
-_END_EXTERN_C
+#include "catalog/heap.hpp"
+#include "util/mctx.hpp"
+#include "storage/bufmgr.hpp"
+#include "storage/freespace.hpp"
+#include "storage/smgr.hpp"
+#include "catalog/mimi_code.hpp"
+
+
 
 TEST(Catalog, heap) {
     BufferInit();

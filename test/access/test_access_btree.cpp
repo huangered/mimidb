@@ -1,15 +1,15 @@
-#include "../g.h"
+#include "../g.hpp"
 
-_EXTERN_C
 
-#include "storage/bufmgr.h"
-#include "access/btree.h"
-#include "util/mctx.h"
-#include "storage/freespace.h"
-#include "util/sysdbg.h"
-#include "storage/smgr.h"
 
-_END_EXTERN_C
+#include "storage/bufmgr.hpp"
+#include "access/btree.hpp"
+#include "util/mctx.hpp"
+#include "storage/freespace.hpp"
+#include "util/sysdbg.hpp"
+#include "storage/smgr.hpp"
+
+
 
 // test the basic usage in buff mgr.
 TEST(btree, incr_insert)
