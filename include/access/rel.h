@@ -1,4 +1,4 @@
-#ifndef _REL_H_
+﻿#ifndef _REL_H_
 #define _REL_H_
 
 #include "mimi.h"
@@ -9,10 +9,11 @@
 #include "access/tupledesc.h"
 #include "catalog/mimi_class.h"
 #include "catalog/mimi_attribute.h"
+#include "storage/relnode.h"
 
 typedef struct RelationData {
     Oid oid;
-    int rnode;
+    RelFileNode rnode;      /* relation 的磁盘位置 */
     BlockNumber root_blkno;
 
     Form_mimi_class rd_rel; /* relation tuple */

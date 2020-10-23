@@ -5,6 +5,7 @@
 #include "access/relcache.h"
 #include "access/relpath.h"
 #include "storage/page.h"
+#include "storage/relnode.h"
 
 typedef struct SMgrRelationData {
     BlockNumber smgr_fsm_nblocks;	/* last known size of fsm fork */
@@ -12,9 +13,9 @@ typedef struct SMgrRelationData {
 
 typedef SMgrRelationData* SmgrRelation;
 
-extern bool smgrexists(Relation rel, ForkNumber number);
-extern void smgrcreate(Relation rel, ForkNumber number);
-extern BlockNumber smgrblocks(Relation rel, ForkNumber number);
-extern void smgrextend(Relation rel, Page page, BlockNumber blkno, ForkNumber number);
-extern void smgrwrite(Relation rel, ForkNumber number, BlockNumber blkno, const char* buf);
+extern bool smgrexists(RelFileNode rel, ForkNumber number);
+extern void smgrcreate(RelFileNode rel, ForkNumber number);
+extern BlockNumber smgrblocks(RelFileNode rel, ForkNumber number);
+extern void smgrextend(RelFileNode rel, Page page, BlockNumber blkno, ForkNumber number);
+extern void smgrwrite(RelFileNode rel, ForkNumber number, BlockNumber blkno, const char* buf);
 #endif // !_smgr_h_

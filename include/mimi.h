@@ -5,10 +5,16 @@
 
 typedef unsigned long long Oid;
 
+#define InvalidOid				((Oid)0)
+#define OidIsValid(objectId)	((bool)(objectId == InvalidOid))
+
 typedef uintptr_t Datum;
 
 #define IntGetDatum(X)      ((Datum)(X))
 #define DatumGetInt(X)      ((int)(X))
+
+#define PointerGetDatum(X)	((Datum)(X))
+#define DatumGetPointer(X)	((void*)(X))
 
 #define NAME_LIMIT  64
 

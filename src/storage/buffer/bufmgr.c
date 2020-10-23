@@ -65,7 +65,7 @@ FlushBuffer(BufferDesc* buffDesc) {
 
 // easy implement
 static void load_page(BufferTag tag, Buffer buf) {
-    char* path = GetRelPath(tag.rnode, tag.forkNum);
+    char* path = GetRelPath(tag.rnode.relnode, tag.forkNum);
     // read file
     fd* f = file_open(path);
     if (f->filePtr == NULL) {

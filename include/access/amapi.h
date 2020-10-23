@@ -1,13 +1,15 @@
-#ifndef _amapi_h_
+﻿#ifndef _amapi_h_
 #define _amapi_h_
 
 #include "mimi.h"
 #include "access/relcache.h"
+#include "access/scan.h"
 #include "storage/block.h"
 #include "access/offset.h"
 
 typedef struct IndexScanDescData {
-    Relation index_rel;
+    TableScanDescData rs_base;  // 继承 tableScanDescData;
+
     int key;
     int value;
     BlockNumber block;

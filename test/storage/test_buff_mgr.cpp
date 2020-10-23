@@ -8,7 +8,7 @@ _END_EXTERN_C
 TEST(hash_buff_mgr, basic)
 {
     Relation rel = (Relation)palloc(sizeof(Relation));
-    rel->rnode = 1;
+    rel->rnode.relnode = 1;
     BufferInit();
 
     Buffer buf_id = ReadBuffer(rel, ForkNumber::MAIN_FORKNUM, 0);
