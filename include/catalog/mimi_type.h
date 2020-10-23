@@ -1,5 +1,5 @@
-#ifndef _mimi_am_h_
-#define _mimi_am_h_
+#ifndef _MIMI_TYPE_H_
+#define _MIMI_TYPE_H_
 
 #include "mimi.h"
 
@@ -12,4 +12,4 @@ typedef struct FormData_mimi_am {
 
 typedef FormData_mimi_am* Form_mimi_am;
 
-#endif // !_mimi_class_h_
+#endif // !_MIMI_TYPE_H_
