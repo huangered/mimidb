@@ -30,10 +30,9 @@ if (CMAKE_VERSION VERSION_LESS 2.8.11)
   include_directories("${gtest_SOURCE_DIR}/include")
 endif()
 
-file(GLOB sources *.cpp)
-file(GLOB sub_sources */*.cpp)
+file(GLOB sources */*.cpp)
 
 # Now simply link against gtest or gtest_main as needed. Eg
-add_executable(unittest ${sources} ${sub_sources})
+add_executable(unittest ${sources})
 target_link_libraries(unittest gtest_main access catalog common port storage util parser)
 add_test(NAME unit_test COMMAND unittest)

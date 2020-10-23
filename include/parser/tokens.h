@@ -3,6 +3,6 @@
 
 #include "node/node.h"
 
-Node* raw_parse(const char* str);
+extern Node* raw_parse(const char* str);
 
 #endif
