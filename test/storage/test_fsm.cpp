@@ -13,7 +13,7 @@ TEST(fsm, root)
 {
     BufferInit();
     RelationData rel;
-    rel.rnode = 2000;
+    rel.rnode.relnode = 2000;
     rel.rd_smgr = (SmgrRelation)palloc(sizeof(SMgrRelationData));
     rel.rd_smgr->smgr_fsm_nblocks = 0;
    // Buffer buf = fsm_readbuf(&rel, FSM_ROOT_ADDRESS, true);
@@ -24,7 +24,7 @@ TEST(fsm, leaf)
 {
     BufferInit();
     RelationData rel;
-    rel.rnode = 2000;
+    rel.rnode.relnode = 2000;
     rel.rd_smgr = (SmgrRelation)palloc(sizeof(SMgrRelationData));
     rel.rd_smgr->smgr_fsm_nblocks = 0;
     RecordPageWithFreeSpace(&rel, 0, BLKSZ);

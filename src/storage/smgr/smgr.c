@@ -4,9 +4,9 @@
 #include "util/mctx.h"
 #include "storage/fd.h"
 
-bool smgrexists(Relation rel, ForkNumber number) {
+bool smgrexists(RelFileNode rel, ForkNumber number) {
     bool result = false;
-    char* path = GetRelPath(rel->rnode, number);
+    char* path = GetRelPath(rel.relnode, number);
 
     result = file_exist(path);
 
@@ -15,15 +15,15 @@ bool smgrexists(Relation rel, ForkNumber number) {
 }
 
 void
-smgrcreate(Relation rel, ForkNumber number) {
-    char* path = GetRelPath(rel->rnode, number);
+smgrcreate(RelFileNode rel, ForkNumber number) {
+    char* path = GetRelPath(rel.relnode, number);
     file_init(path);
     pfree(path);
 }
 
 
-BlockNumber smgrblocks(Relation rel, ForkNumber number) {
-    char* path = GetRelPath(rel->rnode, number);
+BlockNumber smgrblocks(RelFileNode rel, ForkNumber number) {
+    char* path = GetRelPath(rel.relnode, number);
 
     fd* fd = file_open(path);
     int size = file_size(fd);
@@ -31,8 +31,8 @@ BlockNumber smgrblocks(Relation rel, ForkNumber number) {
     return size / BLKSZ;
 }
 
-void smgrextend(Relation rel, Page page, BlockNumber blkno, ForkNumber number) {
-    char* path = GetRelPath(rel->rnode, number);
+void smgrextend(RelFileNode rel, Page page, BlockNumber blkno, ForkNumber number) {
+    char* path = GetRelPath(rel.relnode, number);
 
     fd* fd = file_open(path);
     file_write(fd, blkno, page);
@@ -44,8 +44,8 @@ void smgrextend(Relation rel, Page page, BlockNumber blkno, ForkNumber number) {
 将buf写到物理盘上
 */
 void
-smgrwrite(Relation rel, ForkNumber number, BlockNumber blkno, const char* buf) {
-    char* path = GetRelPath(rel->rnode, number);
+smgrwrite(RelFileNode rel, ForkNumber number, BlockNumber blkno, const char* buf) {
+    char* path = GetRelPath(rel.relnode, number);
     fd* fd = file_open(path);
     file_write(fd, blkno, buf);
     file_close(fd);

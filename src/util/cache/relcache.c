@@ -132,7 +132,7 @@ void formrdesc(const char* relname, Oid reltype, int natts, const FormData_mimi_
     */
     rel->refcount = 1;
     rel->oid = reltype;
-    rel->rnode = reltype;
+    rel->rnode.relnode = reltype;
     rel->root_blkno = 0;
     rel->rd_rel = palloc(sizeof(FormData_mimi_class));
     strcpy(rel->rd_rel->relname, relname);
@@ -183,7 +183,7 @@ Relation BuildRelationDesc(Oid oid, bool insert) {
 Relation BuildLocalRelation(Oid oid, const char* relname, TupleDesc tupdesc) {
     Relation heaprel = palloc(sizeof(RelationData));
     heaprel->oid = oid;
-    heaprel->rnode = oid;
+    heaprel->rnode.relnode = oid;
     heaprel->rd_rel = palloc(sizeof(FormData_mimi_class));
     strcpy(heaprel->rd_rel->relname, relname);
 

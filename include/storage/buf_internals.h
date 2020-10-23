@@ -6,7 +6,7 @@
 #include "access/relpath.h"
 
 typedef struct BufTag {
-    int rnode;
+    RelFileNode rnode;
     ForkNumber forkNum;
     BlockNumber blockNum;
 } BufferTag;
@@ -37,7 +37,7 @@ extern void StrategyFreeBuffer(Buffer buffer);
 // private method
 static inline uint32 buftag_hash(const void* key, Size keysize) {
     BufferTag* btag = (BufferTag*)key;
-    return btag->rnode;
+    return btag->rnode.relnode;
 }
 static inline bool buftag_equal(const void* left, const void* right, Size keysize) {
     int ret = memcmp(left, right, keysize);
