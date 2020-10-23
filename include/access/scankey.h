@@ -14,7 +14,7 @@ typedef struct ScanKeyData {
 
 typedef ScanKeyData* ScanKey;
 
-extern void ScanKeyInit(ScanKey entry, int attrNumber, StrategyNumber strategy, Datum datum, FmgrInfo func);
+extern void ScanKeyInit(ScanKey entry, int attrNumber, StrategyNumber strategy, Datum datum, Oid funcOid);
 
 #endif // !_scankey_h_
 

@@ -1,12 +1,16 @@
-#ifndef _mimi_attribute_h_
+﻿#ifndef _mimi_attribute_h_
 #define _mimi_attribute_h_
 
 #include "mimi.h"
 
+/*
+mimi_attribute 表描述
+*/
 typedef struct FormData_mimi_attribute {
-    Oid oid;
-    char attname[NAME_LIMIT];
-    int attlen;
+    Oid att_relid;
+    char att_name[NAME_LIMIT];
+    int att_len;
+    int att_order;  // att的位置，从0开始
     Oid typid;
 } FormData_mimi_attribute;
 

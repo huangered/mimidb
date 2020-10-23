@@ -20,7 +20,7 @@ TEST(heap, incr_insert)
     BufferInit();
 
     Relation rel = (Relation)palloc(sizeof(RelationData));
-    rel->rnode = 10003;
+    rel->rnode.relnode = 10003;
     rel->tb_am = table_route();
     rel->root_blkno = 0;
 
@@ -29,8 +29,8 @@ TEST(heap, incr_insert)
 
     rel->tupleDesc = (TupleDesc)palloc(sizeof(TupleDescData));
     rel->tupleDesc->natts = 2;
-    rel->tupleDesc->attr[0].attlen = 4;
-    rel->tupleDesc->attr[1].attlen = 4;
+    rel->tupleDesc->attr[0].att_len = 4;
+    rel->tupleDesc->attr[1].att_len = 4;
 
     RecordPageWithFreeSpace(rel, 0, BLKSZ);
     FreeSpaceMapVacuumRange(rel, 0, 1);
@@ -48,7 +48,7 @@ TEST(heap, incr_insert)
     //print_heap(rel);
 
     HeapScanDesc scan = (HeapScanDesc)palloc(sizeof(HeapScanDescData));
-    scan->rel = rel;
+    scan->rs_base.rs_rel = rel;
     scan->inited = false;
     scan->num_blocks = 1;
     scan->key = 9;

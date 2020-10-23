@@ -1,7 +1,6 @@
 #ifndef _LIST_H_
 #define _LIST_H_
 
-#include "mimi.h"
 #include "node/node.h"
 
 typedef struct ListCell {

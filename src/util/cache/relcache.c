@@ -1,20 +1,23 @@
-﻿#include "access/relcache.h"
+﻿#include "access/genam.h"
+#include "access/heaptuple.h"
+#include "access/scankey.h"
+#include "access/relcache.h"
 #include "access/rel.h"
-#include "common/relation.h"
-#include "util/hash.h"
+#include "access/relation.h"
 #include "catalog/mimi_attribute.h"
 #include "catalog/mimi_type.h"
 #include "catalog/mimi_code.h"
-#include "util/mctx.h"
-#include "access/heaptuple.h"
 #include "storage/smgr.h"
+#include "util/builtins.h"
+#include "util/hash.h"
+#include "util/mctx.h"
 
 Hash* relhash;
 
 static void formrdesc(const char* relname, Oid reltype, int natts, const FormData_mimi_attribute* attrs);
 static void relationCacheInsert(Relation rel);
 static Relation relationCacheLookup(Oid relid);
-static void RelationBuildTuple(Relation rel);
+static void RelationBuildTuple(Relation rel, TupleDesc tupleDesc);
 static HeapTuple ScanMimiRelation(Oid relid);
 
 typedef struct RelCacheEntry {
@@ -50,44 +53,38 @@ static Relation relationCacheLookup(Oid relid) {
 
 static const FormData_mimi_attribute desc_pg_class[4] = {
     {
-        .oid = 1,
-        .attname = "oid",
-        .attlen = sizeof(int),
+        .att_name = "oid",
+        .att_len = sizeof(int),
         .typid = 1
     },
         {
-        .oid = 1,
-        .attname = "relkind",
-        .attlen = sizeof(int),
+        .att_name = "relkind",
+        .att_len = sizeof(int),
         .typid = 1
     },
         {
-        .oid = 1,
-        .attname = "relpages",
-        .attlen = sizeof(int),
+        .att_name = "relpages",
+        .att_len = sizeof(int),
         .typid = 1
     },
         {
-        .oid = 1,
-        .attname = "tuples",
-        .attlen = sizeof(int),
+        .att_name = "tuples",
+        .att_len = sizeof(int),
         .typid = 1
     }
 };
 
 static const FormData_mimi_attribute desc_pg_attribute[1] = {
     {
-        .oid = 2,
-        .attname = "oid",
-        .attlen = sizeof(int),
+        .att_name = "oid",
+        .att_len = sizeof(int),
         .typid = 1
     } 
 };
 static const FormData_mimi_attribute desc_pg_type[1] = {
     {
-        .oid = 3,
-        .attname = "oid",
-        .attlen = sizeof(int),
+        .att_name = "oid",
+        .att_len = sizeof(int),
     }
 };
 
@@ -135,10 +132,10 @@ void formrdesc(const char* relname, Oid reltype, int natts, const FormData_mimi_
     */
     rel->refcount = 1;
     rel->oid = reltype;
-    rel->rnode = reltype;
+    rel->rnode.relnode = reltype;
     rel->root_blkno = 0;
     rel->rd_rel = palloc(sizeof(FormData_mimi_class));
-    strcpy(rel->rd_rel->name, relname);
+    strcpy(rel->rd_rel->relname, relname);
 
     rel->tb_am = table_route();
     // build relation tuple desc
@@ -167,7 +164,7 @@ Relation BuildRelationDesc(Oid oid, bool insert) {
     Relation heaprel = palloc(sizeof(RelationData));
     heaprel->oid = oid;
     heaprel->rd_rel = palloc(sizeof(FormData_mimi_class));
-    strcpy(heaprel->rd_rel->name, rel_class->name);
+    strcpy(heaprel->rd_rel->relname, rel_class->relname);
 
     //RelationBuildTuple(heaprel);
 
@@ -186,34 +183,25 @@ Relation BuildRelationDesc(Oid oid, bool insert) {
 Relation BuildLocalRelation(Oid oid, const char* relname, TupleDesc tupdesc) {
     Relation heaprel = palloc(sizeof(RelationData));
     heaprel->oid = oid;
-    heaprel->rnode = oid;
+    heaprel->rnode.relnode = oid;
     heaprel->rd_rel = palloc(sizeof(FormData_mimi_class));
-    strcpy(heaprel->rd_rel->name, relname);
+    strcpy(heaprel->rd_rel->relname, relname);
 
-    heaprel->tupleDesc = palloc(sizeof(TupleDescData));
-    heaprel->tupleDesc->natts = tupdesc->natts;
-    for (int i = 0; i < heaprel->tupleDesc->natts; i++) {
-        heaprel->tupleDesc->attr[i].oid = tupdesc->attr[i].oid;
-        heaprel->tupleDesc->attr[i].attlen = tupdesc->attr[i].attlen;
-        heaprel->tupleDesc->attr[i].typid = tupdesc->attr[i].typid;
-        strcpy(heaprel->tupleDesc->attr[i].attname, tupdesc->attr[i].attname);
-    }
+    RelationBuildTuple(heaprel, tupdesc);
 
     heaprel->refcount = 0;
     return heaprel;
 }
 
-void RelationBuildTuple(Relation heaprel) {
+void RelationBuildTuple(Relation heaprel, TupleDesc tupdesc) {
     // find tuple desc from meta data
-    TupleDesc tupdesc;
 
     heaprel->tupleDesc = palloc(sizeof(TupleDescData));
     heaprel->tupleDesc->natts = tupdesc->natts;
     for (int i = 0; i < heaprel->tupleDesc->natts; i++) {
-        heaprel->tupleDesc->attr[i].oid = tupdesc->attr[i].oid;
-        heaprel->tupleDesc->attr[i].attlen = tupdesc->attr[i].attlen;
+        heaprel->tupleDesc->attr[i].att_len = tupdesc->attr[i].att_len;
         heaprel->tupleDesc->attr[i].typid = tupdesc->attr[i].typid;
-        strcpy(heaprel->tupleDesc->attr[i].attname, tupdesc->attr[i].attname);
+        strcpy(heaprel->tupleDesc->attr[i].att_name, tupdesc->attr[i].att_name);
     }
 }
 
@@ -221,9 +209,19 @@ void RelationBuildTuple(Relation heaprel) {
  * 扫描 mm_class 表，获取 relation tuple 信息
  */
 HeapTuple ScanMimiRelation(Oid relid) {
-    HeapTuple tup = palloc(sizeof(HeapTupleData));
-    tup->t_data = palloc(sizeof(FormData_mimi_class));
-    Form_mimi_class fmc = tup->t_data;
-    strcpy(fmc->name, "asdf");
+    HeapTuple tup = NULL;
+    ScanKeyData key[1];
+    Relation pg_class_relation;
+    SystemTableScan scan;
+
+    ScanKeyInit(key, MIMI_CLASS_OID_LOCATION, BTEqualStrategyNumber, relid, OIDEQ_OID);
+    pg_class_relation = relation_open(ClassRelationId);
+
+    scan = systable_beginscan(pg_class_relation, 1, key);
+    tup = systable_getnext(scan);
+    systable_endscan(scan);
+
+    relation_close(pg_class_relation);
+
     return tup;
 }

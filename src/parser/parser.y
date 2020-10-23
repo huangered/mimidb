@@ -15,7 +15,7 @@ void yyerror(YYLTYPE* a, void* b, const char* s);
 }
 
 %locations
-%pure_parser
+%pure-parser
 %parse-param {NodeWrap* yyscanner}
 %lex-param   {NodeWrap* yyscanner}
 

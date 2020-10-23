@@ -1,14 +1,14 @@
-#ifndef _mimi_type_h_
-#define _mimi_type_h_
+#ifndef _MIMI_TYPE_H_
+#define _MIMI_TYPE_H_
 
 #include "mimi.h"
 
 typedef struct FormData_mimi_type {
     Oid oid;
-    char typename[NAME_LIMIT];
-    int length;
+    char typ_name[NAME_LIMIT];
+    int typ_length;
 } FormData_mimi_type;
 
 typedef FormData_mimi_type* Form_mimi_type;
 
-#endif // !_mimi_class_h_
+#endif // !_MIMI_TYPE_H_

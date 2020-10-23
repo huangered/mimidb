@@ -18,7 +18,7 @@ TEST(btree, incr_insert)
     BufferInit();
 
     Relation rel = (Relation)palloc(sizeof(RelationData));
-    rel->rnode = 10000;
+    rel->rnode.relnode = 10000;
     rel->root_blkno = P_NONE;
     rel->index_am = buildRoute();
     rel->index_am->ambuildempty(rel);
@@ -45,7 +45,7 @@ TEST(btree, decr_insert)
     BufferInit();
 
     Relation rel = (Relation)palloc(sizeof(RelationData));
-    rel->rnode = 10001;
+    rel->rnode.relnode = 10001;
     rel->root_blkno = P_NONE;
     rel->index_am = buildRoute();
     rel->index_am->ambuildempty(rel);
@@ -67,7 +67,7 @@ TEST(btree, decr_insert)
  
     for (int i = 0; i < 10; i++) {
         IndexScanDesc scan = (IndexScanDesc)palloc(sizeof(IndexScanDescData));
-        scan->index_rel = rel;
+        scan->rs_base.rs_rel = rel;
         scan->key = i;
         scan->block = INVALID_BLOCK;
         bool result = rel->index_am->amgettuple(scan);

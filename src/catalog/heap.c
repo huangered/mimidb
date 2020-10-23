@@ -1,7 +1,7 @@
 ﻿#include "access/heap.h"
 #include "catalog/heap.h"
 #include "access/rel.h"
-#include "common/relation.h"
+#include "access/relation.h"
 #include "util/mctx.h"
 #include "catalog/storage.h"
 #include "catalog/mimi_code.h"
@@ -10,9 +10,9 @@
 
 static Relation heap_create(Oid relid, const char* name, TupleDesc tupdesc);
 static void AddRelationPgClass(Relation mimiclassdesc, Relation heaprel);
-static void AddRelationMimiAttribute(Relation mimiclassdesc, Relation heaprel);
+static void AddRelationMimiAttribute(Oid relId, TupleDesc tupleDesc);
 static void InsertMimiClassTuple(Relation mimiclassdesc, Form_mimi_class heaprel);
-static void InsertMimiAttributeTuple(Relation mimi_attribute_rel, FormData_mimi_attribute new_attribute);
+static void InsertMimiAttributeTuple(Relation mimi_attribute_rel, Form_mimi_attribute new_attribute);
 /*
 Create a heap relation
 1. build relation local
@@ -31,7 +31,8 @@ heap_create_with_catalog(const char* name, Oid relid, TupleDesc tupDesc) {
 
     // create tuple in mimi_class
     AddRelationPgClass(pg_class_rel, heap_rel);
-
+    // create tuple in mimi_attribute
+    AddRelationMimiAttribute(heap_rel->oid, tupDesc);
     relation_close(pg_class_rel);
     relation_close(heap_rel);
 
@@ -79,10 +80,33 @@ InsertMimiClassTuple(Relation mimi_class_desc, Form_mimi_class new_rel_reltup) {
     pfree(tuple);
 }
 
+void
+AddRelationMimiAttribute(Oid relId, TupleDesc tupleDesc) {
+    Relation rel = relation_open(AttributeRelationId);
+
+    for (int i = 0; i < tupleDesc->natts; i++) {
+        Form_mimi_attribute attr = &tupleDesc->attr[i];
+        attr->att_relid = relId;
+        InsertMimiAttributeTuple(rel, attr);
+    }
+
+    relation_close(rel);
+}
+
 /*
 构造和插入mimi attribute tuple
 */
 void
-InsertMimiAttributeTuple(Relation mimi_attribute_rel, FormData_mimi_attribute new_attribute) {
+InsertMimiAttributeTuple(Relation mimi_attribute_rel, Form_mimi_attribute new_attribute) {
+    Datum values[5];
+    values[0] = IntGetDatum(new_attribute->att_relid);
+    values[1] = IntGetDatum(new_attribute->att_len);
+    values[2] = PointerGetDatum(new_attribute->att_name);
+    values[3] = IntGetDatum(new_attribute->typid);
 
+    HeapTuple tuple = heap_form_tuple(mimi_attribute_rel->tupleDesc, values);
+
+    simple_heap_insert(mimi_attribute_rel, tuple);
+
+    pfree(tuple);
 }
