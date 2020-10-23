@@ -52,12 +52,12 @@ bool _bt_first(IndexScanDesc scan) {
     itup->ht_id = scan->value;
     itup->tuple_size = sizeof(IndexTupleData);
 
-    BTreeScan itup_key = _bt_make_scankey(scan->index_rel, itup);
-    stack = _bt_search(scan->index_rel, itup_key, &buf);
+    BTreeScan itup_key = _bt_make_scankey(scan->rs_base.rs_rel, itup);
+    stack = _bt_search(scan->rs_base.rs_rel, itup_key, &buf);
 
     BufferDesc* desc = GetBufferDesc(buf);
     Page page = BufferGetPage(buf);
-    offset = _bt_binsrch(scan->index_rel, page, itup_key);
+    offset = _bt_binsrch(scan->rs_base.rs_rel, page, itup_key);
 
     scan->block = desc->tag.blockNum;
     scan->offset = offset;
@@ -77,7 +77,7 @@ bool _bt_first(IndexScanDesc scan) {
 bool _bt_next(IndexScanDesc scan) {
     Page page;
     Buffer buf;
-    Relation rel = scan->index_rel;
+    Relation rel = scan->rs_base.rs_rel;
     BlockNumber blkno = scan->block;
     OffsetNumber offset = scan->offset;
 

@@ -67,7 +67,7 @@ TEST(btree, decr_insert)
  
     for (int i = 0; i < 10; i++) {
         IndexScanDesc scan = (IndexScanDesc)palloc(sizeof(IndexScanDescData));
-        scan->index_rel = rel;
+        scan->rs_base.rs_rel = rel;
         scan->key = i;
         scan->block = INVALID_BLOCK;
         bool result = rel->index_am->amgettuple(scan);
