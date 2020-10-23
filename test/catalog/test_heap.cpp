@@ -16,7 +16,7 @@ TEST(Catalog, heap) {
     RelationCacheInit();
 
     Relation mrel = (Relation)palloc(sizeof(RelationData));
-    mrel->rnode = ClassRelationId;
+    mrel->rnode.relnode = ClassRelationId;
     mrel->rd_smgr = (SmgrRelation)palloc(sizeof(SMgrRelationData));
     mrel->rd_smgr->smgr_fsm_nblocks = 0;
 

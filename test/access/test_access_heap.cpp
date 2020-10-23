@@ -20,7 +20,7 @@ TEST(heap, incr_insert)
     BufferInit();
 
     Relation rel = (Relation)palloc(sizeof(RelationData));
-    rel->rnode = 10003;
+    rel->rnode.relnode = 10003;
     rel->tb_am = table_route();
     rel->root_blkno = 0;
 
