@@ -3,7 +3,7 @@
 #include "storage/page.hpp"
 #include "util/mctx.hpp"
 
-OffsetNumber _bt_binsrch(Relation rel, Page page, BTreeScan key) {
+OffsetNumber BtreeIndex::_bt_binsrch(Relation rel, Page page, BTreeScan key) {
     int result;
 
     BTreeSpecial special = (BTreeSpecial)PageGetSpecial(page);
@@ -40,7 +40,7 @@ OffsetNumber _bt_binsrch(Relation rel, Page page, BTreeScan key) {
     return OffsetNumberPrev(low);
 }
 
-bool _bt_first(IndexScanDesc scan) {
+bool BtreeIndex::_bt_first(IndexScanDesc scan) {
     // bin_srch the point
     BTStack stack = NULL;
     
@@ -55,8 +55,8 @@ bool _bt_first(IndexScanDesc scan) {
     BTreeScan itup_key = _bt_make_scankey(scan->index_rel, itup);
     stack = _bt_search(scan->index_rel, itup_key, &buf);
 
-    BufferDesc* desc = GetBufferDesc(buf);
-    Page page = BufferGetPage(buf);
+    BufferDesc* desc = _bufMgr->GetBufferDesc(buf);
+    Page page = _bufMgr->GetPage(buf);
     offset = _bt_binsrch(scan->index_rel, page, itup_key);
 
     scan->block = desc->tag.blockNum;
@@ -74,7 +74,7 @@ bool _bt_first(IndexScanDesc scan) {
     return true;
 }
 
-bool _bt_next(IndexScanDesc scan) {
+bool BtreeIndex::_bt_next(IndexScanDesc scan) {
     Page page;
     Buffer buf;
     Relation rel = scan->index_rel;
@@ -82,7 +82,7 @@ bool _bt_next(IndexScanDesc scan) {
     OffsetNumber offset = scan->offset;
 
     buf = _bt_get_buf(rel, blkno);
-    page = BufferGetPage(buf);
+    page = _bufMgr->GetPage(buf);
     OffsetNumber limit = PageGetMaxOffsetNumber(page);
     offset = OffsetNumberNext(offset);
     if (offset > limit) {
@@ -101,7 +101,7 @@ bool _bt_next(IndexScanDesc scan) {
     return false;
 }
 
-int _bt_compare(Relation rel, BTreeScan key, Page page, OffsetNumber offset) {
+int BtreeIndex::_bt_compare(Relation rel, BTreeScan key, Page page, OffsetNumber offset) {
 
     int keysz;
     ScanKey skey;

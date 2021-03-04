@@ -25,8 +25,8 @@ TEST(btree, incr_insert)
     rel->rd_smgr = (SmgrRelation)palloc(sizeof(SMgrRelationData));
     rel->rd_smgr->smgr_fsm_nblocks = 0;
 
-    RecordPageWithFreeSpace(rel, 0, BLKSZ);
-    FreeSpaceMapVacuumRange(rel, 0, 1);
+    freespace::RecordPageWithFreeSpace(rel, 0, BLKSZ);
+    freespace::FreeSpaceMapVacuumRange(rel, 0, 1);
 
     for (int i = 0; i < 10; i++) {
         //printf("%d\r\n", i);
@@ -53,8 +53,8 @@ TEST(btree, decr_insert)
     rel->rd_smgr = (SmgrRelation)palloc(sizeof(SMgrRelationData));
     rel->rd_smgr->smgr_fsm_nblocks = 0;
 
-    RecordPageWithFreeSpace(rel, 0, BLKSZ);
-    FreeSpaceMapVacuumRange(rel, 0, 1);
+    freespace::RecordPageWithFreeSpace(rel, 0, BLKSZ);
+    freespace::FreeSpaceMapVacuumRange(rel, 0, 1);
 
 
     for (int i = 0; i < 10; i++) {

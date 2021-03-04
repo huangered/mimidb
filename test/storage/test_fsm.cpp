@@ -27,8 +27,8 @@ TEST(fsm, leaf)
     rel.rnode = 2000;
     rel.rd_smgr = (SmgrRelation)palloc(sizeof(SMgrRelationData));
     rel.rd_smgr->smgr_fsm_nblocks = 0;
-    RecordPageWithFreeSpace(&rel, 0, BLKSZ);
-    FreeSpaceMapVacuumRange(&rel, 0, 1);
+    freespace::RecordPageWithFreeSpace(&rel, 0, BLKSZ);
+    freespace::FreeSpaceMapVacuumRange(&rel, 0, 1);
     BlockNumber blk = fsm_search(&rel, 1024);
     EXPECT_EQ(blk, 0);
 }

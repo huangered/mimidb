@@ -8,29 +8,27 @@
 #define HOT_REMOVED     1
 #define HOT_NORMAL      2
 
-static bool heap_insert(Relation rel, HeapTuple tup);
-static HeapTuple heaptuple_prepare_insert(Relation rel, HeapTuple tup, int xmin);
 
 static TableAmRoute route = {
-    .buildempty = heapbuildempty,
+    /*.buildempty = heapbuildempty,
     .tuple_insert = heap_tuple_insert,
     .tuple_remove = heapremove,
     .gettuple = heapgettuple,
     .beginscan = heapbeginscan,
     .getnext = heapgetnext,
     .endscan = heapendscan,
-    .vacuum = heap_vacuum
+    .vacuum = heap_vacuum*/
 };
 
 TableAmRoute* table_route() {
     return &route;
 }
 
-void heapbuildempty(Relation rel) {
+void HeapIndex::heapbuildempty(Relation rel) {
     // create relation file;
 }
 
-bool heap_tuple_insert(Relation rel, TupleSlotDesc* slot) {
+bool HeapIndex::heap_tuple_insert(Relation rel, TupleSlotDesc* slot) {
 
     HeapTuple htup = _heap_buildtuple(rel, slot);
     
@@ -39,14 +37,14 @@ bool heap_tuple_insert(Relation rel, TupleSlotDesc* slot) {
     //slot->tts_tid = ;
     return heap_insert(rel, htup);
 }
-bool heapremove(Relation rel, int key) {
+bool HeapIndex::heapremove(Relation rel, int key) {
 
     BlockNumber blkNum = 0;
     int offset = 0;
     int cur_tran = 0xffff;
-    Buffer buf = ReadBuffer(rel, MAIN_FORKNUM, blkNum);
+    Buffer buf = _bufMgr->ReadBuffer(rel, MAIN_FORKNUM, blkNum);
 
-    Page page = BufferGetPage(buf);
+    Page page = _bufMgr->GetPage(buf);
 
     PageHeader pHeader = (PageHeader)page;
     for (;;) {
@@ -67,7 +65,8 @@ bool heapremove(Relation rel, int key) {
 
     return false;
 }
-bool heapgettuple(HeapScanDesc scan) {
+bool
+HeapIndex::heapgettuple(HeapScanDesc scan) {
 
     BlockNumber blkno;
     OffsetNumber offset;
@@ -90,9 +89,9 @@ bool heapgettuple(HeapScanDesc scan) {
             return false;
         }
 
-        buf = ReadBuffer(scan->rs_base.rs_rel, MAIN_FORKNUM, blkno);
+        buf = _bufMgr->ReadBuffer(scan->rs_base.rs_rel, MAIN_FORKNUM, blkno);
 
-        Page page = BufferGetPage(buf);
+        Page page = _bufMgr->GetPage(buf);
         OffsetNumber max = PageGetMaxOffsetNumber(page);
         for (; offset <= max; offset++) {
             ItemId itemid = PageGetItemId(page, offset);
@@ -119,7 +118,7 @@ bool heapgettuple(HeapScanDesc scan) {
 }
 
 HeapScanDesc
-heapbeginscan(Relation rel, int nkeys, ScanKey key) {
+HeapIndex::heapbeginscan(Relation rel, int nkeys, ScanKey key) {
     HeapScanDesc scan;
 
     // increase relation ref count
@@ -129,10 +128,14 @@ heapbeginscan(Relation rel, int nkeys, ScanKey key) {
     scan->rs_base.rs_key = key;
     return scan;
 }
-HeapTuple heapgetnext(HeapScanDesc scan) {
+
+HeapTuple
+HeapIndex::heapgetnext(HeapScanDesc scan) {
     return NULL;
 }
-bool heapendscan(HeapScanDesc scan) {
+
+bool
+HeapIndex::heapendscan(HeapScanDesc scan) {
     // descease the relation ref count
 
     pfree(scan->rs_base.rs_key);
@@ -146,7 +149,7 @@ bool heapendscan(HeapScanDesc scan) {
 2. update the fsm page
 */
 void 
-heap_vacuum(Relation rel) {
+HeapIndex::heap_vacuum(Relation rel) {
 
 }
 
@@ -154,13 +157,14 @@ heap_vacuum(Relation rel) {
 for catalog operation
 */
 void
-simple_heap_insert(Relation rel, HeapTuple tup) {
+HeapIndex::simple_heap_insert(Relation rel, HeapTuple tup) {
     heap_insert(rel, tup);
 }
 
 // ========= private 
 
-bool heap_insert(Relation rel, HeapTuple htup) {
+bool
+HeapIndex::heap_insert(Relation rel, HeapTuple htup) {
     // get current transition id.
     int xid = 0;
     Buffer buffer;
@@ -185,11 +189,12 @@ heaptuple_prepare_insert(Relation rel, HeapTuple tup, int xmin) {
 }
 
 // for debug
-void print_heap(Relation rel) {
+void
+HeapIndex::print_heap(Relation rel) {
     BlockNumber blkno = rel->root_blkno;
     TupleDesc tupdesc = rel->tupleDesc;
-    Buffer buf = ReadBuffer(rel, MAIN_FORKNUM, blkno);
-    Page page = BufferGetPage(buf);
+    Buffer buf = _bufMgr->ReadBuffer(rel, MAIN_FORKNUM, blkno);
+    Page page = _bufMgr->GetPage(buf);
     OffsetNumber max = PageGetMaxOffsetNumber(page);
     for (OffsetNumber offset = 1; offset <= max; offset++) {
         ItemId itemid = PageGetItemId(page, offset);

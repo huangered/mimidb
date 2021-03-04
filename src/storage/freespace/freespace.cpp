@@ -4,7 +4,7 @@
 #include "storage/page.hpp"
 
 
-BlockNumber GetPageWithFreeSpace(Relation rel, Size spaceNeeded) {
+BlockNumber freespace::GetPageWithFreeSpace(Relation rel, Size spaceNeeded) {
     BlockNumber block;
 
     block = fsm_search(rel, spaceNeeded);
@@ -12,7 +12,7 @@ BlockNumber GetPageWithFreeSpace(Relation rel, Size spaceNeeded) {
     return block;
 }
 
-void RecordPageWithFreeSpace(Relation rel, BlockNumber usedBlock, Size freeSpace) {
+void freespace::RecordPageWithFreeSpace(Relation rel, BlockNumber usedBlock, Size freeSpace) {
 
     FSMAddress addr;
     int slot = 0;
@@ -22,7 +22,7 @@ void RecordPageWithFreeSpace(Relation rel, BlockNumber usedBlock, Size freeSpace
 
 }
 
-void FreeSpaceMapVacuumRange(Relation rel, BlockNumber start, BlockNumber end) {
+void freespace::FreeSpaceMapVacuumRange(Relation rel, BlockNumber start, BlockNumber end) {
     if (end > start) {
         fsm_vacuum_page(rel, FSM_ROOT_ADDRESS, start, end);
     }

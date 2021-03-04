@@ -1,5 +1,5 @@
-#ifndef _BUF_H_
-#define _BUF_H_
+#ifndef _buf_hpp_
+#define _buf_hpp_
 
 /*
 zero is invalid, the index of shared buffer is [1..NBuffers]

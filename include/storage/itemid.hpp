@@ -1,18 +1,20 @@
-﻿#ifndef _item_id_h_
-#define _item_id_h_
+﻿#ifndef _item_id_hpp_
+#define _item_id_hpp_
 
-typedef struct ItemIdData {
+struct ItemIdData {
     unsigned lp_off : 15;
     unsigned lp_flags : 2;
     unsigned lp_len : 15;
-} ItemIdData;
+};
 
 typedef ItemIdData* ItemId;
 
-#define LP_UNUSED   0
-#define LP_NORMAL   1
-#define LP_REDIRECT 2   /* heap of tuple 重定向标识 */
-#define LP_DEAD     3
+enum LpFlag {
+    LP_UNUSED = 0,
+    LP_NORMAL = 1,
+    LP_REDIRECT = 2,   /* heap of tuple 重定向标识 */
+    LP_DEAD = 3,
+};
 
 typedef void* Item;
 

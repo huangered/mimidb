@@ -5,11 +5,23 @@
 #include "access/rel.hpp"
 #include "access/relpath.hpp"
 
-typedef struct BufTag {
+struct BufferTag {
     int rnode;
     ForkNumber forkNum;
     BlockNumber blockNum;
-} BufferTag;
+
+    int hash() const {
+        return rnode * 17 * 17 + forkNum * 17 + blockNum;
+    }
+
+    friend bool operator==(const BufferTag& l, const BufferTag& r) {
+        return l.rnode == r.rnode && l.forkNum == r.forkNum && l.blockNum == r.blockNum;
+    }
+
+    friend bool operator!=(const BufferTag& l, const BufferTag& r) {
+        return !(l == r);
+    }
+};
 
 typedef struct BuffDesc {
     BufferTag tag;
@@ -22,26 +34,9 @@ typedef struct BuffDesc {
     int freeNext;
 } BufferDesc;
 
-#define INIT_BUFFERTAG(a, xx_rnode, xx_forknum, xx_blocknum) \
-( \
-    (a).rnode = (xx_rnode->rnode),\
-    (a).forkNum = (xx_forknum),\
-    (a).blockNum = (xx_blocknum) \
-)
-
 /* freelist.c */
 extern void StrategyInitialize();
 extern Buffer StrategyGetBuffer();
 extern void StrategyFreeBuffer(Buffer buffer);
-
-// private method
-static inline uint32 buftag_hash(const void* key, Size keysize) {
-    BufferTag* btag = (BufferTag*)key;
-    return btag->rnode;
-}
-static inline bool buftag_equal(const void* left, const void* right, Size keysize) {
-    int ret = memcmp(left, right, keysize);
-    return ret == 0;
-}
 
 #endif // !_buf_internals_h_

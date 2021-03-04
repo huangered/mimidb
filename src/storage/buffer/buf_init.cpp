@@ -8,25 +8,24 @@
 char* BufferBlocks = NULL;
 BufferDesc* BuffDesc = NULL;
 BufferDesc* freeBuffDesc;
-Hash* bufHash;
+HashMap<BufferTag, BufferDesc> bufHash;
 
 void BufferInit() {
-    Size size = (Size)NBuffers * BLKSZ;
+    Size size = (Size)20 * BLKSZ;
     // will use shmem_init in the future
     BufferBlocks = (char*)palloc(size);
     memset(BufferBlocks, 0, size);
     // will use shmem_init in the future
-    BuffDesc = (BufferDesc*)palloc(NBuffers * sizeof(BufferDesc));
-    memset(BuffDesc, 0, NBuffers * sizeof(BufferDesc));
+    BuffDesc = (BufferDesc*)palloc(20 * sizeof(BufferDesc));
+    memset(BuffDesc, 0, 20 * sizeof(BufferDesc));
 
-    for (int i = 0; i < NBuffers; i++) {
+    for (int i = 0; i < 20; i++) {
         BuffDesc[i].buf_id = i;
         BuffDesc[i].freeNext = i + 1;
         BuffDesc[i].state = 0;
     }
-    BuffDesc[NBuffers - 1].freeNext = -1;
+    BuffDesc[20 - 1].freeNext = -1;
     freeBuffDesc = BuffDesc;
-    bufHash = hash_create("local_buf", buftag_hash, buftag_equal, sizeof(BufferTag), sizeof(BufferDesc));
 
     StrategyInitialize();
 }

@@ -7,26 +7,33 @@
 #include "storage/page.hpp"
 #include "storage/buf_internals.hpp"
 #include "storage/buf.hpp"
-#include "util/hash.hpp"
+#include "util/hashmap.hpp"
 
-extern int NBuffers;
-extern char* BufferBlocks;
-extern BufferDesc* BuffDesc;
-extern Hash* bufHash;
-extern BufferDesc* freeBuffDesc;
+class BufferMgr
+{
+private:
+	const int SIZE = 20;
+	HashMap<BufferTag, Buffer>* _hashMap;
 
-typedef void* Block;
+	char* _blocks;
+	BufferDesc* _buffDesc;
+	BufferDesc* _freeBuffDesc;
+public:
+	BufferMgr();
+	~BufferMgr();
+	BufferMgr(const BufferMgr&) = delete;
+	BufferMgr& operator=(BufferMgr) = delete;
 
-#define BufferGetBlock(buffer)  (Block)(BufferBlocks + ((buffer) - 1) * BLKSZ)
-#define BufferGetPage(buffer)   ((Page)BufferGetBlock(buffer))
-#define GetBufferDesc(buf_id)   (&BuffDesc[buf_id])
+	Buffer ReadBuffer(Relation rel, ForkNumber fork, BlockNumber block);
+	void ReleaseBuffer(Buffer buffer);
+	void FlushBuffer(BufferDesc* buffDesc);
+	BufferDesc* GetBufferDesc(Buffer buffer);
+	char* GetPage(Buffer bufId);
 
-// Init the buffer mgr, share mem alloc
-extern void BufferInit();
-extern Buffer ReadBuffer(Relation rel, ForkNumber forkNumber, BlockNumber blkno);
-extern void ReleaseBuffer(Buffer buffer);
-extern void FlushBuffer(BufferDesc* buffDesc);
+private:
+	BufferDesc* BufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno);
+	void load_page(BufferTag tag, Buffer buf);
 
-// for debug
-extern void print_bufflist();
+};
+
 #endif // !_BUFMGR_H_

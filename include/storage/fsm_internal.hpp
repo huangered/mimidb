@@ -32,13 +32,18 @@ struct FSMPageData {
 
 typedef struct FSMPageData* FSMPage;
 
-extern Buffer fsm_readbuf(Relation rel, FSMAddress addr, bool extend);
-extern BlockNumber fsm_search(Relation rel, Size spaceNeed);
-extern int fsm_search_avail(Buffer buf, Size spaceNeed);
-extern int fsm_get_avail(Page page, int slot);
-extern bool fsm_set_avail(Page page, int slot, int value);
-extern void fsm_extend(Relation rel, BlockNumber blkno);
-int fsm_set_and_search(Relation rel, FSMAddress addr, int slot, int newValue, int minValue);
-FSMAddress fsm_get_location(BlockNumber heapblk, int* slot);
-int fsm_vacuum_page(Relation rel, FSMAddress addr, BlockNumber start, BlockNumber end);
+class fsm {
+private:
+    std::shared_ptr<BufferMgr> _bufMgr;
+public:
+    Buffer fsm_readbuf(Relation rel, FSMAddress addr, bool extend);
+    BlockNumber fsm_search(Relation rel, Size spaceNeed);
+    int fsm_search_avail(Buffer buf, Size spaceNeed);
+    int fsm_get_avail(Page page, int slot);
+    bool fsm_set_avail(Page page, int slot, int value);
+    void fsm_extend(Relation rel, BlockNumber blkno);
+    int fsm_set_and_search(Relation rel, FSMAddress addr, int slot, int newValue, int minValue);
+    FSMAddress fsm_get_location(BlockNumber heapblk, int* slot);
+    int fsm_vacuum_page(Relation rel, FSMAddress addr, BlockNumber start, BlockNumber end);
+};
 #endif // !_fsm_internal_h_
