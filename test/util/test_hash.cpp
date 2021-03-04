@@ -1,21 +1,21 @@
 #include "../g.hpp"
 
 
-#include "util/hash.hpp"
+#include "util/hashmap.hpp"
 
 
 TEST(hash_test, add)
 {
-    int* key = (int*)malloc(sizeof(int));
-    *key = 1;
+    HashMap<int, int> a;
+    for (int i{}; i < 100; i++) {
+        a.Put(i, i);
+    }
 
-    Hash* tbl = hash_create("test", string_hash, string_equal, 1, 1);
+    int v{ -99 };
+    EXPECT_TRUE(a.Get(1, &v));
+    EXPECT_EQ(v, 1);
     
-    char* value = (char*)hash_search(tbl, Add, key);
-    *value = '2';
-    value = (char*)hash_search(tbl, Search, key);
+    a.Remove(1);
 
-    EXPECT_EQ(*value, '2');
-    
-    hash_destroy(tbl);
+    EXPECT_FALSE(a.Get(1, &v));
 }
