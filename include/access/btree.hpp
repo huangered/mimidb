@@ -57,14 +57,11 @@ typedef struct BTreeSearchKeyData {
 
 typedef BTreeSearchKeyData* BTreeSearchKey;
 
+
 /*
 btbuildempty() -- build btree meta page
  */ 
-extern void btbuildempty(Relation rel);
-extern bool btinsert(Relation rel, int key, int ht_id);
-extern bool btremove(Relation rel, int key);
-extern bool btgettuple(IndexScanDesc scan);
-extern void btvacuum(Relation rel);
+
 
 #define P_NEW                   INVALID_BLOCK
 #define P_NONE                  0
@@ -87,35 +84,53 @@ extern void btvacuum(Relation rel);
 
 #define BTreeTupleGetDownLink(itup) (itup->ht_id)
 
+class BtreeIndex : public BaseIndex {
+private:
+    std::shared_ptr<BufferMgr> _bufMgr;
+private:
+    // methods in btpage.c
+    void _bt_init_page(Page page);
+    Buffer _bt_get_root(Relation rel);
+    Buffer _bt_get_buf(Relation rel, BlockNumber blkno);
+    Buffer _bt_newroot(Relation rel, Buffer lbuf, Buffer rbuf);
+    Buffer _bt_moveright(Relation rel, BTreeScan key, Buffer buf);
+    Buffer _bt_relandgetbuf(Relation rel, Buffer obuf, BlockNumber blkno);
 
-// methods in btpage.c
-extern void _bt_init_page(Page page);
-extern Buffer _bt_get_root(Relation rel);
-extern Buffer _bt_get_buf(Relation rel, BlockNumber blkno);
-extern Buffer _bt_newroot(Relation rel, Buffer lbuf, Buffer rbuf);
-extern Buffer _bt_moveright(Relation rel, BTreeScan key, Buffer buf);
-extern Buffer _bt_relandgetbuf(Relation rel, Buffer obuf, BlockNumber blkno);
+    // methods in btsearch.c
+    bool _bt_first(IndexScanDesc scan);
+    bool _bt_next(IndexScanDesc scan);
+    OffsetNumber _bt_binsrch(Relation rel, Page page, BTreeScan key);
+    OffsetNumber _bt_findinsertloc(Relation rel, Buffer buffer, BTreeScan key);
 
-// methods in btsearch.c
-extern bool _bt_first(IndexScanDesc scan);
-extern bool _bt_next(IndexScanDesc scan);
-extern OffsetNumber _bt_binsrch(Relation rel, Page page, BTreeScan key);
-extern OffsetNumber _bt_findinsertloc(Relation rel, Buffer buffer, BTreeScan key);
+    // insert
+    bool _bt_do_insert(Relation rel, IndexTuple itup);
+    BTStack _bt_search(Relation rel, BTreeScan itup_key, Buffer* bufp);
 
-// insert
-extern bool _bt_do_insert(Relation rel, IndexTuple itup);
-extern BTStack _bt_search(Relation rel, BTreeScan itup_key, Buffer* bufp);
+    bool _bt_addtup(Page page, Item item, Size itemsz, OffsetNumber newitemoffset);
+    void _bt_insertonpg(Relation rel, Buffer buffer, OffsetNumber newitemoffset, BTreeScan itup_key, BTStack stack);
+    void _bt_insert_parent(Relation rel, Buffer lbuf, Buffer rbuf, BTStack stack, bool is_root);
 
-// btsplit.c
-extern OffsetNumber _bt_find_split_offset(Buffer buf);
-extern Buffer _bt_split(Relation rel, IndexTuple itup, Buffer buf, OffsetNumber newitemoff);
+    BTreeMetaData* _bt_getmeta(Relation rel, Buffer metabuf);
+    void _bt_updatemeta(Buffer metabuf);
 
-// btcompare.c
-extern int _bt_compare(Relation rel, BTreeScan key, Page page, OffsetNumber offset);
+    // btsplit.c
+    OffsetNumber _bt_find_split_offset(Buffer buf);
+    Buffer _bt_split(Relation rel, IndexTuple itup, Buffer buf, OffsetNumber newitemoff);
 
-// methods in btutils.c
-extern IndexTuple _bt_make_tuple(int key, int ht_id);
-extern BTreeScan _bt_make_scankey(Relation rel, IndexTuple itup);
-extern void _bt_freestack(BTStack stack);
+    // btcompare.c
+    int _bt_compare(Relation rel, BTreeScan key, Page page, OffsetNumber offset);
+
+    // methods in btutils.c
+    IndexTuple _bt_make_tuple(int key, int ht_id);
+    BTreeScan _bt_make_scankey(Relation rel, IndexTuple itup);
+    void _bt_freestack(BTStack stack);
+public:
+    BtreeIndex(std::shared_ptr<BufferMgr> bufMgr);
+    virtual void buildempty(Relation rel);
+    virtual bool insert(Relation rel, int key, int ht_id);
+    virtual bool remove(Relation rel, int key);
+    virtual bool gettuple(IndexScanDesc scan);
+    virtual void vacuum(Relation rel);
+};
 
 #endif

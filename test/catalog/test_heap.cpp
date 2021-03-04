@@ -20,8 +20,8 @@ TEST(Catalog, heap) {
     mrel->rd_smgr = (SmgrRelation)palloc(sizeof(SMgrRelationData));
     mrel->rd_smgr->smgr_fsm_nblocks = 0;
 
-    RecordPageWithFreeSpace(mrel, 0, BLKSZ);
-    FreeSpaceMapVacuumRange(mrel, 0, 1);
+    freespace::RecordPageWithFreeSpace(mrel, 0, BLKSZ);
+    freespace::FreeSpaceMapVacuumRange(mrel, 0, 1);
 
     pfree(mrel);
 

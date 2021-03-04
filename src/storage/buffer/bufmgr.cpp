@@ -6,22 +6,19 @@
 #include "storage/fd.hpp"
 #include "storage/smgr.hpp"
 
-static BufferDesc* BufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno);
-static void load_page(BufferTag tag, Buffer buf);
 
 Buffer
-ReadBuffer(Relation rel, ForkNumber forkNumber, BlockNumber blkno) {
+BufferMgr::ReadBuffer(Relation rel, ForkNumber forkNumber, BlockNumber blkno) {
     return BufferAlloc(rel, forkNumber, blkno)->buf_id + 1;
 }
 
 BufferDesc*
-BufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno) {
+BufferMgr::BufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno) {
     Buffer buf_id;
-    BufferTag tag;
-    INIT_BUFFERTAG(tag, rel, forkNumber, blkno);
+    BufferTag tag{ rel->oid, forkNumber, blkno };
 
     // use buftag to find
-    void* result = hash_search(bufHash, Search, &tag);
+    bool result = _hashMap->Get(tag, &buf_id);
     if (result == NULL) {
         buf_id = -1;
     }
@@ -43,28 +40,27 @@ BufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno) {
     GetBufferDesc(buf_id)->state += 1;
     GetBufferDesc(buf_id)->tag = tag;
     // insert into hash
-    Buffer* nBuf = (Buffer*)hash_search(bufHash, Add, &tag);
-    *nBuf = buf_id;
-    // return buf
+    _hashMap->Put(tag, buf_id);
 
     return GetBufferDesc(buf_id);
 }
 
-void ReleaseBuffer(Buffer buffer) {
+void
+BufferMgr::ReleaseBuffer(Buffer buffer) {
     BufferDesc* bd = GetBufferDesc(buffer - 1);
     bd->state -= 1;
 }
 
 void
-FlushBuffer(BufferDesc* buffDesc) {
+BufferMgr::FlushBuffer(BufferDesc* buffDesc) {
 
-    char* buf = BufferGetPage(buffDesc->buf_id);
+    char* buf = GetPage(buffDesc->buf_id);
 
     //smgrwrite(buffDesc->tag.rnode, buffDesc->tag.forkNum, buffDesc->tag.blockNum, buf);
 }
 
 // easy implement
-static void load_page(BufferTag tag, Buffer buf) {
+void BufferMgr::load_page(BufferTag tag, Buffer buf) {
     char* path = GetRelPath(tag.rnode, tag.forkNum);
     // read file
     fd* f = file_open(path);
@@ -76,7 +72,7 @@ static void load_page(BufferTag tag, Buffer buf) {
     memset(data, 0, BLKSZ);
     file_read(f, tag.blockNum, data);
     // read block;
-    char* pagePtr = BufferGetPage(buf + 1);
+    char* pagePtr = GetPage(buf + 1);
 
     memcpy(pagePtr, data, BLKSZ);
     pfree(path);

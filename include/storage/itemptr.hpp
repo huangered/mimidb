@@ -1,11 +1,11 @@
-#ifndef _itemptr_h_
-#define _itemptr_h_
+#ifndef _itemptr_hpp_
+#define _itemptr_hpp_
 
-typedef struct ItemPointerData
+struct ItemPointerData
 {
 	int ip_blkno;
 	int ip_offset;
-} ItemPointerData;
+};
 
 typedef ItemPointerData* ItemPointer;
 

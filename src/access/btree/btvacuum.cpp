@@ -1,5 +1,5 @@
 #include "access/btree.hpp"
 
-void btvacuum(Relation rel) {
+void BtreeIndex::vacuum(Relation rel) {
 
 }

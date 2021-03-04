@@ -4,7 +4,6 @@
 #pragma warning(disable : 4996)
 #pragma warning(disable : 26451)
 
-#include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>

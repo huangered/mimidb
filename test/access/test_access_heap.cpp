@@ -31,8 +31,8 @@ TEST(heap, incr_insert)
     rel->tupleDesc->attr[0].att_len = 4;
     rel->tupleDesc->attr[1].att_len = 4;
 
-    RecordPageWithFreeSpace(rel, 0, BLKSZ);
-    FreeSpaceMapVacuumRange(rel, 0, 1);
+    freespace::RecordPageWithFreeSpace(rel, 0, BLKSZ);
+    freespace::FreeSpaceMapVacuumRange(rel, 0, 1);
 
     for (int i = 0; i < 10; i++) {
         //printf("%d\r\n", i);

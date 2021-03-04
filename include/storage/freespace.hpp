@@ -4,11 +4,14 @@
 #include "storage/block.hpp"
 #include "access/rel.hpp"
 
-/*
-find a page with available free space
-*/
-BlockNumber GetPageWithFreeSpace(Relation rel, Size spaceNeeded);
-void RecordPageWithFreeSpace(Relation rel, BlockNumber usedBlock, Size freeSpace);
+class freespace {
+public:
+	/*
+	find a page with available free space
+	*/
+	static BlockNumber GetPageWithFreeSpace(Relation rel, Size spaceNeeded);
+	static void RecordPageWithFreeSpace(Relation rel, BlockNumber usedBlock, Size freeSpace);
+	static void FreeSpaceMapVacuumRange(Relation rel, BlockNumber start, BlockNumber end);
+};
 
-void FreeSpaceMapVacuumRange(Relation rel, BlockNumber start, BlockNumber end);
 #endif // !_freespace_h_

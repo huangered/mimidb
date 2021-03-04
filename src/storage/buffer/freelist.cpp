@@ -3,6 +3,8 @@
 #include "storage/spin.hpp"
 #include "util/mctx.hpp"
 
+BufferMgr _bufMgr;
+
 typedef struct BufferStrategyControl {
     slock_t lock;
 
@@ -19,18 +21,19 @@ get a free buffer from list
 */
 Buffer
 StrategyGetBuffer() {
-    while (true) {
-        if (freeBuffDesc != NULL) {
-            BufferDesc* bd = freeBuffDesc;
-            freeBuffDesc = BuffDesc + freeBuffDesc->freeNext;
-            bd->freeNext = -1;
-            
-            return bd->buf_id;
-        }
-        else {
-            // find victim to free 
-        }
-    }
+    //while (true) {
+    //    if (freeBuffDesc != NULL) {
+    //        BufferDesc* bd = freeBuffDesc;
+    //        freeBuffDesc = BuffDesc + freeBuffDesc->freeNext;
+    //        bd->freeNext = -1;
+    //        
+    //        return bd->buf_id;
+    //    }
+    //    else {
+    //        // find victim to free 
+    //    }
+    //}
+    return 0;
 }
 
 /*
@@ -40,9 +43,9 @@ void
 StrategyFreeBuffer(Buffer buffer) {
     SpinLockAcquire(&StrategyControl->lock);
 
-    BufferDesc* bd = GetBufferDesc(buffer);
-    bd->freeNext = freeBuffDesc->buf_id;
-    freeBuffDesc = bd;
+    BufferDesc bd = _bufMgr.GetBufferDesc(buffer);
+    //bd.freeNext = freeBuffDesc->buf_id;
+    //freeBuffDesc = bd;
 
     SpinLockRelease(&StrategyControl->lock);
 }
@@ -54,7 +57,7 @@ StrategyInitialize() {
     SpinLockInit(&StrategyControl->lock);
 
     StrategyControl->firstFreeBuffer = 0;
-    StrategyControl->lastFreeBuffer = NBuffers - 1;
+    //StrategyControl->lastFreeBuffer = NBuffers - 1;
 
     StrategyControl->numBufferAllocs = 0;
 }

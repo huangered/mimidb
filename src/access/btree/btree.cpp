@@ -3,18 +3,18 @@
 #include "storage/indexfsm.hpp"
 
 static IndexAmRoute route = {
-    .ambuildempty = btbuildempty,
+    /*.ambuildempty = btbuildempty,
     .aminsert = btinsert,
     .amremove = btremove,
     .amgettuple = btgettuple,
-    .amvacuum = btvacuum
+    .amvacuum = btvacuum*/
 };
 
 IndexAmRoute* buildRoute() {
     return &route;
 }
 
-void btbuildempty(Relation rel) {
+void BtreeIndex::buildempty(Relation rel) {
     Page metap = (Page)palloc(BLKSZ);
     _bt_init_page(metap);
 
@@ -22,13 +22,13 @@ void btbuildempty(Relation rel) {
     metad->root = P_NONE;
 
     // write to local file system
-    Buffer buf = ReadBuffer(rel, MAIN_FORKNUM, BTREE_METAPAGE);
-    Page page = BufferGetPage(buf);
+    Buffer buf = _bufMgr->ReadBuffer(rel, MAIN_FORKNUM, BTREE_METAPAGE);
+    Page page = _bufMgr->GetPage(buf);
     memcpy(page, metap, BLKSZ);
     pfree(metap);
 }
 
-bool btinsert(Relation rel, int key, int ht_id) {
+bool BtreeIndex::insert(Relation rel, int key, int ht_id) {
     bool result;
     IndexTuple tup;
 
@@ -40,10 +40,10 @@ bool btinsert(Relation rel, int key, int ht_id) {
 
     return result;
 }
-bool btremove(Relation rel, int key) {
+bool BtreeIndex::remove(Relation rel, int key) {
     return false;
 }
-bool btgettuple(IndexScanDesc scan) {
+bool BtreeIndex::gettuple(IndexScanDesc scan) {
 
     if (scan->block == INVALID_BLOCK) {
         return _bt_first(scan);
@@ -63,9 +63,9 @@ void _bt_init_page(Page page) {
     special->flags = P_NONE;
 }
 
-Buffer _bt_moveright(Relation rel, BTreeScan key, Buffer buf) {
+Buffer BtreeIndex::_bt_moveright(Relation rel, BTreeScan key, Buffer buf) {
     for (;;) {
-        Page page = BufferGetPage(buf);
+        Page page = _bufMgr->GetPage(buf);
         PageHeader header = PageGetHeader(page);
         BTreeSpecial special = (BTreeSpecial)PageGetSpecial(page);
 
@@ -84,8 +84,8 @@ Buffer _bt_moveright(Relation rel, BTreeScan key, Buffer buf) {
     return buf;
 }
 
-Buffer _bt_relandgetbuf(Relation rel, Buffer obuf, BlockNumber blkno) {
-    ReleaseBuffer(obuf);
-    Buffer buffer = ReadBuffer(rel, MAIN_FORKNUM, blkno);
+Buffer BtreeIndex::_bt_relandgetbuf(Relation rel, Buffer obuf, BlockNumber blkno) {
+    _bufMgr->ReleaseBuffer(obuf);
+    Buffer buffer = _bufMgr->ReadBuffer(rel, MAIN_FORKNUM, blkno);
     return buffer;
 }

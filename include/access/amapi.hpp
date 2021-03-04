@@ -26,4 +26,13 @@ typedef struct IndexAmRoute {
 
 extern IndexAmRoute* buildRoute();
 
+class BaseIndex {
+public:
+    virtual void buildempty(Relation rel) = 0;
+    virtual bool insert(Relation rel, int key, int ht_id) = 0;
+    virtual bool remove(Relation rel, int key) = 0;
+    virtual bool gettuple(IndexScanDesc scan) = 0;
+    virtual void vacuum(Relation rel) = 0;
+};
+
 #endif

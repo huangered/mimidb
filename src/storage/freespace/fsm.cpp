@@ -16,7 +16,7 @@ static FSMAddress fsm_get_parent(FSMAddress child, int* slot);
 2. if no block find , fsm_extend new page and search again
 */
 Buffer
-fsm_readbuf(Relation rel, FSMAddress addr, bool extend) {
+fsm::fsm_readbuf(Relation rel, FSMAddress addr, bool extend) {
     BlockNumber blkno = fsm_logic_to_physical(addr);
     Buffer      buf;
 
@@ -50,7 +50,8 @@ fsm_readbuf(Relation rel, FSMAddress addr, bool extend) {
     return buf;
 }
 
-BlockNumber fsm_search(Relation rel, Size spaceNeed) {
+BlockNumber
+fsm::fsm_search(Relation rel, Size spaceNeed) {
     FSMAddress address = FSM_ROOT_ADDRESS;
 
     for (;;) {
@@ -93,7 +94,7 @@ BlockNumber fsm_search(Relation rel, Size spaceNeed) {
 }
 
 int
-fsm_get_avail(Page page, int slot) {
+fsm::fsm_get_avail(Page page, int slot) {
     FSMPage fsmpage = (FSMPage)PageGetContent(page);
 
 
@@ -101,7 +102,7 @@ fsm_get_avail(Page page, int slot) {
 }
 
 bool
-fsm_set_avail(Page page, int slot, int value) {
+fsm::fsm_set_avail(Page page, int slot, int value) {
     
     int nodeno = slot + NonLeafNodesPerPage;
     FSMPage fsmpage = (FSMPage)PageGetContent(page);
@@ -144,7 +145,7 @@ typedef struct PgData {
 } PgData;
 
 void
-fsm_extend(Relation rel, BlockNumber blkno) {
+fsm::fsm_extend(Relation rel, BlockNumber blkno) {
     PgData data;
     PageInit((Page)data.data, BLKSZ, 0);
 
@@ -156,7 +157,8 @@ fsm_extend(Relation rel, BlockNumber blkno) {
     rel->rd_smgr->smgr_fsm_nblocks = fsm_blocks;
 }
 
-int fsm_search_avail(Buffer buf, Size spaceNeed) {
+int
+fsm::fsm_search_avail(Buffer buf, Size spaceNeed) {
     int no = 0;
     int slot;
 
@@ -184,7 +186,7 @@ int fsm_search_avail(Buffer buf, Size spaceNeed) {
 
 // private methods
 BlockNumber
-fsm_logic_to_physical(FSMAddress addr) {
+fsm::fsm_logic_to_physical(FSMAddress addr) {
     BlockNumber pages;
     int         leafno;
     int         l;
@@ -207,10 +209,12 @@ fsm_logic_to_physical(FSMAddress addr) {
 /*
 get real block number
 */
-BlockNumber fsm_get_heap_blk(FSMAddress addr, int slot) {
+BlockNumber
+fsm::fsm_get_heap_blk(FSMAddress addr, int slot) {
     return addr.logpageno * LeafNodesPerPage + slot;
 }
-FSMAddress fsm_get_child(FSMAddress addr, int slot) {
+FSMAddress
+fsm::fsm_get_child(FSMAddress addr, int slot) {
     FSMAddress child;
     child.level = addr.level - 1;
     child.logpageno = addr.logpageno * LeafNodesPerPage + slot;
@@ -218,7 +222,7 @@ FSMAddress fsm_get_child(FSMAddress addr, int slot) {
 }
 
 FSMAddress
-fsm_get_parent(FSMAddress child, int* slot) {
+fsm::fsm_get_parent(FSMAddress child, int* slot) {
     FSMAddress parent;
 
     parent.level = child.level + 1;
@@ -229,7 +233,7 @@ fsm_get_parent(FSMAddress child, int* slot) {
 }
 
 int
-fsm_set_and_search(Relation rel, FSMAddress addr, int slot,
+fsm::fsm_set_and_search(Relation rel, FSMAddress addr, int slot,
     int newValue, int minValue) {
     Buffer buf;
     Page page;
@@ -244,7 +248,7 @@ fsm_set_and_search(Relation rel, FSMAddress addr, int slot,
 }
 
 FSMAddress
-fsm_get_location(BlockNumber heapblk, int* slot) {
+fsm::fsm_get_location(BlockNumber heapblk, int* slot) {
     FSMAddress	addr;
 
     addr.level = FSM_BOTTOM_LEVEL;
@@ -255,7 +259,7 @@ fsm_get_location(BlockNumber heapblk, int* slot) {
 }
 
 int
-fsm_vacuum_page(Relation rel, FSMAddress addr, BlockNumber start, BlockNumber end) {
+fsm::fsm_vacuum_page(Relation rel, FSMAddress addr, BlockNumber start, BlockNumber end) {
     Buffer buf;
     Page page;
     int max_avail = 0;

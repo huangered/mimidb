@@ -1,11 +1,10 @@
 #include "access/btree.hpp"
 #include "storage/indexfsm.hpp"
 
-static BTreeMetaData* _bt_getmeta(Relation rel, Buffer metabuf);
-static void _bt_updatemeta(Buffer metabuf);
 
-BTreeMetaData* _bt_getmeta(Relation rel, Buffer metabuf) {
-    Page metap = BufferGetPage(metabuf);
+
+BTreeMetaData* BtreeIndex::_bt_getmeta(Relation rel, Buffer metabuf) {
+    Page metap = _bufMgr->GetPage(metabuf);
     BTreeMetaData* metad = (BTreeMetaData*)PageGetContent(metap);
     return metad;
 }
@@ -13,7 +12,7 @@ BTreeMetaData* _bt_getmeta(Relation rel, Buffer metabuf) {
 /*
 update the metapage and save to disk.
 */
-void _bt_updatemeta(Buffer metabuf) {
+void BtreeIndex::_bt_updatemeta(Buffer metabuf) {
 
 }
 
@@ -24,7 +23,7 @@ Get the relation root page buffer
 2. if the cache is empty , load from meta page.
 3. if block num is null in meta, create new root.
  */
-Buffer _bt_get_root(Relation rel) {
+Buffer BtreeIndex::_bt_get_root(Relation rel) {
     Buffer metabuf;
     Buffer rootbuf;
     BTreeMetaData* metad;
@@ -40,12 +39,12 @@ Buffer _bt_get_root(Relation rel) {
     if (blkno == P_NONE) {
         // init new page;
         rootbuf = _bt_get_buf(rel, P_NEW);
-        Page page = BufferGetPage(rootbuf);
+        Page page = _bufMgr->GetPage(rootbuf);
         _bt_init_page(page);
         BTreeSpecial special = (BTreeSpecial)PageGetSpecial(page);
         special->flags = BTP_ROOT | BTP_LEAF;
 
-        rel->root_blkno = GetBufferDesc(rootbuf)->tag.blockNum;
+        rel->root_blkno = _bufMgr->GetBufferDesc(rootbuf)->tag.blockNum;
         _bt_updatemeta(metabuf);
     }
     else {
@@ -54,16 +53,16 @@ Buffer _bt_get_root(Relation rel) {
     return rootbuf;
 }
 
-Buffer _bt_get_buf(Relation rel, BlockNumber blkno) {
+Buffer BtreeIndex::_bt_get_buf(Relation rel, BlockNumber blkno) {
     Buffer buf;
     if (blkno != P_NEW) {
-        buf = ReadBuffer(rel, MAIN_FORKNUM, blkno);
+        buf = _bufMgr->ReadBuffer(rel, MAIN_FORKNUM, blkno);
     }
     else {
         // create new block for cbtree
         blkno = GetFreeIndexPage(rel);
-        buf = ReadBuffer(rel, MAIN_FORKNUM, blkno);
-        Page page = BufferGetPage(buf);
+        buf = _bufMgr->ReadBuffer(rel, MAIN_FORKNUM, blkno);
+        Page page = _bufMgr->GetPage(buf);
         _bt_init_page(page);
     }
     return buf;

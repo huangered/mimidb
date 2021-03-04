@@ -3,7 +3,7 @@
 
 #include "catalog/mimi_attribute.hpp"
 
-#define MAX_NATTS   256
+#define MAX_NATTS
 
 typedef struct TupleDescData {
     int natts;
