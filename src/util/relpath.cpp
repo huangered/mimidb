@@ -7,7 +7,7 @@ const char* const forkNames[] = {
 };
 
 char* GetRelPath(int rnode, ForkNumber fn) {
-    char* str = (char*)palloc(256);
+    char* str = new char[64];
     const char* const fnum = forkNames[fn];
 
     sprintf(str, "%d_%s", rnode, fnum);

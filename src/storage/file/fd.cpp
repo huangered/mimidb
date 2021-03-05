@@ -8,7 +8,7 @@ void file_init(const char* path) {
 }   
 
 fd* file_open(const char* path) {
-    fd* f = (fd*)palloc(sizeof(fd));
+    fd* f = new fd;
     f->filePtr = mopen(path);
     return f;
 }
@@ -25,7 +25,7 @@ void file_write(fd* fd, int blocknum, char* buf) {
 
 void file_close(fd* fd) {
     mclose(fd->filePtr);
-    pfree(fd);
+    delete fd;
 }
 
 bool file_exist(const char* path) {

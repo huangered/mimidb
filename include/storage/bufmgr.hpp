@@ -13,16 +13,15 @@ class BufferMgr
 {
 private:
 	const int SIZE = 20;
-	HashMap<BufferTag, Buffer>* _hashMap;
-
 	char* _blocks;
+	HashMap<BufferTag, Buffer>* _hashMap;
 	BufferDesc* _buffDesc;
 	BufferDesc* _freeBuffDesc;
 public:
 	BufferMgr();
 	~BufferMgr();
-	BufferMgr(const BufferMgr&) = delete;
-	BufferMgr& operator=(BufferMgr) = delete;
+	//BufferMgr(const BufferMgr&) = delete;
+	//BufferMgr& operator=(BufferMgr) = delete;
 
 	Buffer ReadBuffer(Relation rel, ForkNumber fork, BlockNumber block);
 	void ReleaseBuffer(Buffer buffer);
@@ -33,6 +32,7 @@ public:
 private:
 	BufferDesc* BufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno);
 	void load_page(BufferTag tag, Buffer buf);
+	Buffer findFreeBuffer();
 
 };
 

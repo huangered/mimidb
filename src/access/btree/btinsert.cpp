@@ -197,14 +197,14 @@ void BtreeIndex::_bt_insert_parent(Relation rel, Buffer buf, Buffer rbuf, BTStac
         Buffer rootbuf;
 
         rootbuf = _bt_newroot(rel, buf, rbuf);
-        rel->root_blkno = _bufMgr->GetBufferDesc(rootbuf).tag.blockNum;
+        rel->root_blkno = _bufMgr->GetBufferDesc(rootbuf)->tag.blockNum;
     }
     else {
         Page page = _bufMgr->GetPage(buf);
         IndexTuple ritem = (IndexTuple)PageGetItem(page, PageGetItemId(page, P_HIKEY));
         IndexTuple itup = (IndexTuple)palloc(sizeof(IndexTupleData));
         itup->key = ritem->key;
-        itup->ht_id = _bufMgr->GetBufferDesc(rbuf).tag.blockNum;
+        itup->ht_id = _bufMgr->GetBufferDesc(rbuf)->tag.blockNum;
         itup->tuple_size = sizeof(IndexTupleData);
         BTreeScan itup_key = _bt_make_scankey(rel, itup);
         Buffer pbuf = _bt_get_buf(rel, stack->blkno);
@@ -236,7 +236,7 @@ Buffer BtreeIndex::_bt_newroot(Relation rel, Buffer lbuf, Buffer rbuf) {
     // get left page high key
     IndexTuple hkey = (IndexTuple)palloc(sizeof(IndexTupleData));
     hkey->key = INT_MIN;
-    hkey->ht_id = _bufMgr->GetBufferDesc(lbuf).tag.blockNum;
+    hkey->ht_id = _bufMgr->GetBufferDesc(lbuf)->tag.blockNum;
     hkey->tuple_size = sizeof(IndexTupleData);
     // set first item
     _bt_addtup(rootpage, hkey, sizeof(IndexTupleData), P_HIKEY);
@@ -248,7 +248,7 @@ Buffer BtreeIndex::_bt_newroot(Relation rel, Buffer lbuf, Buffer rbuf) {
 
     second = (IndexTuple)palloc(sizeof(IndexTupleData));
     second->key = lphkey->key;
-    second->ht_id = _bufMgr->GetBufferDesc(rbuf).tag.blockNum;
+    second->ht_id = _bufMgr->GetBufferDesc(rbuf)->tag.blockNum;
     second->tuple_size = sizeof(IndexTupleData);
     _bt_addtup(rootpage, second, sizeof(IndexTupleData), P_FIRSTKEY);
 

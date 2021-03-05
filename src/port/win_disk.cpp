@@ -8,11 +8,7 @@ void mcreate(const char* path) {
 }
 
 FILE* mopen(const char* path) {
-    FILE* f = fopen(path, "rb+");
-    if (f == NULL) {
-        mcreate(path);
-    }
-    f = fopen(path, "rb+");
+    FILE* f = fopen(path, "wb+");
     return f;
 }
 

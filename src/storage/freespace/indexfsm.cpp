@@ -4,7 +4,7 @@
 
 BlockNumber GetFreeIndexPage(Relation rel) {
 
-    BlockNumber blkno = freespace::GetPageWithFreeSpace(rel, BLKSZ / 2);
+    BlockNumber blkno = freespace{}.GetPageWithFreeSpace(rel, BLKSZ / 2);
 
     if (blkno != INVALID_BLOCK) {
         RecordUsedIndexPage(rel, blkno);
@@ -14,5 +14,5 @@ BlockNumber GetFreeIndexPage(Relation rel) {
 }
 
 void RecordUsedIndexPage(Relation rel, BlockNumber usedBlock) {
-    freespace::RecordPageWithFreeSpace(rel, usedBlock, 0);
+    freespace{}.RecordPageWithFreeSpace(rel, usedBlock, 0);
 }

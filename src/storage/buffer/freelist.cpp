@@ -43,7 +43,7 @@ void
 StrategyFreeBuffer(Buffer buffer) {
     SpinLockAcquire(&StrategyControl->lock);
 
-    BufferDesc bd = _bufMgr.GetBufferDesc(buffer);
+    BufferDesc* bd = _bufMgr.GetBufferDesc(buffer);
     //bd.freeNext = freeBuffDesc->buf_id;
     //freeBuffDesc = bd;
 

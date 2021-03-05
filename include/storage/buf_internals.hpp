@@ -23,7 +23,7 @@ struct BufferTag {
     }
 };
 
-typedef struct BuffDesc {
+struct BufferDesc {
     BufferTag tag;
     int buf_id;
 
@@ -32,7 +32,7 @@ typedef struct BuffDesc {
     // the buf is updated.
     volatile bool dirty;
     int freeNext;
-} BufferDesc;
+};
 
 /* freelist.c */
 extern void StrategyInitialize();
