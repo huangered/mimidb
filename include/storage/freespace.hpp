@@ -4,6 +4,7 @@
 #include "storage/block.hpp"
 #include "access/rel.hpp"
 #include "storage/fsm_internal.hpp"
+
 class freespace {
 private:
 	fsm* _fsm;

@@ -14,8 +14,6 @@ public:
     Page page;
 };
 
-
-
 typedef struct PageHeaderData {
 
     uint16 pd_checksum;

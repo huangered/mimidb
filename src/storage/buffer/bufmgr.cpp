@@ -1,10 +1,8 @@
 #include "access/rel.hpp"
 #include "storage/bufmgr.hpp"
-#include "port/shmem.hpp"
 #include "storage/fd.hpp"
 #include "storage/smgr.hpp"
 
-#define BLKSZ 8192
 #define NBuffer 20
 
 BufferMgr::BufferMgr() {
