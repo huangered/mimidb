@@ -27,7 +27,7 @@ public:
 	void ReleaseBuffer(Buffer buffer);
 	void FlushBuffer(BufferDesc* buffDesc);
 	BufferDesc* GetBufferDesc(Buffer buffer);
-	char* GetPage(Buffer bufId);
+	Page GetPage(Buffer bufId);
 
 private:
 	BufferDesc* BufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno);

@@ -9,6 +9,13 @@
 
 typedef char* Page;
 
+class PageBuf {
+public:
+    Page page;
+};
+
+
+
 typedef struct PageHeaderData {
 
     uint16 pd_checksum;

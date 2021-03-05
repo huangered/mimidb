@@ -100,7 +100,7 @@ void BufferMgr::load_page(BufferTag tag, Buffer buf) {
     file_close(f);
 }
 
-char*
+Page
 BufferMgr::GetPage(Buffer bufId) {
     int index = (bufId - 1) * BLKSZ;
     char* p = _blocks + index;
