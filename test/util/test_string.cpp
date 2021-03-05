@@ -6,4 +6,7 @@ TEST(string_test, basic_int)
 {
     yih::String a{ "abcd" };
     yih::String b{ a };
+
+    a.Append("efg");
+    a.Append("");
 }
