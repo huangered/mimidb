@@ -4,11 +4,11 @@
 #pragma warning(disable : 4996)
 #pragma warning(disable : 26451)
 
-#include <stddef.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdint.h>
+#include <cstddef>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cstdint>
 #include <memory.h>
 
 typedef size_t Size;

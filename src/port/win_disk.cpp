@@ -3,7 +3,7 @@
 #include <sys/stat.h>
 
 void mcreate(const char* path) {
-    FILE* f = fopen(path, "rb+");
+    FILE* f = fopen(path, "wb+");
     fclose(f);
 }
 
