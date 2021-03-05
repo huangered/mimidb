@@ -5,7 +5,6 @@
 #include "access/relcache.hpp"
 #include "storage/block.hpp"
 #include "storage/page.hpp"
-#include "storage/buf_internals.hpp"
 #include "storage/buf.hpp"
 #include "util/hashmap.hpp"
 
@@ -20,8 +19,8 @@ private:
 public:
 	BufferMgr();
 	~BufferMgr();
-	//BufferMgr(const BufferMgr&) = delete;
-	//BufferMgr& operator=(BufferMgr) = delete;
+	BufferMgr(const BufferMgr&) = delete;
+	BufferMgr& operator=(BufferMgr) = delete;
 
 	Buffer ReadBuffer(Relation rel, ForkNumber fork, BlockNumber block);
 	void ReleaseBuffer(Buffer buffer);

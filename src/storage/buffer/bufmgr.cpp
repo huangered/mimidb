@@ -1,8 +1,6 @@
+#include "access/rel.hpp"
 #include "storage/bufmgr.hpp"
-#include "storage/buf_internals.hpp"
 #include "port/shmem.hpp"
-#include "util/mctx.hpp"
-#include "util/hash.hpp"
 #include "storage/fd.hpp"
 #include "storage/smgr.hpp"
 
