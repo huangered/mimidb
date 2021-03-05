@@ -1,5 +1,6 @@
 #include "../g.hpp"
 
+#include "access/rel.hpp"
 #include "storage/bufmgr.hpp"
 
 // test the basic usage in buff mgr.
