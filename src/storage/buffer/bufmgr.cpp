@@ -51,7 +51,7 @@ BufferMgr::BufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno) {
 
     buf_id = findFreeBuffer();
     // load page data into page ptr;
-    //load_page(tag, buf_id);
+    load_page(tag, buf_id);
 
     GetBufferDesc(buf_id)->state += 1;
     GetBufferDesc(buf_id)->tag = tag;

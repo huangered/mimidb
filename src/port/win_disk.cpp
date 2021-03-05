@@ -3,12 +3,16 @@
 #include <sys/stat.h>
 
 void mcreate(const char* path) {
-    FILE* f = fopen(path, "wb");
+    FILE* f = fopen(path, "rb+");
     fclose(f);
 }
 
 FILE* mopen(const char* path) {
-    FILE* f = fopen(path, "wb+");
+    FILE* f;
+    auto i =  fopen_s(&f, path, "rb+");
+    if (i != 0) {
+      i=  fopen_s(&f, path, "wb+");
+    }
     return f;
 }
 
