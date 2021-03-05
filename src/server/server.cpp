@@ -18,7 +18,7 @@ Startup() {
 	MemoryContextInit();
 
 	printf("start up buffer mgr");
-	BufferInit();
+	//BufferInit();
 
 	printf("start relation cache");
 	RelationCacheInit();

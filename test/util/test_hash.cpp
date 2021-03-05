@@ -1,21 +1,19 @@
 #include "../g.hpp"
 
-
 #include "util/hashmap.hpp"
 
-
-TEST(hash_test, add)
+TEST(hash_test, basic_int)
 {
-    HashMap<int, int> a;
+    HashMap<int, int> map;
     for (int i{}; i < 100; i++) {
-        a.Put(i, i);
+        map.Put(i, i);
     }
 
     int v{ -99 };
-    EXPECT_TRUE(a.Get(1, &v));
+    EXPECT_TRUE(map.Get(1, &v));
     EXPECT_EQ(v, 1);
     
-    a.Remove(1);
+    map.Remove(1);
 
-    EXPECT_FALSE(a.Get(1, &v));
+    EXPECT_FALSE(map.Get(1, &v));
 }

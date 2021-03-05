@@ -6,11 +6,7 @@
 #define left_children(X)    ( 2 * (X) + 1 )
 #define right_children(X)   ( 2 * (X) + 2 )
 
-static BlockNumber fsm_logic_to_physical(FSMAddress addr);
 
-static BlockNumber fsm_get_heap_blk(FSMAddress addr, int slot);
-static FSMAddress fsm_get_child(FSMAddress addr, int slot);
-static FSMAddress fsm_get_parent(FSMAddress child, int* slot);
 /*
 1. find a available block
 2. if no block find , fsm_extend new page and search again
@@ -42,9 +38,9 @@ fsm::fsm_readbuf(Relation rel, FSMAddress addr, bool extend) {
         }
     }
 
-    buf = ReadBuffer(rel, FSM_FORKNUM, blkno);
-    if (PageIsNew(BufferGetPage(buf))) {
-        PageInit(BufferGetPage(buf), BLKSZ, 0);
+    buf = _bufMgr->ReadBuffer(rel, FSM_FORKNUM, blkno);
+    if (PageIsNew(_bufMgr->GetPage(buf))) {
+        PageInit(_bufMgr->GetPage(buf), BLKSZ, 0);
     }
 
     return buf;
@@ -162,7 +158,7 @@ fsm::fsm_search_avail(Buffer buf, Size spaceNeed) {
     int no = 0;
     int slot;
 
-    Page page = BufferGetPage(buf);
+    Page page = _bufMgr->GetPage(buf);
     FSMPage fsm = (FSMPage)PageGetContent(page);
 
     if (fsm->fp_nodes[no] < spaceNeed) {
@@ -240,7 +236,7 @@ fsm::fsm_set_and_search(Relation rel, FSMAddress addr, int slot,
     int newslot = -1;
 
     buf = fsm_readbuf(rel, addr, true);
-    page = BufferGetPage(buf);
+    page = _bufMgr->GetPage(buf);
 
     fsm_set_avail(page, slot, newValue);
 
@@ -270,7 +266,7 @@ fsm::fsm_vacuum_page(Relation rel, FSMAddress addr, BlockNumber start, BlockNumb
         return 0;
     }
 
-    page = BufferGetPage(buf);
+    page = _bufMgr->GetPage(buf);
 
     if (addr.level > FSM_BOTTOM_LEVEL) {
         FSMAddress fsm_start,

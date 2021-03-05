@@ -182,11 +182,18 @@ HeapIndex::heap_insert(Relation rel, HeapTuple htup) {
 给heaptup的事务id赋值
 */
 HeapTuple
-heaptuple_prepare_insert(Relation rel, HeapTuple tup, int xmin) {
+HeapIndex::heaptuple_prepare_insert(Relation rel, HeapTuple tup, int xmin) {
     tup->t_data->t_heap.t_xmin = xmin;
     tup->t_data->t_heap.t_xmax = 0;
     return tup;
 }
+
+HeapTuple
+HeapIndex::_heap_buildtuple(Relation rel, TupleSlotDesc* slot) {
+    HeapTuple a;
+    return a;
+}
+
 
 // for debug
 void

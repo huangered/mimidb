@@ -7,7 +7,7 @@ HeapIndex::GetBufferForTuple(Relation rel, Size len) {
     BlockNumber blkno;
     Buffer buf;
 
-    blkno = freespace::GetPageWithFreeSpace(rel, len);
+    blkno = freespace{}.GetPageWithFreeSpace(rel, len);
 
     if (blkno != INVALID_BLOCK) {
         buf = _bufMgr->ReadBuffer(rel, MAIN_FORKNUM, blkno);
@@ -19,7 +19,7 @@ HeapIndex::GetBufferForTuple(Relation rel, Size len) {
 
         Size avail = PageGetFreeSpace(page) - len;
         BlockNumber blkno = _bufMgr->GetBufferDesc(buf)->tag.blockNum;
-        freespace::RecordPageWithFreeSpace(rel, blkno, avail);
+        freespace{}.RecordPageWithFreeSpace(rel, blkno, avail);
         return buf;
     }
 

@@ -45,5 +45,10 @@ public:
     int fsm_set_and_search(Relation rel, FSMAddress addr, int slot, int newValue, int minValue);
     FSMAddress fsm_get_location(BlockNumber heapblk, int* slot);
     int fsm_vacuum_page(Relation rel, FSMAddress addr, BlockNumber start, BlockNumber end);
+private:
+    BlockNumber fsm_logic_to_physical(FSMAddress addr);
+    BlockNumber fsm_get_heap_blk(FSMAddress addr, int slot);
+    FSMAddress fsm_get_child(FSMAddress addr, int slot);
+    FSMAddress fsm_get_parent(FSMAddress child, int* slot);
 };
 #endif // !_fsm_internal_h_

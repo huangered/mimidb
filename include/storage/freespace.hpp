@@ -3,15 +3,17 @@
 
 #include "storage/block.hpp"
 #include "access/rel.hpp"
-
+#include "storage/fsm_internal.hpp"
 class freespace {
+private:
+	fsm* _fsm;
 public:
 	/*
 	find a page with available free space
 	*/
-	static BlockNumber GetPageWithFreeSpace(Relation rel, Size spaceNeeded);
-	static void RecordPageWithFreeSpace(Relation rel, BlockNumber usedBlock, Size freeSpace);
-	static void FreeSpaceMapVacuumRange(Relation rel, BlockNumber start, BlockNumber end);
+	BlockNumber GetPageWithFreeSpace(Relation rel, Size spaceNeeded);
+	void RecordPageWithFreeSpace(Relation rel, BlockNumber usedBlock, Size freeSpace);
+	void FreeSpaceMapVacuumRange(Relation rel, BlockNumber start, BlockNumber end);
 };
 
 #endif // !_freespace_h_
