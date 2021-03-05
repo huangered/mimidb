@@ -24,3 +24,19 @@ String::~String() {
 		delete[] _data;
 	}
 }
+
+String&
+String::Append(const char* data) {
+	size_t sz = strlen(data);
+	if (sz == 0) {
+		return *this;
+	}
+	size_t nlen = _len + sz;
+	char* buf = new char[nlen];
+	strcpy(buf, _data);
+	strcpy(buf + _len - 1, data);
+	_len = nlen;
+	delete _data;
+	_data = buf;
+	return *this;
+}

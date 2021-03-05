@@ -14,6 +14,7 @@ namespace yih {
 
 	public:
 		// common methods
+		String& Append(const char* data);
 	};
 }
 #endif // !_ustring_hpp_
