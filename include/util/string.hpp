@@ -11,7 +11,8 @@ namespace yih {
 		String(const char* data);
 		String(const String& str);
 		~String();
-
+		const char* Data();
+		int Len() const;
 	public:
 		// common methods
 		String& Append(const char* data);

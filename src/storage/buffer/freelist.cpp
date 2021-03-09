@@ -3,7 +3,7 @@
 #include "storage/spin.hpp"
 #include "util/mctx.hpp"
 
-BufferMgr _bufMgr;
+
 
 typedef struct BufferStrategyControl {
     slock_t lock;
@@ -20,7 +20,7 @@ static BufferStrategyControl* StrategyControl;
 get a free buffer from list
 */
 Buffer
-StrategyGetBuffer() {
+BufferStrategy::GetBuffer() {
     //while (true) {
     //    if (freeBuffDesc != NULL) {
     //        BufferDesc* bd = freeBuffDesc;
@@ -40,24 +40,13 @@ StrategyGetBuffer() {
 release the buffer to list
 */
 void
-StrategyFreeBuffer(Buffer buffer) {
+BufferStrategy::FreeBuffer(Buffer buffer) {
     SpinLockAcquire(&StrategyControl->lock);
 
-    BufferDesc* bd = _bufMgr.GetBufferDesc(buffer);
+    BufferDesc* bd = _bufMgr->GetBufferDesc(buffer);
     //bd.freeNext = freeBuffDesc->buf_id;
     //freeBuffDesc = bd;
 
     SpinLockRelease(&StrategyControl->lock);
 }
 
-void
-StrategyInitialize() {
-    StrategyControl = (BufferStrategyControl*)palloc(sizeof(BufferStrategyControl));
-
-    SpinLockInit(&StrategyControl->lock);
-
-    StrategyControl->firstFreeBuffer = 0;
-    //StrategyControl->lastFreeBuffer = NBuffers - 1;
-
-    StrategyControl->numBufferAllocs = 0;
-}

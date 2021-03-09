@@ -30,11 +30,11 @@ BufferMgr::~BufferMgr() {
 
 Buffer
 BufferMgr::ReadBuffer(Relation rel, ForkNumber forkNumber, BlockNumber blkno) {
-    return BufferAlloc(rel, forkNumber, blkno)->buf_id;
+    return bufferAlloc(rel, forkNumber, blkno)->buf_id;
 }
 
 BufferDesc*
-BufferMgr::BufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno) {
+BufferMgr::bufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno) {
     Buffer buf_id = INVALID_BUFFER;
     BufferTag tag{ rel->oid, forkNumber, blkno };
 
@@ -51,7 +51,7 @@ BufferMgr::BufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno) {
 
     buf_id = findFreeBuffer();
     // load page data into page ptr;
-    load_page(tag, buf_id);
+    loadDiskToMem(tag, buf_id);
 
     GetBufferDesc(buf_id)->state += 1;
     GetBufferDesc(buf_id)->tag = tag;
@@ -76,19 +76,15 @@ BufferMgr::FlushBuffer(BufferDesc* buffDesc) {
 }
 
 // easy implement
-void BufferMgr::load_page(BufferTag tag, Buffer buf) {
+void BufferMgr::loadDiskToMem(BufferTag tag, Buffer buf) {
     char* path = GetRelPath(tag.rnode, tag.forkNum);
     // read file
     fd* f = file_open(path);
-    if (f->filePtr == NULL) {
-        file_init(path);
-        f = file_open(path);
-    }
     char* data = new char[BLKSZ];
     memset(data, 0, BLKSZ);
     file_read(f, tag.blockNum, data);
     // read block;
-    char* pagePtr = GetPage(buf + 1);
+    char* pagePtr = GetPage(buf);
 
     memcpy(pagePtr, data, BLKSZ);
     delete[] path;

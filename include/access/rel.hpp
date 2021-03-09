@@ -18,8 +18,8 @@ typedef struct RelationData {
     Form_mimi_class rd_rel; /* relation tuple */
     TupleDesc tupleDesc;    /* retuple descriptor */
     int refcount;
-    TableAmRoute* tb_am;
-    IndexAmRoute* index_am;
+    BaseIndex* tb_am;
+    BaseIndex* index_am;
 
     struct SMgrRelationData* rd_smgr;
 

@@ -137,7 +137,7 @@ void formrdesc(const char* relname, Oid reltype, int natts, const FormData_mimi_
     rel->rd_rel = new FormData_mimi_class;
     strcpy(rel->rd_rel->relname, relname);
 
-    rel->tb_am = table_route();
+    rel->tb_am = nullptr;// table_route();
     // build relation tuple desc
     rel->tupleDesc = CreateTempTupleDesc(natts);
     for (int i = 0; i < natts; i++) {
