@@ -1,14 +1,14 @@
 #include "access/btree.hpp"
-#include "util/mctx.hpp"
 
 /*
 make a scan key
 */
-BTreeScan _bt_make_scankey(Relation rel, IndexTuple itup) {
+BTreeScan
+BtreeIndex::_bt_make_scankey(Relation rel, IndexTuple itup) {
     int nkeys = 1;
     ScanKey skey;
 
-    BTreeScan key = (BTreeScan)palloc(sizeof(BTreeScanData));
+    BTreeScan key = new BTreeScanData;
     key->itup = itup;
     key->itemsz = sizeof(IndexTupleData);
     key->nextkey = false;
@@ -26,8 +26,9 @@ BTreeScan _bt_make_scankey(Relation rel, IndexTuple itup) {
 /*
 make a index tuple
 */
-IndexTuple _bt_make_tuple(int key, int ht_id) {
-    IndexTuple tup = (IndexTuple)palloc(sizeof(IndexTupleData));
+IndexTuple
+BtreeIndex::_bt_make_tuple(int key, int ht_id) {
+    IndexTuple tup = new IndexTupleData;
     tup->key = key;
     tup->ht_id = ht_id;
     tup->tuple_size = sizeof(IndexTupleData);
@@ -37,10 +38,11 @@ IndexTuple _bt_make_tuple(int key, int ht_id) {
 /*
 free the tree stack
 */
-void _bt_freestack(BTStack stack) {
+void
+BtreeIndex::_bt_freestack(BTStack stack) {
     while (stack != NULL) {
         BTStack parent = stack->parent;
-        pfree(stack);
+        delete stack;
         stack = parent;
     }
 }

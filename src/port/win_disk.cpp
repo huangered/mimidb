@@ -1,38 +1,46 @@
 #include "port/disk.hpp"
-
 #include <sys/stat.h>
 
-void mcreate(const char* path) {
-    FILE* f = fopen(path, "wb+");
-    fclose(f);
-}
-
-FILE* mopen(const char* path) {
-    FILE* f;
-    auto i =  fopen_s(&f, path, "rb+");
-    if (i != 0) {
-      i=  fopen_s(&f, path, "wb+");
+void
+DiskFile::open(const char* path) {
+    if (_f != nullptr) {
+        close();
     }
-    return f;
+    auto i = fopen_s(&_f, path, "rb+");
+    if (i != 0) {
+        i = fopen_s(&_f, path, "wb+");
+    }
 }
 
-bool mread(FILE* f, char* buf, Size size, Size offset) {
-    fseek(f, offset, SEEK_SET);
-    fread(buf, sizeof(char), size, f);
-    return false;
+
+bool
+DiskFile::read(char* buf, Size size, Size offset) {
+    fseek(_f, offset, SEEK_SET);
+    fread(buf, sizeof(char), size, _f);
+    return true;
 }
 
-bool mwrite(FILE* f, char* buf, Size size, Size offset) {
-    fseek(f, offset, SEEK_SET);
-    fwrite(buf, sizeof(char), size, f);
-    return false;
+bool
+DiskFile::write(char* buf, Size size, Size offset) {
+    fseek(_f, offset, SEEK_SET);
+    fwrite(buf, sizeof(char), size, _f);
+    return true;
 }
 
-void mclose(FILE* f) {
-    fclose(f);
+void
+DiskFile::close() {
+    fclose(_f);
 }
-
-bool mexist(const char* path) {
+ 
+bool
+DiskFile::exist(const char* path) {
     struct stat buffer;
     return (stat(path, &buffer) == 0);
+};
+
+int
+DiskFile::size() {
+    fseek(_f, 0, SEEK_END);
+    int sz = ftell(_f);
+    return sz;
 }

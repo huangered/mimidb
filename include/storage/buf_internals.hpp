@@ -4,8 +4,11 @@
 #include "storage/buf.hpp"
 
 /* freelist.c */
-extern void StrategyInitialize();
-extern Buffer StrategyGetBuffer();
-extern void StrategyFreeBuffer(Buffer buffer);
-
+class BufferStrategy {
+private:
+	BufferMgr* _bufMgr;
+public:
+	Buffer GetBuffer();
+	void FreeBuffer(Buffer buffer);
+};
 #endif // !_buf_internals_h_

@@ -29,8 +29,8 @@ public:
 	Page GetPage(Buffer bufId);
 
 private:
-	BufferDesc* BufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno);
-	void load_page(BufferTag tag, Buffer buf);
+	BufferDesc* bufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno);
+	void loadDiskToMem(BufferTag tag, Buffer buf);
 	Buffer findFreeBuffer();
 
 };

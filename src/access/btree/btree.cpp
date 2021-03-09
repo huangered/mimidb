@@ -1,21 +1,13 @@
 #include "access/btree.hpp"
-#include "util/mctx.hpp"
 #include "storage/indexfsm.hpp"
 
-static IndexAmRoute route = {
-    /*.ambuildempty = btbuildempty,
-    .aminsert = btinsert,
-    .amremove = btremove,
-    .amgettuple = btgettuple,
-    .amvacuum = btvacuum*/
-};
-
-IndexAmRoute* buildRoute() {
-    return &route;
+BtreeIndex::BtreeIndex(std::shared_ptr<BufferMgr> mgr) {
+    _bufMgr = mgr;
 }
 
-void BtreeIndex::buildempty(Relation rel) {
-    Page metap = (Page)palloc(BLKSZ);
+void
+BtreeIndex::buildempty(Relation rel) {
+    Page metap = new char[BLKSZ];
     _bt_init_page(metap);
 
     BTreeMetaData* metad = (BTreeMetaData*)PageGetContent(metap);
@@ -25,10 +17,11 @@ void BtreeIndex::buildempty(Relation rel) {
     Buffer buf = _bufMgr->ReadBuffer(rel, MAIN_FORKNUM, BTREE_METAPAGE);
     Page page = _bufMgr->GetPage(buf);
     memcpy(page, metap, BLKSZ);
-    pfree(metap);
+    delete metap;
 }
 
-bool BtreeIndex::insert(Relation rel, int key, int ht_id) {
+bool
+BtreeIndex::insert(Relation rel, int key, int ht_id) {
     bool result;
     IndexTuple tup;
 
@@ -36,14 +29,16 @@ bool BtreeIndex::insert(Relation rel, int key, int ht_id) {
 
     result = _bt_do_insert(rel, tup);
 
-    pfree(tup);
+    delete tup;
 
     return result;
 }
-bool BtreeIndex::remove(Relation rel, int key) {
+bool
+BtreeIndex::remove(Relation rel, int key) {
     return false;
 }
-bool BtreeIndex::gettuple(IndexScanDesc scan) {
+bool
+BtreeIndex::gettuple(IndexScanDesc scan) {
 
     if (scan->block == INVALID_BLOCK) {
         return _bt_first(scan);
@@ -53,8 +48,10 @@ bool BtreeIndex::gettuple(IndexScanDesc scan) {
     }
 }
 
+// private method
 
-void _bt_init_page(Page page) {
+void
+BtreeIndex::_bt_init_page(Page page) {
     PageInit(page, BLKSZ, sizeof(BTreeSpecialData));
     BTreeSpecial special = (BTreeSpecial)PageGetSpecial(page);
     special->level = 0;
@@ -63,7 +60,8 @@ void _bt_init_page(Page page) {
     special->flags = P_NONE;
 }
 
-Buffer BtreeIndex::_bt_moveright(Relation rel, BTreeScan key, Buffer buf) {
+Buffer
+BtreeIndex::_bt_moveright(Relation rel, BTreeScan key, Buffer buf) {
     for (;;) {
         Page page = _bufMgr->GetPage(buf);
         PageHeader header = PageGetHeader(page);
@@ -84,7 +82,8 @@ Buffer BtreeIndex::_bt_moveright(Relation rel, BTreeScan key, Buffer buf) {
     return buf;
 }
 
-Buffer BtreeIndex::_bt_relandgetbuf(Relation rel, Buffer obuf, BlockNumber blkno) {
+Buffer
+BtreeIndex::_bt_relandgetbuf(Relation rel, Buffer obuf, BlockNumber blkno) {
     _bufMgr->ReleaseBuffer(obuf);
     Buffer buffer = _bufMgr->ReadBuffer(rel, MAIN_FORKNUM, blkno);
     return buffer;

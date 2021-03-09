@@ -1,6 +1,5 @@
 #include <limits.h>
 #include "access/btree.hpp"
-#include "util/mctx.hpp"
 #include "storage/bufmgr.hpp"
 
 
@@ -27,7 +26,7 @@ top:
 
     _bt_freestack(stack);
 
-    pfree(itup_key);
+    delete itup_key;
     _bufMgr->ReleaseBuffer(buf);
 
     return true;
@@ -63,7 +62,7 @@ BTStack BtreeIndex::_bt_search(Relation rel, BTreeScan itup_key, Buffer* bufp) {
         blkno = BTreeTupleGetDownLink(itup);
         par_blkno = _bufMgr->GetBufferDesc(*bufp)->tag.blockNum;
 
-        BTStack new_stack = (BTStack)palloc(sizeof(BTStackData));
+        BTStack new_stack = new BTStackData;
         new_stack->parent = stack_in;
         new_stack->blkno = par_blkno;
         new_stack->offset = offsetnum;
@@ -202,15 +201,15 @@ void BtreeIndex::_bt_insert_parent(Relation rel, Buffer buf, Buffer rbuf, BTStac
     else {
         Page page = _bufMgr->GetPage(buf);
         IndexTuple ritem = (IndexTuple)PageGetItem(page, PageGetItemId(page, P_HIKEY));
-        IndexTuple itup = (IndexTuple)palloc(sizeof(IndexTupleData));
+        IndexTuple itup = new IndexTupleData;
         itup->key = ritem->key;
         itup->ht_id = _bufMgr->GetBufferDesc(rbuf)->tag.blockNum;
         itup->tuple_size = sizeof(IndexTupleData);
         BTreeScan itup_key = _bt_make_scankey(rel, itup);
         Buffer pbuf = _bt_get_buf(rel, stack->blkno);
         _bt_insertonpg(rel, pbuf, stack->offset + 1, itup_key, stack->parent);
-        pfree(itup);
-        pfree(itup_key);
+        delete itup;
+        delete itup_key;
         _bufMgr->ReleaseBuffer(pbuf);
         _bufMgr->ReleaseBuffer(rbuf);
     }
@@ -234,25 +233,25 @@ Buffer BtreeIndex::_bt_newroot(Relation rel, Buffer lbuf, Buffer rbuf) {
     special->flags = BTP_ROOT;
     special->level = ((BTreeSpecial)PageGetSpecial(lpage))->level + 1;
     // get left page high key
-    IndexTuple hkey = (IndexTuple)palloc(sizeof(IndexTupleData));
+    IndexTuple hkey = new IndexTupleData;
     hkey->key = INT_MIN;
     hkey->ht_id = _bufMgr->GetBufferDesc(lbuf)->tag.blockNum;
     hkey->tuple_size = sizeof(IndexTupleData);
     // set first item
     _bt_addtup(rootpage, hkey, sizeof(IndexTupleData), P_HIKEY);
 
-    pfree(hkey);
+    delete hkey;
     // set second item
     IndexTuple second;
     IndexTuple lphkey = (IndexTuple)PageGetItem(lpage, PageGetItemId(lpage, P_HIKEY));
 
-    second = (IndexTuple)palloc(sizeof(IndexTupleData));
+    second = new IndexTupleData;
     second->key = lphkey->key;
     second->ht_id = _bufMgr->GetBufferDesc(rbuf)->tag.blockNum;
     second->tuple_size = sizeof(IndexTupleData);
     _bt_addtup(rootpage, second, sizeof(IndexTupleData), P_FIRSTKEY);
 
-    pfree(second);
+    delete second;
 
     _bufMgr->ReleaseBuffer(rbuf);
     _bufMgr->ReleaseBuffer(buf);

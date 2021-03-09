@@ -4,37 +4,35 @@
 #include "storage/page.hpp"
 
 void file_init(const char* path) {
-    mcreate(path);
+   
 }   
 
 fd* file_open(const char* path) {
-    fd* f = new fd;
-    f->filePtr = mopen(path);
+    fd* f = new fd();
+    f->filePtr.open(path);
     return f;
 }
 
 void file_read(fd* fd, int blocknum, char* buf) {
-    int offset1 = blocknum * BLKSZ;
-    mread(fd->filePtr, buf, BLKSZ, offset1);
+    int offset = blocknum * BLKSZ;
+    fd->filePtr.read(buf, BLKSZ, offset);
 }
 
 void file_write(fd* fd, int blocknum, char* buf) {
-    int offset1 = blocknum * BLKSZ;
-    mwrite(fd->filePtr, buf, BLKSZ, offset1);
+    int offset = blocknum * BLKSZ;
+    fd->filePtr.write(buf, BLKSZ, offset);
 }
 
 void file_close(fd* fd) {
-    mclose(fd->filePtr);
+    fd->filePtr.close();
     delete fd;
 }
 
 bool file_exist(const char* path) {
-    return mexist(path);
+    DiskFile df;
+    return df.exist(path);
 }
 
 int file_size(fd* fd) {
-    int size;
-    fseek(fd->filePtr, 0, SEEK_END);
-    size = ftell(fd->filePtr);
-    return size;
+    return fd->filePtr.size();
 }
