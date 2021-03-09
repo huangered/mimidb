@@ -57,3 +57,8 @@ disk::create() {
 	_file.open(_path, std::ios::out);
 	_file.close();
 }
+
+bool
+disk::exist() {
+	return std::filesystem::exists(_path);
+}
