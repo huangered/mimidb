@@ -4,6 +4,7 @@
 #include "storage/smgr.hpp"
 
 #define NBuffer 20
+#define P_NEW INVALID_BLOCK
 
 BufferMgr::BufferMgr() {
     size_t size = NBuffer * BLKSZ;
@@ -28,9 +29,33 @@ BufferMgr::~BufferMgr() {
     delete _hashMap;
 }
 
+/*
+*/
 Buffer
 BufferMgr::ReadBuffer(Relation rel, ForkNumber forkNumber, BlockNumber blkno) {
-    return bufferAlloc(rel, forkNumber, blkno)->buf_id;
+    BufferDesc* desc;
+    bool isExtend = false;
+
+    if (blkno == P_NEW) {
+        isExtend = true;
+    }
+
+    if (isExtend) {
+        blkno = smgrblocks(rel, forkNumber);
+    }
+
+
+    desc = bufferAlloc(rel, forkNumber, blkno);
+
+    // load or save data
+    if (isExtend) {
+        //smgrextend();
+    }
+    else {
+        // smgrread();
+    }    
+
+    return desc->buf_id;
 }
 
 BufferDesc*

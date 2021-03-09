@@ -51,3 +51,12 @@ smgrwrite(Relation rel, ForkNumber number, BlockNumber blkno, char* buf) {
     file_close(fd);
     pfree(path);
 }
+
+void
+smgrread(Relation rel, ForkNumber number, BlockNumber blkno, char* buf) {
+    char* path = GetRelPath(rel->rnode, number);
+    fd* fd = file_open(path);
+    file_write(fd, blkno, buf);
+    file_close(fd);
+    pfree(path);
+}

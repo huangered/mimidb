@@ -12,9 +12,10 @@ typedef struct SMgrRelationData {
 
 typedef SMgrRelationData* SmgrRelation;
 
-extern bool smgrexists(Relation rel, ForkNumber number);
-extern void smgrcreate(Relation rel, ForkNumber number);
-extern BlockNumber smgrblocks(Relation rel, ForkNumber number);
-extern void smgrextend(Relation rel, Page page, BlockNumber blkno, ForkNumber number);
-extern void smgrwrite(Relation rel, ForkNumber number, BlockNumber blkno, const char* buf);
+bool smgrexists(Relation rel, ForkNumber number);
+void smgrcreate(Relation rel, ForkNumber number);
+BlockNumber smgrblocks(Relation rel, ForkNumber number);
+void smgrextend(Relation rel, Page page, BlockNumber blkno, ForkNumber number);
+void smgrwrite(Relation rel, ForkNumber number, BlockNumber blkno, const char* buf);
+void smgrread(Relation rel, ForkNumber number, BlockNumber blkno, const char* buf);
 #endif // !_smgr_h_
