@@ -114,6 +114,23 @@ public:
 			}
 		}
 	}
+
+	bool Exist(K k) {
+		int hash = _hash(k);
+		int index = hash % NUM;
+		Bucket* bucket = _buckets + index;
+		Entry* head = bucket->_list;
+
+		while (head != nullptr) {
+			if (_equal(head->_k, k)) {
+				return true;
+			}
+			else {
+				head = head->_next;
+			}
+		}
+		return false;
+	}
 };
 
 #endif

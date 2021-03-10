@@ -36,6 +36,8 @@ BufferMgr::ReadBuffer(Relation rel, ForkNumber forkNumber, BlockNumber blkno) {
     BufferDesc* desc;
     bool isExtend = false;
 
+    smgropen(rel, forkNumber);
+
     if (blkno == P_NEW) {
         isExtend = true;
     }
@@ -44,15 +46,16 @@ BufferMgr::ReadBuffer(Relation rel, ForkNumber forkNumber, BlockNumber blkno) {
         blkno = smgrblocks(rel, forkNumber);
     }
 
-
     desc = bufferAlloc(rel, forkNumber, blkno);
 
+    Page page = GetPage(desc->buf_id);
     // load or save data
     if (isExtend) {
-        //smgrextend();
+        memset(page, 0, BLKSZ);
+        smgrextend(rel, page, blkno, MAIN_FORKNUM);
     }
     else {
-        // smgrread();
+        smgrread(rel, MAIN_FORKNUM, blkno, page);
     }    
 
     return desc->buf_id;
@@ -75,8 +78,6 @@ BufferMgr::bufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno) {
     // create new one and find a valid buffdesc or find a victim;
 
     buf_id = findFreeBuffer();
-    // load page data into page ptr;
-    loadDiskToMem(tag, buf_id);
 
     GetBufferDesc(buf_id)->state += 1;
     GetBufferDesc(buf_id)->tag = tag;
@@ -98,23 +99,6 @@ BufferMgr::FlushBuffer(BufferDesc* buffDesc) {
     char* buf = GetPage(buffDesc->buf_id);
 
     //smgrwrite(buffDesc->tag.rnode, buffDesc->tag.forkNum, buffDesc->tag.blockNum, buf);
-}
-
-// easy implement
-void BufferMgr::loadDiskToMem(BufferTag tag, Buffer buf) {
-    char* path = GetRelPath(tag.rnode, tag.forkNum);
-    // read file
-    fd* f = file_open(path);
-    char* data = new char[BLKSZ];
-    memset(data, 0, BLKSZ);
-    file_read(f, tag.blockNum, data);
-    // read block;
-    char* pagePtr = GetPage(buf);
-
-    memcpy(pagePtr, data, BLKSZ);
-    delete[] path;
-    delete[] data;
-    file_close(f);
 }
 
 Page
