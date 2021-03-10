@@ -10,6 +10,7 @@ class disk
 	std::filesystem::path _path;
 public:
 	disk(std::filesystem::path path);
+	disk(const disk& disk);
 	int nblock();
 	int write(char* buf, int block);
 	int read(char* buf, int block);
