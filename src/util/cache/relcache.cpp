@@ -35,8 +35,8 @@ static bool OidHashEqual(const void* left, const void* right, Size keysize) {
 }
 
 static void relationCacheInsert(Relation rel) {
-    RelCacheEntry entry{rel->oid, rel};
-    relhash->Put(rel->oid, entry);
+    RelCacheEntry entry{rel->rd_id, rel};
+    relhash->Put(rel->rd_id, entry);
 }
 
 static Relation relationCacheLookup(Oid relid) {
@@ -131,8 +131,7 @@ void formrdesc(const char* relname, Oid reltype, int natts, const FormData_mimi_
     init the ref count: 1 because it needs keep in cache
     */
     rel->refcount = 1;
-    rel->oid = reltype;
-    rel->rnode = reltype;
+    rel->rd_id = reltype;
     rel->root_blkno = 0;
     rel->rd_rel = new FormData_mimi_class;
     strcpy(rel->rd_rel->relname, relname);
@@ -162,7 +161,7 @@ Relation BuildRelationDesc(Oid oid, bool insert) {
     rel_class = (Form_mimi_class)(heap_tup->t_data);
 
     Relation heaprel = new RelationData;
-    heaprel->oid = oid;
+    heaprel->rd_id = oid;
     heaprel->rd_rel = new FormData_mimi_class;
     strcpy(heaprel->rd_rel->relname, rel_class->relname);
 
@@ -182,8 +181,7 @@ Relation BuildRelationDesc(Oid oid, bool insert) {
 */
 Relation BuildLocalRelation(Oid oid, const char* relname, TupleDesc tupdesc) {
     Relation heaprel = new RelationData;
-    heaprel->oid = oid;
-    heaprel->rnode = oid;
+    heaprel->rd_id = oid;
     heaprel->rd_rel = new FormData_mimi_class;
     strcpy(heaprel->rd_rel->relname, relname);
 

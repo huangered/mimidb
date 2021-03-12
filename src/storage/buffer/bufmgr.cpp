@@ -1,6 +1,5 @@
 #include "access/rel.hpp"
 #include "storage/bufmgr.hpp"
-#include "storage/fd.hpp"
 #include "storage/smgr.hpp"
 
 #define NBuffer 20
@@ -29,14 +28,24 @@ BufferMgr::~BufferMgr() {
     delete _hashMap;
 }
 
+Buffer
+BufferMgr::ReadBuffer(Relation rel, BlockNumber blkno) {
+    return ReadBufferExtend(rel, MAIN_FORKNUM, blkno);
+}
+
+Buffer
+BufferMgr::ReadBufferExtend(Relation rel, ForkNumber forkNumber, BlockNumber blkno) {
+    RelationOpenSmgr(rel, smgropen(rel, forkNumber));
+
+    return ReadBuffer_common(rel, forkNumber, blkno);
+}
+
 /*
 */
 Buffer
-BufferMgr::ReadBuffer(Relation rel, ForkNumber forkNumber, BlockNumber blkno) {
+BufferMgr::ReadBuffer_common(Relation rel, ForkNumber forkNumber, BlockNumber blkno) {
     BufferDesc* desc;
-    bool isExtend = false;
-
-    smgropen(rel, forkNumber);
+    bool isExtend{};
 
     if (blkno == P_NEW) {
         isExtend = true;
@@ -46,25 +55,25 @@ BufferMgr::ReadBuffer(Relation rel, ForkNumber forkNumber, BlockNumber blkno) {
         blkno = smgrblocks(rel, forkNumber);
     }
 
-    desc = bufferAlloc(rel, forkNumber, blkno);
+    desc = _BufferAlloc(rel, forkNumber, blkno);
 
     Page page = GetPage(desc->buf_id);
     // load or save data
     if (isExtend) {
         memset(page, 0, BLKSZ);
-        smgrextend(rel, page, blkno, MAIN_FORKNUM);
+        smgrextend(rel, page, blkno, forkNumber);
     }
     else {
-        smgrread(rel, MAIN_FORKNUM, blkno, page);
+        smgrread(rel, forkNumber, blkno, page);
     }    
 
     return desc->buf_id;
 }
 
 BufferDesc*
-BufferMgr::bufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno) {
+BufferMgr::_BufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno) {
     Buffer buf_id = INVALID_BUFFER;
-    BufferTag tag{ rel->oid, forkNumber, blkno };
+    BufferTag tag{ rel->rd_id, forkNumber, blkno };
 
     // use buftag to find
     bool result = _hashMap->Get(tag, &buf_id);
@@ -77,7 +86,7 @@ BufferMgr::bufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno) {
     // if find, return
     // create new one and find a valid buffdesc or find a victim;
 
-    buf_id = findFreeBuffer();
+    buf_id = _FindFreeBuffer();
 
     GetBufferDesc(buf_id)->state += 1;
     GetBufferDesc(buf_id)->tag = tag;
@@ -116,7 +125,7 @@ BufferMgr::GetBufferDesc(Buffer bufId) {
 
 
 Buffer
-BufferMgr::findFreeBuffer() {
+BufferMgr::_FindFreeBuffer() {
     BufferDesc* bd = _freeBuffDesc;
     _freeBuffDesc = &_buffDesc[_freeBuffDesc->freeNext - 1];
     bd->freeNext = 0;

@@ -14,7 +14,7 @@ BtreeIndex::buildempty(Relation rel) {
     metad->root = P_NONE;
 
     // write to local file system
-    Buffer buf = _bufMgr->ReadBuffer(rel, MAIN_FORKNUM, BTREE_METAPAGE);
+    Buffer buf = _bufMgr->ReadBuffer(rel, BTREE_METAPAGE);
     Page page = _bufMgr->GetPage(buf);
     memcpy(page, metap, BLKSZ);
     delete metap;
@@ -85,6 +85,6 @@ BtreeIndex::_bt_moveright(Relation rel, BTreeScan key, Buffer buf) {
 Buffer
 BtreeIndex::_bt_relandgetbuf(Relation rel, Buffer obuf, BlockNumber blkno) {
     _bufMgr->ReleaseBuffer(obuf);
-    Buffer buffer = _bufMgr->ReadBuffer(rel, MAIN_FORKNUM, blkno);
+    Buffer buffer = _bufMgr->ReadBuffer(rel, blkno);
     return buffer;
 }

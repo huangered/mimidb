@@ -1,4 +1,4 @@
-#ifndef _REL_H_
+﻿#ifndef _REL_H_
 #define _REL_H_
 
 #include "mimi.hpp"
@@ -9,10 +9,11 @@
 #include "access/tupledesc.hpp"
 #include "catalog/mimi_class.hpp"
 #include "catalog/mimi_attribute.hpp"
+#include "storage/smgr.hpp"
+#include "storage/relfilenode.hpp"
 
-typedef struct RelationData {
-    Oid oid;
-    int rnode;
+struct RelationData {
+    Oid rd_id;
     BlockNumber root_blkno;
 
     Form_mimi_class rd_rel; /* relation tuple */
@@ -21,9 +22,17 @@ typedef struct RelationData {
     BaseIndex* tb_am;
     BaseIndex* index_am;
 
-    struct SMgrRelationData* rd_smgr;
+    SMgrRelation rd_smgr; /*保存的文件句柄*/
+    RelFileNode rd_node;  /*relation的物理位置*/
+};
 
-} RelationData;
-
+class relation {
+private:
+    SMgrRelation rd_smgr;
+public:
+    relation();
+    // 更上层函数
+    void OpenSmgr();
+};
 
 #endif

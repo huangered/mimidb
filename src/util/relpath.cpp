@@ -5,20 +5,11 @@ const char* const forkNames[] = {
     "fsm",						/* FSM_FORKNUM */
 };
 
-char* GetRelPath(int rnode, ForkNumber fn) {
+std::filesystem::path GetRelPath2(Oid dbNode, Oid relNode, ForkNumber fn) {
     char* str = new char[64];
     const char* const fnum = forkNames[fn];
 
-    sprintf(str, "%d_%s", rnode, fnum);
-
-    return str;
-}
-
-std::filesystem::path GetRelPath2(Oid rnode, ForkNumber fn) {
-    char* str = new char[64];
-    const char* const fnum = forkNames[fn];
-
-    sprintf(str, "%lld_%s", rnode, fnum);
+    sprintf(str, "%lld_%lld_%s", dbNode, relNode, fnum);
 
     std::filesystem::path path{str};
 

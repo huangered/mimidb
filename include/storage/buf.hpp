@@ -14,7 +14,7 @@ typedef int Buffer;
 #define BufferIsValid(buf)      ((buf) != INVALID_BUFFER)
 
 struct BufferTag {
-    int rnode;
+    Oid rnode;
     ForkNumber forkNum;
     BlockNumber blockNum;
 

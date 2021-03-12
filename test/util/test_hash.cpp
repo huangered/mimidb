@@ -41,3 +41,12 @@ TEST(hash_test, value_is_pointer) {
     }
 
 }
+
+TEST(hash_test, keys_and_values) {
+    HashMap<int, int> map;
+    for (int i{}; i < 100; i++) {
+        map.Put(i, i);
+    }
+    EXPECT_EQ(100, map.Keys().size());
+    EXPECT_EQ(100, map.Values().size());
+}

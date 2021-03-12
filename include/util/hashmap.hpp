@@ -3,7 +3,7 @@
 
 #include <functional>
 #include <type_traits>
-
+#include <list>
 /*
 只支持class对象，必须自己实现hash方法
 */
@@ -25,12 +25,13 @@ struct hash_to {
 template<class K>
 struct hash_to<K, class std::enable_if<std::is_integral_v<K>>::type> {
 	int operator()(const K& obj) const {
-		return obj;
+		return (int)obj;
 	}
 };
 
 /*
-* 一个简单的hashmap，只支持值类型
+* 一个简单的hashmap，只支持值类型,
+* todo: 还是要实现迭代器来释放元素。
 */
 template<class K, class V, class Hash = hash_to<K>, class Equal = std::equal_to<K>>
 class HashMap {
@@ -130,6 +131,34 @@ public:
 			}
 		}
 		return false;
+	}
+
+	std::list<K> Keys() {
+		std::list<K> keys;
+		for (int i{}; i < NUM; i++) {
+			Bucket* bucket = _buckets + i;
+			Entry* head = bucket->_list;
+
+			while (head != nullptr) {
+				keys.push_back(head->_k);
+				head = head->_next;				
+			}
+		}
+		return keys;
+	}
+
+	std::list<V> Values() {
+		std::list<V> values;
+		for (int i{}; i < NUM; i++) {
+			Bucket* bucket = _buckets + i;
+			Entry* head = bucket->_list;
+
+			while (head != nullptr) {
+				values.push_back(head->_v);
+				head = head->_next;
+			}
+		}
+		return values;
 	}
 };
 

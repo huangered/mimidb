@@ -32,7 +32,7 @@ heap_create_with_catalog(const char* name, Oid relid, TupleDesc tupDesc) {
     // create tuple in mimi_class
     AddRelationPgClass(pg_class_rel, heap_rel);
     // create tuple in mimi_attribute
-    AddRelationMimiAttribute(heap_rel->oid, tupDesc);
+    AddRelationMimiAttribute(heap_rel->rd_id, tupDesc);
     relation_close(pg_class_rel);
     relation_close(heap_rel);
 

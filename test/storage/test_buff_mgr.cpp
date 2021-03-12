@@ -9,18 +9,19 @@ TEST(hash_buff_mgr, basic)
 {
     BufferMgr mgr{};
     Relation rel = new RelationData;
-    rel->rnode = 1;
-    rel->oid = 1;
+    rel->rd_id = 1;
+    rel->rd_node.dbNode = 1;
+    rel->rd_node.relNode = 2;
 
-    Buffer buf_id = mgr.ReadBuffer(rel, ForkNumber::MAIN_FORKNUM, 0);
-
-    EXPECT_EQ(buf_id, 1);
-
-    buf_id = mgr.ReadBuffer(rel, ForkNumber::MAIN_FORKNUM, 0);
+    Buffer buf_id = mgr.ReadBuffer(rel, 0);
 
     EXPECT_EQ(buf_id, 1);
 
-    Buffer buf_id_2 = mgr.ReadBuffer(rel, ForkNumber::MAIN_FORKNUM, 1);
+    buf_id = mgr.ReadBuffer(rel, 0);
+
+    EXPECT_EQ(buf_id, 1);
+
+    Buffer buf_id_2 = mgr.ReadBuffer(rel, 1);
     EXPECT_EQ(buf_id_2, 2);
 
     mgr.ReleaseBuffer(buf_id);
@@ -33,11 +34,12 @@ TEST(hash_buff_mgr, p_new)
 {
     BufferMgr mgr{};
     Relation rel = new RelationData;
-    rel->rnode = 2;
-    rel->oid = 2;
+    rel->rd_id = 2;
+    rel->rd_node.dbNode = 1;
+    rel->rd_node.relNode = 2;
 
-    Buffer buf_id = mgr.ReadBuffer(rel, ForkNumber::MAIN_FORKNUM, P_NEW);
-    Buffer buf_id2 = mgr.ReadBuffer(rel, ForkNumber::MAIN_FORKNUM, P_NEW);
+    Buffer buf_id = mgr.ReadBuffer(rel, P_NEW);
+    Buffer buf_id2 = mgr.ReadBuffer(rel, P_NEW);
 
     EXPECT_EQ(buf_id, 1);
     EXPECT_EQ(buf_id2, 2);

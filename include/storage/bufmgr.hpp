@@ -11,7 +11,6 @@
 class BufferMgr
 {
 private:
-	const int SIZE = 20;
 	char* _blocks;
 	HashMap<BufferTag, Buffer>* _hashMap;
 	BufferDesc* _buffDesc;
@@ -22,16 +21,17 @@ public:
 	BufferMgr(const BufferMgr&) = delete;
 	BufferMgr& operator=(BufferMgr) = delete;
 
-	Buffer ReadBuffer(Relation rel, ForkNumber fork, BlockNumber block);
+	Buffer ReadBuffer(Relation rel, BlockNumber block);
+	Buffer ReadBufferExtend(Relation rel, ForkNumber fork, BlockNumber block);
+	Buffer ReadBuffer_common(Relation rel, ForkNumber fork, BlockNumber block);
 	void ReleaseBuffer(Buffer buffer);
 	void FlushBuffer(BufferDesc* buffDesc);
 	BufferDesc* GetBufferDesc(Buffer buffer);
 	Page GetPage(Buffer bufId);
 
 private:
-	BufferDesc* bufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno);
-	void loadDiskToMem(BufferTag tag, Buffer buf);
-	Buffer findFreeBuffer();
+	BufferDesc* _BufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno);
+	Buffer _FindFreeBuffer();
 
 };
 
