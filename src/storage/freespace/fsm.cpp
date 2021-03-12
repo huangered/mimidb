@@ -38,7 +38,7 @@ fsm::fsm_readbuf(Relation rel, FSMAddress addr, bool extend) {
         }
     }
 
-    buf = _bufMgr->ReadBuffer(rel, FSM_FORKNUM, blkno);
+    buf = _bufMgr->ReadBufferExtend(rel, FSM_FORKNUM, blkno);
     if (PageIsNew(_bufMgr->GetPage(buf))) {
         PageInit(_bufMgr->GetPage(buf), BLKSZ, 0);
     }

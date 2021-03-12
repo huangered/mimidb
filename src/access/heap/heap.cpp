@@ -42,7 +42,7 @@ bool HeapIndex::heapremove(Relation rel, int key) {
     BlockNumber blkNum = 0;
     int offset = 0;
     int cur_tran = 0xffff;
-    Buffer buf = _bufMgr->ReadBuffer(rel, MAIN_FORKNUM, blkNum);
+    Buffer buf = _bufMgr->ReadBuffer(rel, blkNum);
 
     Page page = _bufMgr->GetPage(buf);
 
@@ -89,7 +89,7 @@ HeapIndex::heapgettuple(HeapScanDesc scan) {
             return false;
         }
 
-        buf = _bufMgr->ReadBuffer(scan->rs_base.rs_rel, MAIN_FORKNUM, blkno);
+        buf = _bufMgr->ReadBuffer(scan->rs_base.rs_rel, blkno);
 
         Page page = _bufMgr->GetPage(buf);
         OffsetNumber max = PageGetMaxOffsetNumber(page);
@@ -200,7 +200,7 @@ void
 HeapIndex::print_heap(Relation rel) {
     BlockNumber blkno = rel->root_blkno;
     TupleDesc tupdesc = rel->tupleDesc;
-    Buffer buf = _bufMgr->ReadBuffer(rel, MAIN_FORKNUM, blkno);
+    Buffer buf = _bufMgr->ReadBuffer(rel, blkno);
     Page page = _bufMgr->GetPage(buf);
     OffsetNumber max = PageGetMaxOffsetNumber(page);
     for (OffsetNumber offset = 1; offset <= max; offset++) {

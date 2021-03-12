@@ -1,6 +1,7 @@
 #ifndef _C_H_
 #define _C_H_
 
+#pragma warning(disable : 4200)
 #pragma warning(disable : 4996)
 #pragma warning(disable : 26451)
 

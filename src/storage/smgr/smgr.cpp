@@ -9,15 +9,24 @@ namespace fs = std::filesystem;
 class smgr {
 private:
     HashMap<Oid, disk*> _data;
+    HashMap<Oid, SMgrRelation> _data2;
 public:
+    ~smgr();
     bool exists(Oid oid, ForkNumber fork);
-    void open(Oid oid, ForkNumber fork);
+    SMgrRelation open(Oid oid, RelFileNode reln, ForkNumber fork);
     BlockNumber nblocks(Oid oid);
     void create(Oid oid, ForkNumber fork);
     void read(Oid oid, ForkNumber fork, char* buf, BlockNumber blkno);
     void write(Oid oid, ForkNumber fork, char* buf, BlockNumber blkno);
     void extend(Oid oid, ForkNumber fork, char* buf);
 };
+
+smgr::~smgr() {
+    auto values = _data.Values();
+    for (auto v : values) {
+        delete v;
+    }
+}
 
 bool
 smgr::exists(Oid oid, ForkNumber fork) {
@@ -26,17 +35,27 @@ smgr::exists(Oid oid, ForkNumber fork) {
     return disk->exist();
 }
 
-void
-smgr::open(Oid oid, ForkNumber fork) {
-    if (_data.Exist(oid))
-        return;
-    fs::path path = GetRelPath2(oid, fork);
+SMgrRelation
+smgr::open(Oid oid, RelFileNode reln, ForkNumber fork) {
+    SMgrRelation rel;
+    if (_data2.Get(oid, &rel))
+        return rel;
+
+    fs::path path = GetRelPath2(reln.dbNode, reln.relNode, fork);
     disk* dfile = new disk{ path };
     if (!dfile->exist()) {
         dfile->create();
     }
     dfile->open();
     _data.Put(oid, dfile);
+
+    rel = new SMgrRelationData;
+    rel->smgr_target_nblocks = INVALID_BLOCK;
+    rel->smgr_fsm_nblocks = INVALID_BLOCK;
+
+    _data2.Put(oid, rel);
+
+    return rel;
 }
 
 BlockNumber
@@ -75,28 +94,28 @@ smgr::extend(Oid oid, ForkNumber fork, char* buf) {
 
 smgr _smgr{};
 
-void smgropen(Relation rel, ForkNumber number) {
-    _smgr.open(rel->oid, number);
+SMgrRelation smgropen(Relation rel, ForkNumber number) {
+    return _smgr.open(rel->rd_id, rel->rd_node, number);
 }
 
 bool smgrexists(Relation rel, ForkNumber number) {
-    return _smgr.exists(rel->oid, number);    
+    return _smgr.exists(rel->rd_id, number);    
 }
 
 void
 smgrcreate(Relation rel, ForkNumber number) {
-    _smgr.create(rel->oid, number);
+    _smgr.create(rel->rd_id, number);
 }
 
 
 BlockNumber smgrblocks(Relation rel, ForkNumber number) {
-    _smgr.open(rel->oid, number);
-    return _smgr.nblocks(rel->oid);
+    _smgr.open(rel->rd_id, rel->rd_node, number);
+    return _smgr.nblocks(rel->rd_id);
 
 }
 
 void smgrextend(Relation rel, Page page, BlockNumber blkno, ForkNumber number) {
-    _smgr.extend(rel->oid, number, page);
+    _smgr.extend(rel->rd_id, number, page);
 }
 
 /*
@@ -104,10 +123,18 @@ void smgrextend(Relation rel, Page page, BlockNumber blkno, ForkNumber number) {
 */
 void
 smgrwrite(Relation rel, ForkNumber number, BlockNumber blkno, char* buf) {
-    _smgr.write(rel->oid, number, buf, blkno);
+    _smgr.write(rel->rd_id, number, buf, blkno);
 }
 
 void
 smgrread(Relation rel, ForkNumber number, BlockNumber blkno, char* buf) {
-    _smgr.read(rel->oid, number, buf, blkno);
+    _smgr.read(rel->rd_id, number, buf, blkno);
+}
+
+
+// ------
+void RelationOpenSmgr(Relation rel, SMgrRelation reln) {
+    if (rel->rd_smgr == nullptr) {
+        rel->rd_smgr = smgropen(rel, MAIN_FORKNUM);
+ }
 }

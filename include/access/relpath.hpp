@@ -10,7 +10,6 @@ typedef enum ForkNumber {
     INIT_FORKNUM,
 } ForkNumber;
 
-char* GetRelPath(int rnode, ForkNumber fn);
-std::filesystem::path GetRelPath2(Oid rnode, ForkNumber fn);
+std::filesystem::path GetRelPath2(Oid dbNode, Oid relNode, ForkNumber fn);
 
 #endif // !_relpath_h_

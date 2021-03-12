@@ -56,12 +56,12 @@ Buffer BtreeIndex::_bt_get_root(Relation rel) {
 Buffer BtreeIndex::_bt_get_buf(Relation rel, BlockNumber blkno) {
     Buffer buf;
     if (blkno != P_NEW) {
-        buf = _bufMgr->ReadBuffer(rel, MAIN_FORKNUM, blkno);
+        buf = _bufMgr->ReadBuffer(rel, blkno);
     }
     else {
         // create new block for cbtree
         blkno = GetFreeIndexPage(rel);
-        buf = _bufMgr->ReadBuffer(rel, MAIN_FORKNUM, blkno);
+        buf = _bufMgr->ReadBuffer(rel, blkno);
         Page page = _bufMgr->GetPage(buf);
         _bt_init_page(page);
     }

@@ -3,9 +3,10 @@
 #include "storage/fsm_internal.hpp"
 #include "storage/page.hpp"
 
+fsm* _fsm;
 
 BlockNumber 
-freespace::GetPageWithFreeSpace(Relation rel, Size spaceNeeded) {
+GetPageWithFreeSpace(Relation rel, Size spaceNeeded) {
     BlockNumber block;
 
     block = _fsm->fsm_search(rel, spaceNeeded);
@@ -14,7 +15,7 @@ freespace::GetPageWithFreeSpace(Relation rel, Size spaceNeeded) {
 }
 
 void
-freespace::RecordPageWithFreeSpace(Relation rel, BlockNumber usedBlock, Size freeSpace) {
+RecordPageWithFreeSpace(Relation rel, BlockNumber usedBlock, Size freeSpace) {
 
     FSMAddress addr;
     int slot = 0;
@@ -25,7 +26,7 @@ freespace::RecordPageWithFreeSpace(Relation rel, BlockNumber usedBlock, Size fre
 }
 
 void
-freespace::FreeSpaceMapVacuumRange(Relation rel, BlockNumber start, BlockNumber end) {
+FreeSpaceMapVacuumRange(Relation rel, BlockNumber start, BlockNumber end) {
     if (end > start) {
         _fsm->fsm_vacuum_page(rel, FSM_ROOT_ADDRESS, start, end);
     }
