@@ -5,14 +5,9 @@
 #include "storage/itemid.hpp"
 #include "access/offset.hpp"
 
-#define BLKSZ   8192
+#define BLKSZ 8192
 
 typedef char* Page;
-
-class PageBuf {
-public:
-    Page page;
-};
 
 typedef struct PageHeaderData {
 
@@ -23,22 +18,32 @@ typedef struct PageHeaderData {
     OffsetNumber pd_upper;
     OffsetNumber pd_special;
 
-    ItemIdData pd_linp[1];
+    ItemIdData pd_linp[];
 } PageHeaderData;
 
 typedef PageHeaderData* PageHeader;
 
-
-#define PageIsNew(page)                 (((PageHeader)(page))->pd_upper == 0)
 #define SizeOfPageHeaderData            (offsetof(PageHeaderData, pd_linp))
 #define PageGetHeader(page)             ((PageHeader)page)
 #define PageGetContent(page)            ((char*)(page + SizeOfPageHeaderData ))
 #define PageGetSpecial(page)            ((char*)(page + PageGetHeader(page)->pd_special ))
-#define PageGetMaxOffsetNumber(page) \
-    (((PageHeader) (page))->pd_lower <= SizeOfPageHeaderData ? 0 : \
-    ((((PageHeader) (page))->pd_lower - SizeOfPageHeaderData) / sizeof(ItemIdData)))
-#define PageGetItemId(page, offsetnum)  ((ItemId)(&(((PageHeader)(page))->pd_linp[offsetnum - 1])))
-#define PageGetItem(page, itemId)       (((char*)(page)) + itemId->lp_off)
+
+inline bool PageIsNew(Page page) {
+    return ((PageHeader)(page))->pd_upper == 0;
+}
+
+inline size_t PageGetMaxOffsetNumber(Page page) {
+    OffsetNumber lower = PageGetHeader(page)->pd_lower;
+    return lower <= SizeOfPageHeaderData ? 0 : (lower - SizeOfPageHeaderData) / sizeof(ItemIdData);
+}
+
+inline ItemId PageGetItemId(Page page, OffsetNumber offsetnum) {
+    return &PageGetHeader(page)->pd_linp[offsetnum - 1];
+}
+
+inline Item PageGetItem(Page page, ItemId itemId) {
+    return (((char*)(page)) + itemId->lp_off);
+}
 
 void PageInit(Page page, Size pageSize, Size specialSize);
 
@@ -48,4 +53,5 @@ void PageRemoveItem(Page page, OffsetNumber offsetNum);
 Page GetTempPage(Page page);
 Size PageGetFreeSpace(Page page);
 void PageRestoreTempPage(Page temp, Page origin);
+
 #endif // !_PAGE_H_

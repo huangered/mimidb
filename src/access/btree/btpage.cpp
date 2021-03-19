@@ -1,7 +1,5 @@
 #include "access/btree.hpp"
-#include "storage/indexfsm.hpp"
-
-
+#include "storage/freespace.hpp"
 
 BTreeMetaData* BtreeIndex::_bt_getmeta(Relation rel, Buffer metabuf) {
     Page metap = _bufMgr->GetPage(metabuf);

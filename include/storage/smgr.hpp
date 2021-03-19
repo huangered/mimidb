@@ -5,10 +5,16 @@
 #include "access/relcache.hpp"
 #include "access/relpath.hpp"
 #include "storage/page.hpp"
+#include "storage/disk.hpp"
+#include "storage/relfilenode.hpp"
 
 struct SMgrRelationData {
+    RelFileNode rd_node;
+
     BlockNumber smgr_target_nblocks; /*最后读取的block*/
     BlockNumber smgr_fsm_nblocks;	/* last known size of fsm fork */
+
+    disk* disks[2];
 };
 
 typedef SMgrRelationData* SMgrRelation;

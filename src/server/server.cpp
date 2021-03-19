@@ -1,25 +1,18 @@
-#include "mimi.hpp"
-#include "foo.hpp"
-#include "access/relcache.hpp"
-#include "server/server.hpp"
-#include "storage/bufmgr.hpp"
-#include "util/mctx.hpp"
+#include <cstdlib>
+#include <iostream>
 
+
+struct A {
+    int i;
+    uint8_t a[1024];
+};
 int
 main(int argc, char* argv[]) {
+    int i = 1;
+    int* arr[4];
+    arr[0] = &i;
 
-	Startup();
+    std::cout << *(arr[0]) << std::endl;
+    
     return 0;
-}
-
-void
-Startup() {
-	printf("start up mctx");
-	MemoryContextInit();
-
-	printf("start up buffer mgr");
-	//BufferInit();
-
-	printf("start relation cache");
-	RelationCacheInit();
 }

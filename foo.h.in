@@ -1,7 +1,0 @@
-#ifndef _foo_h_
-#define _foo_h_
-
-#cmakedefine NAME_INCLUDE @NAME_INCLUDE@
-#cmakedefine NAME_LIB "@NAME_LIB@"
-
-#endif
