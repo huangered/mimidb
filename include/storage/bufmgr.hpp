@@ -23,13 +23,14 @@ public:
 
 	Buffer ReadBuffer(Relation rel, BlockNumber block);
 	Buffer ReadBufferExtend(Relation rel, ForkNumber fork, BlockNumber block);
-	Buffer ReadBuffer_common(Relation rel, ForkNumber fork, BlockNumber block);
+
 	void ReleaseBuffer(Buffer buffer);
 	void FlushBuffer(BufferDesc* buffDesc);
 	BufferDesc* GetBufferDesc(Buffer buffer);
 	Page GetPage(Buffer bufId);
 
 private:
+	Buffer _ReadBufferCommon(Relation rel, ForkNumber fork, BlockNumber block);
 	BufferDesc* _BufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno);
 	Buffer _FindFreeBuffer();
 

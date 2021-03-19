@@ -1,5 +1,5 @@
 #include "access/btree.hpp"
-#include "storage/indexfsm.hpp"
+#include "storage/freespace.hpp"
 
 BtreeIndex::BtreeIndex(std::shared_ptr<BufferMgr> mgr) {
     _bufMgr = mgr;

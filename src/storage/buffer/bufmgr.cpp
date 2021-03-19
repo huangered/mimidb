@@ -37,13 +37,13 @@ Buffer
 BufferMgr::ReadBufferExtend(Relation rel, ForkNumber forkNumber, BlockNumber blkno) {
     RelationOpenSmgr(rel, smgropen(rel, forkNumber));
 
-    return ReadBuffer_common(rel, forkNumber, blkno);
+    return _ReadBufferCommon(rel, forkNumber, blkno);
 }
 
 /*
 */
 Buffer
-BufferMgr::ReadBuffer_common(Relation rel, ForkNumber forkNumber, BlockNumber blkno) {
+BufferMgr::_ReadBufferCommon(Relation rel, ForkNumber forkNumber, BlockNumber blkno) {
     BufferDesc* desc;
     bool isExtend{};
 

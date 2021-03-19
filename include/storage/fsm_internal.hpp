@@ -11,7 +11,7 @@
 #define FSM_ROOT_LEVEL      (FSM_TREE_DEPTH - 1)
 #define FSM_BOTTOM_LEVEL    0
 
-#define FLEXIBLE_ARRAY_MEMBER 7
+#define FLEXIBLE_ARRAY_MEMBER
 
 #define NodesPerPage            7
 #define NonLeafNodesPerPage     3

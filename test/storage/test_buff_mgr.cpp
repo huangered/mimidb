@@ -5,7 +5,7 @@
 #include "access/btree.hpp"
 
 // test the basic usage in buff mgr.
-TEST(hash_buff_mgr, basic)
+TEST(buff_mgr, basic)
 {
     BufferMgr mgr{};
     Relation rel = new RelationData;
@@ -30,7 +30,7 @@ TEST(hash_buff_mgr, basic)
     delete rel;
 }
 
-TEST(hash_buff_mgr, p_new)
+TEST(buff_mgr, p_new)
 {
     BufferMgr mgr{};
     Relation rel = new RelationData;

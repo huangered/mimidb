@@ -93,7 +93,6 @@ int
 fsm::fsm_get_avail(Page page, int slot) {
     FSMPage fsmpage = (FSMPage)PageGetContent(page);
 
-
     return fsmpage->fp_nodes[NonLeafNodesPerPage + slot];
 }
 

@@ -1,4 +1,3 @@
-#include "storage/indexfsm.hpp"
 #include "storage/freespace.hpp"
 #include "storage/page.hpp"
 

@@ -10,6 +10,7 @@ class smgr {
 private:
     HashMap<Oid, disk*> _data;
     HashMap<Oid, SMgrRelation> _data2;
+    HashMap<RelFileNode, SMgrRelation> _data3;
 public:
     ~smgr();
     bool exists(Oid oid, ForkNumber fork);
@@ -52,9 +53,13 @@ smgr::open(Oid oid, RelFileNode reln, ForkNumber fork) {
     rel = new SMgrRelationData;
     rel->smgr_target_nblocks = INVALID_BLOCK;
     rel->smgr_fsm_nblocks = INVALID_BLOCK;
+    rel->rd_node = reln;
+    for (int i = 0; i < 2; i++) {
+        rel->disks[i] = nullptr;
+    }
 
     _data2.Put(oid, rel);
-
+    _data3.Put(reln, rel);
     return rel;
 }
 
@@ -135,6 +140,6 @@ smgrread(Relation rel, ForkNumber number, BlockNumber blkno, char* buf) {
 // ------
 void RelationOpenSmgr(Relation rel, SMgrRelation reln) {
     if (rel->rd_smgr == nullptr) {
-        rel->rd_smgr = smgropen(rel, MAIN_FORKNUM);
+        rel->rd_smgr = reln;
  }
 }
