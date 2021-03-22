@@ -35,7 +35,7 @@ BufferMgr::ReadBuffer(Relation rel, BlockNumber blkno) {
 
 Buffer
 BufferMgr::ReadBufferExtend(Relation rel, ForkNumber forkNumber, BlockNumber blkno) {
-    RelationOpenSmgr(rel, smgropen(rel, forkNumber));
+    RelationOpenSmgr(rel);
 
     return _ReadBufferCommon(rel, forkNumber, blkno);
 }

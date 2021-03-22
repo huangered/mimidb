@@ -31,6 +31,6 @@ void smgrread(Relation rel, ForkNumber number, BlockNumber blkno, char* buf);
 /*
 打开relation的文件
 */
-void RelationOpenSmgr(Relation rel, SMgrRelation reln);
+void RelationOpenSmgr(Relation rel);
 
 #endif // !_smgr_h_
