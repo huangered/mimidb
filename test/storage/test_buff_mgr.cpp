@@ -12,7 +12,7 @@ TEST(buff_mgr, basic)
     rel->rd_id = 1;
     rel->rd_node.dbNode = 1;
     rel->rd_node.relNode = 2;
-
+    rel->rd_smgr = nullptr;
     Buffer buf_id = mgr.ReadBuffer(rel, 0);
 
     EXPECT_EQ(buf_id, 1);
@@ -35,8 +35,9 @@ TEST(buff_mgr, p_new)
     BufferMgr mgr{};
     Relation rel = new RelationData;
     rel->rd_id = 2;
-    rel->rd_node.dbNode = 1;
-    rel->rd_node.relNode = 2;
+    rel->rd_node.dbNode = 10;
+    rel->rd_node.relNode = 20;
+    rel->rd_smgr = nullptr;
 
     Buffer buf_id = mgr.ReadBuffer(rel, P_NEW);
     Buffer buf_id2 = mgr.ReadBuffer(rel, P_NEW);
