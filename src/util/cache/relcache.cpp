@@ -36,52 +36,52 @@ Relation BuildRelationDesc(Oid oid, bool insert) {
 
 static const FormData_mimi_attribute desc_pg_class[4] = {
     {
-        .att_relid = 1,
-        .att_name = "oid",
-        .att_len = sizeof(int),
-        .att_order = 0,
-        .typid = 1
+         1,
+         {"oid"},
+         sizeof(int),
+         0,
+         1
     },
     {
-        .att_relid = 1,
-        .att_name = "relkind",
-        .att_len = sizeof(int),
-        .att_order = 0,
-        .typid = 1
+         1,
+         {"relkind"},
+         sizeof(int),
+         0,
+         1
     },
     {
-        .att_relid = 1,
-        .att_name = "relpages",
-        .att_len = sizeof(int),
-        .att_order = 0,
-        .typid = 1
+         1,
+         {"relpages"},
+         sizeof(int),
+         0,
+         1
     },
     {
-        .att_relid = 1,
-        .att_name = "tuples",
-        .att_len = sizeof(int),
-        .att_order = 0,
-        .typid = 1
+         1,
+         {"tuples"},
+         sizeof(int),
+         0,
+         1
     }
 };
 
 static const FormData_mimi_attribute desc_pg_attribute[1] = {
     {
-        .att_relid = 1,
-        .att_name = "oid",
-        .att_len = sizeof(int),
-        .att_order = 0,
-        .typid = 1
+         1,
+         {"oid"},
+         sizeof(int),
+         0,
+         1
     } 
 };
 
 static const FormData_mimi_attribute desc_pg_type[1] = {
     {
-        .att_relid = 1,
-        .att_name = "oid",
-        .att_len = sizeof(int),
-        .att_order = 0,
-        .typid = 1
+         1,
+	 {"oid"},
+	 sizeof(int),
+         0,
+         1
     }
 };
 
