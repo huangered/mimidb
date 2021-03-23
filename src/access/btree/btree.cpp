@@ -10,14 +10,10 @@ BtreeIndex::buildempty(Relation rel) {
     Page metap = new char[BLKSZ];
     _bt_init_page(metap);
 
-    BTreeMetaData* metad = (BTreeMetaData*)PageGetContent(metap);
-    metad->root = P_NONE;
-
     // write to local file system
-    Buffer buf = _bufMgr->ReadBuffer(rel, BTREE_METAPAGE);
-    Page page = _bufMgr->GetPage(buf);
-    memcpy(page, metap, BLKSZ);
-    delete metap;
+    smgrwrite(rel, MAIN_FORKNUM, BTREE_METAPAGE, metap);
+
+    delete[] metap;
 }
 
 bool
@@ -49,6 +45,14 @@ BtreeIndex::gettuple(IndexScanDesc scan) {
 }
 
 // private method
+
+void
+BtreeIndex::_bt_init_metapage(Page page, BlockNumber rootblkno) {
+    _bt_init_page(page);
+    BTreeMetaData* metad = (BTreeMetaData*)PageGetContent(page);
+    metad->fastroot = P_NONE;
+}
+
 
 void
 BtreeIndex::_bt_init_page(Page page) {
