@@ -92,6 +92,8 @@ smgr::extend(RelFileNode rnode, ForkNumber fork, char* buf, BlockNumber blkno) {
 
 smgr _smgr{};
 
+// public methods
+
 SMgrRelation smgropen(Relation rel) {
     return _smgr.open(rel->rd_node);
 }
@@ -134,5 +136,5 @@ smgrread(Relation rel, ForkNumber number, BlockNumber blkno, char* buf) {
 void RelationOpenSmgr(Relation rel) {
     if (rel->rd_smgr == nullptr) {
         rel->rd_smgr = smgropen(rel);
- }
+    }
 }

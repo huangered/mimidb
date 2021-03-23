@@ -24,6 +24,7 @@ struct RelationData {
 
     SMgrRelation rd_smgr; /*保存的文件句柄*/
     RelFileNode rd_node;  /*relation的物理位置*/
+    void* rd_metacache;          /*meta对象*/
 };
 
 class relation {

@@ -194,9 +194,7 @@ bool BtreeIndex::_bt_addtup(Page page, Item item, Size itemsz, OffsetNumber newi
 void BtreeIndex::_bt_insert_parent(Relation rel, Buffer buf, Buffer rbuf, BTStack stack, bool is_root) {
     if (is_root) {
         Buffer rootbuf;
-
         rootbuf = _bt_newroot(rel, buf, rbuf);
-        rel->root_blkno = _bufMgr->GetBufferDesc(rootbuf)->tag.blockNum;
     }
     else {
         Page page = _bufMgr->GetPage(buf);

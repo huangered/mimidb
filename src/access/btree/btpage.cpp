@@ -1,6 +1,6 @@
-#include "access/btree.hpp"
+﻿#include "access/btree.hpp"
 #include "storage/freespace.hpp"
-
+#include <assert.h>
 BTreeMetaData* BtreeIndex::_bt_getmeta(Relation rel, Buffer metabuf) {
     Page metap = _bufMgr->GetPage(metabuf);
     BTreeMetaData* metad = (BTreeMetaData*)PageGetContent(metap);
@@ -21,33 +21,43 @@ Get the relation root page buffer
 2. if the cache is empty , load from meta page.
 3. if block num is null in meta, create new root.
  */
-Buffer BtreeIndex::_bt_get_root(Relation rel) {
+Buffer
+BtreeIndex::_bt_get_root(Relation rel) {
     Buffer metabuf;
+    Page metapage;
     Buffer rootbuf;
     BTreeMetaData* metad;
+    BlockNumber rootblkno;
 
-    // if no block number cache
-    if (rel->root_blkno == P_NONE) {
-        metabuf = _bt_get_buf(rel, BTREE_METAPAGE);
-        metad = _bt_getmeta(rel, metabuf);
-        rel->root_blkno = metad->root;
+    // 从meta里获取root buf
+    if (rel->rd_metacache != nullptr) {
+        metad = (BTreeMetaData*)rel->rd_metacache;
+        assert(metad->root != P_NONE);
+
+        rootbuf = _bt_get_buf(rel, metad->fastroot);
+        return rootbuf;
     }
 
-    BlockNumber blkno = rel->root_blkno;
-    if (blkno == P_NONE) {
-        // init new page;
-        rootbuf = _bt_get_buf(rel, P_NEW);
-        Page page = _bufMgr->GetPage(rootbuf);
-        _bt_init_page(page);
-        BTreeSpecial special = (BTreeSpecial)PageGetSpecial(page);
-        special->flags = BTP_ROOT | BTP_LEAF;
+    // 加载 meta
+    metabuf = _bt_get_buf(rel, BTREE_METAPAGE);
+    metapage = _bufMgr->GetPage(metabuf);
+    metad = (BTreeMetaData*)PageGetContent(metapage);
 
-        rel->root_blkno = _bufMgr->GetBufferDesc(rootbuf)->tag.blockNum;
-        _bt_updatemeta(metabuf);
+    if (metad->root == P_NONE) {
+        // 如果meta没有初始化
+        // 1. 创建root block
+        rootbuf = _bt_get_buf(rel, P_NEW);
+        rootblkno = _bufMgr->GetBufferDesc(rootbuf)->tag.blockNum;
+        // 2. 更新meta
+        metad->root = rootblkno;
+        metad->fastroot = rootblkno;
     }
     else {
-        rootbuf = _bt_get_buf(rel, blkno);
+        // 如果meta初始化了
+        rootblkno = metad->fastroot;
+        rootbuf = _bt_get_buf(rel, rootblkno);
     }
+
     return rootbuf;
 }
 
@@ -64,4 +74,9 @@ Buffer BtreeIndex::_bt_get_buf(Relation rel, BlockNumber blkno) {
         _bt_init_page(page);
     }
     return buf;
+}
+
+void
+BtreeIndex::_bt_relbuf(Relation rel, Buffer buf) {
+
 }

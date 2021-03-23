@@ -13,6 +13,7 @@
 
 typedef struct BTreeMetaData {
     BlockNumber root;
+    BlockNumber fastroot;
 } BTreeMetaData;
 
 typedef struct IndexTupleData {
@@ -90,11 +91,13 @@ private:
 private:
     // methods in btpage.c
     void _bt_init_page(Page page);
+    void _bt_init_metapage(Page page, BlockNumber rootblkno);
     Buffer _bt_get_root(Relation rel);
     Buffer _bt_get_buf(Relation rel, BlockNumber blkno);
     Buffer _bt_newroot(Relation rel, Buffer lbuf, Buffer rbuf);
     Buffer _bt_moveright(Relation rel, BTreeScan key, Buffer buf);
     Buffer _bt_relandgetbuf(Relation rel, Buffer obuf, BlockNumber blkno);
+    void _bt_relbuf(Relation rel, Buffer buf);
 
     // methods in btsearch.c
     bool _bt_first(IndexScanDesc scan);
