@@ -45,6 +45,7 @@ BufferMgr::ReadBufferExtend(Relation rel, ForkNumber forkNumber, BlockNumber blk
 Buffer
 BufferMgr::_ReadBufferCommon(Relation rel, ForkNumber forkNumber, BlockNumber blkno) {
     BufferDesc* desc;
+    bool found{};
     bool isExtend{};
 
     if (blkno == P_NEW) {
@@ -55,9 +56,16 @@ BufferMgr::_ReadBufferCommon(Relation rel, ForkNumber forkNumber, BlockNumber bl
         blkno = smgrblocks(rel, forkNumber);
     }
 
-    desc = _BufferAlloc(rel, forkNumber, blkno);
+    desc = _BufferAlloc(rel, forkNumber, blkno, &found);
 
     Page page = GetPage(desc->buf_id);
+
+    if (found) {
+        if (!isExtend) {
+            return desc->buf_id;
+        }
+    }
+
     // load or save data
     if (isExtend) {
         memset(page, 0, BLKSZ);
@@ -71,13 +79,13 @@ BufferMgr::_ReadBufferCommon(Relation rel, ForkNumber forkNumber, BlockNumber bl
 }
 
 BufferDesc*
-BufferMgr::_BufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno) {
+BufferMgr::_BufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno, bool* found) {
     Buffer buf_id = INVALID_BUFFER;
     BufferTag tag{ rel->rd_id, forkNumber, blkno };
 
     // use buftag to find
-    bool result = _hashMap->Get(tag, &buf_id);
-    
+    *found = _hashMap->Get(tag, &buf_id);
+
     if (buf_id > INVALID_BUFFER) {
         // add ref count;
         GetBufferDesc(buf_id)->state += 1;

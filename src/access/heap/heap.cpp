@@ -198,7 +198,7 @@ HeapIndex::_heap_buildtuple(Relation rel, TupleSlotDesc* slot) {
 // for debug
 void
 HeapIndex::print_heap(Relation rel) {
-    BlockNumber blkno = rel->root_blkno;
+    BlockNumber blkno = 0;
     TupleDesc tupdesc = rel->tupleDesc;
     Buffer buf = _bufMgr->ReadBuffer(rel, blkno);
     Page page = _bufMgr->GetPage(buf);

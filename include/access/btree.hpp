@@ -66,7 +66,7 @@ btbuildempty() -- build btree meta page
 
 #define P_NEW                   INVALID_BLOCK
 #define P_NONE                  0
-#define P_RIGHTMOST(special)    ((special)->block_next == P_NEW)
+#define P_RIGHTMOST(special)    ((special)->block_next == P_NONE)
 
 
 #define BTP_LEAF  ( 1 << 0 )

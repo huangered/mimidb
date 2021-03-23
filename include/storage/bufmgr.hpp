@@ -31,7 +31,7 @@ public:
 
 private:
 	Buffer _ReadBufferCommon(Relation rel, ForkNumber fork, BlockNumber block);
-	BufferDesc* _BufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno);
+	BufferDesc* _BufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno, bool* found);
 	Buffer _FindFreeBuffer();
 
 };

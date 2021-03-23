@@ -28,6 +28,7 @@ BtreeIndex::_bt_get_root(Relation rel) {
     Buffer rootbuf;
     BTreeMetaData* metad;
     BlockNumber rootblkno;
+    Page rootpage;
 
     // 从meta里获取root buf
     if (rel->rd_metacache != nullptr) {
@@ -48,6 +49,13 @@ BtreeIndex::_bt_get_root(Relation rel) {
         // 1. 创建root block
         rootbuf = _bt_get_buf(rel, P_NEW);
         rootblkno = _bufMgr->GetBufferDesc(rootbuf)->tag.blockNum;
+        // 1.1 更新root block
+        rootpage = _bufMgr->GetPage(rootbuf);
+        BTreeSpecial rootspecial = (BTreeSpecial)PageGetSpecial(rootpage);
+        rootspecial->block_next = P_NONE;
+        rootspecial->block_prev = P_NONE;
+        rootspecial->flags = (BTP_LEAF | BTP_ROOT);
+
         // 2. 更新meta
         metad->root = rootblkno;
         metad->fastroot = rootblkno;
@@ -55,7 +63,9 @@ BtreeIndex::_bt_get_root(Relation rel) {
     else {
         // 如果meta初始化了
         rootblkno = metad->fastroot;
+        rel->rd_metacache = metad;
         rootbuf = _bt_get_buf(rel, rootblkno);
+
     }
 
     return rootbuf;

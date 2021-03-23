@@ -14,7 +14,6 @@
 
 struct RelationData {
     Oid rd_id;
-    BlockNumber root_blkno;
 
     Form_mimi_class rd_rel; /* relation tuple */
     TupleDesc tupleDesc;    /* retuple descriptor */
