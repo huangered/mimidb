@@ -78,8 +78,8 @@ static const FormData_mimi_attribute desc_pg_attribute[1] = {
 static const FormData_mimi_attribute desc_pg_type[1] = {
     {
          1,
-	 {"oid"},
-	 sizeof(int),
+	     {"oid"},
+	     sizeof(int),
          0,
          1
     }
@@ -130,7 +130,6 @@ RelCache::_formrdesc(const char* relname, Oid reltype, int natts, const FormData
     */
     rel->refcount = 1;
     rel->rd_id = reltype;
-    rel->root_blkno = 0;
     rel->rd_rel = new FormData_mimi_class;
     strcpy(rel->rd_rel->relname, relname);
 

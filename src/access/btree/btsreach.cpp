@@ -47,7 +47,7 @@ bool BtreeIndex::_bt_first(IndexScanDesc scan) {
     OffsetNumber offset;
     Buffer buf;
     
-    IndexTuple itup = (IndexTuple)palloc(sizeof(IndexTupleData));
+    IndexTuple itup = new IndexTupleData;
     itup->key = scan->key;
     itup->ht_id = scan->value;
     itup->tuple_size = sizeof(IndexTupleData);
@@ -67,8 +67,8 @@ bool BtreeIndex::_bt_first(IndexScanDesc scan) {
     IndexTuple itup1 = (IndexTuple)item;
     scan->value = itup1->ht_id;
 
-    pfree(itup);
-    pfree(itup_key);
+    delete itup;
+    delete itup_key;
     
     _bt_freestack(stack);
     return true;
@@ -119,7 +119,17 @@ int BtreeIndex::_bt_compare(Relation rel, BTreeScan key, Page page, OffsetNumber
     keysz = key->keysz;
     skey = key->scankeys;
     
-    for (int i = 0; i < keysz; i++) {
+    if (key->itup->key > itup->key) {
+        return 1;
+    }
+    else if (key->itup->key == itup->key) {
+        return 0;
+    }
+    else {
+        return -1;
+    }
+
+   /* for (int i = 0; i < keysz; i++) {
 
         FmgrInfo info = skey->sk_func;
 
@@ -130,7 +140,7 @@ int BtreeIndex::_bt_compare(Relation rel, BTreeScan key, Page page, OffsetNumber
         if (result != 0) {
             return result;
         }
-    }
+    }*/
 
     return 0;
 }

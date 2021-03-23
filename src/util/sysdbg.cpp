@@ -5,15 +5,6 @@
 
 static void pprint(Relation rel, Page page);
 
-// debug
-void debug_rel(Relation rel) {
-  /*  Buffer buf = _bt_get_root(rel);
-    Page page = BufferGetPage(buf);
-
-    pprint(rel, page);
-    ReleaseBuffer(buf);*/
-}
-
 void pprint(Relation rel, Page page) {
 
     PageHeader header = PageGetHeader(page);
