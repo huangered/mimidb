@@ -28,7 +28,7 @@ public:
 	void FlushBuffer(BufferDesc* buffDesc);
 	BufferDesc* GetBufferDesc(Buffer buffer);
 	Page GetPage(Buffer bufId);
-
+	void MarkBufferDirty(Buffer bufId);
 private:
 	Buffer _ReadBufferCommon(Relation rel, ForkNumber fork, BlockNumber block);
 	BufferDesc* _BufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno, bool* found);

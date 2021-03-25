@@ -66,7 +66,7 @@ void PageRemoveItem(Page page, OffsetNumber itemoffset) {
 }
 
 Page GetTempPage(Page page) {
-    char* temp = (char*)palloc(BLKSZ);
+    char* temp = new char[BLKSZ];
     return temp;
 }
 
@@ -87,5 +87,5 @@ void PageRestoreTempPage(Page temp, Page origin) {
     int size = BLKSZ;
     memcpy((char*)origin, (char*)temp, size);
 
-    pfree(temp);
+    delete[] temp;
 }
