@@ -57,6 +57,7 @@ BtreeIndex::_bt_init_metapage(Page page, BlockNumber rootblkno) {
 void
 BtreeIndex::_bt_init_page(Page page) {
     PageInit(page, BLKSZ, sizeof(BTreeSpecialData));
+    // todo:
     BTreeSpecial special = (BTreeSpecial)PageGetSpecial(page);
     special->level = 0;
     special->block_prev = INVALID_BLOCK;

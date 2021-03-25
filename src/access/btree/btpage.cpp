@@ -1,6 +1,7 @@
 ﻿#include "access/btree.hpp"
 #include "storage/freespace.hpp"
 #include <assert.h>
+
 BTreeMetaData* BtreeIndex::_bt_getmeta(Relation rel, Buffer metabuf) {
     Page metap = _bufMgr->GetPage(metabuf);
     BTreeMetaData* metad = (BTreeMetaData*)PageGetContent(metap);
@@ -71,7 +72,8 @@ BtreeIndex::_bt_get_root(Relation rel) {
     return rootbuf;
 }
 
-Buffer BtreeIndex::_bt_get_buf(Relation rel, BlockNumber blkno) {
+Buffer
+BtreeIndex::_bt_get_buf(Relation rel, BlockNumber blkno) {
     Buffer buf;
     if (blkno != P_NEW) {
         buf = _bufMgr->ReadBuffer(rel, blkno);

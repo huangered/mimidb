@@ -1,5 +1,5 @@
-﻿#ifndef _smgr_h_
-#define _smgr_h_
+﻿#ifndef _smgr_hpp_
+#define _smgr_hpp_
 
 #include "storage/block.hpp"
 #include "access/relcache.hpp"
