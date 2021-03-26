@@ -1,8 +1,7 @@
 #include "access/btree.hpp"
 #include "storage/freespace.hpp"
 
-BtreeIndex::BtreeIndex(std::shared_ptr<BufferMgr> mgr) {
-    _bufMgr = mgr;
+BtreeIndex::BtreeIndex() {
 }
 
 void
@@ -57,18 +56,12 @@ BtreeIndex::_bt_init_metapage(Page page, BlockNumber rootblkno) {
 void
 BtreeIndex::_bt_init_page(Page page) {
     PageInit(page, BLKSZ, sizeof(BTreeSpecialData));
-    // todo:
-    BTreeSpecial special = (BTreeSpecial)PageGetSpecial(page);
-    special->level = 0;
-    special->block_prev = INVALID_BLOCK;
-    special->block_next = INVALID_BLOCK;
-    special->flags = P_NONE;
 }
 
 Buffer
 BtreeIndex::_bt_moveright(Relation rel, BTreeScan key, Buffer buf) {
     for (;;) {
-        Page page = _bufMgr->GetPage(buf);
+        Page page = BufferGetPage(buf);
         PageHeader header = PageGetHeader(page);
         BTreeSpecial special = (BTreeSpecial)PageGetSpecial(page);
 
@@ -89,7 +82,7 @@ BtreeIndex::_bt_moveright(Relation rel, BTreeScan key, Buffer buf) {
 
 Buffer
 BtreeIndex::_bt_relandgetbuf(Relation rel, Buffer obuf, BlockNumber blkno) {
-    _bufMgr->ReleaseBuffer(obuf);
-    Buffer buffer = _bufMgr->ReadBuffer(rel, blkno);
+    ReleaseBuffer(obuf);
+    Buffer buffer = ReadBuffer(rel, blkno);
     return buffer;
 }

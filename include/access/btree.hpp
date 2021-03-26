@@ -11,58 +11,52 @@
 
 #define BTREE_METAPAGE  0
 
-typedef struct BTreeMetaData {
+struct BTreeMetaData {
     BlockNumber root;
     BlockNumber fastroot;
-} BTreeMetaData;
+};
 
-typedef struct IndexTupleData {
+struct IndexTupleData {
     int ht_id;          // record heap tuple id
     int tuple_size;     // temporarily value;
     int key;
     // data part
-} IndexTupleData;
+};
 
 typedef IndexTupleData* IndexTuple;
 
-typedef struct BTreeSpecialData {
+struct BTreeSpecialData {
     BlockNumber block_next;
     BlockNumber block_prev;
     uint16 level;
     uint16 flags;
-} BTreeSpecialData;
+};
 
 typedef BTreeSpecialData* BTreeSpecial;
 
-typedef struct BTStackData {
+struct BTStackData {
     BlockNumber blkno;
     OffsetNumber offset;
     struct BTStackData* parent;
-} BTStackData;
+};
 
 typedef BTStackData* BTStack;
 
-typedef struct BTreeScanData {
+struct BTreeScanData {
     IndexTuple itup;
     Size itemsz;
     bool nextkey;
     int keysz;
     ScanKeyData scankeys[128];
-} BTreeScanData;
+};
 
 typedef BTreeScanData* BTreeScan;
 
-typedef struct BTreeSearchKeyData {
+struct BTreeSearchKeyData {
     int key;
-} BTreeSearchKeyData;
+};
 
 typedef BTreeSearchKeyData* BTreeSearchKey;
-
-
-/*
-btbuildempty() -- build btree meta page
- */ 
-
 
 #define P_NEW                   INVALID_BLOCK
 #define P_NONE                  0
@@ -86,8 +80,6 @@ btbuildempty() -- build btree meta page
 #define BTreeTupleGetDownLink(itup) (itup->ht_id)
 
 class BtreeIndex : public BaseIndex {
-private:
-    std::shared_ptr<BufferMgr> _bufMgr;
 private:
     // methods in btpage.c
     void _bt_init_page(Page page);
@@ -128,7 +120,7 @@ private:
     BTreeScan _bt_make_scankey(Relation rel, IndexTuple itup);
     void _bt_freestack(BTStack stack);
 public:
-    BtreeIndex(std::shared_ptr<BufferMgr> bufMgr);
+    BtreeIndex();
     virtual void buildempty(Relation rel);
     virtual bool insert(Relation rel, int key, int ht_id);
     virtual bool remove(Relation rel, int key);

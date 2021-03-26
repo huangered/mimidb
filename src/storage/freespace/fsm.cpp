@@ -38,9 +38,9 @@ fsm::fsm_readbuf(Relation rel, FSMAddress addr, bool extend) {
         }
     }
 
-    buf = _bufMgr->ReadBufferExtend(rel, FSM_FORKNUM, blkno);
-    if (PageIsNew(_bufMgr->GetPage(buf))) {
-        PageInit(_bufMgr->GetPage(buf), BLKSZ, 0);
+    buf = ReadBufferExtend(rel, FSM_FORKNUM, blkno);
+    if (PageIsNew(BufferGetPage(buf))) {
+        PageInit(BufferGetPage(buf), BLKSZ, 0);
     }
 
     return buf;
@@ -157,7 +157,7 @@ fsm::fsm_search_avail(Buffer buf, Size spaceNeed) {
     int no = 0;
     int slot;
 
-    Page page = _bufMgr->GetPage(buf);
+    Page page = BufferGetPage(buf);
     FSMPage fsm = (FSMPage)PageGetContent(page);
 
     if (fsm->fp_nodes[no] < spaceNeed) {
@@ -235,7 +235,7 @@ fsm::fsm_set_and_search(Relation rel, FSMAddress addr, int slot,
     int newslot = -1;
 
     buf = fsm_readbuf(rel, addr, true);
-    page = _bufMgr->GetPage(buf);
+    page = BufferGetPage(buf);
 
     fsm_set_avail(page, slot, newValue);
 
@@ -265,7 +265,7 @@ fsm::fsm_vacuum_page(Relation rel, FSMAddress addr, BlockNumber start, BlockNumb
         return 0;
     }
 
-    page = _bufMgr->GetPage(buf);
+    page = BufferGetPage(buf);
 
     if (addr.level > FSM_BOTTOM_LEVEL) {
         FSMAddress fsm_start,

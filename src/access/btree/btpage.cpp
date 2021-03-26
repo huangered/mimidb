@@ -3,7 +3,7 @@
 #include <assert.h>
 
 BTreeMetaData* BtreeIndex::_bt_getmeta(Relation rel, Buffer metabuf) {
-    Page metap = _bufMgr->GetPage(metabuf);
+    Page metap = BufferGetPage(metabuf);
     BTreeMetaData* metad = (BTreeMetaData*)PageGetContent(metap);
     return metad;
 }
@@ -42,16 +42,16 @@ BtreeIndex::_bt_get_root(Relation rel) {
 
     // 加载 meta
     metabuf = _bt_get_buf(rel, BTREE_METAPAGE);
-    metapage = _bufMgr->GetPage(metabuf);
+    metapage = BufferGetPage(metabuf);
     metad = (BTreeMetaData*)PageGetContent(metapage);
 
     if (metad->root == P_NONE) {
         // 如果meta没有初始化
         // 1. 创建root block
         rootbuf = _bt_get_buf(rel, P_NEW);
-        rootblkno = _bufMgr->GetBufferDesc(rootbuf)->tag.blockNum;
+        rootblkno = GetBufferDesc(rootbuf)->tag.blockNum;
         // 1.1 更新root block
-        rootpage = _bufMgr->GetPage(rootbuf);
+        rootpage = BufferGetPage(rootbuf);
         BTreeSpecial rootspecial = (BTreeSpecial)PageGetSpecial(rootpage);
         rootspecial->block_next = P_NONE;
         rootspecial->block_prev = P_NONE;
@@ -76,13 +76,13 @@ Buffer
 BtreeIndex::_bt_get_buf(Relation rel, BlockNumber blkno) {
     Buffer buf;
     if (blkno != P_NEW) {
-        buf = _bufMgr->ReadBuffer(rel, blkno);
+        buf = ReadBuffer(rel, blkno);
     }
     else {
         // create new block for cbtree
         blkno = GetFreeIndexPage(rel);
-        buf = _bufMgr->ReadBuffer(rel, blkno);
-        Page page = _bufMgr->GetPage(buf);
+        buf = ReadBuffer(rel, blkno);
+        Page page = BufferGetPage(buf);
         _bt_init_page(page);
     }
     return buf;
