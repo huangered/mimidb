@@ -8,8 +8,6 @@
 #include "access/scankey.hpp"
 
 class HeapIndex {
-private:
-	std::shared_ptr<BufferMgr> _bufMgr;
 public:
 	void heapbuildempty(Relation rel);
 	bool heap_tuple_insert(Relation rel, TupleSlotDesc* slot);

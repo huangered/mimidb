@@ -10,14 +10,12 @@
 // test the basic usage in buff mgr.
 TEST(btree, incr_insert)
 {
-    std::shared_ptr<BufferMgr> mgr = std::make_shared<BufferMgr>();
-
     Relation rel = new RelationData{};
     rel->rd_id = 10000;
     rel->rd_node = { 10000, 10000 };
     RelationOpenSmgr(rel);
 
-    rel->index_am = new BtreeIndex(mgr);
+    rel->index_am = new BtreeIndex();
     rel->index_am->buildempty(rel);
 
     for (int i = 0; i < 100; i++) {
@@ -39,14 +37,12 @@ TEST(btree, incr_insert)
 
 TEST(btree, decr_insert)
 {
-    std::shared_ptr<BufferMgr> mgr = std::make_shared<BufferMgr>();
-
     Relation rel = new RelationData{};
     rel->rd_id = 20000;
     rel->rd_node = { 10000, 20000 };
     RelationOpenSmgr(rel);
 
-    rel->index_am = new BtreeIndex(mgr);
+    rel->index_am = new BtreeIndex();
     rel->index_am->buildempty(rel);
 
     for (int i = 100; i > 0; i--) {
@@ -68,14 +64,12 @@ TEST(btree, decr_insert)
 
 TEST(btree, blk_insert)
 {
-    std::shared_ptr<BufferMgr> mgr = std::make_shared<BufferMgr>();
-
     Relation rel = new RelationData{};
     rel->rd_id = 30000;
     rel->rd_node = { 10000, 30000 };
     RelationOpenSmgr(rel);
 
-    rel->index_am = new BtreeIndex(mgr);
+    rel->index_am = new BtreeIndex();
     rel->index_am->buildempty(rel);
 
     for (int i{}; i < 1000; i++) {

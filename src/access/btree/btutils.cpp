@@ -28,7 +28,7 @@ make a index tuple
 */
 IndexTuple
 BtreeIndex::_bt_make_tuple(int key, int ht_id) {
-    IndexTuple tup = new IndexTupleData;
+    IndexTuple tup = new IndexTupleData{};
     tup->key = key;
     tup->ht_id = ht_id;
     tup->tuple_size = sizeof(IndexTupleData);
@@ -40,7 +40,7 @@ free the tree stack
 */
 void
 BtreeIndex::_bt_freestack(BTStack stack) {
-    while (stack != NULL) {
+    while (stack != nullptr) {
         BTStack parent = stack->parent;
         delete stack;
         stack = parent;

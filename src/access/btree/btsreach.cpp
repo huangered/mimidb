@@ -1,12 +1,11 @@
 #include "access/btree.hpp"
 #include "access/rel.hpp"
 #include "storage/page.hpp"
-#include "util/mctx.hpp"
 
 OffsetNumber BtreeIndex::_bt_binsrch(Relation rel, Page page, BTreeScan key) {
     int result;
 
-    BTreeSpecial special = (BTreeSpecial)PageGetSpecial(page);
+    BTreeSpecial special = PageGetSpecial(page);
     int low = P_FIRSTDATAKEY(special);
     int high = PageGetMaxOffsetNumber(page);
 
@@ -40,9 +39,10 @@ OffsetNumber BtreeIndex::_bt_binsrch(Relation rel, Page page, BTreeScan key) {
     return OffsetNumberPrev(low);
 }
 
-bool BtreeIndex::_bt_first(IndexScanDesc scan) {
+bool
+BtreeIndex::_bt_first(IndexScanDesc scan) {
     // bin_srch the point
-    BTStack stack = NULL;
+    BTStack stack{};
     
     OffsetNumber offset;
     Buffer buf;
@@ -55,8 +55,8 @@ bool BtreeIndex::_bt_first(IndexScanDesc scan) {
     BTreeScan itup_key = _bt_make_scankey(scan->index_rel, itup);
     stack = _bt_search(scan->index_rel, itup_key, &buf);
 
-    BufferDesc* desc = _bufMgr->GetBufferDesc(buf);
-    Page page = _bufMgr->GetPage(buf);
+    BufferDesc* desc = GetBufferDesc(buf);
+    Page page = BufferGetPage(buf);
     offset = _bt_binsrch(scan->index_rel, page, itup_key);
 
     scan->block = desc->tag.blockNum;
@@ -74,7 +74,8 @@ bool BtreeIndex::_bt_first(IndexScanDesc scan) {
     return true;
 }
 
-bool BtreeIndex::_bt_next(IndexScanDesc scan) {
+bool
+BtreeIndex::_bt_next(IndexScanDesc scan) {
     Page page;
     Buffer buf;
     Relation rel = scan->index_rel;
@@ -82,7 +83,7 @@ bool BtreeIndex::_bt_next(IndexScanDesc scan) {
     OffsetNumber offset = scan->offset;
 
     buf = _bt_get_buf(rel, blkno);
-    page = _bufMgr->GetPage(buf);
+    page = BufferGetPage(buf);
     OffsetNumber limit = PageGetMaxOffsetNumber(page);
     offset = OffsetNumberNext(offset);
     if (offset > limit) {
@@ -101,7 +102,8 @@ bool BtreeIndex::_bt_next(IndexScanDesc scan) {
     return false;
 }
 
-int BtreeIndex::_bt_compare(Relation rel, BTreeScan key, Page page, OffsetNumber offset) {
+int
+BtreeIndex::_bt_compare(Relation rel, BTreeScan key, Page page, OffsetNumber offset) {
 
     int keysz;
     ScanKey skey;

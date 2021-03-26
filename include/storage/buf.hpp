@@ -1,4 +1,4 @@
-#ifndef _buf_hpp_
+﻿#ifndef _buf_hpp_
 #define _buf_hpp_
 
 #include "access/relpath.hpp"

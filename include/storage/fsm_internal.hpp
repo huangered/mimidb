@@ -33,8 +33,6 @@ struct FSMPageData {
 typedef struct FSMPageData* FSMPage;
 
 class fsm {
-private:
-    std::shared_ptr<BufferMgr> _bufMgr;
 public:
     Buffer fsm_readbuf(Relation rel, FSMAddress addr, bool extend);
     BlockNumber fsm_search(Relation rel, Size spaceNeed);

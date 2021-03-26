@@ -10,15 +10,15 @@ HeapIndex::GetBufferForTuple(Relation rel, Size len) {
     blkno = GetPageWithFreeSpace(rel, len);
 
     if (blkno != INVALID_BLOCK) {
-        buf = _bufMgr->ReadBuffer(rel, blkno);
-        Page page = _bufMgr->GetPage(buf);
+        buf = ReadBuffer(rel, blkno);
+        Page page = BufferGetPage(buf);
 
         if (PageIsNew(page)) {
             PageInit(page, BLKSZ, 0);
         }
 
         Size avail = PageGetFreeSpace(page) - len;
-        BlockNumber blkno = _bufMgr->GetBufferDesc(buf)->tag.blockNum;
+        BlockNumber blkno = GetBufferDesc(buf)->tag.blockNum;
         RecordPageWithFreeSpace(rel, blkno, avail);
         return buf;
     }
@@ -32,7 +32,7 @@ insert the heap tuple into relation
 void
 HeapIndex::RelationPutHeapTuple(Relation rel, Buffer buf, HeapTuple htup) {
     OffsetNumber offset;
-    Page page = _bufMgr->GetPage(buf);
+    Page page = BufferGetPage(buf);
 
     if (PageIsNew(page)) {
         PageInit(page, BLKSZ, 0);
@@ -40,6 +40,6 @@ HeapIndex::RelationPutHeapTuple(Relation rel, Buffer buf, HeapTuple htup) {
 
     offset = PageAddItem(page, (htup->t_data), htup->t_len, InvalidOffsetNumber);
 
-    htup->t_data->t_ctid.blocknum = _bufMgr->GetBufferDesc(buf)->tag.blockNum;
+    htup->t_data->t_ctid.blocknum = GetBufferDesc(buf)->tag.blockNum;
     htup->t_data->t_ctid.offset = offset;
 }

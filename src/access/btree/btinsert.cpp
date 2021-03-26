@@ -27,7 +27,7 @@ top:
     _bt_freestack(stack);
 
     delete itup_key;
-    _bufMgr->ReleaseBuffer(buf);
+    ReleaseBuffer(buf);
 
     return true;
 }
@@ -47,7 +47,7 @@ BTStack BtreeIndex::_bt_search(Relation rel, BTreeScan itup_key, Buffer* bufp) {
 
         *bufp = _bt_moveright(rel, itup_key, *bufp);
 
-        page = _bufMgr->GetPage(*bufp);
+        page = BufferGetPage(*bufp);
 
         PageHeader header = PageGetHeader(page);
         BTreeSpecial special = (BTreeSpecial)PageGetSpecial(page);
@@ -60,7 +60,7 @@ BTStack BtreeIndex::_bt_search(Relation rel, BTreeScan itup_key, Buffer* bufp) {
         itemid = PageGetItemId(page, offsetnum);
         itup = (IndexTuple)PageGetItem(page, itemid);
         blkno = BTreeTupleGetDownLink(itup);
-        par_blkno = _bufMgr->GetBufferDesc(*bufp)->tag.blockNum;
+        par_blkno = GetBufferDesc(*bufp)->tag.blockNum;
 
         BTStack new_stack = new BTStackData;
         new_stack->parent = stack_in;
@@ -76,7 +76,7 @@ BTStack BtreeIndex::_bt_search(Relation rel, BTreeScan itup_key, Buffer* bufp) {
 }
 
 void BtreeIndex::_bt_insertonpg(Relation rel, Buffer buffer, OffsetNumber newitemoffset, BTreeScan itup_key, BTStack stack) {
-    Page page = _bufMgr->GetPage(buffer);
+    Page page = BufferGetPage(buffer);
 
     // size enough
     PageHeader header = PageGetHeader(page);
@@ -100,23 +100,23 @@ void BtreeIndex::_bt_insertonpg(Relation rel, Buffer buffer, OffsetNumber newite
 Buffer
 BtreeIndex::_bt_split(Relation rel, IndexTuple itup, Buffer buf, OffsetNumber newitemoff) {
     OffsetNumber splitoff = _bt_find_split_offset(buf);
-    Page originpage = _bufMgr->GetPage(buf);
+    Page originpage = BufferGetPage(buf);
     Page leftpage = GetTempPage(originpage);
     _bt_init_page(leftpage);
     Buffer rbuf = _bt_get_buf(rel, P_NEW);
-    Page rightpage = _bufMgr->GetPage(rbuf);
+    Page rightpage = BufferGetPage(rbuf);
     _bt_init_page(rightpage);
 
-    BTreeSpecial originspecial = (BTreeSpecial)PageGetSpecial(originpage);
-    BTreeSpecial leftspecial = (BTreeSpecial)PageGetSpecial(leftpage);
-    BTreeSpecial rightspecial = (BTreeSpecial)PageGetSpecial(rightpage);
+    BTreeSpecial originspecial = PageGetSpecial(originpage);
+    BTreeSpecial leftspecial = PageGetSpecial(leftpage);
+    BTreeSpecial rightspecial = PageGetSpecial(rightpage);
 
     // update right / left point
-    leftspecial->block_next = _bufMgr->GetBufferDesc(rbuf)->tag.blockNum;
+    leftspecial->block_next = GetBufferDesc(rbuf)->tag.blockNum;
     rightspecial->block_next = originspecial->block_next;
 
     leftspecial->block_prev = originspecial->block_prev;
-    rightspecial->block_prev = _bufMgr->GetBufferDesc(buf)->tag.blockNum;
+    rightspecial->block_prev = GetBufferDesc(buf)->tag.blockNum;
 
     if (P_ISLEAF(originspecial)) {
         leftspecial->flags = BTP_LEAF;
@@ -201,19 +201,19 @@ void BtreeIndex::_bt_insert_parent(Relation rel, Buffer buf, Buffer rbuf, BTStac
         rootbuf = _bt_newroot(rel, buf, rbuf);
     }
     else {
-        Page page = _bufMgr->GetPage(buf);
+        Page page = BufferGetPage(buf);
         IndexTuple ritem = (IndexTuple)PageGetItem(page, PageGetItemId(page, P_HIKEY));
         IndexTuple itup = new IndexTupleData;
         itup->key = ritem->key;
-        itup->ht_id = _bufMgr->GetBufferDesc(rbuf)->tag.blockNum;
+        itup->ht_id = GetBufferDesc(rbuf)->tag.blockNum;
         itup->tuple_size = sizeof(IndexTupleData);
         BTreeScan itup_key = _bt_make_scankey(rel, itup);
         Buffer pbuf = _bt_get_buf(rel, stack->blkno);
         _bt_insertonpg(rel, pbuf, stack->offset + 1, itup_key, stack->parent);
         delete itup;
         delete itup_key;
-        _bufMgr->ReleaseBuffer(pbuf);
-        _bufMgr->ReleaseBuffer(rbuf);
+        ReleaseBuffer(pbuf);
+        ReleaseBuffer(rbuf);
     }
 }
 
@@ -226,28 +226,28 @@ void BtreeIndex::_bt_insert_parent(Relation rel, Buffer buf, Buffer rbuf, BTStac
 Buffer
 BtreeIndex::_bt_newroot(Relation rel, Buffer lbuf, Buffer rbuf) {
     Buffer rootbuf;
+    Buffer metabuf;
     Page rootpage, lpage;
+    Page metapage;
     BlockNumber lblkno, rblkno;
     BlockNumber rootblkno;
     BTreeSpecial lspecial;
     BTreeSpecial rootspecial;
-    Buffer metabuf;
-    Page metapage;
     BTreeMetaData* metad;
 
-    lblkno = _bufMgr->GetBufferDesc(lbuf)->tag.blockNum;
-    rblkno = _bufMgr->GetBufferDesc(rbuf)->tag.blockNum;
-    lpage = _bufMgr->GetPage(lbuf);
+    lblkno = GetBufferDesc(lbuf)->tag.blockNum;
+    rblkno = GetBufferDesc(rbuf)->tag.blockNum;
+    lpage = BufferGetPage(lbuf);
     lspecial = (BTreeSpecial)PageGetSpecial(lpage);
 
     /* 创建新的 root buf */
     rootbuf = _bt_get_buf(rel, P_NEW);
-    rootpage = _bufMgr->GetPage(rootbuf);
-    rootblkno = _bufMgr->GetBufferDesc(rootbuf)->tag.blockNum;
+    rootpage = BufferGetPage(rootbuf);
+    rootblkno = GetBufferDesc(rootbuf)->tag.blockNum;
 
     /* 获取索引 meta 页 */
     metabuf = _bt_get_buf(rel, BTREE_METAPAGE);
-    metapage = _bufMgr->GetPage(metabuf);
+    metapage = BufferGetPage(metabuf);
     metad = (BTreeMetaData*)PageGetContent(metapage);
 
     _bt_init_page(rootpage);
@@ -284,8 +284,8 @@ BtreeIndex::_bt_newroot(Relation rel, Buffer lbuf, Buffer rbuf) {
 
     delete second;
 
-    _bufMgr->ReleaseBuffer(rbuf);
-    _bufMgr->ReleaseBuffer(rootbuf);
-    _bufMgr->ReleaseBuffer(metabuf);
+    ReleaseBuffer(rbuf);
+    ReleaseBuffer(rootbuf);
+    ReleaseBuffer(metabuf);
     return rootbuf;
 }
