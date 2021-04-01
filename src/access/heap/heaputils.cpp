@@ -2,7 +2,8 @@
 #include "util/mctx.hpp"
 
 // internal methods
-HeapTuple _heap_buildtuple(Relation rel, TupleSlotDesc* slot) {
+HeapTuple
+_heap_buildtuple(Relation rel, TupleSlotDesc* slot) {
     HeapTupleHeader td;
     int hoff = sizeof(HeapTupleHeaderData);
     int data_size = 2 * sizeof(int);

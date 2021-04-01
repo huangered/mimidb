@@ -1,11 +1,11 @@
-#include "util/fmgr.hpp"
+﻿#include "util/fmgr.hpp"
 #include "util/builtins.hpp"
 
 typedef struct FmgrBuildin {
     Oid			foid;			/* OID of the function */
     const char* name;
-    MMFunction	func;
-}FmgrBuildin;
+    Method	func;
+} FmgrBuildin;
 
 static FmgrBuildin fmgr_buildins[] = {
     {INT8CMP_OID, "int8cmp", int8cmp},
@@ -24,15 +24,18 @@ fmgr_info(Oid functionId, FmgrInfo* finfo) {
     const FmgrBuildin* fbp;
     finfo->fn_id = 0;
 
-    if ((fbp = fmgr_isbuildin(functionId)) != NULL) {
-        finfo->fn_addr = fbp->func;
+    if ((fbp = fmgr_isbuildin(functionId)) != nullptr) {
+        finfo->fn_method = fbp->func;
         finfo->fn_id = functionId;
+        return;
     }
+
+    // 从syscache里查找
 }
 
 Datum
-DirectFunctionCall2Coll(MMFunction func, Datum arg1, Datum arg2) {
-    FunctionCallInfoData fdata;
+DirectFunctionCall2Coll(Method func, Datum arg1, Datum arg2) {
+    FunctionCallInfoData fdata{};
     fdata.flinfo = &func;
     fdata.nagrs = 2;
     fdata.args[0] = arg1;

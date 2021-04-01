@@ -110,7 +110,7 @@ BtreeIndex::_bt_compare(Relation rel, BTreeScan key, Page page, OffsetNumber off
 
     ItemId itemId = PageGetItemId(page, offset);
 
-    BTreeSpecial special = (BTreeSpecial)PageGetSpecial(page);
+    BTreeSpecial special = PageGetSpecial(page);
 
     if (!P_ISLEAF(special) && offset == P_FIRSTDATAKEY(special)) {
         return 1;
@@ -121,28 +121,18 @@ BtreeIndex::_bt_compare(Relation rel, BTreeScan key, Page page, OffsetNumber off
     keysz = key->keysz;
     skey = key->scankeys;
     
-    if (key->itup->key > itup->key) {
-        return 1;
-    }
-    else if (key->itup->key == itup->key) {
-        return 0;
-    }
-    else {
-        return -1;
-    }
-
-   /* for (int i = 0; i < keysz; i++) {
+    for (int i = 0; i < keysz; i++) {
 
         FmgrInfo info = skey->sk_func;
 
-        Datum result = DirectFunctionCall2Coll(info.fn_addr, itup->key, key->itup->key);
+        Datum result = DirectFunctionCall2Coll(info.fn_method, itup->key, key->itup->key);
 
         result = DatumGetInt(result);
 
         if (result != 0) {
             return result;
         }
-    }*/
+    }
 
     return 0;
 }

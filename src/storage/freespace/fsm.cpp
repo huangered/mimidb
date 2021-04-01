@@ -122,7 +122,7 @@ fsm::fsm_set_avail(Page page, int slot, int value) {
 
         newvalue = fsmpage->fp_nodes[lchild];
         if (rchild < NodesPerPage)
-            newvalue = Max(newvalue,
+            newvalue = std::max(newvalue,
                 fsmpage->fp_nodes[rchild]);
 
         oldvalue = fsmpage->fp_nodes[nodeno];

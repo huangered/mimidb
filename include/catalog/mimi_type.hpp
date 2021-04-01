@@ -1,4 +1,4 @@
-#ifndef _mimi_am_h_
+﻿#ifndef _mimi_am_h_
 #define _mimi_am_h_
 
 #include "mimi.hpp"

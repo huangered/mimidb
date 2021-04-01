@@ -1,7 +1,9 @@
-#ifndef _relation_h_
-#define _relation_h_
+#ifndef _relation_hpp_
+#define _relation_hpp_
 
-#include "access/relcache.hpp"
+#include "mimi.hpp"
+
+typedef struct RelationData* Relation;
 
 Relation relation_open(Oid relid);
 void relation_close(Relation rel);
