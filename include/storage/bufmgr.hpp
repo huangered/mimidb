@@ -1,9 +1,7 @@
 #ifndef _BUFMGR_HPP_
 #define _BUFMGR_HPP_
 
-#include "mimi.hpp"
-#include "access/relcache.hpp"
-#include "storage/block.hpp"
+#include "access/relation.hpp"
 #include "storage/page.hpp"
 #include "storage/buf.hpp"
 

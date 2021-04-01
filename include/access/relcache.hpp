@@ -1,12 +1,11 @@
- #ifndef _rel_cache_h_
-#define _rel_cache_h_
+#ifndef _relcache_hpp_
+#define _relcache_hpp_
 
-#include "access/tupledesc.hpp"
 #include "mimi.hpp"
-#include "util/hashmap.hpp"
 #include "access/heaptuple.hpp"
-
-typedef struct RelationData* Relation;
+#include "access/relation.hpp"
+#include "access/tupledesc.hpp"
+#include "util/hashmap.hpp"
 
 void RelationCacheInit();
 

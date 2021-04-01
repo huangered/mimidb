@@ -63,8 +63,15 @@ private:
 public:
     T(int _i, int _j) :i{ _i }, j{ _j } {}
 };
+
+struct ggg {
+    int i;
+    int j;
+};
+
 int main()
 {
-    T* t = new T{1,2};
+    char* buf = new char[256]{};
+    ggg* ggg1 = (ggg*)std::malloc(sizeof(ggg) + 256 * sizeof(char));
     return 0;
 }

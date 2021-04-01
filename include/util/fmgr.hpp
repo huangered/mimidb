@@ -6,21 +6,22 @@
 #define MAX_ARGS 10
 
 typedef struct FunctionCallInfoData* FunctionCallInfo;
-typedef Datum (*MMFunction)(FunctionCallInfo fcinfo);
 
-typedef struct FmgrInfo {
+typedef Datum (*Method)(FunctionCallInfo fc_info);
+
+struct FmgrInfo {
     Oid fn_id;
-    MMFunction fn_addr;
-} FmgrInfo;
+    Method fn_method;
+};
 
-typedef struct FunctionCallInfoData {
-    MMFunction* flinfo;
+struct FunctionCallInfoData {
+    Method* flinfo;
     short nagrs;
     Datum args[MAX_ARGS];
-}FunctionCallInfoData;
+};
 
-extern void fmgr_info(Oid functionId, FmgrInfo* finfo);
+extern void fmgr_info(Oid functionId, FmgrInfo* fn_info);
 
-extern Datum DirectFunctionCall2Coll(MMFunction func, Datum arg1, Datum arg2);
+extern Datum DirectFunctionCall2Coll(Method func, Datum arg1, Datum arg2);
 
 #endif

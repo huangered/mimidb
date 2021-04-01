@@ -54,14 +54,14 @@ bool HeapIndex::heapremove(Relation rel, int key) {
         HeapTuple tup = (HeapTuple)item;
         if (tup->t_data->t_heap.t_xmax == 0) { // for now , only get latest one.
             tup->t_data->t_heap.t_xmax = cur_tran;
-            // add new deleted record?!
+             //add new deleted record?!
             return true;
         }
         else {
             blkNum = tup->t_data->t_ctid.blocknum;
             offset = tup->t_data->t_ctid.offset;
         }
-    }
+  }
 
     return false;
 }
