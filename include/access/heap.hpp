@@ -1,34 +1,43 @@
-#ifndef _ACCESS_HEAP_H_
-#define _ACCESS_HEAP_H_
+﻿#ifndef _access_heap_hpp_
+#define _access_heap_hpp_
 
 #include "mimi.hpp"
 #include "rel.hpp"
-#include "storage/bufmgr.hpp"
 #include "access/heaptuple.hpp"
 #include "access/scankey.hpp"
 
-class HeapIndex {
+/*
+堆表操作类
+*/
+class Heap {
 public:
+	Relation Open(Oid relationId);
+	void Close(Relation rel);
+
+	bool Insert(Relation rel, HeapTuple tuple);
+	void Update(Relation rel, HeapTuple tuple);
+	HeapScanDesc BeginScan(Relation rel, int nkeys, ScanKey key);
+	HeapTuple GetNext(HeapScanDesc scan);
+	bool EndScan(HeapScanDesc scan);
+
 	void heapbuildempty(Relation rel);
-	bool heap_insert(Relation rel, HeapTuple tup);
+
 	bool heap_tuple_insert(Relation rel, TupleSlotDesc* slot);
-	bool heapremove(Relation rel, int key);
+	bool Remove(Relation rel, int key);
 	bool heapgettuple(HeapScanDesc scan);
-	HeapScanDesc heapbeginscan(Relation rel, int nkeys, ScanKey key);
-	HeapTuple heapgetnext(HeapScanDesc scan);
-	bool heapendscan(HeapScanDesc scan);
-	void heap_vacuum(Relation rel);
+	void Vacuum(Relation rel);
 	// for catalog usage
 	void simple_heap_insert(Relation rel, HeapTuple tup);
+
 	Buffer GetBufferForTuple(Relation rel, Size len);
 	void RelationPutHeapTuple(Relation rel, Buffer buf, HeapTuple htup);
-	// for debug
-	void print_heap(Relation rel);
-	HeapTuple heaptuple_prepare_insert(Relation rel, HeapTuple tup, int xmin);
+
 private:
 	// internal methods
 	HeapTuple _heap_buildtuple(Relation rel, TupleSlotDesc* slot);
-
+	HeapTuple _tuple_prepare_insert(Relation rel, HeapTuple tup, int xmin);
 };
 
-#endif // !_HEAP_H_
+Heap* route();
+
+#endif // !_access_heap_hpp_

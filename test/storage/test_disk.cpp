@@ -4,7 +4,7 @@
 TEST(disk, basic)
 {
     char* buf = new char[BLKSZ];
-    memset(buf, 'a', BLKSZ);
+    memset(buf, 96, BLKSZ);
     
     RelFileNode rnode = { 500,500 };
 
@@ -17,5 +17,5 @@ TEST(disk, basic)
     bn = smgr->Nblocks(reln, MAIN_FORKNUM);
     EXPECT_EQ(bn, 1);
     smgr->Close(reln);
-    delete[] buf;
+
 }

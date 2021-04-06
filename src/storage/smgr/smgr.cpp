@@ -9,7 +9,7 @@ namespace fs = std::filesystem;
 Smgr* smgr = new Smgr{};
 
 Smgr::Smgr() {
-    md = new Md();
+    md = new Md{};
 }
 
 Smgr::~Smgr() {
