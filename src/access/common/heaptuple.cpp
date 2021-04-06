@@ -13,15 +13,13 @@ heap_form_tuple(TupleDesc tupdesc, Datum* values) {
         data_size += attr.att_len;
     }
 
-    int hoff = sizeof(HeapTupleHeaderData);
-    int len = HEAP_TUPLE_SIZE + hoff + data_size;
+    size_t len = HEAP_TUPLE_SIZE + HEAP_TUPLE_HEADER_SIZE + data_size;
 
-    htup = (HeapTuple)palloc(len);
-    htup->t_len = data_size + hoff;
+    htup = (HeapTuple)malloc(len);
+    htup->t_len = data_size;
     htup->t_data = td = (HeapTupleHeader)((char*)htup + HEAP_TUPLE_SIZE);
-    htup->t_data->t_hoff = hoff;
 
-    memcpy(((char*)td + hoff), values, data_size);
+    memcpy(((char*)td + HEAP_TUPLE_HEADER_SIZE), values, data_size);
 
     return htup;
 }

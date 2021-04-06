@@ -1,5 +1,5 @@
-#ifndef _RELPATH_H_
-#define _RELPATH_H_
+#ifndef _relpath_hpp_
+#define _relpath_hpp_
 
 #include <filesystem>
 #include "mimi.hpp"

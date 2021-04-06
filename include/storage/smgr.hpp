@@ -5,7 +5,6 @@
 #include "access/relcache.hpp"
 #include "access/relpath.hpp"
 #include "storage/page.hpp"
-#include "storage/disk.hpp"
 #include "storage/relfilenode.hpp"
 
 struct SMgrRelationData {
@@ -14,18 +13,43 @@ struct SMgrRelationData {
     BlockNumber smgr_target_nblocks; /*最后读取的block*/
     BlockNumber smgr_fsm_nblocks;	/* last known size of fsm fork */
 
-    disk* disks[2];
+    int fd[INIT_FORKNUM];
 };
 
 typedef SMgrRelationData* SMgrRelation;
 
-SMgrRelation smgropen(Relation rel, ForkNumber number);
-bool smgrexists(Relation rel, ForkNumber number);
-void smgrcreate(Relation rel, ForkNumber number);
-BlockNumber smgrblocks(Relation rel, ForkNumber number);
-void smgrextend(Relation rel, Page page, BlockNumber blkno, ForkNumber number);
-void smgrwrite(Relation rel, ForkNumber number, BlockNumber blkno, char* buf);
-void smgrread(Relation rel, ForkNumber number, BlockNumber blkno, char* buf);
+class Md
+{
+private:
+    int Open(SMgrRelation reln, ForkNumber forknum);
+public:
+    int Nblock(SMgrRelation reln, ForkNumber forknum);
+    int Write(SMgrRelation reln, ForkNumber forknum, BlockNumber blocknum, char* buffer);
+    int Read(SMgrRelation reln, ForkNumber forknum, BlockNumber blocknum, char* buffer);
+    void Close(SMgrRelation reln, ForkNumber forknum);
+    int Extend(SMgrRelation reln, ForkNumber forknum, BlockNumber blocknum, char* buffer);
+    bool Exist(SMgrRelation reln, ForkNumber forknum);
+    void Create(SMgrRelation reln, ForkNumber forknum);
+};
+
+class Smgr {
+private:
+    Md* md;
+    HashMap<RelFileNode, SMgrRelation> _data;
+public:
+    Smgr();
+    ~Smgr();
+    SMgrRelation Open(RelFileNode rnode);
+    bool Exists(SMgrRelation reln, ForkNumber forknum);
+    BlockNumber Nblocks(SMgrRelation reln, ForkNumber forknum);
+    void Create(SMgrRelation reln, ForkNumber forknum);
+    void Read(SMgrRelation reln, ForkNumber forknum, BlockNumber blocknum, char* buf);
+    void Write(SMgrRelation reln, ForkNumber forknum, BlockNumber blocknum, char* buf);
+    void Extend(SMgrRelation reln, ForkNumber forknum, BlockNumber blocknum, char* buf);
+    void Close(SMgrRelation reln);
+};
+
+extern Smgr* smgr;
 
 // 更上层函数
 /*

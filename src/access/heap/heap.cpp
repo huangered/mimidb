@@ -98,7 +98,7 @@ HeapIndex::heapgettuple(HeapScanDesc scan) {
             Item item = PageGetItem(page, itemid);
             HeapTupleHeader tup = (HeapTupleHeader)item;
 
-            char* data = (char*)tup + tup->t_hoff;
+            char* data = (char*)tup + HEAP_TUPLE_HEADER_SIZE;
             int key = *((int*)data);
             int value = *(((int*)data) + 1 );
 
@@ -198,24 +198,5 @@ HeapIndex::_heap_buildtuple(Relation rel, TupleSlotDesc* slot) {
 // for debug
 void
 HeapIndex::print_heap(Relation rel) {
-    BlockNumber blkno = 0;
-    TupleDesc tupdesc = rel->tupleDesc;
-    Buffer buf = ReadBuffer(rel, blkno);
-    Page page = BufferGetPage(buf);
-    OffsetNumber max = PageGetMaxOffsetNumber(page);
-    for (OffsetNumber offset = 1; offset <= max; offset++) {
-        ItemId itemid = PageGetItemId(page, offset);
-        Item item = PageGetItem(page, itemid);
-        printf("\r\nitemid: %d %d\r\n", itemid->lp_len, itemid->lp_off);
-        HeapTupleHeader tup = (HeapTupleHeader)item;
-
-        int offset1 = 0;
-        for (int i = 0; i < tupdesc->natts; i++) {
-            FormData_mimi_attribute attr = tupdesc->attr[i];
-
-            int* ptr = (int*)((char*)tup + tup->t_hoff + offset);
-            printf("value: %d", *ptr);
-            offset += attr.att_len;
-        }
-    }
+    
 }

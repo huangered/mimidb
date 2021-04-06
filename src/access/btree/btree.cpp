@@ -10,7 +10,7 @@ BtreeIndex::buildempty(Relation rel) {
     _bt_init_page(metap);
 
     // write to local file system
-    smgrwrite(rel, MAIN_FORKNUM, BTREE_METAPAGE, metap);
+    smgr->Write(rel->rd_smgr, MAIN_FORKNUM, BTREE_METAPAGE, metap);
 
     delete[] metap;
 }

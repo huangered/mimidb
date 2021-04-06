@@ -25,8 +25,8 @@ typedef HeapScanDescData* HeapScanDesc;
 
 typedef struct TableAmRoute {
     void (*buildempty)(Relation rel);
-    bool (*tuple_insert)(Relation rel, TupleSlotDesc *slot);
-    bool (*tuple_remove)(Relation rel, int key);
+    bool (*insert)(Relation rel, TupleSlotDesc *slot);
+    bool (*remove)(Relation rel, int key);
     bool (*gettuple)(HeapScanDesc scan);
     HeapScanDesc (*beginscan)(Relation rel, int nkeys, ScanKey keys);
     HeapTuple (*getnext)(HeapScanDesc scan);

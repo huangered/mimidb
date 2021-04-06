@@ -37,7 +37,7 @@ startup() {
             printf("\r\n");
         }
 
-        char* str = "Hello World!";
+        const char* str = "Hello World!";
         send(clntSock, str, strlen(str) + sizeof(char), NULL);
     }
     closesocket(clntSock);
