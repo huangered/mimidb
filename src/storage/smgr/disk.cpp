@@ -1,7 +1,11 @@
 #include "storage/smgr.hpp"
 #include "storage/page.hpp"
 #include <fcntl.h>
+#ifdef _WIN32
 #include <io.h>
+#else
+#include <unistd.h>
+#endif
 #include "storage/fd.hpp"
 
 int
