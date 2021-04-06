@@ -1,21 +1,21 @@
 #include "../g.hpp"
-#include "storage/disk.hpp"
-#include "storage/page.hpp"
+#include "storage/smgr.hpp"
 
 TEST(disk, basic)
 {
     char* buf = new char[BLKSZ];
-    memset(buf, 0, BLKSZ);
-    std::filesystem::path path{ "a.txt" };
-    disk df{ path };
-    df.create();
-    bool result = df.open();
-    EXPECT_TRUE(result);
-    int num = df.nblock();
-    EXPECT_EQ(num, 0);
-    df.write(buf, 0);
-    num = df.nblock();
-    EXPECT_EQ(num, 1);
-    df.close();
+    memset(buf, 'a', BLKSZ);
+    
+    RelFileNode rnode = { 500,500 };
+
+    SMgrRelation reln = smgr->Open(rnode);
+
+    BlockNumber bn = smgr->Nblocks(reln, MAIN_FORKNUM);
+    EXPECT_EQ(bn, 0);
+    smgr->Write(reln, MAIN_FORKNUM, 0, buf);
+
+    bn = smgr->Nblocks(reln, MAIN_FORKNUM);
+    EXPECT_EQ(bn, 1);
+    smgr->Close(reln);
     delete[] buf;
 }

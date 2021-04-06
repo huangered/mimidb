@@ -53,7 +53,7 @@ BufferMgr::_ReadBufferCommon(Relation rel, ForkNumber forkNumber, BlockNumber bl
     }
 
     if (isExtend) {
-        blkno = smgrblocks(rel, forkNumber);
+        blkno = smgr->Nblocks(rel->rd_smgr, forkNumber);
     }
 
     desc = _BufferAlloc(rel, forkNumber, blkno, &found);
@@ -69,10 +69,10 @@ BufferMgr::_ReadBufferCommon(Relation rel, ForkNumber forkNumber, BlockNumber bl
     // load or save data
     if (isExtend) {
         memset(page, 0, BLKSZ);
-        smgrextend(rel, page, blkno, forkNumber);
+        smgr->Extend(rel->rd_smgr, forkNumber, blkno, page);
     }
     else {
-        smgrread(rel, forkNumber, blkno, page);
+        smgr->Read(rel->rd_smgr, forkNumber, blkno, page);
     }    
 
     return desc->buf_id;

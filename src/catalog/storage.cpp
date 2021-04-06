@@ -1,8 +1,9 @@
 #include "catalog/storage.hpp"
 #include "storage/smgr.hpp"
+#include "access/rel.hpp"
 
 void RelationCreateStorage(Relation rel) {
-    smgrcreate(rel, MAIN_FORKNUM);
+    smgr->Create(rel->rd_smgr, MAIN_FORKNUM);
 }
 
 void

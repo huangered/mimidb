@@ -21,8 +21,8 @@ fsm::fsm_readbuf(Relation rel, FSMAddress addr, bool extend) {
     // if exist rel fsm file
     if (rel->rd_smgr->smgr_fsm_nblocks == INVALID_BLOCK ||
         blkno >= rel->rd_smgr->smgr_fsm_nblocks) {
-        if (smgrexists(rel, FSM_FORKNUM)) {
-            rel->rd_smgr->smgr_fsm_nblocks = smgrblocks(rel, FSM_FORKNUM);
+        if (smgr->Exists(rel->rd_smgr, FSM_FORKNUM)) {
+            rel->rd_smgr->smgr_fsm_nblocks = smgr->Nblocks(rel->rd_smgr, FSM_FORKNUM);
         }
         else {
             rel->rd_smgr->smgr_fsm_nblocks = 0;
@@ -144,9 +144,9 @@ fsm::fsm_extend(Relation rel, BlockNumber blkno) {
     PgData data;
     PageInit((Page)data.data, BLKSZ, 0);
 
-    BlockNumber fsm_blocks = smgrblocks(rel, FSM_FORKNUM);
+    BlockNumber fsm_blocks = smgr->Nblocks(rel->rd_smgr, FSM_FORKNUM);
     while (fsm_blocks < blkno) {
-        smgrextend(rel, (Page)data.data, fsm_blocks, FSM_FORKNUM);
+        smgr->Extend(rel->rd_smgr, FSM_FORKNUM, fsm_blocks, (Page)data.data);
         fsm_blocks++;
     }
     rel->rd_smgr->smgr_fsm_nblocks = fsm_blocks;

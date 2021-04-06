@@ -1,39 +1,35 @@
-#ifndef _heaptuple_h_
+﻿#ifndef _heaptuple_h_
 #define _heaptuple_h_
 
 #include "mimi.hpp"
 #include "access/tupledesc.hpp"
 
-typedef struct HeapTupleFields {
+struct HeapTupleFields {
     int t_xmin;
     int t_xmax;
-} HeapTupleFields;
+};
 
-typedef struct ItemPointerData {
+struct ItemPointerData {
     int blocknum;
     int offset;
-} ItemPointerData;
+};
 
-typedef ItemPointerData* ItemPointer;
-
-typedef struct HeapTupleHeaderData {
+struct HeapTupleHeaderData {
     HeapTupleFields t_heap;
-
     ItemPointerData t_ctid;
-    int t_hoff;
-} HeapTupleHeaderData;
+};
 
 typedef HeapTupleHeaderData* HeapTupleHeader;
 
-typedef struct HeapTupleData {
-    int t_len;  /* length of t_data */
-    Oid t_tableOid;
-    HeapTupleHeader t_data; // tuple header and data
-} HeapTupleData;
+struct HeapTupleData {
+    int t_len;  /* 数据 values 的长度 */
+    HeapTupleHeader t_data; // 数据头和数据指针
+};
 
 typedef HeapTupleData* HeapTuple;
 
-#define HEAP_TUPLE_SIZE     sizeof(HeapTupleData)
+#define HEAP_TUPLE_SIZE            sizeof(HeapTupleData)
+#define HEAP_TUPLE_HEADER_SIZE     sizeof(HeapTupleHeaderData)
 
 extern HeapTuple heap_form_tuple(TupleDesc desc, Datum* values);
 
