@@ -1,43 +1,44 @@
 ﻿#include "access/heap.hpp"
 #include "storage/page.hpp"
 #include "storage/bufmgr.hpp"
-#include "util/mctx.hpp"
-#include "access/tbapi.hpp"
+#include "access/relcache.hpp"
 
 #define HOT_UPDATED     0
 #define HOT_REMOVED     1
 #define HOT_NORMAL      2
 
+static Heap* heap = new Heap{};
 
-static TableAmRoute route = {
-    /*.buildempty = heapbuildempty,
-    .tuple_insert = heap_tuple_insert,
-    .tuple_remove = heapremove,
-    .gettuple = heapgettuple,
-    .beginscan = heapbeginscan,
-    .getnext = heapgetnext,
-    .endscan = heapendscan,
-    .vacuum = heap_vacuum*/
-};
-
-TableAmRoute* table_route() {
-    return &route;
+Heap* route() {
+    return heap;
 }
 
-void HeapIndex::heapbuildempty(Relation rel) {
+// 打开relation
+Relation
+Heap::Open(Oid relaitonId) {
+    return RelationIdGetRelation(relaitonId);
+}
+
+// 关闭relation
+void
+Heap::Close(Relation rel) {
+    RelationClose(rel);
+}
+
+void Heap::heapbuildempty(Relation rel) {
     // create relation file;
 }
 
-bool HeapIndex::heap_tuple_insert(Relation rel, TupleSlotDesc* slot) {
+bool Heap::heap_tuple_insert(Relation rel, TupleSlotDesc* slot) {
 
     HeapTuple htup = _heap_buildtuple(rel, slot);
     
     
     // todo
     //slot->tts_tid = ;
-    return heap_insert(rel, htup);
+    return Insert(rel, htup);
 }
-bool HeapIndex::heapremove(Relation rel, int key) {
+bool Heap::Remove(Relation rel, int key) {
 
     BlockNumber blkNum = 0;
     int offset = 0;
@@ -66,7 +67,7 @@ bool HeapIndex::heapremove(Relation rel, int key) {
     return false;
 }
 bool
-HeapIndex::heapgettuple(HeapScanDesc scan) {
+Heap::heapgettuple(HeapScanDesc scan) {
 
     BlockNumber blkno;
     OffsetNumber offset;
@@ -118,11 +119,11 @@ HeapIndex::heapgettuple(HeapScanDesc scan) {
 }
 
 HeapScanDesc
-HeapIndex::heapbeginscan(Relation rel, int nkeys, ScanKey key) {
+Heap::BeginScan(Relation rel, int nkeys, ScanKey key) {
     HeapScanDesc scan;
 
     // increase relation ref count
-    scan = (HeapScanDesc)palloc(sizeof(HeapScanDescData));
+    scan = new HeapScanDescData{};
     scan->rs_base.rs_rel = rel;
     scan->rs_base.rs_nkeys = nkeys;
     scan->rs_base.rs_key = key;
@@ -130,17 +131,17 @@ HeapIndex::heapbeginscan(Relation rel, int nkeys, ScanKey key) {
 }
 
 HeapTuple
-HeapIndex::heapgetnext(HeapScanDesc scan) {
+Heap::GetNext(HeapScanDesc scan) {
     return NULL;
 }
 
 bool
-HeapIndex::heapendscan(HeapScanDesc scan) {
+Heap::EndScan(HeapScanDesc scan) {
     // descease the relation ref count
 
-    pfree(scan->rs_base.rs_key);
+    delete scan->rs_base.rs_key;
 
-    pfree(scan);
+    delete scan;
     return true;
 }
 
@@ -149,7 +150,7 @@ HeapIndex::heapendscan(HeapScanDesc scan) {
 2. update the fsm page
 */
 void 
-HeapIndex::heap_vacuum(Relation rel) {
+Heap::Vacuum(Relation rel) {
 
 }
 
@@ -157,23 +158,24 @@ HeapIndex::heap_vacuum(Relation rel) {
 for catalog operation
 */
 void
-HeapIndex::simple_heap_insert(Relation rel, HeapTuple tup) {
-    heap_insert(rel, tup);
+Heap::simple_heap_insert(Relation rel, HeapTuple tup) {
+    Insert(rel, tup);
 }
 
-// ========= private 
-
+//插入操作
 bool
-HeapIndex::heap_insert(Relation rel, HeapTuple htup) {
+Heap::Insert(Relation rel, HeapTuple htup) {
     // get current transition id.
     int xid = 0;
     Buffer buffer;
 
-    htup = heaptuple_prepare_insert(rel, htup, xid);
+    htup = _tuple_prepare_insert(rel, htup, xid);
 
     buffer = GetBufferForTuple(rel, htup->t_len);
 
     RelationPutHeapTuple(rel, buffer, htup);
+
+    MarkBufferDirty(buffer);
 
     return true;
 }
@@ -182,21 +184,14 @@ HeapIndex::heap_insert(Relation rel, HeapTuple htup) {
 给heaptup的事务id赋值
 */
 HeapTuple
-HeapIndex::heaptuple_prepare_insert(Relation rel, HeapTuple tup, int xmin) {
+Heap::_tuple_prepare_insert(Relation rel, HeapTuple tup, int xmin) {
     tup->t_data->t_heap.t_xmin = xmin;
     tup->t_data->t_heap.t_xmax = 0;
     return tup;
 }
 
 HeapTuple
-HeapIndex::_heap_buildtuple(Relation rel, TupleSlotDesc* slot) {
+Heap::_heap_buildtuple(Relation rel, TupleSlotDesc* slot) {
     HeapTuple a;
     return a;
-}
-
-
-// for debug
-void
-HeapIndex::print_heap(Relation rel) {
-    
 }

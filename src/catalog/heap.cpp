@@ -75,7 +75,7 @@ InsertMimiClassTuple(Relation mimi_class_desc, Form_mimi_class new_rel_reltup) {
 
     HeapTuple tuple = heap_form_tuple(mimi_class_desc->tupleDesc, values);
 
-    HeapIndex{}.simple_heap_insert(mimi_class_desc, tuple);
+    Heap{}.simple_heap_insert(mimi_class_desc, tuple);
 
     pfree(tuple);
 }
@@ -106,7 +106,7 @@ InsertMimiAttributeTuple(Relation mimi_attribute_rel, Form_mimi_attribute new_at
 
     HeapTuple tuple = heap_form_tuple(mimi_attribute_rel->tupleDesc, values);
 
-    HeapIndex{}.simple_heap_insert(mimi_attribute_rel, tuple);
+    Heap{}.simple_heap_insert(mimi_attribute_rel, tuple);
 
     pfree(tuple);
 }

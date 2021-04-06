@@ -3,7 +3,7 @@
 #include "storage/bufmgr.hpp"
 
 Buffer
-HeapIndex::GetBufferForTuple(Relation rel, Size len) {
+Heap::GetBufferForTuple(Relation rel, Size len) {
     BlockNumber blkno;
     Buffer buf;
 
@@ -30,7 +30,7 @@ HeapIndex::GetBufferForTuple(Relation rel, Size len) {
 insert the heap tuple into relation
 */
 void
-HeapIndex::RelationPutHeapTuple(Relation rel, Buffer buf, HeapTuple htup) {
+Heap::RelationPutHeapTuple(Relation rel, Buffer buf, HeapTuple htup) {
     OffsetNumber offset;
     Page page = BufferGetPage(buf);
 
