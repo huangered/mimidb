@@ -1,21 +1,24 @@
 #include "access/heap.hpp"
-#include "util/mctx.hpp"
+#include "access/heaptuple.hpp"
 
-// internal methods
 HeapTuple
-_heap_buildtuple(Relation rel, TupleSlotDesc* slot) {
-    HeapTupleHeader td;
-    int hoff = sizeof(HeapTupleHeaderData);
-    int data_size = 2 * sizeof(int);
-    int len = HEAP_TUPLE_SIZE + hoff + data_size;
-    HeapTuple htup = (HeapTuple)palloc(len);
+heap_form_tuple(TupleDesc desc, Datum* values) {
+    int datasz{};
+    HeapTupleHeader td{};
 
-    htup->t_len = data_size + hoff;
+    for (int i{}; i < desc->natts; i++) {
+        datasz += desc->attr[i].att_len;
+    }
+
+
+    int hoff = sizeof(HeapTupleHeaderData);
+    int len = HEAP_TUPLE_SIZE + hoff + datasz;
+    HeapTuple htup = (HeapTuple)std::malloc(len);
+    
+    htup->t_len = datasz + hoff;
     htup->t_data = td = (HeapTupleHeader)((char*)htup + HEAP_TUPLE_SIZE);
 
     // for simple, we only have (key,value) now.
-    memcpy(((char*)td + hoff), &slot->key, sizeof(int));
-    memcpy(((char*)td + hoff + sizeof(int)), &slot->value, sizeof(int));
-
+    memcpy(((char*)td + hoff), values, datasz);
     return htup;
 }

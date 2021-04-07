@@ -1,9 +1,9 @@
 #include "access/rel.hpp"
 #include "storage/buf_internal.hpp"
 #include "storage/smgr.hpp"
+#include "storage/bufmgr.hpp"
 
 #define NBuffer 20
-#define P_NEW INVALID_BLOCK
 
 BufferMgr::BufferMgr() {
     size_t size = NBuffer * BLKSZ;

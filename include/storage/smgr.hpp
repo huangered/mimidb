@@ -10,8 +10,8 @@
 struct SMgrRelationData {
     RelFileNode rd_node;
 
-    BlockNumber smgr_target_nblocks; /*最后读取的block*/
-    BlockNumber smgr_fsm_nblocks;	/* last known size of fsm fork */
+    BlockNumber smgr_target_block; /* 当前插入的block */
+    BlockNumber smgr_fsm_nblocks;	 /* last known size of fsm fork */
 
     int fd[INIT_FORKNUM];
 };

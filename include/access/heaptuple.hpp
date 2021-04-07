@@ -22,7 +22,7 @@ struct HeapTupleHeaderData {
 typedef HeapTupleHeaderData* HeapTupleHeader;
 
 struct HeapTupleData {
-    int t_len;  /* 数据 values 的长度 */
+    int t_len;              /* 数据 values 的长度 */
     HeapTupleHeader t_data; // 数据头和数据指针
 };
 
