@@ -6,7 +6,7 @@
 */
 TupleDesc
 CreateTempTupleDesc(int natts) {
-    TupleDesc desc = (TupleDesc)palloc(offsetof(TupleDescData, attr) + natts * sizeof(FormData_mimi_attribute));
+    TupleDesc desc = (TupleDesc)std::malloc(offsetof(TupleDescData, attr) + natts * sizeof(FormData_mimi_attribute));
     desc->natts = natts;
     return desc;
 }
@@ -14,11 +14,12 @@ CreateTempTupleDesc(int natts) {
 /*
 create a tupledesc object by attrs
 */
-TupleDesc CreateTupleDesc(int natts, Form_mimi_attribute* attrs) {
+TupleDesc
+CreateTupleDesc(int natts, Form_mimi_attribute attrs) {
     TupleDesc tupdesc = CreateTempTupleDesc(natts);
     // copy the attrs;
     for (int i = 0; i < natts; i++) {
-        memcpy(&tupdesc->attr[i], attrs[i], sizeof(FormData_mimi_attribute));
+        memcpy(&tupdesc->attr[i], &attrs[i], sizeof(FormData_mimi_attribute));
     }
     return tupdesc;
 }
@@ -26,6 +27,7 @@ TupleDesc CreateTupleDesc(int natts, Form_mimi_attribute* attrs) {
 /*
 free tupledesc object
 */
-void FreeTupleDesc(TupleDesc tupdesc) {
-    pfree(tupdesc);
+void
+FreeTupleDesc(TupleDesc tupdesc) {
+    std::free(tupdesc);
 }

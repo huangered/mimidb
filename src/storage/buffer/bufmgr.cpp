@@ -32,3 +32,9 @@ void
 MarkBufferDirty(Buffer buffer) {
 	bmgr->MarkBufferDirty(buffer);
 }
+
+BlockNumber
+BufferGetBlockNumber(Buffer buffer) {
+	BufferDesc* bufHdr = GetBufferDesc(buffer);
+	return bufHdr->tag.blockNum;
+}

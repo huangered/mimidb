@@ -6,13 +6,13 @@
 /*
 mimi_attribute 表描述
 */
-typedef struct FormData_mimi_attribute {
+struct FormData_mimi_attribute {
     Oid att_relid;
     char att_name[NAME_LIMIT];
     int att_len;
     int att_order;  // att的位置，从0开始
     Oid typid;
-} FormData_mimi_attribute;
+};
 
 typedef FormData_mimi_attribute* Form_mimi_attribute;
 

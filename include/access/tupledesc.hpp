@@ -5,15 +5,15 @@
 
 #define MAX_NATTS
 
-typedef struct TupleDescData {
+struct TupleDescData {
     int natts;
     FormData_mimi_attribute attr[MAX_NATTS];
-} TupleDescData;
+};
 
 typedef struct TupleDescData* TupleDesc;
 
 extern TupleDesc CreateTempTupleDesc(int natts);
-extern TupleDesc CreateTupleDesc(int natts, Form_mimi_attribute* attrs);
+extern TupleDesc CreateTupleDesc(int natts, Form_mimi_attribute attrs);
 
 extern void FreeTupleDesc(TupleDesc tupdesc);
 

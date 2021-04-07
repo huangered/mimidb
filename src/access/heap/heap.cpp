@@ -13,32 +13,42 @@ Heap* route() {
     return heap;
 }
 
+//临时方法，会移到事务管理器中
+static int GetCurrentTransactionId(void) {
+    static int i = 0;
+    return i++;
+}
+
 // 打开relation
 Relation
 Heap::Open(Oid relaitonId) {
-    return RelationIdGetRelation(relaitonId);
+    // 从relation cache加载
+    Relation rel = RelationIdGetRelation(relaitonId);
+    if (rel->rd_rel->relkind != RELKIND_RELATION) {
+        printf("rel %s is not a relation", rel->rd_rel->relname);
+    }
+
+    return rel;
 }
 
 // 关闭relation
 void
 Heap::Close(Relation rel) {
+    // 从relation cache释放
     RelationClose(rel);
 }
 
-void Heap::heapbuildempty(Relation rel) {
-    // create relation file;
-}
-
-bool Heap::heap_tuple_insert(Relation rel, TupleSlotDesc* slot) {
-
-    HeapTuple htup = _heap_buildtuple(rel, slot);
-    
-    
-    // todo
-    //slot->tts_tid = ;
-    return Insert(rel, htup);
-}
-bool Heap::Remove(Relation rel, int key) {
+//bool Heap::heap_tuple_insert(Relation rel, TupleSlotDesc* slot) {
+//
+//    HeapTuple htup = _heap_buildtuple(rel, slot);
+//    
+//    
+//    // todo
+//    //slot->tts_tid = ;
+//    return Insert(rel, htup);
+//}
+bool
+Heap::Remove(Relation rel, int key) {
 
     BlockNumber blkNum = 0;
     int offset = 0;
@@ -166,7 +176,7 @@ Heap::simple_heap_insert(Relation rel, HeapTuple tup) {
 bool
 Heap::Insert(Relation rel, HeapTuple htup) {
     // get current transition id.
-    int xid = 0;
+    int xid = GetCurrentTransactionId();
     Buffer buffer;
 
     htup = _tuple_prepare_insert(rel, htup, xid);
@@ -185,6 +195,7 @@ Heap::Insert(Relation rel, HeapTuple htup) {
 */
 HeapTuple
 Heap::_tuple_prepare_insert(Relation rel, HeapTuple tup, int xmin) {
+    // 设置 （xmin， xmax）
     tup->t_data->t_heap.t_xmin = xmin;
     tup->t_data->t_heap.t_xmax = 0;
     return tup;

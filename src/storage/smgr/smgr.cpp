@@ -32,7 +32,7 @@ Smgr::Open(RelFileNode reln) {
         return rel;
 
     rel = new SMgrRelationData{};
-    rel->smgr_target_nblocks = INVALID_BLOCK;
+    rel->smgr_target_block = INVALID_BLOCK;
     rel->smgr_fsm_nblocks = INVALID_BLOCK;
     rel->rd_node = reln;
     for (int i{0}; i < INIT_FORKNUM; i++) {

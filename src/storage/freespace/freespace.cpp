@@ -25,9 +25,17 @@ RecordPageWithFreeSpace(Relation rel, BlockNumber usedBlock, Size freeSpace) {
 
 }
 
+BlockNumber
+RecordAndGetPageWithFreeSpace(Relation rel, BlockNumber oldPage, Size oldSpaceAvail, Size spaceNeeded) {
+    RecordPageWithFreeSpace(rel, oldPage, oldSpaceAvail);
+    return GetPageWithFreeSpace(rel, spaceNeeded);
+}
+
+
 void
 FreeSpaceMapVacuumRange(Relation rel, BlockNumber start, BlockNumber end) {
     if (end > start) {
         _fsm->fsm_vacuum_page(rel, FSM_ROOT_ADDRESS, start, end);
     }
 }
+
