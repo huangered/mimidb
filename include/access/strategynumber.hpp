@@ -1,10 +1,9 @@
-#ifndef _strategy_number_h_
-#define _strategy_number_h_
+#ifndef _strategy_number_hpp_
+#define _strategy_number_hpp_
 
-typedef int StrategyNumber;
-
-#define BTEqualStrategyNumber   0
-#define BTGreaterStrategyNumber 1
-#define BTLessStrategyNumber	2
-
+enum StrategyNumber {
+	BTEqualStrategyNumber = 0,
+	BTGreaterStrategyNumber = 1,
+	BTLessStrategyNumber = 2
+};
 #endif // !_strategy_number_h_

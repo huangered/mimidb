@@ -68,7 +68,8 @@ Heap::Remove(Relation rel, int key) {
 
     return false;
 }
-bool
+
+void
 Heap::heapgettuple(HeapScanDesc scan) {
 
     BlockNumber blkno;
@@ -76,23 +77,23 @@ Heap::heapgettuple(HeapScanDesc scan) {
     Page page;
     Buffer buf;
 
-    if (!scan->inited) {
+    if (!scan->rs_inited) {
         BlockNumber start = 0;
         blkno = start;
         offset = FirstOffsetNumber;
-        scan->inited = true;
+        scan->rs_inited = true;
     }
     else {
-        blkno = scan->cblock;
-        offset = OffsetNumberNext(scan->offset);
+        blkno = scan->rs_curblock;
+        offset = OffsetNumberNext(scan->rs_curtuple.t_data->t_ctid.offset);
     }
 
     for (;;) {
-        if (blkno > scan->num_blocks) {
-            return false;
+        if (blkno > scan->rs_numblocks) {
+            return;
         }
 
-        buf = ReadBuffer(scan->rs_base.rs_rel, blkno);
+        buf = ReadBuffer(scan->rs_rd, blkno);
 
         Page page = BufferGetPage(buf);
         OffsetNumber max = PageGetMaxOffsetNumber(page);
@@ -100,24 +101,23 @@ Heap::heapgettuple(HeapScanDesc scan) {
             ItemId itemid = PageGetItemId(page, offset);
             Item item = PageGetItem(page, itemid);
             HeapTupleHeader tup = (HeapTupleHeader)item;
-
-            char* data = (char*)tup + HEAP_TUPLE_HEADER_SIZE;
+            // todo test scan key;
+           /* char* data = (char*)tup + HEAP_TUPLE_HEADER_SIZE;
             int key = *((int*)data);
             int value = *(((int*)data) + 1 );
 
-            if (key == scan->key) {
+            if (key == scan->rs_key) {
                 scan->value = value;
                 scan->cblock = blkno;
                 scan->offset = offset;
                 return true;
-            }
+            }*/
         }
         // current page is exhausted.
         // goto next page
         blkno = blkno + 1;
         offset = FirstOffsetNumber;
     }
-    return false;
 }
 
 HeapScanDesc
@@ -126,22 +126,27 @@ Heap::BeginScan(Relation rel, int nkeys, ScanKey key) {
 
     // increase relation ref count
     scan = new HeapScanDescData{};
-    scan->rs_base.rs_rel = rel;
-    scan->rs_base.rs_nkeys = nkeys;
-    scan->rs_base.rs_key = key;
+    scan->rs_rd = rel;
+    scan->rs_nkeys = nkeys;
+    scan->rs_key = key;
     return scan;
 }
 
 HeapTuple
 Heap::GetNext(HeapScanDesc scan) {
-    return NULL;
+    heapgettuple(scan);
+    return &scan->rs_curtuple;
 }
 
 bool
 Heap::EndScan(HeapScanDesc scan) {
+    // 释放 scan 当前buf
+    bmgr->ReleaseBuffer(scan->rs_curbuf);
     // descease the relation ref count
 
-    delete scan->rs_base.rs_key;
+    if (scan->rs_key) {
+        delete scan->rs_key;
+    }
 
     delete scan;
     return true;
@@ -191,10 +196,4 @@ Heap::_tuple_prepare_insert(Relation rel, HeapTuple tup, int xmin) {
     tup->t_data->t_heap.t_xmin = xmin;
     tup->t_data->t_heap.t_xmax = 0;
     return tup;
-}
-
-HeapTuple
-Heap::_heap_buildtuple(Relation rel, TupleSlotDesc* slot) {
-    HeapTuple a;
-    return a;
 }
