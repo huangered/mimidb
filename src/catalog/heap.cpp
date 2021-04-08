@@ -41,7 +41,7 @@ heap_create_with_catalog(const char* name, Oid relid, TupleDesc tupDesc) {
 
 Relation
 heap_create(Oid relid, const char* name, TupleDesc tupdesc) {
-    Relation heap_rel = BuildLocalRelation(relid, name, tupdesc);
+    Relation heap_rel = relcache->BuildLocalRelation(relid, name, tupdesc);
 
     switch (heap_rel->rd_rel->relkind) {
     case RELKIND_INDEX:

@@ -27,7 +27,6 @@ TEST(heap, incr_insert)
     delete[] attr;
 
     for (int i = 0; i < 5; i++) {
-        printf("%d\r\n", i);
         int* value = new int[2]{ i,i };
         HeapTuple tuple = heap_form_tuple(rel->tupleDesc, (Datum*)value);
         bool result = rel->tb_am->Insert(rel, tuple);

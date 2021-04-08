@@ -1,15 +1,13 @@
-﻿#ifndef _REL_H_
-#define _REL_H_
+﻿#ifndef _rel_hpp_
+#define _rel_hpp_
 
 #include "mimi.hpp"
-#include "access/relcache.hpp"
-#include "storage/block.hpp"
-#include "access/tbapi.hpp"
 #include "access/amapi.hpp"
 #include "access/tupledesc.hpp"
 #include "catalog/mimi_class.hpp"
 #include "catalog/mimi_attribute.hpp"
 #include "catalog/mimi_index.hpp"
+#include "storage/block.hpp"
 #include "storage/smgr.hpp"
 #include "storage/relfilenode.hpp"
 

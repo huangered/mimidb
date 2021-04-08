@@ -3,23 +3,22 @@
 #include "util/mctx.hpp"
 
 HeapTuple
-heap_form_tuple(TupleDesc tupdesc, Datum* values) {
-    HeapTuple htup;
-    HeapTupleHeader td;
-    int data_size = 0;
-    int natts = tupdesc->natts;
-    for (int i = 0; i < natts; i++) {
-        FormData_mimi_attribute attr = tupdesc->attr[i];
-        data_size += attr.att_len;
+heap_form_tuple(TupleDesc desc, Datum* values) {
+    int datasz{};
+    HeapTupleHeader td{};
+
+    for (int i{}; i < desc->natts; i++) {
+        datasz += desc->attr[i].att_len;
     }
 
-    size_t len = HEAP_TUPLE_SIZE + HEAP_TUPLE_HEADER_SIZE + data_size;
+    int hoff = sizeof(HeapTupleHeaderData);
+    int len = HEAP_TUPLE_SIZE + hoff + datasz;
+    HeapTuple htup = (HeapTuple)std::malloc(len);
 
-    htup = (HeapTuple)malloc(len);
-    htup->t_len = data_size;
+    htup->t_len = datasz + hoff;
     htup->t_data = td = (HeapTupleHeader)((char*)htup + HEAP_TUPLE_SIZE);
 
-    memcpy(((char*)td + HEAP_TUPLE_HEADER_SIZE), values, data_size);
-
+    // for simple, we only have (key,value) now.
+    memcpy(((char*)td + hoff), values, datasz);
     return htup;
 }
