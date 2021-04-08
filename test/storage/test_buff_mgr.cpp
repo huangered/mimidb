@@ -30,7 +30,7 @@ TEST(buff_mgr, basic)
 
 TEST(buff_mgr, p_new)
 {
-    Relation rel = new RelationData;
+    Relation rel = new RelationData{};
     rel->rd_id = 2;
     rel->rd_node.dbNode = 10;
     rel->rd_node.relNode = 20;

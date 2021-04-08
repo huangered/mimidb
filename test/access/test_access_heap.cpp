@@ -39,8 +39,8 @@ TEST(heap, incr_insert)
     // 验证htup
     rel->tb_am->EndScan(hsDesc);
 
-    if (htup)
-        delete htup;
+    //if (htup)
+    //    delete htup;
 
     FreeTupleDesc(rel->tupleDesc);
     delete rel;
