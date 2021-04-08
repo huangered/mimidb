@@ -5,7 +5,11 @@
 #include "access/relation.hpp"
 #include "access/heaptuple.hpp"
 #include "access/scankey.hpp"
-#include "access/tbapi.hpp"
+#include "access/scan.hpp"
+#include "access/tableapi.hpp"
+
+typedef HeapScanDescData* HeapScanDesc;
+
 /*
 堆表操作类
 */
@@ -28,13 +32,13 @@ public:
 	void simple_heap_insert(Relation rel, HeapTuple tup);
 private:
 	// internal methods
-	HeapTuple _heap_buildtuple(Relation rel, TupleSlotDesc* slot);
+	//HeapTuple _heap_buildtuple(Relation rel, TupleSlotDesc* slot);
 	HeapTuple _tuple_prepare_insert(Relation rel, HeapTuple tup, int xmin);
 
 
 	Buffer GetBufferForTuple(Relation rel, Size len);
 	void RelationPutHeapTuple(Relation rel, Buffer buf, HeapTuple htup);
-	bool heapgettuple(HeapScanDesc scan);
+	void heapgettuple(HeapScanDesc scan);
 };
 
 Heap* route();

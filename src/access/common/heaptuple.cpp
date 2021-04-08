@@ -1,4 +1,4 @@
-#include "access/heaptuple.hpp"
+﻿#include "access/heaptuple.hpp"
 #include "access/tupledesc.hpp"
 #include "util/mctx.hpp"
 
@@ -21,4 +21,10 @@ heap_form_tuple(TupleDesc desc, Datum* values) {
     // for simple, we only have (key,value) now.
     memcpy(((char*)td + hoff), values, datasz);
     return htup;
+}
+
+// 释放heaptuple
+void
+heap_free_tuple(HeapTuple tuple) {
+    std::free(tuple);
 }

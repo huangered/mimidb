@@ -1,13 +1,11 @@
 #include "../g.hpp"
 
-
 #include "storage/bufmgr.hpp"
 #include "access/heap.hpp"
-#include "util/mctx.hpp"
 #include "storage/freespace.hpp"
 #include "storage/smgr.hpp"
 #include "util/sysdbg.hpp"
-#include "access/tbapi.hpp"
+#include "access/tableapi.hpp"
 
 // test the basic usage in buff mgr.
 TEST(heap, incr_insert)
@@ -31,7 +29,7 @@ TEST(heap, incr_insert)
         HeapTuple tuple = heap_form_tuple(rel->tupleDesc, (Datum*)value);
         bool result = rel->tb_am->Insert(rel, tuple);
         EXPECT_TRUE(result);
-        std::free(tuple);
+        heap_free_tuple(tuple);
         delete[] value;
     }
 
