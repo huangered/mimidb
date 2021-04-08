@@ -1,11 +1,17 @@
 #include "access/btree.hpp"
 #include "storage/freespace.hpp"
 
+static BtreeIndex btree{};
+
+IndexAm* BtreeRoute() {
+    return &btree;
+}
+
 BtreeIndex::BtreeIndex() {
 }
 
 void
-BtreeIndex::buildempty(Relation rel) {
+BtreeIndex::BuildEmpty(Relation rel) {
     Page metap = new char[BLKSZ];
     _bt_init_page(metap);
 
@@ -16,7 +22,7 @@ BtreeIndex::buildempty(Relation rel) {
 }
 
 bool
-BtreeIndex::insert(Relation rel, int key, int ht_id) {
+BtreeIndex::Insert(Relation rel, int key, int ht_id) {
     bool result;
     IndexTuple tup;
 
@@ -29,11 +35,11 @@ BtreeIndex::insert(Relation rel, int key, int ht_id) {
     return result;
 }
 bool
-BtreeIndex::remove(Relation rel, int key) {
+BtreeIndex::Remove(Relation rel, int key) {
     return false;
 }
 bool
-BtreeIndex::gettuple(IndexScanDesc scan) {
+BtreeIndex::GetTuple(IndexScanDesc scan) {
 
     if (scan->block == INVALID_BLOCK) {
         return _bt_first(scan);
@@ -41,6 +47,15 @@ BtreeIndex::gettuple(IndexScanDesc scan) {
     else {
         return _bt_next(scan);
     }
+}
+
+IndexScanDesc
+BtreeIndex::BeginScan(Relation nrel, int nkeys, ScanKey key) {
+    return nullptr;
+}
+void
+BtreeIndex::EndScan(Relation rel, int nkeys) {
+    // todo
 }
 
 // private method
@@ -63,7 +78,7 @@ BtreeIndex::_bt_moveright(Relation rel, BTreeScan key, Buffer buf) {
     for (;;) {
         Page page = BufferGetPage(buf);
         PageHeader header = PageGetHeader(page);
-        BTreeSpecial special = (BTreeSpecial)PageGetSpecial(page);
+        BTreeSpecial special = PageGetSpecial(page);
 
         if (P_RIGHTMOST(special)) {
             break;

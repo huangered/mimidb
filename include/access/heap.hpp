@@ -38,9 +38,9 @@ private:
 
 	Buffer GetBufferForTuple(Relation rel, Size len);
 	void RelationPutHeapTuple(Relation rel, Buffer buf, HeapTuple htup);
-	void heapgettuple(HeapScanDesc scan);
+	void _heapGetTuple(HeapScanDesc scan);
 };
 
-Heap* route();
+Heap* HeapRoute();
 
 #endif // !_access_heap_hpp_

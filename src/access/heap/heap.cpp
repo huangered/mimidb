@@ -8,9 +8,9 @@
 #define HOT_REMOVED     1
 #define HOT_NORMAL      2
 
-static Heap heap;
+static Heap heap{};
 
-Heap* route() {
+Heap* HeapRoute() {
     return &heap;
 }
 
@@ -70,7 +70,7 @@ Heap::Remove(Relation rel, int key) {
 }
 
 void
-Heap::heapgettuple(HeapScanDesc scan) {
+Heap::_heapGetTuple(HeapScanDesc scan) {
 
     BlockNumber blkno;
     OffsetNumber offset;
@@ -128,13 +128,20 @@ Heap::BeginScan(Relation rel, int nkeys, ScanKey key) {
     scan = new HeapScanDescData{};
     scan->rs_rd = rel;
     scan->rs_nkeys = nkeys;
-    scan->rs_key = key;
+    scan->rs_key = new ScanKeyData[nkeys];
+    memcpy(scan->rs_key, key, nkeys * sizeof(ScanKeyData));
+
+    RelationOpenSmgr(rel);
+    scan->rs_nblocks = smgr->Nblocks(rel->rd_smgr, MAIN_FORKNUM);
+    scan->rs_startblock = 0;
+    scan->rs_numblocks = scan->rs_nblocks;
+
     return scan;
 }
 
 HeapTuple
 Heap::GetNext(HeapScanDesc scan) {
-    heapgettuple(scan);
+    _heapGetTuple(scan);
     return &scan->rs_curtuple;
 }
 

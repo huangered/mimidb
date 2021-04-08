@@ -1,19 +1,18 @@
-#include "../g.hpp"
+﻿#include "../g.hpp"
 
 #include "storage/bufmgr.hpp"
 #include "access/heap.hpp"
-#include "storage/freespace.hpp"
+#include "access/rel.hpp"
 #include "storage/smgr.hpp"
-#include "util/sysdbg.hpp"
-#include "access/tableapi.hpp"
 
 // test the basic usage in buff mgr.
 TEST(heap, incr_insert)
 {
+    // insert
     Relation rel = new RelationData{};
     rel->rd_id = 2000;
     rel->rd_node = { 3000, 2000 };
-    rel->tb_am = route();
+    rel->tb_am = HeapRoute();
 
     RelationOpenSmgr(rel);
 
@@ -32,6 +31,16 @@ TEST(heap, incr_insert)
         heap_free_tuple(tuple);
         delete[] value;
     }
+
+    // find
+    ScanKey skey = new ScanKeyData{};
+    HeapScanDesc hsDesc = rel->tb_am->BeginScan(rel, 1, skey);
+    HeapTuple htup = rel->tb_am->GetNext(hsDesc);
+    // 验证htup
+    rel->tb_am->EndScan(hsDesc);
+
+    if (htup)
+        delete htup;
 
     FreeTupleDesc(rel->tupleDesc);
     delete rel;

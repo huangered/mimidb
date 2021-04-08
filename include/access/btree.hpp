@@ -1,13 +1,13 @@
-#ifndef _BT_TREE_H_
-#define _BT_TREE_H_
+#ifndef _btree_hpp_
+#define _btree_hpp_
 
 #include "mimi.hpp"
+#include "access/amapi.hpp"
 #include "access/offset.hpp"
 #include "access/rel.hpp"
+#include "access/scankey.hpp"
 #include "storage/block.hpp"
 #include "storage/bufmgr.hpp"
-#include "access/scankey.hpp"
-#include "access/amapi.hpp"
 
 #define BTREE_METAPAGE  0
 
@@ -79,7 +79,7 @@ typedef BTreeSearchKeyData* BTreeSearchKey;
 
 #define BTreeTupleGetDownLink(itup) (itup->ht_id)
 
-class BtreeIndex : public BaseIndex {
+class BtreeIndex : public IndexAm {
 private:
     // methods in btpage.c
     void _bt_init_page(Page page);
@@ -121,11 +121,15 @@ private:
     void _bt_freestack(BTStack stack);
 public:
     BtreeIndex();
-    virtual void buildempty(Relation rel);
-    virtual bool insert(Relation rel, int key, int ht_id);
-    virtual bool remove(Relation rel, int key);
-    virtual bool gettuple(IndexScanDesc scan);
-    virtual void vacuum(Relation rel);
+    virtual void BuildEmpty(Relation rel);
+    virtual bool Insert(Relation rel, int nkey, int ht_id);
+    virtual bool Remove(Relation rel, int nkey);
+    virtual IndexScanDesc BeginScan(Relation nrel, int nkeys, ScanKey key);
+    virtual void EndScan(Relation rel, int nkeys);
+    virtual bool GetTuple(IndexScanDesc scan);
+    virtual void Vacuum(Relation rel);
 };
+
+extern IndexAm* BtreeRoute();
 
 #endif
