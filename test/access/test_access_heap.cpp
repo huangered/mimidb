@@ -4,6 +4,7 @@
 #include "access/heap.hpp"
 #include "access/rel.hpp"
 #include "storage/smgr.hpp"
+#include "util/mctx.hpp"
 
 // test the basic usage in buff mgr.
 TEST(heap, incr_insert)
@@ -33,14 +34,18 @@ TEST(heap, incr_insert)
     }
 
     // find
-    ScanKey skey = new ScanKeyData{};
+    Datum datum = IntGetDatum(1);
+    ScanKey skey = (ScanKey)palloc(sizeof(ScanKeyData));
+    ScanKeyInit(skey, 0, BTEqualStrategyNumber, datum, 0);
     HeapScanDesc hsDesc = rel->tb_am->BeginScan(rel, 1, skey);
     HeapTuple htup = rel->tb_am->GetNext(hsDesc);
     // 验证htup
+    EXPECT_EQ(1, 1);
     rel->tb_am->EndScan(hsDesc);
 
     //if (htup)
     //    delete htup;
+    pfree(skey);
 
     FreeTupleDesc(rel->tupleDesc);
     delete rel;
