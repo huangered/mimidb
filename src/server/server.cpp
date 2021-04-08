@@ -2,16 +2,33 @@
 #include <cstring>
 #include <cstdio>
 
+class G {
+public:
+    G() {}
+    ~G(){}
+};
+
+template<typename T>
+T* palloc0(size_t sz) {
+    void* p = std::malloc(sz);
+    return reinterpret_cast<T*>(p);
+}
+
+void* palloc(size_t sz) {
+    void* p = std::malloc(sz);
+    return p;
+}
+
+void pfree(void* ptr) {
+    std::free(ptr);
+}
+
 int main(int argc, char* argv[])
 {
-    int i = 1;
-    int* value = (int*)std::malloc(2 * sizeof(int));
-    memcpy(value, &i, sizeof(int));
-    memcpy(value + 1, &i, sizeof(int));
-    
-    for (int i{}; i < 2; i++) {
-        printf("%d\r\n", value[i]);
-    }
+    int* i = palloc0<int>(10 * sizeof(int));
+    int* j = (int*)palloc(10 * sizeof(int));
+    pfree(i);
+    pfree(j);
 
     return 0;
 }

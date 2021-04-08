@@ -23,7 +23,7 @@ struct RelationData {
     TupleDesc tupleDesc;    /* relation tuple 结构描述 */
     int refcount;
     Heap* tb_am;
-    BaseIndex* index_am;
+    IndexAm* index_am;
 
     void* rd_metacache;   /* meta 缓存对象 */
     Form_mimi_index rd_index;

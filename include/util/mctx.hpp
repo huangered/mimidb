@@ -1,9 +1,7 @@
-#ifndef _MCTX_H_
-#define _MCTX_H_
+#ifndef _memctx_hpp_
+#define _memctx_hpp_
 
 #include "c.hpp"
-
-void MemoryContextInit();
 
 void* palloc(Size size);
 void pfree(void* ptr);

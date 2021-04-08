@@ -6,14 +6,6 @@
 #include "storage/block.hpp"
 #include "storage/buf.hpp"
 
-typedef struct TableScanDescData {
-	Relation rs_rel;
-	int rs_nkeys;
-	ScanKey rs_key;
-} TableScanDescData;
-
-typedef TableScanDescData* TableScanDesc;
-
 // 堆表扫描描述
 struct HeapScanDescData {
 	Relation rs_rd;  // 表描述符
@@ -37,4 +29,5 @@ struct HeapScanDescData {
 // 索引表扫描描述
 
 // 系统表扫描描述
+
 #endif

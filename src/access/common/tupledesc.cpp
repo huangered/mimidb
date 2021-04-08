@@ -29,5 +29,7 @@ free tupledesc object
 */
 void
 FreeTupleDesc(TupleDesc tupdesc) {
-    std::free(tupdesc);
+    if (tupdesc) {
+        std::free(tupdesc);
+    }
 }
