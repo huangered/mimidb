@@ -2,15 +2,16 @@
 #include "storage/page.hpp"
 #include "storage/bufmgr.hpp"
 #include "access/relcache.hpp"
+#include "access/rel.hpp"
 
 #define HOT_UPDATED     0
 #define HOT_REMOVED     1
 #define HOT_NORMAL      2
 
-static Heap* heap = new Heap{};
+static Heap heap;
 
 Heap* route() {
-    return heap;
+    return &heap;
 }
 
 //临时方法，会移到事务管理器中
@@ -23,7 +24,7 @@ static int GetCurrentTransactionId(void) {
 Relation
 Heap::Open(Oid relaitonId) {
     // 从relation cache加载
-    Relation rel = RelationIdGetRelation(relaitonId);
+    Relation rel = relcache->RelationIdGetRelation(relaitonId);
     if (rel->rd_rel->relkind != RELKIND_RELATION) {
         printf("rel %s is not a relation", rel->rd_rel->relname);
     }
@@ -35,18 +36,9 @@ Heap::Open(Oid relaitonId) {
 void
 Heap::Close(Relation rel) {
     // 从relation cache释放
-    RelationClose(rel);
+    relcache->RelationClose(rel);
 }
 
-//bool Heap::heap_tuple_insert(Relation rel, TupleSlotDesc* slot) {
-//
-//    HeapTuple htup = _heap_buildtuple(rel, slot);
-//    
-//    
-//    // todo
-//    //slot->tts_tid = ;
-//    return Insert(rel, htup);
-//}
 bool
 Heap::Remove(Relation rel, int key) {
 

@@ -1,5 +1,5 @@
-#ifndef _offset_h_
-#define _offset_h_
+#ifndef _offset_hpp_
+#define _offset_hpp_
 
 typedef unsigned int OffsetNumber;
 

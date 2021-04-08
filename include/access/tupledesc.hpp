@@ -1,5 +1,5 @@
-#ifndef _TupleDesc_h_
-#define _TupleDesc_h_
+#ifndef _tupledesc_hpp_
+#define _tupledesc_hpp_
 
 #include "catalog/mimi_attribute.hpp"
 
@@ -10,7 +10,7 @@ struct TupleDescData {
     FormData_mimi_attribute attr[MAX_NATTS];
 };
 
-typedef struct TupleDescData* TupleDesc;
+typedef TupleDescData* TupleDesc;
 
 extern TupleDesc CreateTempTupleDesc(int natts);
 extern TupleDesc CreateTupleDesc(int natts, Form_mimi_attribute attrs);

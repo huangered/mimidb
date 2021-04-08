@@ -9,31 +9,10 @@
 #include "catalog/mimi_code.hpp"
 #include "storage/smgr.hpp"
 #include "util/builtins.hpp"
-#include "util/hashmap.hpp"
 
-RelCache* cache = nullptr;
-
-extern void RelationCacheInit() {
-    cache = new RelCache;
-}
-
-Relation RelationIdGetRelation(Oid relid) {
-    return cache->GetRelation(relid);
-}
-void RelationClose(Relation rel) {
-    cache->CloseRelation(rel);
-}
-
-Relation BuildLocalRelation(Oid oid, const char* name, TupleDesc tupDesc) {
-    return cache->BuildLocalRelation(oid, name, tupDesc);
-}
-
-Relation BuildRelationDesc(Oid oid, bool insert) {
-    return cache->BuildRelationDesc(oid, insert);
-}
+RelCache* relcache = new RelCache{};
 
 // private area
-
 static const FormData_mimi_attribute desc_pg_class[4] = {
     {
          1,
@@ -96,21 +75,21 @@ RelCache::RelCache() {
 }
 
 Relation
-RelCache::GetRelation(Oid relid) {
+RelCache::RelationIdGetRelation(Oid relid) {
     RelCacheEntry entry;
 
-    if (_relhash.Get(relid, &entry)) {
+    if (cache.Get(relid, &entry)) {
         entry.rel->refcount += 1;
         return entry.rel;
     }
 
     Relation rel = BuildRelationDesc(relid, true);
-
+    rel->refcount += 1;
     return rel;
 }
 
 void
-RelCache::CloseRelation(Relation rel) {
+RelCache::RelationClose(Relation rel) {
     rel->refcount -= 1;
     if (rel->refcount == 0) {
         //remove from cache;
@@ -144,7 +123,7 @@ RelCache::_formrdesc(const char* relname, Oid reltype, int natts, const FormData
     rel->rd_smgr = nullptr;
 
     RelCacheEntry entry{ rel->rd_id, rel };
-    _relhash.Put(rel->rd_id, entry);
+    cache.Put(rel->rd_id, entry);
 }
 
 /*
@@ -169,7 +148,7 @@ RelCache::BuildRelationDesc(Oid oid, bool insert) {
     heaprel->refcount = 0;
     if (insert) {
         RelCacheEntry entry{ heaprel->rd_id, heaprel };
-        _relhash.Put(heaprel->rd_id, entry);
+        cache.Put(heaprel->rd_id, entry);
     }
     return heaprel;
 }
