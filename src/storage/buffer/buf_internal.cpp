@@ -3,7 +3,7 @@
 #include "storage/smgr.hpp"
 #include "storage/bufmgr.hpp"
 
-#define NBuffer 20
+#define NBuffer 1024
 
 BufferMgr::BufferMgr() {
     size_t size = NBuffer * BLKSZ;
@@ -19,13 +19,11 @@ BufferMgr::BufferMgr() {
     
     _buffDesc[NBuffer - 1].freeNext = 0;
     _freeBuffDesc = _buffDesc;
-    _hashMap = new HashMap<BufferTag, Buffer>;
 }
 
 BufferMgr::~BufferMgr() {
     delete[] _blocks;
     delete[] _buffDesc;
-    delete _hashMap;
 }
 
 Buffer
@@ -84,7 +82,7 @@ BufferMgr::_BufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno, 
     BufferTag tag{ rel->rd_id, forkNumber, blkno };
 
     // use buftag to find
-    *found = _hashMap->Get(tag, &buf_id);
+    *found = _hashMap.Get(tag, &buf_id);
 
     if (buf_id > INVALID_BUFFER) {
         // add ref count;
@@ -99,7 +97,7 @@ BufferMgr::_BufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno, 
     GetBufferDesc(buf_id)->state += 1;
     GetBufferDesc(buf_id)->tag = tag;
     // insert into hash
-    _hashMap->Put(tag, buf_id);
+    _hashMap.Put(tag, buf_id);
 
     return GetBufferDesc(buf_id);
 }
@@ -115,7 +113,7 @@ BufferMgr::FlushBuffer(BufferDesc* buffDesc) {
 
     char* buf = GetPage(buffDesc->buf_id);
 
-    //smgrwrite(buffDesc->tag.rnode, buffDesc->tag.forkNum, buffDesc->tag.blockNum, buf);
+    //smgr->Write(buffDesc->tag.rnode, buffDesc->tag.forkNum, buffDesc->tag.blockNum, buf);
 }
 
 Page

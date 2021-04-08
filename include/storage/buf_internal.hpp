@@ -12,15 +12,14 @@ class BufferMgr
 {
 private:
 	char* _blocks;
-	HashMap<BufferTag, Buffer>* _hashMap;
+	HashMap<BufferTag, Buffer> _hashMap;
 	BufferDesc* _buffDesc;
 	BufferDesc* _freeBuffDesc;
 public:
 	BufferMgr();
 	~BufferMgr();
-	BufferMgr(const BufferMgr&) = delete;
-	BufferMgr& operator=(BufferMgr) = delete;
 
+	// Read MAIN_FORK 
 	Buffer ReadBuffer(Relation rel, BlockNumber block);
 	Buffer ReadBufferExtend(Relation rel, ForkNumber fork, BlockNumber block);
 
@@ -33,7 +32,6 @@ private:
 	Buffer _ReadBufferCommon(Relation rel, ForkNumber fork, BlockNumber block);
 	BufferDesc* _BufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno, bool* found);
 	Buffer _FindFreeBuffer();
-
 };
 
 #endif
