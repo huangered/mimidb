@@ -2,7 +2,7 @@
 #define _indexcmds_h_
 
 #include "mimi.hpp"
-#include "node/parsenode.hpp"
+#include "node/parsenode.h"
 
 void DefineIndex(Oid relationId, CreateIndexStmt* stmt);
 

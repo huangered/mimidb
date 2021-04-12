@@ -20,6 +20,24 @@ static int GetCurrentTransactionId(void) {
     return i++;
 }
 
+static bool TestKey(HeapTuple tuple, HeapScanDesc scan) {
+    bool result1{ true };
+    char* data = (char*)tuple + HEAP_TUPLE_HEADER_SIZE;
+
+    for (int i{ 0 }; i < scan->rs_nkeys; i++) {
+        int key = *((int*)data);
+        int value = *(((int*)data) + 1);
+
+        ScanKey skey = scan->rs_key + i;
+        Datum result = DirectFunctionCall2Coll(skey->sk_func.fn_method, key, skey->sk_data);
+        if (result != 0) {
+            result1 = false;
+            break;
+        }
+    }
+    return result1;
+}
+
 // 打开relation
 Relation
 Heap::Open(Oid relaitonId) {
@@ -73,7 +91,7 @@ Heap::Remove(Relation rel, int key) {
 现在只支持前向搜索
 */
 void
-Heap::_heapGetTuple(HeapScanDesc scan) {
+Heap::_heap_get_tuple(HeapScanDesc scan, ScanDirection direction) {
     HeapTuple tuple = &(scan->rs_curtuple);
     BlockNumber blkno;
     OffsetNumber offset;
@@ -107,20 +125,12 @@ Heap::_heapGetTuple(HeapScanDesc scan) {
             tuple->t_data = (HeapTupleHeader)PageGetItem(page, itemid);;
             tuple->t_len = itemid->lp_len;
             // todo test scan key;
-            char* data = (char*)tuple + HEAP_TUPLE_HEADER_SIZE;
 
-            for (int i{0}; i < scan->rs_nkeys; i++) {
-                int key = *((int*)data);
-                int value = *(((int*)data) + 1);
-
-                ScanKey skey = scan->rs_key + i;
-                Datum result = DirectFunctionCall2Coll(skey->sk_func.fn_method, key, skey->sk_data);
-                if (result == 0) {
-                    scan->rs_curblock = blkno;
-                    tuple->t_data->t_ctid.blocknum = blkno;
-                    tuple->t_data->t_ctid.offset = offset;
-                    return;
-                }
+            if (TestKey(tuple, scan)) {
+                scan->rs_curblock = blkno;
+                tuple->t_data->t_ctid.blocknum = blkno;
+                tuple->t_data->t_ctid.offset = offset;
+                return;
             }
         }
         // current page is exhausted.
@@ -156,8 +166,8 @@ Heap::BeginScan(Relation rel, int nkeys, ScanKey key) {
 }
 
 HeapTuple
-Heap::GetNext(HeapScanDesc scan) {
-    _heapGetTuple(scan);
+Heap::GetNext(HeapScanDesc scan, ScanDirection direction) {
+    _heap_get_tuple(scan, direction);
     return &scan->rs_curtuple;
 }
 
@@ -201,9 +211,9 @@ Heap::Insert(Relation rel, HeapTuple htup) {
 
     htup = _tuple_prepare_insert(rel, htup, xid);
 
-    buffer = GetBufferForTuple(rel, htup->t_len);
+    buffer = _get_buffer_for_tuple(rel, htup->t_len);
 
-    RelationPutHeapTuple(rel, buffer, htup);
+    _relation_put_heap_tuple(rel, buffer, htup);
 
     MarkBufferDirty(buffer);
 

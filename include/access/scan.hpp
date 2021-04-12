@@ -30,4 +30,9 @@ struct HeapScanDescData {
 
 // 系统表扫描描述
 
+enum class ScanDirection {
+	Backward,
+	Forward
+};
+
 #endif

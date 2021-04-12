@@ -1,8 +1,8 @@
 ﻿#ifndef _PARSENODE_H_
 #define _PARSENODE_H_
 
-#include "node/node.hpp"
-#include "util/list.hpp"
+#include "node/node.h"
+#include "node/list.h"
 
 typedef struct NodeWrap {
 	Node* node;
@@ -48,7 +48,7 @@ typedef struct CreateTableParam {
 	NodeTag nodetag;
 	char* colname;
 	char* type;
-	bool primary;
+	int primary;
 } CreateTableParam;
 
 /*
@@ -84,7 +84,7 @@ typedef struct StrValue {
 typedef struct TypeName {
 	NodeTag nodetag;
 	char* name;
-	Oid typeOid;
+	long typeOid;
 } TypeName;
 
 typedef struct ColumnDef {
@@ -93,20 +93,19 @@ typedef struct ColumnDef {
 	TypeName* typeName;
 } ColumnDef;
 
+Node* makeIntValue(int i);
+Node* makeStrValue(char* str);
+Node* makeExpr(char* key);
+Node* makeParam(char* param1, char* param2);
+Node* makeAssignStmt(char* col_name, Node* value);
+Node* makeSelectStmt(char* tbl_name, List* cols);
+Node* makeInsertStmt(char* tbl_name, List* cols);
+Node* makeUpdateStmt(char* tbl_name, List* cols, Node* where_cause);
+Node* makeCreateTableStmt(char* tbl_name, List* cols);
+Node* makeCreateTableParam(char* col_name, char* type, int primary);
+Node* makeWhereStmt(List* cols);
+Node* makeTypeName(char* type_name);
+Node* makeColumnDef(char* col_name, TypeName* type_name, int primary);
 
-extern "C" {
-	Node* makeIntValue(int i);
-	Node* makeStrValue(char* str);
-	Node* makeExpr(char* key);
-	Node* makeParam(char* param1, char* param2);
-	Node* makeAssignStmt(char* col_name, Node* value);
-	Node* makeSelectStmt(char* tbl_name, List* cols);
-	Node* makeInsertStmt(char* tbl_name, List* cols);
-	Node* makeUpdateStmt(char* tbl_name, List* cols, Node* where_cause);
-	Node* makeCreateTableStmt(char* tbl_name, List* cols);
-	Node* makeCreateTableParam(char* col_name, char* type, bool primary);
-	Node* makeWhereStmt(List* cols);
-	NodePtr makeTypeName(char* type_name);
-	NodePtr makeColumnDef(char* col_name, TypeName* type_name, bool primary);
-}
+extern Node* raw_parse(const char* str);
 #endif

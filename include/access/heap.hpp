@@ -24,7 +24,7 @@ public:
 
 	// search
 	HeapScanDesc BeginScan(Relation rel, int nkeys, ScanKey key);
-	HeapTuple GetNext(HeapScanDesc scan);
+	HeapTuple GetNext(HeapScanDesc scan, ScanDirection direction);
 	bool EndScan(HeapScanDesc scan);
 
 	void Vacuum(Relation rel);
@@ -36,9 +36,9 @@ private:
 	// internal methods
 	HeapTuple _tuple_prepare_insert(Relation rel, HeapTuple tup, int xmin);
 
-	Buffer GetBufferForTuple(Relation rel, Size len);
-	void RelationPutHeapTuple(Relation rel, Buffer buf, HeapTuple htup);
-	void _heapGetTuple(HeapScanDesc scan);
+	Buffer _get_buffer_for_tuple(Relation rel, Size len);
+	void _relation_put_heap_tuple(Relation rel, Buffer buf, HeapTuple htup);
+	void _heap_get_tuple(HeapScanDesc scan, ScanDirection direction);
 };
 
 Heap* HeapRoute();

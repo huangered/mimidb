@@ -1,7 +1,9 @@
 ﻿#include "commands/create.hpp"
 #include "top/utility.hpp"
-#include "parser/parse_utilitycmd.hpp"
-#include "util/list.hpp"
+extern "C" {
+#include "parser/parse_utilitycmd.h"
+#include "node/list.h"
+}
 /*
 处理create table sql
 */

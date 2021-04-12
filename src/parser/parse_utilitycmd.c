@@ -1,4 +1,4 @@
-﻿#include "parser/parse_utilitycmd.hpp"
+﻿#include "parser/parse_utilitycmd.h"
 
 /*
 拆解create table
@@ -8,5 +8,5 @@
 */
 List*
 transformCreateStmt(CreateTableStmt* stmt) {
-	return NULL;
+	return 0;
 }

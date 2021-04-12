@@ -14,7 +14,7 @@ endif()
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-include_directories(include)
+include_directories("include")
 
 add_subdirectory(src)
 add_subdirectory("test")

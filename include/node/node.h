@@ -1,7 +1,7 @@
 #ifndef _NODE_H_
 #define _NODE_H_
 
-#include "mimi.hpp"
+#include <stdlib.h>
 
 typedef enum NodeTag {
 	NT_InsertStmt,
