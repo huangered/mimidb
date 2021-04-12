@@ -30,6 +30,8 @@ public:
 	void Vacuum(Relation rel);
 	// for catalog usage
 	void simple_heap_insert(Relation rel, HeapTuple tup);
+
+	void debug(Relation rel);
 private:
 	// internal methods
 	HeapTuple _tuple_prepare_insert(Relation rel, HeapTuple tup, int xmin);
