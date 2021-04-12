@@ -69,8 +69,12 @@ Heap::Remove(Relation rel, int key) {
     return false;
 }
 
+/*
+现在只支持前向搜索
+*/
 void
 Heap::_heapGetTuple(HeapScanDesc scan) {
+    HeapTuple tuple = &(scan->rs_curtuple);
     BlockNumber blkno;
     OffsetNumber offset;
     OffsetNumber max;
@@ -82,6 +86,7 @@ Heap::_heapGetTuple(HeapScanDesc scan) {
         blkno = start;
         offset = FirstOffsetNumber;
         scan->rs_inited = true;
+        tuple->t_data = nullptr;
     }
     else {
         blkno = scan->rs_curblock;
@@ -99,23 +104,21 @@ Heap::_heapGetTuple(HeapScanDesc scan) {
 
         for (; offset <= max; offset++) {
             ItemId itemid = PageGetItemId(page, offset);
-            Item item = PageGetItem(page, itemid);
-            HeapTupleHeader tup = (HeapTupleHeader)item;
+            tuple->t_data = (HeapTupleHeader)PageGetItem(page, itemid);;
+            tuple->t_len = itemid->lp_len;
             // todo test scan key;
-            char* data = (char*)tup + HEAP_TUPLE_HEADER_SIZE;
+            char* data = (char*)tuple + HEAP_TUPLE_HEADER_SIZE;
 
-            for (int i{}; i < scan->rs_nkeys; i++) {
+            for (int i{0}; i < scan->rs_nkeys; i++) {
                 int key = *((int*)data);
                 int value = *(((int*)data) + 1);
 
                 ScanKey skey = scan->rs_key + i;
                 Datum result = DirectFunctionCall2Coll(skey->sk_func.fn_method, key, skey->sk_data);
                 if (result == 0) {
-                    scan->rs_curtuple.t_data = tup;
-                    scan->rs_curtuple.t_len = itemid->lp_len;
                     scan->rs_curblock = blkno;
-                    scan->rs_curtuple.t_data->t_ctid.blocknum = blkno;
-                    scan->rs_curtuple.t_data->t_ctid.offset = offset;
+                    tuple->t_data->t_ctid.blocknum = blkno;
+                    tuple->t_data->t_ctid.offset = offset;
                     return;
                 }
             }
@@ -125,6 +128,12 @@ Heap::_heapGetTuple(HeapScanDesc scan) {
         blkno = blkno + 1;
         offset = FirstOffsetNumber;
     }
+
+    // search all blocks, no one found.
+    tuple->t_data = nullptr;
+    scan->rs_inited = false;
+    scan->rs_curbuf = INVALID_BUFFER;
+    scan->rs_curblock = INVALID_BLOCK;
 }
 
 HeapScanDesc
@@ -149,9 +158,6 @@ Heap::BeginScan(Relation rel, int nkeys, ScanKey key) {
 HeapTuple
 Heap::GetNext(HeapScanDesc scan) {
     _heapGetTuple(scan);
-
-
-
     return &scan->rs_curtuple;
 }
 
