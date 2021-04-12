@@ -12,6 +12,8 @@
 #define BTREE_METAPAGE  0
 
 struct BTreeMetaData {
+    uint32_t btm_magic;
+    uint32_t btm_version;
     BlockNumber root;
     BlockNumber fastroot;
 };
@@ -47,7 +49,7 @@ struct BTreeScanData {
     Size itemsz;
     bool nextkey;
     int keysz;
-    ScanKeyData scankeys[128];
+    ScanKeyData scankeys[FLEX_ARRAY_SIZE];
 };
 
 typedef BTreeScanData* BTreeScan;

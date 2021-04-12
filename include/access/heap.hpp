@@ -32,9 +32,7 @@ public:
 	void simple_heap_insert(Relation rel, HeapTuple tup);
 private:
 	// internal methods
-	//HeapTuple _heap_buildtuple(Relation rel, TupleSlotDesc* slot);
 	HeapTuple _tuple_prepare_insert(Relation rel, HeapTuple tup, int xmin);
-
 
 	Buffer GetBufferForTuple(Relation rel, Size len);
 	void RelationPutHeapTuple(Relation rel, Buffer buf, HeapTuple htup);

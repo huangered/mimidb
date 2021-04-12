@@ -102,16 +102,23 @@ Heap::_heapGetTuple(HeapScanDesc scan) {
             Item item = PageGetItem(page, itemid);
             HeapTupleHeader tup = (HeapTupleHeader)item;
             // todo test scan key;
-           /* char* data = (char*)tup + HEAP_TUPLE_HEADER_SIZE;
-            int key = *((int*)data);
-            int value = *(((int*)data) + 1 );
+            char* data = (char*)tup + HEAP_TUPLE_HEADER_SIZE;
 
-            if (key == scan->rs_key) {
-                scan->value = value;
-                scan->cblock = blkno;
-                scan->offset = offset;
-                return true;
-            }*/
+            for (int i{}; i < scan->rs_nkeys; i++) {
+                int key = *((int*)data);
+                int value = *(((int*)data) + 1);
+
+                ScanKey skey = scan->rs_key + i;
+                Datum result = DirectFunctionCall2Coll(skey->sk_func.fn_method, key, skey->sk_data);
+                if (result == 0) {
+                    scan->rs_curtuple.t_data = tup;
+                    scan->rs_curtuple.t_len = itemid->lp_len;
+                    scan->rs_curblock = blkno;
+                    scan->rs_curtuple.t_data->t_ctid.blocknum = blkno;
+                    scan->rs_curtuple.t_data->t_ctid.offset = offset;
+                    return;
+                }
+            }
         }
         // current page is exhausted.
         // goto next page
@@ -122,7 +129,7 @@ Heap::_heapGetTuple(HeapScanDesc scan) {
 
 HeapScanDesc
 Heap::BeginScan(Relation rel, int nkeys, ScanKey key) {
-    HeapScanDesc scan;
+    HeapScanDesc scan{};
 
     // increase relation ref count
     scan = new HeapScanDescData{};

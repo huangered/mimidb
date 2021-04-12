@@ -8,7 +8,7 @@ BtreeIndex::_bt_make_scankey(Relation rel, IndexTuple itup) {
     int nkeys = 1;
     ScanKey skey;
 
-    BTreeScan key = new BTreeScanData{};
+    BTreeScan key = new BTreeScanData;
     key->itup = itup;
     key->itemsz = sizeof(IndexTupleData);
     key->nextkey = false;

@@ -64,6 +64,10 @@ static const FormData_mimi_attribute desc_pg_type[1] = {
     }
 };
 
+static void RelationIncRefCount(Relation rel);
+static void RelationDecRefCount(Relation rel);
+
+
 /*
 1. init the relation cache
 2. insert the basic system relation
@@ -79,18 +83,18 @@ RelCache::RelationIdGetRelation(Oid relid) {
     RelCacheEntry entry;
 
     if (cache.Get(relid, &entry)) {
-        entry.rel->refcount += 1;
+        RelationIncRefCount(entry.rel);
         return entry.rel;
     }
 
     Relation rel = BuildRelationDesc(relid, true);
-    rel->refcount += 1;
+    RelationIncRefCount(rel);
     return rel;
 }
 
 void
 RelCache::RelationClose(Relation rel) {
-    rel->refcount -= 1;
+    RelationDecRefCount(rel);
     if (rel->refcount == 0) {
         //remove from cache;
     }
@@ -102,14 +106,14 @@ RelCache::RelationClose(Relation rel) {
 */
 void
 RelCache::_formrdesc(const char* relname, Oid reltype, int natts, const FormData_mimi_attribute* attrs) {
-    Relation rel = new RelationData;
+    Relation rel = new RelationData{};
 
     /*
     init the ref count: 1 because it needs keep in cache
     */
     rel->refcount = 1;
     rel->rd_id = reltype;
-    rel->rd_rel = new FormData_mimi_class;
+    rel->rd_rel = new FormData_mimi_class{};
     strcpy(rel->rd_rel->relname, relname);
 
     rel->tb_am = nullptr;// table_route();
@@ -204,4 +208,16 @@ RelCache::_scanMimiRelation(Oid relid) {
     relation_close(pg_class_relation);
 
     return tup;
+}
+
+// === internal method
+
+void
+RelationIncRefCount(Relation rel) {
+    rel->refcount += 1;
+}
+
+void
+RelationDecRefCount(Relation rel) {
+    rel->refcount -= 1;
 }

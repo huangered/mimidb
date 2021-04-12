@@ -1,19 +1,25 @@
-#ifndef _amapi_h_
-#define _amapi_h_
+﻿#ifndef _amapi_hpp_
+#define _amapi_hpp_
 
 #include "mimi.hpp"
 #include "access/relcache.hpp"
-#include "storage/block.hpp"
 #include "access/offset.hpp"
 #include "access/scankey.hpp"
+#include "storage/block.hpp"
 
-typedef struct IndexScanDescData {
+struct IndexScanDescData {
+    /* scan 参数 */
+    Relation heap_rel;
     Relation index_rel;
+    int nkeys;
+    ScanKey skey;
+
     int key;
     int value;
     BlockNumber block;
     OffsetNumber offset;
-} IndexScanDescData;
+    
+};
 
 typedef IndexScanDescData* IndexScanDesc;
 

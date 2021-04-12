@@ -12,7 +12,7 @@ TEST(heap, incr_insert)
     // insert
     Relation rel = new RelationData{};
     rel->rd_id = 2000;
-    rel->rd_node = { 3000, 2000 };
+    rel->rd_node = { 0, rel->rd_id };
     rel->tb_am = HeapRoute();
 
     RelationOpenSmgr(rel);
@@ -35,17 +35,20 @@ TEST(heap, incr_insert)
 
     // find
     Datum datum = IntGetDatum(1);
-    ScanKey skey = (ScanKey)palloc(sizeof(ScanKeyData));
+    ScanKey skey = new ScanKeyData;
     ScanKeyInit(skey, 0, BTEqualStrategyNumber, datum, 0);
     HeapScanDesc hsDesc = rel->tb_am->BeginScan(rel, 1, skey);
     HeapTuple htup = rel->tb_am->GetNext(hsDesc);
+    EXPECT_EQ(htup->t_data->t_heap.t_xmax, 0);
     // 验证htup
-    EXPECT_EQ(1, 1);
+    char* data = (char*)htup->t_data + htup->t_len;
+    int* i = (int*)data;
+    EXPECT_EQ(datum, *i);
     rel->tb_am->EndScan(hsDesc);
 
     //if (htup)
     //    delete htup;
-    pfree(skey);
+    std::free(skey);
 
     FreeTupleDesc(rel->tupleDesc);
     delete rel;

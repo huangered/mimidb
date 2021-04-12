@@ -3,7 +3,9 @@
 
 #include "c.hpp"
 
-void* palloc(Size size);
-void pfree(void* ptr);
+// void* palloc(Size size);
+// void* palloc0(Size size);
+
+// void pfree(void* ptr);
 
 #endif // !_MCTX_H_

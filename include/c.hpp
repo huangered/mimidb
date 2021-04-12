@@ -1,10 +1,11 @@
-#ifndef _C_H_
-#define _C_H_
+#ifndef _c_hpp_
+#define _c_hpp_
 
 #pragma warning(disable : 4200)
 #pragma warning(disable : 4996)
 #pragma warning(disable : 26451)
 
+#include <cassert>
 #include <cstddef>
 #include <cstdio>
 #include <cstdlib>

@@ -21,4 +21,6 @@ typedef uintptr_t Datum;
 #define TYPEALIGN(ALIGNVAL,LEN)  \
 	(((uintptr_t) (LEN) + ((ALIGNVAL) - 1)) & ~((uintptr_t) ((ALIGNVAL) - 1)))
 
+#define FLEX_ARRAY_SIZE
+
 #endif

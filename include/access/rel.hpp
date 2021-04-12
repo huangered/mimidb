@@ -2,7 +2,6 @@
 #define _rel_hpp_
 
 #include "mimi.hpp"
-#include "access/amapi.hpp"
 #include "access/tupledesc.hpp"
 #include "catalog/mimi_class.hpp"
 #include "catalog/mimi_attribute.hpp"
@@ -12,6 +11,7 @@
 #include "storage/relfilenode.hpp"
 
 class Heap;
+class IndexAm;
 
 struct RelationData {
     SMgrRelation rd_smgr; /* 保存的文件句柄*/
