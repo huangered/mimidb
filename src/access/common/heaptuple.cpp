@@ -11,7 +11,7 @@ heap_form_tuple(TupleDesc desc, Datum* values) {
         datasz += desc->attr[i].att_len;
     }
 
-    int hoff = sizeof(HeapTupleHeaderData);
+    int hoff = HEAP_TUPLE_HEADER_SIZE;
     int len = HEAP_TUPLE_SIZE + hoff + datasz;
     HeapTuple htup = (HeapTuple)std::malloc(len);
 

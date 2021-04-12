@@ -19,7 +19,6 @@ TEST(btree, incr_insert)
     rel->index_am->BuildEmpty(rel);
 
     for (int i = 0; i < 100; i++) {
-        printf("insert %d\r\n", i);
         bool result = rel->index_am->Insert(rel, i, i);
         EXPECT_TRUE(result);
     }

@@ -41,7 +41,7 @@ PageAddItem(Page page, Item item, Size itemsz, OffsetNumber offsetNumber) {
 
     // add index
 
-    header->pd_upper = header->pd_upper - sizeof(IndexTupleData);
+    header->pd_upper = header->pd_upper - itemsz;
 
     // update item;
     itemId->lp_off = header->pd_upper;
