@@ -49,7 +49,7 @@ struct BTreeScanData {
     Size itemsz;
     bool nextkey;
     int keysz;
-    ScanKeyData scankeys[FLEX_ARRAY_SIZE];
+    ScanKeyData scankeys[128];
 };
 
 typedef BTreeScanData* BTreeScan;
