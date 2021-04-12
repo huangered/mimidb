@@ -35,5 +35,5 @@ file(GLOB sub_sources */*.cpp)
 
 # Now simply link against gtest or gtest_main as needed. Eg
 add_executable(unittest ${sources} ${sub_sources})
-target_link_libraries(unittest gtest_main access catalog common port storage util)
+target_link_libraries(unittest gtest_main access catalog common parser port storage util)
 add_test(NAME unit_test COMMAND unittest)

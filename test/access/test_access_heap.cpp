@@ -38,7 +38,7 @@ TEST(heap, incr_insert)
     ScanKeyInit(skey, 0, BTEqualStrategyNumber, datum, 0);
     HeapScanDesc hsDesc = rel->tb_am->BeginScan(rel, 1, skey);
     for (int i{}; i < 5; i++) {
-        HeapTuple htup = rel->tb_am->GetNext(hsDesc);
+        HeapTuple htup = rel->tb_am->GetNext(hsDesc, ScanDirection::Forward);
         //printf("min %d\r\n", htup->t_data->t_heap.t_xmin);
         //printf("max %d\r\n", htup->t_data->t_heap.t_xmax);
         // 验证htup

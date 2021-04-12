@@ -5,7 +5,7 @@
 #include "storage/page.hpp"
 
 Buffer
-Heap::GetBufferForTuple(Relation rel, Size len) {
+Heap::_get_buffer_for_tuple(Relation rel, Size len) {
     Page page;
     Size pageFreeSpace;
     BlockNumber targetBlock;
@@ -47,7 +47,7 @@ Heap::GetBufferForTuple(Relation rel, Size len) {
 insert the heap tuple into relation
 */
 void
-Heap::RelationPutHeapTuple(Relation rel, Buffer buf, HeapTuple htup) {
+Heap::_relation_put_heap_tuple(Relation rel, Buffer buf, HeapTuple htup) {
     OffsetNumber offset;
     Page page = BufferGetPage(buf);
 

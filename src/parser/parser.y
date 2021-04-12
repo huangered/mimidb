@@ -1,8 +1,7 @@
-%skeleton "lalr1.cc"
 %code requires {
-#include "parser/tokens.h"
-#include "node/parsenode.hpp"
-#include "util/mctx.hpp"
+#include "node/tokens.h"
+#include "node/parsenode.h"
+
 }
 /* simplest version of calculator */
 %code {
@@ -10,8 +9,8 @@
 
 void yyerror(YYLTYPE* a, void* b, const char* s);
 
-#define YYMALLOC palloc
-#define YYFREE   pfree
+#define YYMALLOC malloc
+#define YYFREE   free
 
 }
 
@@ -128,8 +127,8 @@ create_table_param_list:
   | create_table_param_list ',' create_table_param { $$ = append_list($1, $3); }
   ;
 create_table_param:
-    ident ident PRIMARY KEY { $$ = makeColumnDef($1, makeTypeName($2), true);  }
-  | ident ident { $$ = makeColumnDef($1, makeTypeName($2), false); }
+    ident ident PRIMARY KEY { $$ = makeColumnDef($1, makeTypeName($2), 1);  }
+  | ident ident { $$ = makeColumnDef($1, makeTypeName($2), 0); }
   ;
 where_cause:
   WHERE where_col_ref_list { $$ = makeWhereStmt($2); }

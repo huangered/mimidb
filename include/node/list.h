@@ -1,8 +1,7 @@
 #ifndef _LIST_H_
 #define _LIST_H_
 
-#include "mimi.hpp"
-#include "node/node.hpp"
+#include "node/node.h"
 
 typedef struct ListCell {
 	union {

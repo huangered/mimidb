@@ -1,12 +1,10 @@
-﻿#include "node/parsenode.hpp"
-#include "util/mctx.hpp"
-
+﻿#include "node/parsenode.h"
 /* 
  * 解析create table sql
  */
 Node*
 makeCreateTableStmt(char* tbl_name, List* cols) {
-	CreateTableStmt* stmt =(CreateTableStmt*)palloc(sizeof(CreateTableStmt));
+	CreateTableStmt* stmt =(CreateTableStmt*)malloc(sizeof(CreateTableStmt));
 	stmt->nodetag = NT_CreateTableStmt;
 	stmt->relname = tbl_name;
 	stmt->columns = cols;
@@ -17,7 +15,7 @@ makeCreateTableStmt(char* tbl_name, List* cols) {
 Node*
 makeSelectStmt(char* tbl_name, List* cols) {
 	printf("makeSelectStmt\n");
-	SelectStmt* stmt = (SelectStmt*)palloc(sizeof(SelectStmt));
+	SelectStmt* stmt = (SelectStmt*)malloc(sizeof(SelectStmt));
 	stmt->nodetag = NT_SelectStmt;
 	stmt->relname = tbl_name;
 	stmt->columns = cols;
@@ -27,7 +25,7 @@ makeSelectStmt(char* tbl_name, List* cols) {
 Node*
 makeInsertStmt(char* tbl_name, List* cols) {
 	printf("makeInsertStmt\n");
-	InsertStmt* stmt = (InsertStmt*)palloc(sizeof(InsertStmt));
+	InsertStmt* stmt = (InsertStmt*)malloc(sizeof(InsertStmt));
 	stmt->nodetag = NT_InsertStmt;
 	stmt->relname = tbl_name;
 	stmt->columns = cols;
@@ -36,7 +34,7 @@ makeInsertStmt(char* tbl_name, List* cols) {
 
 Node*
 makeUpdateStmt(char* tbl_name, List* cols, Node* where_cause) {
-	UpdateStmt* stmt = (UpdateStmt*)palloc(sizeof(UpdateStmt));
+	UpdateStmt* stmt = (UpdateStmt*)malloc(sizeof(UpdateStmt));
 	stmt->nodetag = NT_UpdateStmt;
 	stmt->relname = tbl_name;
 	stmt->columns = cols;
@@ -49,7 +47,7 @@ update sql的赋值语句 a='abcd' or a=123
 */
 Node*
 makeAssignStmt(char* col_name, Node* value) {
-	AssignStmt* stmt = (AssignStmt*)palloc(sizeof(AssignStmt));
+	AssignStmt* stmt = (AssignStmt*)malloc(sizeof(AssignStmt));
 	stmt->nodetag = NT_AssignStmt;
 	stmt->col_name = col_name;
 	stmt->value = value;
@@ -62,7 +60,7 @@ makeAssignStmt(char* col_name, Node* value) {
 */
 Node*
 makeWhereStmt(List* cols) {
-	WhereStmt* stmt = (WhereStmt*)palloc(sizeof(WhereStmt));
+	WhereStmt* stmt = (WhereStmt*)malloc(sizeof(WhereStmt));
 	stmt->nodetag = NT_WhereStmt;
 	stmt->columns = cols;
 

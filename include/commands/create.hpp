@@ -1,7 +1,7 @@
 #ifndef _create_h_
 #define _create_h_
 
-#include "node/parsenode.hpp"
+#include "node/parsenode.h"
 
 void DefineRelation(CreateTableStmt* stmt);
 
