@@ -1,5 +1,5 @@
-#ifndef _heap_catalog_h_
-#define _heap_catalog_h_
+#ifndef _heap_catalog_hpp_
+#define _heap_catalog_hpp_
 
 #include "mimi.hpp"
 #include "access/relcache.hpp"

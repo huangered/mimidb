@@ -1,9 +1,8 @@
 #include "storage/freespace.hpp"
-#include "storage/bufmgr.hpp"
 #include "storage/fsm_internal.hpp"
 #include "storage/page.hpp"
 
-fsm* _fsm;
+static fsm* _fsm = new fsm{};
 
 BlockNumber 
 GetPageWithFreeSpace(Relation rel, Size spaceNeeded) {

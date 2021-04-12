@@ -27,7 +27,7 @@ formTupleDesc(List* columns) {
 	ListCell* cell;
 	ColumnDef* columndef;
 
-	TupleDesc tupdesc = (TupleDesc)palloc(sizeof(TupleDescData));
+	TupleDesc tupdesc = new TupleDescData;
 	tupdesc->natts = list_len(columns);
 	for (cell = list_first_elem(columns); cell!=NULL; cell=list_next_elem(cell)) {
 		columndef = (ColumnDef*)cell->data.ptr_value;

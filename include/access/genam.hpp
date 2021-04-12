@@ -1,8 +1,8 @@
 /*
  * general index api function
  */
-#ifndef _GENAM_H_
-#define _GENAM_H_
+#ifndef _genam_hpp_
+#define _genam_hpp_
 
 #include "access/heaptuple.hpp"
 #include "access/rel.hpp"
