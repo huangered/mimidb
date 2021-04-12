@@ -48,7 +48,7 @@ TEST(heap, incr_insert)
 
     //if (htup)
     //    delete htup;
-    std::free(skey);
+    delete skey;
 
     FreeTupleDesc(rel->tupleDesc);
     delete rel;
