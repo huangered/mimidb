@@ -13,6 +13,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: clean
+      run: rm *main
     - name: configure
       run: cmake .
     - name: make
