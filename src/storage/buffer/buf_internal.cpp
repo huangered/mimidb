@@ -3,7 +3,7 @@
 #include "storage/smgr.hpp"
 #include "storage/bufmgr.hpp"
 
-#define NBuffer 32
+#define NBuffer 16
 
 BufferMgr::BufferMgr() {
     size_t size = NBuffer * BLKSZ;
@@ -12,7 +12,7 @@ BufferMgr::BufferMgr() {
 
     _buffDesc = new BufferDesc[NBuffer]{};
 
-    for (int i{}; i < NBuffer; i++) {
+    for (int i{0}; i < NBuffer; i++) {
         BufferDesc* desc = &_buffDesc[i];
         desc->buf_id = i + 1;
         desc->freeNext = i + 2;
@@ -25,7 +25,6 @@ BufferMgr::BufferMgr() {
 }
 
 BufferMgr::~BufferMgr() {
-  printf("release buffmgr~~");
     delete[] _blocks;
     delete[] _buffDesc;
 }

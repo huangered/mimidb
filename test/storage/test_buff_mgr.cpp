@@ -11,7 +11,7 @@ TEST(buff_mgr, basic)
     rel->rd_id = 1;
     rel->rd_node = { 1,2 };
     rel->rd_smgr = nullptr;
-    for (int i{}; i < 32; i++) {
+    for (int i{}; i < 16; i++) {
         printf("read buffer for block %d\r\n", i);
         Buffer buf_id = ReadBuffer(rel, i);
     }
