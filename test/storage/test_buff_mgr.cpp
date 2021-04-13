@@ -28,6 +28,7 @@ TEST(buff_mgr, basic)
     delete rel;
 }
 
+/*
 TEST(buff_mgr, p_new)
 {
     Relation rel = new RelationData{};
@@ -47,3 +48,4 @@ TEST(buff_mgr, p_new)
 
     delete rel;
 }
+*/

@@ -10,7 +10,7 @@ BufferMgr::BufferMgr() {
     _blocks = new char[size];
     memset(_blocks, 0, size);
 
-    _buffDesc = new BufferDesc[NBuffer];
+    _buffDesc = new BufferDesc[NBuffer]{};
 
     for (int i{}; i < NBuffer; i++) {
         _buffDesc[i].buf_id = i + 1;
@@ -132,10 +132,17 @@ BufferMgr::GetBufferDesc(Buffer bufId) {
 
 Buffer
 BufferMgr::_FindFreeBuffer() {
+    static int i{ 0 };
+    i++;
+    printf("find free buffer %d\r\n", i);
     BufferDesc* bd = _freeBuffDesc;
-    _freeBuffDesc = &_buffDesc[_freeBuffDesc->freeNext - 1];
+    printf("bd exit %d\r\n", bd != nullptr);
+    printf("bd->buf id %d \r\n", bd->buf_id);
+    printf("bd->freeNext %d\r\n", bd->freeNext);
+    _freeBuffDesc = _buffDesc + (_freeBuffDesc->freeNext - 1);
     bd->freeNext = 0;
     return bd->buf_id;
+
 }
 
 void
