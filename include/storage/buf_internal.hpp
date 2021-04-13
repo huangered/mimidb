@@ -15,6 +15,7 @@ private:
 	HashMap<BufferTag, Buffer> _hashMap;
 	BufferDesc* _buffDesc;
 	BufferDesc* _freeBuffDesc;
+        int index;
 public:
 	BufferMgr();
 	~BufferMgr();

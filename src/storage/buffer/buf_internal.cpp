@@ -21,10 +21,11 @@ BufferMgr::BufferMgr() {
     
     _buffDesc[NBuffer - 1].freeNext = 0;
     _freeBuffDesc = _buffDesc;
-
+        index = 0;
 }
 
 BufferMgr::~BufferMgr() {
+  printf("release buffmgr~~");
     delete[] _blocks;
     delete[] _buffDesc;
 }
@@ -121,8 +122,8 @@ BufferMgr::FlushBuffer(BufferDesc* buffDesc) {
 
 Page
 BufferMgr::GetPage(Buffer bufId) {
-    int index = (bufId - 1) * BLKSZ;
-    char* p = _blocks + index;
+    int index1 = (bufId - 1) * BLKSZ;
+    char* p = _blocks + index1;
     return p;
 }
 
@@ -138,16 +139,39 @@ BufferMgr::_FindFreeBuffer() {
     static int i{ 0 };
     i++;
     printf("find free buffer %d\r\n", i);
+
+    if(_freeBuffDesc == nullptr){
+      printf("<<< exhausted\r\n");
+      return 0;
+    }
+    
+    for (int i{}; i < NBuffer; i++) {
+        BufferDesc* desc = &_buffDesc[i];
+        printf(">>>>>desc address %p , id %d, freenext %d\r\n", desc, desc->buf_id, desc->freeNext);
+    }
+    printf(">>>before index %d\r\n", index);
+    printf(">>>before free desc address %p \r\n", _freeBuffDesc);
+    printf(">>>before free desc address %p , id %d\r\n", _freeBuffDesc, _freeBuffDesc->buf_id);
+    
     BufferDesc* bd = _freeBuffDesc;
     printf("bd exit %d\r\n", bd != nullptr);
     printf("require desc address %p\r\n", bd);
-
+ 
     printf("bd->buf id %d \r\n", bd->buf_id);
     printf("bd->freeNext %d\r\n", bd->freeNext);
-    _freeBuffDesc = _buffDesc + (_freeBuffDesc->freeNext - 1);
+    if (bd->freeNext == 0){
+      // exhausted.
+      _freeBuffDesc = nullptr;
+    } else {
+      _freeBuffDesc = _buffDesc + (_freeBuffDesc->freeNext - 1);
+    }
     bd->freeNext = 0;
+    
+    printf(">>>after  free desc address %p , id %d\r\n", _freeBuffDesc, _freeBuffDesc->buf_id);
+        index = _freeBuffDesc->freeNext - 1;
+        printf(">>>after index %d\r\n", index);
     return bd->buf_id;
-
+    
 }
 
 void
