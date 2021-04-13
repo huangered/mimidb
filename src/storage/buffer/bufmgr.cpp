@@ -3,6 +3,11 @@
 
 BufferMgr* bmgr = new BufferMgr{};
 
+void BufferReset(){
+    delete bmgr;
+    bmgr = new BufferMgr{};
+}
+
 Buffer
 ReadBuffer(Relation rel, BlockNumber block) {
 	return bmgr->ReadBuffer(rel, block);

@@ -3,13 +3,18 @@
 #include "storage/smgr.hpp"
 #include "storage/bufmgr.hpp"
 
-#define NBuffer 50
+#define NBuffer 32
 
 BufferMgr::BufferMgr() {
     size_t size = NBuffer * BLKSZ;
-    _blocks = new char[size];
+    _blocks = (char*)std::malloc(size);
     memset(_blocks, 0, size);
 
+    //printf(">>>>> blocks %p start\r\n", _blocks);
+    //printf(">>>>> blocks %p end\r\n", _blocks + size);
+    {
+    _blocks+size;
+    }
     _buffDesc = new BufferDesc[NBuffer]{};
 
     for (int i{0}; i < NBuffer; i++) {
@@ -21,10 +26,12 @@ BufferMgr::BufferMgr() {
     _buffDesc[NBuffer - 1].freeNext = 0;
     _freeBuffDesc = _buffDesc;
         //index = 0;
+    
 }
 
 BufferMgr::~BufferMgr() {
-    delete[] _blocks;
+    printf("releate buff mgr");
+    std::free(_blocks);
     delete[] _buffDesc;
 }
 
@@ -53,19 +60,16 @@ BufferMgr::_ReadBufferCommon(Relation rel, ForkNumber forkNumber, BlockNumber bl
     }
 
     if (isExtend) {
+
         blkno = smgr->Nblocks(rel->rd_smgr, forkNumber);
     }
-
     desc = _BufferAlloc(rel, forkNumber, blkno, &found);
-
     Page page = GetPage(desc->buf_id);
-
     if (found) {
         if (!isExtend) {
             return desc->buf_id;
         }
     }
-
     // load or save data
     if (isExtend) {
         memset(page, 0, BLKSZ);
@@ -74,7 +78,6 @@ BufferMgr::_ReadBufferCommon(Relation rel, ForkNumber forkNumber, BlockNumber bl
     else {
         smgr->Read(rel->rd_smgr, forkNumber, blkno, page);
     }    
-
     return desc->buf_id;
 }
 
@@ -102,7 +105,6 @@ BufferMgr::_BufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno, 
     gg->tag = tag;
 //    // insert into hash
     _hashMap.Put(tag, buf_id);
-
     return GetBufferDesc(buf_id);
 }
 

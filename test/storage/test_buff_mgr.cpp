@@ -8,6 +8,7 @@
 // test the basic usage in buff mgr.
 TEST(buff_mgr, basic)
 {
+    BufferReset();
     Relation rel = new RelationData{};
     rel->rd_id = 1;
     rel->rd_node = { 1,2 };
@@ -22,20 +23,20 @@ TEST(buff_mgr, basic)
 
 TEST(buff_mgr, p_new)
 {
+    BufferReset();
     Relation rel = new RelationData{};
     rel->rd_id = 2;
-    rel->rd_node.dbNode = 10;
-    rel->rd_node.relNode = 20;
+    rel->rd_node = { 2, rel->rd_id };
     rel->rd_smgr = nullptr;
 
     Buffer buf_id = ReadBuffer(rel, P_NEW);
-    Buffer buf_id2 = ReadBuffer(rel, P_NEW);
+    //Buffer buf_id2 = ReadBuffer(rel, P_NEW);
 
     EXPECT_GT(buf_id, 0);
-    EXPECT_GT(buf_id2, 0);
+    //EXPECT_GT(buf_id2, 0);
 
     ReleaseBuffer(buf_id);
-    ReleaseBuffer(buf_id2);
+    //ReleaseBuffer(buf_id2);
 
     delete rel;
 }

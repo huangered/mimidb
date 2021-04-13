@@ -15,5 +15,5 @@ BufferDesc* GetBufferDesc(Buffer buffer);
 Page BufferGetPage(Buffer buffer);
 void MarkBufferDirty(Buffer buffer);
 BlockNumber BufferGetBlockNumber(Buffer buffer);
-
+void BufferReset(void);
 #endif // !_BUFMGR_H_
