@@ -21,7 +21,7 @@ BufferMgr::BufferMgr() {
     
     _buffDesc[NBuffer - 1].freeNext = 0;
     _freeBuffDesc = _buffDesc;
-        index = 0;
+        //index = 0;
 }
 
 BufferMgr::~BufferMgr() {
@@ -149,7 +149,7 @@ BufferMgr::_FindFreeBuffer() {
         BufferDesc* desc = &_buffDesc[i];
         printf(">>>>>desc address %p , id %d, freenext %d\r\n", desc, desc->buf_id, desc->freeNext);
     }
-    printf(">>>before index %d\r\n", index);
+    //printf(">>>before index %d\r\n", index);
     printf(">>>before free desc address %p \r\n", _freeBuffDesc);
     printf(">>>before free desc address %p , id %d\r\n", _freeBuffDesc, _freeBuffDesc->buf_id);
     
@@ -167,8 +167,8 @@ BufferMgr::_FindFreeBuffer() {
     }
     bd->freeNext = 0;
     
-        index = bd->freeNext - 1;
-        printf(">>>after index %d\r\n", index);
+        //index = bd->freeNext - 1;
+       // printf(">>>after index %d\r\n", index);
     return bd->buf_id;
     
 }
