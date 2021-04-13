@@ -3,7 +3,7 @@
 #include "storage/smgr.hpp"
 #include "storage/bufmgr.hpp"
 
-#define NBuffer 16
+#define NBuffer 50
 
 BufferMgr::BufferMgr() {
     size_t size = NBuffer * BLKSZ;
@@ -16,7 +16,6 @@ BufferMgr::BufferMgr() {
         BufferDesc* desc = &_buffDesc[i];
         desc->buf_id = i + 1;
         desc->freeNext = i + 2;
-        printf("desc address %p\r\n", desc);
     }
     
     _buffDesc[NBuffer - 1].freeNext = 0;
@@ -94,12 +93,14 @@ BufferMgr::_BufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno, 
     }
     // if find, return
     // create new one and find a valid buffdesc or find a victim;
-
+//
     buf_id = _FindFreeBuffer();
-
-    GetBufferDesc(buf_id)->state += 1;
-    GetBufferDesc(buf_id)->tag = tag;
-    // insert into hash
+//
+    BufferDesc* gg = GetBufferDesc(buf_id);
+    assert(gg);
+    gg->state +=1;
+    gg->tag = tag;
+//    // insert into hash
     _hashMap.Put(tag, buf_id);
 
     return GetBufferDesc(buf_id);
@@ -135,29 +136,12 @@ BufferMgr::GetBufferDesc(Buffer bufId) {
 
 Buffer
 BufferMgr::_FindFreeBuffer() {
-    static int i{ 0 };
-    i++;
-    printf("find free buffer %d\r\n", i);
-
     if(_freeBuffDesc == nullptr){
-      printf("<<< exhausted\r\n");
       return 0;
     }
     
-    for (int i{}; i < NBuffer; i++) {
-        BufferDesc* desc = &_buffDesc[i];
-        printf(">>>>>desc address %p , id %d, freenext %d\r\n", desc, desc->buf_id, desc->freeNext);
-    }
-    //printf(">>>before index %d\r\n", index);
-    printf(">>>before free desc address %p \r\n", _freeBuffDesc);
-    printf(">>>before free desc address %p , id %d\r\n", _freeBuffDesc, _freeBuffDesc->buf_id);
-    
     BufferDesc* bd = _freeBuffDesc;
-    printf("bd exit %d\r\n", bd != nullptr);
-    printf("require desc address %p\r\n", bd);
- 
-    printf("bd->buf id %d \r\n", bd->buf_id);
-    printf("bd->freeNext %d\r\n", bd->freeNext);
+    
     if (bd->freeNext == 0){
       // exhausted.
       _freeBuffDesc = nullptr;
@@ -165,11 +149,7 @@ BufferMgr::_FindFreeBuffer() {
       _freeBuffDesc = _buffDesc + (_freeBuffDesc->freeNext - 1);
     }
     bd->freeNext = 0;
-    
-        //index = bd->freeNext - 1;
-       // printf(">>>after index %d\r\n", index);
     return bd->buf_id;
-    
 }
 
 void
