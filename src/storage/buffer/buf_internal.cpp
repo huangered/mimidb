@@ -167,8 +167,7 @@ BufferMgr::_FindFreeBuffer() {
     }
     bd->freeNext = 0;
     
-    printf(">>>after  free desc address %p , id %d\r\n", _freeBuffDesc, _freeBuffDesc->buf_id);
-        index = _freeBuffDesc->freeNext - 1;
+        index = bd->freeNext - 1;
         printf(">>>after index %d\r\n", index);
     return bd->buf_id;
     

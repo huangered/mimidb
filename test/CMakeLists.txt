@@ -31,9 +31,9 @@ if (CMAKE_VERSION VERSION_LESS 2.8.11)
 endif()
 
 #file(GLOB sources *.cpp)
-#file(GLOB sub_sources */*.cpp)
+file(GLOB sub_sources */*.cpp)
 
 # Now simply link against gtest or gtest_main as needed. Eg
-add_executable(unittest "storage/test_buff_mgr.cpp")
+add_executable(unittest ${sub_sources})
 target_link_libraries(unittest gtest_main access catalog common parser port storage util)
 add_test(NAME unit_test COMMAND unittest)
