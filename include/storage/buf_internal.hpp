@@ -12,10 +12,10 @@ class BufferMgr
 {
 private:
 	char* _blocks;
-	HashMap<BufferTag, Buffer> _hashMap;
-	BufferDesc* _buffDesc;
 	BufferDesc* _freeBuffDesc;
-        //int index;
+	BufferDesc* _buffDesc;
+	HashMap<BufferTag, Buffer> _hashMap;
+    //int index;
 public:
 	BufferMgr();
 	~BufferMgr();
