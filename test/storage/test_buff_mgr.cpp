@@ -11,20 +11,10 @@ TEST(buff_mgr, basic)
     rel->rd_id = 1;
     rel->rd_node = { 1,2 };
     rel->rd_smgr = nullptr;
-    Buffer buf_id = ReadBuffer(rel, 1);
-
-    EXPECT_GT(buf_id, 0);
-
-    buf_id = ReadBuffer(rel, 1);
-
-    EXPECT_GT(buf_id, 0);
-
-    Buffer buf_id_2 = ReadBuffer(rel, 1);
-    EXPECT_GT(buf_id_2, 0);
-
-    ReleaseBuffer(buf_id);
-    ReleaseBuffer(buf_id);
-    ReleaseBuffer(buf_id_2);
+    for (int i{}; i < 32; i++) {
+        printf("read buffer for block %d\r\n", i);
+        Buffer buf_id = ReadBuffer(rel, i);
+    }
     delete rel;
 }
 

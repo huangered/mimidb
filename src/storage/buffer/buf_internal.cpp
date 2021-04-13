@@ -3,7 +3,7 @@
 #include "storage/smgr.hpp"
 #include "storage/bufmgr.hpp"
 
-#define NBuffer 1024
+#define NBuffer 32
 
 BufferMgr::BufferMgr() {
     size_t size = NBuffer * BLKSZ;
