@@ -3,22 +3,24 @@
 #include "storage/smgr.hpp"
 #include "storage/bufmgr.hpp"
 
-#define NBuffer 1024
+#define NBuffer 50
 
 BufferMgr::BufferMgr() {
     size_t size = NBuffer * BLKSZ;
     _blocks = new char[size];
     memset(_blocks, 0, size);
 
-    _buffDesc = new BufferDesc[NBuffer];
+    _buffDesc = new BufferDesc[NBuffer]{};
 
-    for (int i{}; i < NBuffer; i++) {
-        _buffDesc[i].buf_id = i + 1;
-        _buffDesc[i].freeNext = i + 2;
+    for (int i{0}; i < NBuffer; i++) {
+        BufferDesc* desc = &_buffDesc[i];
+        desc->buf_id = i + 1;
+        desc->freeNext = i + 2;
     }
     
     _buffDesc[NBuffer - 1].freeNext = 0;
     _freeBuffDesc = _buffDesc;
+        //index = 0;
 }
 
 BufferMgr::~BufferMgr() {
@@ -91,12 +93,14 @@ BufferMgr::_BufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno, 
     }
     // if find, return
     // create new one and find a valid buffdesc or find a victim;
-
+//
     buf_id = _FindFreeBuffer();
-
-    GetBufferDesc(buf_id)->state += 1;
-    GetBufferDesc(buf_id)->tag = tag;
-    // insert into hash
+//
+    BufferDesc* gg = GetBufferDesc(buf_id);
+    assert(gg);
+    gg->state +=1;
+    gg->tag = tag;
+//    // insert into hash
     _hashMap.Put(tag, buf_id);
 
     return GetBufferDesc(buf_id);
@@ -118,8 +122,8 @@ BufferMgr::FlushBuffer(BufferDesc* buffDesc) {
 
 Page
 BufferMgr::GetPage(Buffer bufId) {
-    int index = (bufId - 1) * BLKSZ;
-    char* p = _blocks + index;
+    int index1 = (bufId - 1) * BLKSZ;
+    char* p = _blocks + index1;
     return p;
 }
 
@@ -132,8 +136,18 @@ BufferMgr::GetBufferDesc(Buffer bufId) {
 
 Buffer
 BufferMgr::_FindFreeBuffer() {
+    if(_freeBuffDesc == nullptr){
+      return 0;
+    }
+    
     BufferDesc* bd = _freeBuffDesc;
-    _freeBuffDesc = &_buffDesc[_freeBuffDesc->freeNext - 1];
+    
+    if (bd->freeNext == 0){
+      // exhausted.
+      _freeBuffDesc = nullptr;
+    } else {
+      _freeBuffDesc = _buffDesc + (_freeBuffDesc->freeNext - 1);
+    }
     bd->freeNext = 0;
     return bd->buf_id;
 }

@@ -1,10 +1,8 @@
-﻿#include "../g.hpp"
+#include "../g.hpp"
 
-#include "storage/bufmgr.hpp"
 #include "access/heap.hpp"
 #include "access/rel.hpp"
 #include "storage/smgr.hpp"
-#include "util/mctx.hpp"
 
 // test the basic usage in buff mgr.
 TEST(heap, incr_insert)
@@ -39,9 +37,6 @@ TEST(heap, incr_insert)
     HeapScanDesc hsDesc = rel->tb_am->BeginScan(rel, 1, skey);
     for (int i{}; i < 5; i++) {
         HeapTuple htup = rel->tb_am->GetNext(hsDesc, ScanDirection::Forward);
-        //printf("min %d\r\n", htup->t_data->t_heap.t_xmin);
-        //printf("max %d\r\n", htup->t_data->t_heap.t_xmax);
-        // 验证htup
         char* data = (char*)htup->t_data + HEAP_TUPLE_HEADER_SIZE;
         int* j = (int*)data;
         int* l = j + 1;

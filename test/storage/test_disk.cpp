@@ -1,3 +1,4 @@
+/*
 #include "../g.hpp"
 #include "storage/smgr.hpp"
 
@@ -19,3 +20,4 @@ TEST(disk, basic)
     smgr->Close(reln);
 
 }
+ */
