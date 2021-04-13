@@ -3,5 +3,5 @@
 
 int
 PathNameOpenFile(const char* filename) {
-  return open(filename, O_CREAT |O_RDWR , S_IRUSR|S_IWUSR);
+  return open(filename, O_CREAT | O_RDWR | O_TRUNC, S_IRUSR|S_IWUSR);
 }

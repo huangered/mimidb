@@ -8,7 +8,7 @@ int win32_open(const char* path) {
     HANDLE hFile;
 
     hFile = CreateFile(path,           // name of the write
-        GENERIC_READ | GENERIC_WRITE,  // open for writing
+        GENERIC_READ | GENERIC_WRITE ,  // open for writing
         0,                             // do not share
         NULL,                          // default security
         OPEN_ALWAYS,                   // create new file only
@@ -20,7 +20,7 @@ int win32_open(const char* path) {
         return -1;
     }
 
-    int fd = _open_osfhandle((intptr_t)hFile, O_APPEND);
+    int fd = _open_osfhandle((intptr_t)hFile, O_TRUNC );
     return fd;
 }
 
