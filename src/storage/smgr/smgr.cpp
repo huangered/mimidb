@@ -77,6 +77,7 @@ Smgr::Close(SMgrRelation reln) {
     _data.Remove(reln->rd_node);
 }
 
+
 // ------
 void RelationOpenSmgr(Relation rel) {
     if (rel->rd_smgr == nullptr) {

@@ -3,6 +3,7 @@
 
 #include "access/relpath.hpp"
 #include "storage/block.hpp"
+#include "storage/relfilenode.hpp"
 
 /*
 zero is invalid, the index of shared buffer is [1..NBuffers]
@@ -14,12 +15,12 @@ typedef int Buffer;
 #define BufferIsValid(buf)      ((buf) != INVALID_BUFFER)
 
 struct BufferTag {
-    Oid rnode;
+    RelFileNode rnode;
     ForkNumber forkNum;
     BlockNumber blockNum;
 
     int hash() const {
-        return rnode * 17 * 17 + forkNum * 17 + blockNum;
+        return rnode.relNode * 17 * 17 + forkNum * 17 + blockNum;
     }
 
     friend bool operator==(const BufferTag& l, const BufferTag& r) {

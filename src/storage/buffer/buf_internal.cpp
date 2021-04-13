@@ -8,13 +8,9 @@
 BufferMgr::BufferMgr() {
     size_t size = NBuffer * BLKSZ;
     _blocks = (char*)std::malloc(size);
+    assert(_blocks);
     memset(_blocks, 0, size);
 
-    //printf(">>>>> blocks %p start\r\n", _blocks);
-    //printf(">>>>> blocks %p end\r\n", _blocks + size);
-    {
-    _blocks+size;
-    }
     _buffDesc = new BufferDesc[NBuffer]{};
 
     for (int i{0}; i < NBuffer; i++) {
@@ -25,12 +21,9 @@ BufferMgr::BufferMgr() {
     
     _buffDesc[NBuffer - 1].freeNext = 0;
     _freeBuffDesc = _buffDesc;
-        //index = 0;
-    
 }
 
 BufferMgr::~BufferMgr() {
-    printf("releate buff mgr");
     std::free(_blocks);
     delete[] _buffDesc;
 }
@@ -84,7 +77,7 @@ BufferMgr::_ReadBufferCommon(Relation rel, ForkNumber forkNumber, BlockNumber bl
 BufferDesc*
 BufferMgr::_BufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno, bool* found) {
     Buffer buf_id = INVALID_BUFFER;
-    BufferTag tag{ rel->rd_id, forkNumber, blkno };
+    BufferTag tag{ rel->rd_node, forkNumber, blkno };
 
     // use buftag to find
     *found = _hashMap.Get(tag, &buf_id);
@@ -116,10 +109,9 @@ BufferMgr::ReleaseBuffer(Buffer buffer) {
 
 void
 BufferMgr::FlushBuffer(BufferDesc* buffDesc) {
-
+    SMgrRelation reln = smgr->Open(buffDesc->tag.rnode);
     char* buf = GetPage(buffDesc->buf_id);
-
-    //smgr->Write(buffDesc->tag.rnode, buffDesc->tag.forkNum, buffDesc->tag.blockNum, buf);
+    smgr->Write(reln, buffDesc->tag.forkNum, buffDesc->tag.blockNum, buf);
 }
 
 Page
@@ -156,5 +148,6 @@ BufferMgr::_FindFreeBuffer() {
 
 void
 BufferMgr::MarkBufferDirty(Buffer bufId) {
-
+    BufferDesc* bd = &_buffDesc[bufId - 1];
+    
 }
