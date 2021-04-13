@@ -15,6 +15,7 @@ typedef HeapScanDescData* HeapScanDesc;
 */
 class Heap {
 public:
+    Heap(){}
 	Relation Open(Oid relationId);
 	void Close(Relation rel);
 
@@ -41,6 +42,6 @@ private:
 	void _heap_get_tuple(HeapScanDesc scan, ScanDirection direction);
 };
 
-Heap* HeapRoute();
+extern Heap* HeapRoute();
 
 #endif // !_access_heap_hpp_

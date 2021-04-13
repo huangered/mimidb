@@ -174,7 +174,7 @@ Heap::GetNext(HeapScanDesc scan, ScanDirection direction) {
 bool
 Heap::EndScan(HeapScanDesc scan) {
     // 释放 scan 当前buf
-    bmgr->ReleaseBuffer(scan->rs_curbuf);
+    ReleaseBuffer(scan->rs_curbuf);
     // descease the relation ref count
 
     if (scan->rs_key) {

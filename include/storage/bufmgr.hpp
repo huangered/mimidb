@@ -16,6 +16,4 @@ Page BufferGetPage(Buffer buffer);
 void MarkBufferDirty(Buffer buffer);
 BlockNumber BufferGetBlockNumber(Buffer buffer);
 
-extern BufferMgr* bmgr;
-
 #endif // !_BUFMGR_H_

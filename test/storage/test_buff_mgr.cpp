@@ -2,7 +2,8 @@
 
 #include "access/rel.hpp"
 #include "storage/bufmgr.hpp"
-#include "access/btree.hpp"
+
+#include "access/heap.hpp"
 
 // test the basic usage in buff mgr.
 TEST(buff_mgr, basic)
@@ -11,22 +12,13 @@ TEST(buff_mgr, basic)
     rel->rd_id = 1;
     rel->rd_node = { 1,2 };
     rel->rd_smgr = nullptr;
-    Buffer buf_id = ReadBuffer(rel, 1);
-
-    EXPECT_GT(buf_id, 0);
-
-    buf_id = ReadBuffer(rel, 1);
-
-    EXPECT_GT(buf_id, 0);
-
-    Buffer buf_id_2 = ReadBuffer(rel, 1);
-    EXPECT_GT(buf_id_2, 0);
-
-    ReleaseBuffer(buf_id);
-    ReleaseBuffer(buf_id);
-    ReleaseBuffer(buf_id_2);
+    for (int i{}; i < 10; i++) {
+        Buffer buf_id = ReadBuffer(rel, i);
+        EXPECT_GT(buf_id, 0);
+    }
     delete rel;
 }
+
 
 TEST(buff_mgr, p_new)
 {
@@ -47,3 +39,5 @@ TEST(buff_mgr, p_new)
 
     delete rel;
 }
+
+
