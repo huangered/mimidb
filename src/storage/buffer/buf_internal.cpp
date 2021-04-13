@@ -13,12 +13,15 @@ BufferMgr::BufferMgr() {
     _buffDesc = new BufferDesc[NBuffer]{};
 
     for (int i{}; i < NBuffer; i++) {
-        _buffDesc[i].buf_id = i + 1;
-        _buffDesc[i].freeNext = i + 2;
+        BufferDesc* desc = &_buffDesc[i];
+        desc->buf_id = i + 1;
+        desc->freeNext = i + 2;
+        printf("desc address %p", desc);
     }
     
     _buffDesc[NBuffer - 1].freeNext = 0;
     _freeBuffDesc = _buffDesc;
+
 }
 
 BufferMgr::~BufferMgr() {
@@ -137,6 +140,8 @@ BufferMgr::_FindFreeBuffer() {
     printf("find free buffer %d\r\n", i);
     BufferDesc* bd = _freeBuffDesc;
     printf("bd exit %d\r\n", bd != nullptr);
+    printf("require desc address %p", bd);
+
     printf("bd->buf id %d \r\n", bd->buf_id);
     printf("bd->freeNext %d\r\n", bd->freeNext);
     _freeBuffDesc = _buffDesc + (_freeBuffDesc->freeNext - 1);
