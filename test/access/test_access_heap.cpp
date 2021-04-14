@@ -23,7 +23,7 @@ TEST(heap, incr_insert)
     delete[] attr;
 
     for (int i = 0; i < 100; i++) {
-        int* value = new int[2]{ 98, 99 };
+        int* value = new int[2]{ 0, 5 };
         HeapTuple tuple = heap_form_tuple(rel->tupleDesc, (Datum*)value);
         bool result = rel->tb_am->Insert(rel, tuple);
         EXPECT_TRUE(result);
@@ -41,7 +41,7 @@ TEST(heap, incr_insert)
         int* j = (int*)data;
         int* l = j + 1;
         EXPECT_EQ(datum, *j);
-        EXPECT_EQ(i, *l);
+        EXPECT_EQ(5, *l);
     }
 
     rel->tb_am->EndScan(hsDesc);
