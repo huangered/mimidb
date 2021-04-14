@@ -14,7 +14,6 @@ makeCreateTableStmt(char* tbl_name, List* cols) {
 
 Node*
 makeSelectStmt(char* tbl_name, List* cols) {
-	printf("makeSelectStmt\n");
 	SelectStmt* stmt = (SelectStmt*)malloc(sizeof(SelectStmt));
 	stmt->nodetag = NT_SelectStmt;
 	stmt->relname = tbl_name;
@@ -24,7 +23,6 @@ makeSelectStmt(char* tbl_name, List* cols) {
 
 Node*
 makeInsertStmt(char* tbl_name, List* cols) {
-	printf("makeInsertStmt\n");
 	InsertStmt* stmt = (InsertStmt*)malloc(sizeof(InsertStmt));
 	stmt->nodetag = NT_InsertStmt;
 	stmt->relname = tbl_name;

@@ -1,6 +1,7 @@
 #include "node/parsenode.h"
 
-Node* makeParam(char* param1, char* param2) {
+Node*
+makeParam(char* param1, char* param2) {
 	ParamStmt* node = (ParamStmt*)malloc(sizeof(ParamStmt));
 	node->nodetag = NT_ParamStmt;
 	node->key = param1;
