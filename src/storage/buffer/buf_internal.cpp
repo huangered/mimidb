@@ -19,7 +19,7 @@ BufferMgr::BufferMgr() {
         desc->freeNext = i + 2;
     }
     
-    _buffDesc[NBuffer - 1].freeNext = 0;
+    _buffDesc[NBuffer - 1].freeNext = INVALID_BUFFER;
     _freeBuffDesc = _buffDesc;
 }
 
@@ -84,18 +84,18 @@ BufferMgr::_BufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno, 
 
     if (buf_id > INVALID_BUFFER) {
         // add ref count;
-        GetBufferDesc(buf_id)->state += 1;
+        GetBufferDesc(buf_id)->refcnt += 1;
         return GetBufferDesc(buf_id);
     }
     // if find, return
     // create new one and find a valid buffdesc or find a victim;
-//
     buf_id = _FindFreeBuffer();
-//
-    BufferDesc* gg = GetBufferDesc(buf_id);
-    assert(gg);
-    gg->state +=1;
-    gg->tag = tag;
+    assert(buf_id <= NBuffer);
+    assert(buf_id != INVALID_BUFFER);
+    BufferDesc* desc = GetBufferDesc(buf_id);
+    assert(desc);
+    desc->refcnt +=1;
+    desc->tag = tag;
 //    // insert into hash
     _hashMap.Put(tag, buf_id);
     return GetBufferDesc(buf_id);
@@ -104,7 +104,7 @@ BufferMgr::_BufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno, 
 void
 BufferMgr::ReleaseBuffer(Buffer buffer) {
     BufferDesc* bd = GetBufferDesc(buffer);
-    bd->state -= 1;
+    bd->refcnt -= 1;
 }
 
 void
@@ -117,8 +117,8 @@ BufferMgr::FlushBuffer(BufferDesc* buffDesc) {
 Page
 BufferMgr::GetPage(Buffer bufId) {
     int index1 = (bufId - 1) * BLKSZ;
-    char* p = _blocks + index1;
-    return p;
+    char* page = _blocks + index1;
+    return page;
 }
 
 BufferDesc*
@@ -127,27 +127,55 @@ BufferMgr::GetBufferDesc(Buffer bufId) {
     return bd;
 }
 
+void
+BufferMgr::MarkBufferDirty(Buffer bufId) {
+    BufferDesc* bd = &_buffDesc[bufId - 1];
+    bd->dirty = true;
+}
 
 Buffer
 BufferMgr::_FindFreeBuffer() {
-    if(_freeBuffDesc == nullptr){
-      return 0;
-    }
+    // loop to find a valid buffer desc
     
     BufferDesc* bd = _freeBuffDesc;
-    
-    if (bd->freeNext == 0){
-      // exhausted.
-      _freeBuffDesc = nullptr;
-    } else {
-      _freeBuffDesc = _buffDesc + (_freeBuffDesc->freeNext - 1);
+
+    if (bd->freeNext == INVALID_BUFFER) {
+        // exhausted.
+        _freeBuffDesc = nullptr;
+    }
+    else {
+        _freeBuffDesc = _buffDesc + (_freeBuffDesc->freeNext - 1);
     }
     bd->freeNext = 0;
     return bd->buf_id;
 }
 
 void
-BufferMgr::MarkBufferDirty(Buffer bufId) {
-    BufferDesc* bd = &_buffDesc[bufId - 1];
-    
+BufferMgr::_Cleanup() {
+    if (_freeBuffDesc == nullptr) {
+        for (int i{}; i < NBuffer; i++) {
+            BufferDesc* desc = &_buffDesc[i];
+            if (desc->refcnt == 0) {
+                if (desc->dirty) {
+                    FlushBuffer(desc);
+                }
+                _hashMap.Remove(desc->tag);
+                if (_freeBuffDesc != nullptr) {
+                    desc->freeNext = _freeBuffDesc->buf_id;
+                }
+                else {
+                    desc->freeNext = INVALID_BUFFER;
+                }
+                _freeBuffDesc = desc;
+            }
+        }
+    }
+}
+
+void
+BufferMgr::Debug(void) {
+    for (int i{ 0 }; i < NBuffer; i++) {
+        BufferDesc* desc = &_buffDesc[i];
+        printf("buf id %d , refcnt %d\r\n", desc->buf_id, desc->refcnt);
+    }
 }

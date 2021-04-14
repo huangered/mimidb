@@ -37,9 +37,9 @@ struct BufferDesc {
     int buf_id;
 
     // the buf state, include ref_count;
-    volatile int state;
+    int refcnt;
     // the buf is updated.
-    volatile bool dirty;
+    bool dirty;
     int freeNext;
 };
 
