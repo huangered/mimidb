@@ -30,10 +30,12 @@ public:
 	BufferDesc* GetBufferDesc(Buffer buffer);
 	Page GetPage(Buffer bufId);
 	void MarkBufferDirty(Buffer bufId);
+	void Debug(void);
 private:
 	Buffer _ReadBufferCommon(Relation rel, ForkNumber fork, BlockNumber block);
 	BufferDesc* _BufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno, bool* found);
-	Buffer _FindFreeBuffer();
+	Buffer _FindFreeBuffer(void);
+	void _Cleanup(void);
 };
 
 #endif

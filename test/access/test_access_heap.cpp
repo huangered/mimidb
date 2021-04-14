@@ -22,8 +22,8 @@ TEST(heap, incr_insert)
     rel->tupleDesc = CreateTupleDesc(2, attr);
     delete[] attr;
 
-    for (int i = 0; i < 5; i++) {
-        int* value = new int[2]{ 0,i };
+    for (int i = 0; i < 100; i++) {
+        int* value = new int[2]{ 98, 99 };
         HeapTuple tuple = heap_form_tuple(rel->tupleDesc, (Datum*)value);
         bool result = rel->tb_am->Insert(rel, tuple);
         EXPECT_TRUE(result);

@@ -1,7 +1,12 @@
 #include "storage/bufmgr.hpp"
 #include "storage/buf_internal.hpp"
 
-BufferMgr* bmgr = new BufferMgr{};
+static BufferMgr* bmgr = new BufferMgr{};
+
+void BufferReset(){
+    delete bmgr;
+    bmgr = new BufferMgr{};
+}
 
 Buffer
 ReadBuffer(Relation rel, BlockNumber block) {
@@ -37,4 +42,9 @@ BlockNumber
 BufferGetBlockNumber(Buffer buffer) {
 	BufferDesc* bufHdr = GetBufferDesc(buffer);
 	return bufHdr->tag.blockNum;
+}
+
+void
+FlushBuffer(Buffer buffer) {
+	bmgr->FlushBuffer(GetBufferDesc(buffer));
 }

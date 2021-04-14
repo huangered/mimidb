@@ -51,8 +51,10 @@ private:
 	Hash _hash;
 	Equal _equal;
 	const int NUM = 8;
+	int count;
 public:
 	HashMap() {
+		count = 0;
 		_buckets = new Bucket[NUM];
 		for (int i{}; i < NUM; i++) {
 			(_buckets + i)->_list = nullptr;
@@ -78,6 +80,7 @@ public:
 		Bucket* bucket = _buckets + index;
 		Entry* entry = new Entry{ k, v, bucket->_list };
 		bucket->_list = entry;
+		count++;
 	}
 
 	bool Get(K k, V* v) {
@@ -109,6 +112,7 @@ public:
 			if (_equal(entry->_k, k)) {
 				*head = entry->_next;
 				delete entry;
+				count--;
 			}
 			else {
 				head = &entry->_next;
