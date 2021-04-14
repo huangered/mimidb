@@ -136,7 +136,7 @@ BufferMgr::MarkBufferDirty(Buffer bufId) {
 Buffer
 BufferMgr::_FindFreeBuffer() {
     // loop to find a valid buffer desc
-    
+    _Cleanup();
     BufferDesc* bd = _freeBuffDesc;
 
     if (bd->freeNext == INVALID_BUFFER) {
