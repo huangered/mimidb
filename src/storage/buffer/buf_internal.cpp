@@ -21,6 +21,7 @@ BufferMgr::BufferMgr() {
     
     _buffDesc[NBuffer - 1].freeNext = INVALID_BUFFER;
     _freeBuffDesc = _buffDesc;
+        //index = 0;
 }
 
 BufferMgr::~BufferMgr() {
@@ -96,7 +97,7 @@ BufferMgr::_BufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno, 
     assert(desc);
     desc->refcnt +=1;
     desc->tag = tag;
-//    // insert into hash
+    // insert into hash
     _hashMap.Put(tag, buf_id);
     return GetBufferDesc(buf_id);
 }

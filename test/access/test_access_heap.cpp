@@ -30,25 +30,25 @@ TEST(heap, incr_insert)
         heap_free_tuple(tuple);
         delete[] value;
     }
-    //// find
-    //Datum datum = IntGetDatum(0);
-    //ScanKey skey = new ScanKeyData;
-    //ScanKeyInit(skey, 0, BTEqualStrategyNumber, datum, 0);
-    //HeapScanDesc hsDesc = rel->tb_am->BeginScan(rel, 1, skey);
-    //for (int i{}; i < 5; i++) {
-    //    HeapTuple htup = rel->tb_am->GetNext(hsDesc, ScanDirection::Forward);
-    //    char* data = (char*)htup->t_data + HEAP_TUPLE_HEADER_SIZE;
-    //    int* j = (int*)data;
-    //    int* l = j + 1;
-    //    EXPECT_EQ(datum, *j);
-    //    EXPECT_EQ(i, *l);
-    //}
+    // find
+    Datum datum = IntGetDatum(0);
+    ScanKey skey = new ScanKeyData;
+    ScanKeyInit(skey, 0, BTEqualStrategyNumber, datum, 0);
+    HeapScanDesc hsDesc = rel->tb_am->BeginScan(rel, 1, skey);
+    for (int i{}; i < 5; i++) {
+        HeapTuple htup = rel->tb_am->GetNext(hsDesc, ScanDirection::Forward);
+        char* data = (char*)htup->t_data + HEAP_TUPLE_HEADER_SIZE;
+        int* j = (int*)data;
+        int* l = j + 1;
+        EXPECT_EQ(datum, *j);
+        EXPECT_EQ(i, *l);
+    }
 
-    //rel->tb_am->EndScan(hsDesc);
+    rel->tb_am->EndScan(hsDesc);
 
-    ////if (htup)
-    ////    delete htup;
-    //delete skey;
+    //if (htup)
+    //    delete htup;
+    delete skey;
 
     FreeTupleDesc(rel->tupleDesc);
     delete rel;
