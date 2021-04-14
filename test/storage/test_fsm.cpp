@@ -1,6 +1,5 @@
 #include "../g.hpp"
 
-
 #include "storage/bufmgr.hpp"
 #include "storage/fsm_internal.hpp"
 #include "storage/freespace.hpp"

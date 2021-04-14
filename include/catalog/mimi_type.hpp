@@ -1,15 +1,14 @@
-﻿#ifndef _mimi_am_h_
-#define _mimi_am_h_
+﻿#ifndef _mimi_type_hpp_
+#define _mimi_type_hpp_
 
 #include "mimi.hpp"
 
-typedef struct FormData_mimi_am {
+typedef struct FormData_mimi_type {
     Oid oid;
-    char amname[NAME_LIMIT];
-    char amhandler[NAME_LIMIT];
-    char amtype;
-} FormData_mimi_am;
+    char typ_name[NAME_LIMIT];
+    int typ_length;
+} FormData_mimi_type;
 
-typedef FormData_mimi_am* Form_mimi_am;
+typedef FormData_mimi_type* Form_mimi_type;
 
-#endif // !_mimi_class_h_
+#endif // !_MIMI_TYPE_H_

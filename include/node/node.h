@@ -1,13 +1,15 @@
-#ifndef _NODE_H_
-#define _NODE_H_
+#ifndef _node_hpp_
+#define _node_hpp_
 
 #include <stdlib.h>
 
 typedef enum NodeTag {
+	//ddl
 	NT_InsertStmt,
 	NT_UpdateStmt,
 	NT_SelectStmt,
 	NT_DeleteStmt,
+	// dml
 	NT_CreateTableStmt,
 
 	NT_WhereStmt,
@@ -29,6 +31,10 @@ typedef struct Node {
 	NodeTag nodetag;
 } Node;
 
-typedef struct Node* NodePtr;
+typedef enum Op {
+	OP_AND,
+	OP_OR,
+	OP_NOT,
+} Op;
 
 #endif

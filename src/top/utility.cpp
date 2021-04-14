@@ -13,7 +13,7 @@ ProcessUtility(Node* pstmt) {
 	{
 	case NT_CreateTableStmt:
 	{
-		List* stmts = NULL;
+		List* stmts = nullptr;
 
 		// 拆解create table sql
 		stmts = transformCreateStmt((CreateTableStmt*)pstmt);

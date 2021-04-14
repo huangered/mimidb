@@ -1,5 +1,5 @@
-﻿#ifndef _PARSENODE_H_
-#define _PARSENODE_H_
+﻿#ifndef _parsenode_hpp_
+#define _parsenode_hpp_
 
 #include "node/node.h"
 #include "node/list.h"
@@ -91,6 +91,7 @@ typedef struct ColumnDef {
 	NodeTag nodetag;
 	char* colname;
 	TypeName* typeName;
+	int primary;
 } ColumnDef;
 
 Node* makeIntValue(int i);

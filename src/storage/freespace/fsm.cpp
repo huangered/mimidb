@@ -143,7 +143,6 @@ void
 fsm::fsm_extend(Relation rel, BlockNumber blkno) {
     PgData data;
     PageInit((Page)data.data, BLKSZ, 0);
-
     BlockNumber fsm_blocks = smgr->Nblocks(rel->rd_smgr, FSM_FORKNUM);
     while (fsm_blocks < blkno) {
         smgr->Extend(rel->rd_smgr, FSM_FORKNUM, fsm_blocks, (Page)data.data);
