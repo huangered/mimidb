@@ -28,6 +28,7 @@ top:
 
     delete itup_key;
     ReleaseBuffer(buf);
+    FlushBuffer(buf);
 
     return true;
 }
