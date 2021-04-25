@@ -57,6 +57,10 @@ Heap::Close(Relation rel) {
     relcache->RelationClose(rel);
 }
 
+Heap::Heap() {
+
+}
+
 bool
 Heap::Remove(Relation rel, int key) {
 

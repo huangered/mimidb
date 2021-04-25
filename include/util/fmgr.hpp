@@ -16,7 +16,7 @@ struct FmgrInfo {
 
 struct FunctionCallInfoData {
     Method* flinfo;
-    short nagrs;
+    short nargs;
     Datum args[MAX_ARGS];
 };
 

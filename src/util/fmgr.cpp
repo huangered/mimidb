@@ -37,7 +37,7 @@ Datum
 DirectFunctionCall2Coll(Method func, Datum arg1, Datum arg2) {
     FunctionCallInfoData fdata{};
     fdata.flinfo = &func;
-    fdata.nagrs = 2;
+    fdata.nargs = 2;
     fdata.args[0] = arg1;
     fdata.args[1] = arg2;
     Datum result = (*fdata.flinfo)(&fdata);
