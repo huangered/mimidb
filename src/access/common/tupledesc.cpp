@@ -2,11 +2,11 @@
 #include "util/mctx.hpp"
 
 /*
-* 创建一个空的tupledesc
+* 创建一个空的 tupledesc
 */
 TupleDesc
 CreateTempTupleDesc(int natts) {
-    TupleDesc desc = (TupleDesc)std::malloc(offsetof(TupleDescData, attr) + natts * sizeof(FormData_mimi_attribute));
+    TupleDesc desc = (TupleDesc)palloc0(offsetof(TupleDescData, attr) + natts * sizeof(FormData_mimi_attribute));
     desc->natts = natts;
     return desc;
 }
@@ -29,7 +29,5 @@ free tupledesc object
 */
 void
 FreeTupleDesc(TupleDesc tupdesc) {
-    if (tupdesc) {
-        std::free(tupdesc);
-    }
+    pfree(tupdesc);
 }

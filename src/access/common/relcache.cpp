@@ -164,9 +164,9 @@ RelCache::BuildRelationDesc(Oid oid, bool insert) {
 */
 Relation
 RelCache::BuildLocalRelation(Oid oid, const char* relname, TupleDesc tupdesc) {
-    Relation heaprel = new RelationData;
+    Relation heaprel = new RelationData{};
     heaprel->rd_id = oid;
-    heaprel->rd_rel = new FormData_mimi_class;
+    heaprel->rd_rel = new FormData_mimi_class{};
     strcpy(heaprel->rd_rel->relname, relname);
 
     _relationBuildTuple(heaprel, tupdesc);
@@ -196,7 +196,7 @@ RelCache::_scanMimiRelation(Oid relid) {
     HeapTuple tup = NULL;
     ScanKeyData key[1];
     Relation pg_class_relation;
-    SystemTableScan scan;
+    SysTableScan scan;
 
     ScanKeyInit(key, MIMI_CLASS_OID_LOCATION, BTEqualStrategyNumber, relid, OIDEQ_OID);
     pg_class_relation = relation_open(ClassRelationId);

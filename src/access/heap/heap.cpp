@@ -233,22 +233,29 @@ Heap::_tuple_prepare_insert(Relation rel, HeapTuple tup, int xmin) {
 
 void
 Heap::debug(Relation rel) {
-    Buffer buf = ReadBuffer(rel, 0);
-    Page page = BufferGetPage(buf);
-    OffsetNumber max = PageGetMaxOffsetNumber(page);
+    int j{ 0 };
+    RelationOpenSmgr(rel);
+    int nblocks = smgr->Nblocks(rel->rd_smgr, MAIN_FORKNUM);
+    for (int i{}; i < nblocks; i++) {
+        Buffer buf = ReadBuffer(rel, i);
+        Page page = BufferGetPage(buf);
+        OffsetNumber max = PageGetMaxOffsetNumber(page);
 
-
-    for (OffsetNumber offset{1}; offset <= max; offset++) {
-        ItemId itemid = PageGetItemId(page, offset);
-        Item item = PageGetItem(page, itemid);
-        HeapTupleHeader tup = (HeapTupleHeader)item;
-        printf("debug min: %d\r\n", tup->t_heap.t_xmin);
-        printf("debug max: %d\r\n", tup->t_heap.t_xmax);
-        // todo test scan key;
-        char* data = (char*)tup + HEAP_TUPLE_HEADER_SIZE;
-        int* a = (int*)data;
-        printf("debug v1 %d\r\n", *a);
-        printf("debug v2 %d\r\n", *(a+1));
+        for (OffsetNumber offset{ 1 }; offset <= max; offset++) {
+            ItemId itemid = PageGetItemId(page, offset);
+            Item item = PageGetItem(page, itemid);
+            HeapTupleHeader tup = (HeapTupleHeader)item;
+            // todo test scan key;
+            char* data = (char*)tup + HEAP_TUPLE_HEADER_SIZE;
+            int* a = (int*)data;
+            printf(">>> debug min,max: (%d , %d) bo, (%d, %d) value: (%d , %d)\r\n",
+                tup->t_heap.t_xmin, tup->t_heap.t_xmax,
+                tup->t_ctid.blocknum, tup->t_ctid.offset, 
+                *a, *(a + 1));
+            j++;
+        }
+        printf(">>>\r\n");
+        ReleaseBuffer(buf);
     }
-    printf("=========\r\n");
+    printf("total %d\r\n", j);
 }

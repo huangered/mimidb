@@ -8,8 +8,6 @@
 #include "access/scan.hpp"
 #include "access/tableapi.hpp"
 
-typedef HeapScanDescData* HeapScanDesc;
-
 /*
 堆表操作类
 */

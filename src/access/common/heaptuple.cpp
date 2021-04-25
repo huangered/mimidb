@@ -13,7 +13,7 @@ heap_form_tuple(TupleDesc desc, Datum* values) {
 
     int hoff = HEAP_TUPLE_HEADER_SIZE;
     int len = HEAP_TUPLE_SIZE + hoff + datasz;
-    HeapTuple htup = (HeapTuple)std::malloc(len);
+    HeapTuple htup = (HeapTuple)palloc0(len);
 
     htup->t_len = datasz + hoff;
     htup->t_data = td = (HeapTupleHeader)((char*)htup + HEAP_TUPLE_SIZE);
@@ -27,5 +27,5 @@ heap_form_tuple(TupleDesc desc, Datum* values) {
 void
 heap_free_tuple(HeapTuple tuple) {
     
-    std::free(tuple);
+    pfree(tuple);
 }

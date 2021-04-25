@@ -80,7 +80,7 @@ Md::Extend(SMgrRelation reln, ForkNumber forknum, BlockNumber blocknum, char* bu
 		fd = Open(reln, forknum);
 	}
 	int off = BLKSZ * blocknum;
-	lseek(fd, off, SEEK_END);
+	lseek(fd, off, SEEK_SET);
 	int sz = write(fd, buf, BLKSZ);
 	return sz;
 }

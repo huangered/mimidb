@@ -2,7 +2,8 @@
 #include "storage/freespace.hpp"
 #include <assert.h>
 
-BTreeMetaData* BtreeIndex::_bt_getmeta(Relation rel, Buffer metabuf) {
+BTreeMetaData*
+BtreeIndex::_bt_getmeta(Relation rel, Buffer metabuf) {
     Page metap = BufferGetPage(metabuf);
     BTreeMetaData* metad = (BTreeMetaData*)PageGetContent(metap);
     return metad;
@@ -11,7 +12,8 @@ BTreeMetaData* BtreeIndex::_bt_getmeta(Relation rel, Buffer metabuf) {
 /*
 update the metapage and save to disk.
 */
-void BtreeIndex::_bt_updatemeta(Buffer metabuf) {
+void
+BtreeIndex::_bt_updatemeta(Buffer metabuf) {
 
 }
 
@@ -31,7 +33,7 @@ BtreeIndex::_bt_get_root(Relation rel) {
     BlockNumber rootblkno;
     Page rootpage;
 
-    // 从meta里获取root buf
+    // 从 meta 缓存里获取 root buf
     if (rel->rd_metacache != nullptr) {
         metad = (BTreeMetaData*)rel->rd_metacache;
         assert(metad->root != P_NONE);
@@ -40,13 +42,13 @@ BtreeIndex::_bt_get_root(Relation rel) {
         return rootbuf;
     }
 
-    // 加载 meta
+    // 从 blocknum 0 加载 meta
     metabuf = _bt_get_buf(rel, BTREE_METAPAGE);
     metapage = BufferGetPage(metabuf);
     metad = (BTreeMetaData*)PageGetContent(metapage);
 
     if (metad->root == P_NONE) {
-        // 如果meta没有初始化
+        // 如果meta没有初始化，初始化
         // 1. 创建root block
         rootbuf = _bt_get_buf(rel, P_NEW);
         rootblkno = GetBufferDesc(rootbuf)->tag.blockNum;
@@ -60,13 +62,17 @@ BtreeIndex::_bt_get_root(Relation rel) {
         // 2. 更新meta
         metad->root = rootblkno;
         metad->fastroot = rootblkno;
+
+        MarkBufferDirty(rootbuf);
+        MarkBufferDirty(metabuf);
+        // 释放metabuf
+        ReleaseBuffer(metabuf);
     }
     else {
         // 如果meta初始化了
         rootblkno = metad->fastroot;
         rel->rd_metacache = metad;
         rootbuf = _bt_get_buf(rel, rootblkno);
-
     }
 
     return rootbuf;
@@ -90,5 +96,5 @@ BtreeIndex::_bt_get_buf(Relation rel, BlockNumber blkno) {
 
 void
 BtreeIndex::_bt_relbuf(Relation rel, Buffer buf) {
-
+    ReleaseBuffer(buf);
 }
