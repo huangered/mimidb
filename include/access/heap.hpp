@@ -13,7 +13,7 @@
 */
 class Heap {
 public:
-    Heap(){}
+	Heap();
 	Relation Open(Oid relationId);
 	void Close(Relation rel);
 

@@ -1,5 +1,5 @@
-#ifndef _PAGE_H_
-#define _PAGE_H_
+#ifndef _page_hpp_
+#define _page_hpp_
 
 #include "mimi.hpp"
 #include "storage/itemid.hpp"
@@ -54,4 +54,4 @@ Page GetTempPage(Page page);
 Size PageGetFreeSpace(Page page);
 void PageRestoreTempPage(Page temp, Page origin);
 
-#endif // !_PAGE_H_
+#endif
