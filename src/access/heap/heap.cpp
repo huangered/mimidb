@@ -22,7 +22,7 @@ static int GetCurrentTransactionId(void) {
 
 static bool TestKey(HeapTuple tuple, HeapScanDesc scan) {
     bool result1{ true };
-    char* data = (char*)tuple + HEAP_TUPLE_HEADER_SIZE;
+    char* data = (char*)tuple->t_data + HEAP_TUPLE_HEADER_SIZE;
 
     for (int i{ 0 }; i < scan->rs_nkeys; i++) {
         int key = *((int*)data);
@@ -121,7 +121,7 @@ Heap::_heap_get_tuple(HeapScanDesc scan, ScanDirection direction) {
 
     for (;;) {
         if (blkno > scan->rs_numblocks) {
-            return;
+            break;
         }
 
         for (; offset <= max; offset++) {
@@ -141,6 +141,10 @@ Heap::_heap_get_tuple(HeapScanDesc scan, ScanDirection direction) {
         // goto next page
         blkno = blkno + 1;
         offset = FirstOffsetNumber;
+
+        buf = ReadBuffer(scan->rs_rd, blkno);
+        page = BufferGetPage(buf);
+        max = PageGetMaxOffsetNumber(page);
     }
 
     // search all blocks, no one found.

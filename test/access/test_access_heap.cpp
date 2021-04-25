@@ -3,7 +3,7 @@
 #include "access/heap.hpp"
 #include "access/rel.hpp"
 #include "storage/smgr.hpp"
-
+#include "util/mctx.hpp"
 // test the basic usage in buff mgr.
 TEST(heap, incr_insert)
 {
@@ -23,7 +23,7 @@ TEST(heap, incr_insert)
     delete[] attr;
 
     for (int i = 0; i < 1000; i++) {
-        int* value = new int[2]{ i, i*10 };
+        int* value = new int[2]{ i, i * 10 };
         HeapTuple tuple = heap_form_tuple(rel->tupleDesc, (Datum*)value);
         bool result = rel->tb_am->Insert(rel, tuple);
         EXPECT_TRUE(result);
@@ -31,26 +31,28 @@ TEST(heap, incr_insert)
         delete[] value;
     }
     // find
-    //Datum datum = IntGetDatum(0);
-    //ScanKey skey = new ScanKeyData;
-    //ScanKeyInit(skey, 0, BTEqualStrategyNumber, datum, 0);
-    //HeapScanDesc hsDesc = rel->tb_am->BeginScan(rel, 1, skey);
-    //for (int i{}; i < 5; i++) {
-    //    HeapTuple htup = rel->tb_am->GetNext(hsDesc, ScanDirection::Forward);
-    //    char* data = (char*)htup->t_data + HEAP_TUPLE_HEADER_SIZE;
-    //    int* j = (int*)data;
-    //    int* l = j + 1;
-    //    EXPECT_EQ(datum, *j);
-    //    EXPECT_EQ(5, *l);
-    //}
+    Datum datum = IntGetDatum(0);
+    ScanKey skey = (ScanKey)palloc0(sizeof(ScanKeyData));
+    ScanKeyInit(skey, 0, BTEqualStrategyNumber, datum, 2);
+    HeapScanDesc hsDesc = rel->tb_am->BeginScan(rel, 1, skey);
+    for (int i{}; i < 5; i++) {
+        HeapTuple htup = rel->tb_am->GetNext(hsDesc, ScanDirection::Forward);
+        if (htup->t_data != nullptr) {
+            char* data = (char*)htup->t_data + HEAP_TUPLE_HEADER_SIZE;
+            int* j = (int*)data;
+            int* l = j + 1;
+            EXPECT_EQ(datum, *j);
+            EXPECT_EQ(datum * 10, *l);
+        }
+    }
 
-    //rel->tb_am->EndScan(hsDesc);
+    rel->tb_am->EndScan(hsDesc);
 
-    rel->tb_am->debug(rel);
+    //rel->tb_am->debug(rel);
 
     //if (htup)
     //    delete htup;
-    //delete skey;
+    pfree(skey);
 
     FreeTupleDesc(rel->tupleDesc);
     delete rel;
