@@ -24,11 +24,17 @@ struct HeapScanDescData {
 	Buffer		rs_curbuf;	   // 当前buf
 };
 
-
+typedef HeapScanDescData* HeapScanDesc;
 
 // 索引表扫描描述
 
 // 系统表扫描描述
+struct SysTableScanData {
+	Relation heap_rel;
+	HeapScanDesc heap_scan;
+};
+
+typedef SysTableScanData* SysTableScan;
 
 enum class ScanDirection {
 	Backward,

@@ -3,7 +3,8 @@
 #include "storage/bufmgr.hpp"
 
 
-bool BtreeIndex::_bt_do_insert(Relation rel, IndexTuple itup) {
+bool
+BtreeIndex::_bt_do_insert(Relation rel, IndexTuple itup) {
     BTStack stack = NULL;
     bool fastpath = false;
     OffsetNumber newitemoffset;
@@ -33,7 +34,8 @@ top:
     return true;
 }
 
-BTStack BtreeIndex::_bt_search(Relation rel, BTreeScan itup_key, Buffer* bufp) {
+BTStack
+BtreeIndex::_bt_search(Relation rel, BTreeScan itup_key, Buffer* bufp) {
     BTStack stack_in = NULL;
 
     *bufp = _bt_get_root(rel);
@@ -63,7 +65,7 @@ BTStack BtreeIndex::_bt_search(Relation rel, BTreeScan itup_key, Buffer* bufp) {
         blkno = BTreeTupleGetDownLink(itup);
         par_blkno = GetBufferDesc(*bufp)->tag.blockNum;
 
-        BTStack new_stack = new BTStackData;
+        BTStack new_stack = new BTStackData{};
         new_stack->parent = stack_in;
         new_stack->blkno = par_blkno;
         new_stack->offset = offsetnum;
@@ -76,7 +78,8 @@ BTStack BtreeIndex::_bt_search(Relation rel, BTreeScan itup_key, Buffer* bufp) {
     return stack_in;
 }
 
-void BtreeIndex::_bt_insertonpg(Relation rel, Buffer buffer, OffsetNumber newitemoffset, BTreeScan itup_key, BTStack stack) {
+void
+BtreeIndex::_bt_insertonpg(Relation rel, Buffer buffer, OffsetNumber newitemoffset, BTreeScan itup_key, BTStack stack) {
     Page page = BufferGetPage(buffer);
 
     // size enough
@@ -189,14 +192,16 @@ BtreeIndex::_bt_split(Relation rel, IndexTuple itup, Buffer buf, OffsetNumber ne
     return rbuf;
 }
 
-bool BtreeIndex::_bt_addtup(Page page, Item item, Size itemsz, OffsetNumber newitemoffset) {
+bool
+BtreeIndex::_bt_addtup(Page page, Item item, Size itemsz, OffsetNumber newitemoffset) {
 
     PageAddItem(page, item, itemsz, newitemoffset);
 
     return true;
 }
 
-void BtreeIndex::_bt_insert_parent(Relation rel, Buffer buf, Buffer rbuf, BTStack stack, bool is_root) {
+void
+BtreeIndex::_bt_insert_parent(Relation rel, Buffer buf, Buffer rbuf, BTStack stack, bool is_root) {
     if (is_root) {
         Buffer rootbuf;
         rootbuf = _bt_newroot(rel, buf, rbuf);
@@ -265,8 +270,8 @@ BtreeIndex::_bt_newroot(Relation rel, Buffer lbuf, Buffer rbuf) {
     metad->fastroot = rootblkno;
 
     // get left page high key
-    IndexTuple hkey = new IndexTupleData;
-    hkey->key = INT_MIN;
+    IndexTuple hkey = new IndexTupleData{};
+    //hkey->key = INT_MIN;
     hkey->ht_id = lblkno;
     hkey->tuple_size = sizeof(IndexTupleData);
     // set first item
@@ -277,7 +282,7 @@ BtreeIndex::_bt_newroot(Relation rel, Buffer lbuf, Buffer rbuf) {
     IndexTuple second;
     IndexTuple lphkey = (IndexTuple)PageGetItem(lpage, PageGetItemId(lpage, P_HIKEY));
 
-    second = new IndexTupleData;
+    second = new IndexTupleData{};
     second->key = lphkey->key;
     second->ht_id = rblkno;
     second->tuple_size = sizeof(IndexTupleData);

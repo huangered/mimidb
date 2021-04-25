@@ -127,9 +127,11 @@ public:
     virtual bool Insert(Relation rel, int nkey, int ht_id);
     virtual bool Remove(Relation rel, int nkey);
     virtual IndexScanDesc BeginScan(Relation nrel, int nkeys, ScanKey key);
+    virtual bool GetNext(IndexScanDesc scan, ScanDirection dir);
     virtual void EndScan(Relation rel, int nkeys);
-    virtual bool GetTuple(IndexScanDesc scan);
     virtual void Vacuum(Relation rel);
+
+    void debug(Relation rel);
 };
 
 extern IndexAm* BtreeRoute();

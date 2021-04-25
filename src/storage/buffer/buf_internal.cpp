@@ -177,6 +177,6 @@ void
 BufferMgr::Debug(void) {
     for (int i{ 0 }; i < NBuffer; i++) {
         BufferDesc* desc = &_buffDesc[i];
-        printf("buf id %d , refcnt %d\r\n", desc->buf_id, desc->refcnt);
+        printf("buf id %d , refcnt %d , dirty %d\r\n", desc->buf_id, desc->refcnt, desc->dirty);
     }
 }

@@ -23,7 +23,6 @@ BtreeIndex::_bt_binsrch(Relation rel, Page page, BTreeScan key) {
         int mid = low + ((high - low) / 2);
 
         result = _bt_compare(rel, key, page, mid);
-
         if (result >= cmp) {
             low = mid + 1;
         }
@@ -59,6 +58,7 @@ BtreeIndex::_bt_first(IndexScanDesc scan) {
 
     BufferDesc* desc = GetBufferDesc(buf);
     Page page = BufferGetPage(buf);
+    itup_key->nextkey = false;
     offset = _bt_binsrch(scan->index_rel, page, itup_key);
 
     scan->block = desc->tag.blockNum;
@@ -127,12 +127,12 @@ BtreeIndex::_bt_compare(Relation rel, BTreeScan key, Page page, OffsetNumber off
 
         FmgrInfo info = skey->sk_func;
 
-        Datum result = DirectFunctionCall2Coll(info.fn_method, itup->key, key->itup->key);
+        Datum result = DirectFunctionCall2Coll(info.fn_method, key->itup->key, itup->key);
 
-        result = DatumGetInt(result);
+        int r = DatumGetInt(result);
 
-        if (result != 0) {
-            return result;
+        if (r != 0) {
+            return r;
         }
     }
 

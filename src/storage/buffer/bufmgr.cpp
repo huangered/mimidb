@@ -1,12 +1,7 @@
 #include "storage/bufmgr.hpp"
 #include "storage/buf_internal.hpp"
 
-static BufferMgr* bmgr = new BufferMgr{};
-
-void BufferReset(){
-    delete bmgr;
-    bmgr = new BufferMgr{};
-}
+BufferMgr* bmgr = new BufferMgr{};
 
 Buffer
 ReadBuffer(Relation rel, BlockNumber block) {
