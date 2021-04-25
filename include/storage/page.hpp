@@ -54,4 +54,4 @@ Page GetTempPage(Page page);
 Size PageGetFreeSpace(Page page);
 void PageRestoreTempPage(Page temp, Page origin);
 
-#endif
+#endif 
