@@ -3,6 +3,7 @@
 #include "storage/bufmgr.hpp"
 #include "access/relcache.hpp"
 #include "access/rel.hpp"
+#include "util/mctx.hpp"
 
 #define HOT_UPDATED     0
 #define HOT_REMOVED     1
@@ -59,36 +60,6 @@ Heap::Close(Relation rel) {
 
 Heap::Heap() {
 
-}
-
-bool
-Heap::Remove(Relation rel, int key) {
-
-    BlockNumber blkNum = 0;
-    int offset = 0;
-    int cur_tran = 0xffff;
-    Buffer buf = ReadBuffer(rel, blkNum);
-
-    Page page = BufferGetPage(buf);
-
-    PageHeader pHeader = (PageHeader)page;
-    for (;;) {
-        ItemId itemId = PageGetItemId(page, offset);
-        Item item = PageGetItem(page, itemId);
-
-        HeapTuple tup = (HeapTuple)item;
-        if (tup->t_data->t_heap.t_xmax == 0) { // for now , only get latest one.
-            tup->t_data->t_heap.t_xmax = cur_tran;
-             //add new deleted record?!
-            return true;
-        }
-        else {
-            blkNum = tup->t_data->t_ctid.blocknum;
-            offset = tup->t_data->t_ctid.offset;
-        }
-  }
-
-    return false;
 }
 
 /*
@@ -162,8 +133,11 @@ Heap::BeginScan(Relation rel, int nkeys, ScanKey key) {
     scan = new HeapScanDescData{};
     scan->rs_rd = rel;
     scan->rs_nkeys = nkeys;
-    scan->rs_key = new ScanKeyData[nkeys];
-    memcpy(scan->rs_key, key, nkeys * sizeof(ScanKeyData));
+    scan->rs_key = (ScanKey)palloc0(sizeof(ScanKeyData) * nkeys);
+
+    if (key != nullptr) {
+        memcpy(scan->rs_key, key, nkeys * sizeof(ScanKeyData));
+    }
 
     RelationOpenSmgr(rel);
     scan->rs_nblocks = smgr->Nblocks(rel->rd_smgr, MAIN_FORKNUM);
@@ -228,6 +202,32 @@ Heap::Insert(Relation rel, HeapTuple htup) {
     return true;
 }
 
+// 更新操作
+void
+Heap::Update(Relation rel, ItemPointer otid, HeapTuple newtuple) {
+    // 更新旧tuple
+    // 插入新tuple
+}
+
+// 移除操作
+bool
+Heap::Remove(Relation rel, ItemPointer otid) {
+    BlockNumber blkNum = otid->blocknum;
+    OffsetNumber offset = otid->offset;
+    int cur_tran = 0xffff;
+    Buffer buf = ReadBuffer(rel, blkNum);
+
+    Page page = BufferGetPage(buf);
+
+    ItemId itemId = PageGetItemId(page, offset);
+    Item item = PageGetItem(page, itemId);
+
+    HeapTuple tup = (HeapTuple)item;
+    tup->t_data->t_heap.t_xmax = cur_tran;
+    MarkBufferDirty(buf);
+    return true;
+}
+
 /*
 给heaptup的事务id赋值
 */
@@ -241,11 +241,11 @@ Heap::_tuple_prepare_insert(Relation rel, HeapTuple tup, int xmin) {
 
 void
 Heap::debug(Relation rel) {
-    int j{ 0 };
+    int total{ 0 };
     RelationOpenSmgr(rel);
     int nblocks = smgr->Nblocks(rel->rd_smgr, MAIN_FORKNUM);
-    for (int i{}; i < nblocks; i++) {
-        Buffer buf = ReadBuffer(rel, i);
+    for (int index{}; index < nblocks; index++) {
+        Buffer buf = ReadBuffer(rel, index);
         Page page = BufferGetPage(buf);
         OffsetNumber max = PageGetMaxOffsetNumber(page);
 
@@ -258,12 +258,12 @@ Heap::debug(Relation rel) {
             int* a = (int*)data;
             printf(">>> debug min,max: (%d , %d) bo, (%d, %d) value: (%d , %d)\r\n",
                 tup->t_heap.t_xmin, tup->t_heap.t_xmax,
-                tup->t_ctid.blocknum, tup->t_ctid.offset, 
+                tup->t_ctid.blocknum, tup->t_ctid.offset,
                 *a, *(a + 1));
-            j++;
+            total++;
         }
         printf(">>>\r\n");
         ReleaseBuffer(buf);
     }
-    printf("total %d\r\n", j);
+    printf("total %d\r\n", total);
 }

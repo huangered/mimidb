@@ -18,8 +18,8 @@ public:
 	void Close(Relation rel);
 
 	bool Insert(Relation rel, HeapTuple tuple);
-	void Update(Relation rel, HeapTuple tuple);
-	bool Remove(Relation rel, int key);
+	void Update(Relation rel, ItemPointer otid, HeapTuple newtuple);
+	bool Remove(Relation rel, ItemPointer otid);
 
 	// search
 	HeapScanDesc BeginScan(Relation rel, int nkeys, ScanKey key);

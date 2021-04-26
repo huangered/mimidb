@@ -1,15 +1,10 @@
-#include "storage/fd.hpp"
-#include <fcntl.h>
-#ifdef _WIN32
-#include <io.h>
-#endif
-#include <cstdio>
+#include <iostream>
+
 int main(int argc, char* argv[])
 {
-    int fd = PathNameOpenFile("test.txt");
-    const char* data = "12345";
-    lseek(fd, 1, SEEK_SET);
-    write(fd, data, 5);
-    close(fd);
+    int* a = new int[10]{0,1,2,3,4,5,6,7,8,9};
+    for (int i{}; i < 10; i++) {
+        std::cout << *(a + i) << std::endl;
+    }
     return 0;
 }

@@ -3,15 +3,11 @@
 
 #include "mimi.hpp"
 #include "access/tupledesc.hpp"
+#include "access/itemid.hpp"
 
 struct HeapTupleFields {
     int t_xmin;
     int t_xmax;
-};
-
-struct ItemPointerData {
-    int blocknum;
-    int offset;
 };
 
 struct HeapTupleHeaderData {
