@@ -5,24 +5,24 @@
 #include "util/mctx.hpp"
 #include "access/heap.hpp"
 
-SysTableScan
+SysTableScanDesc
 systable_beginscan(Relation heapRel, int nkeys, ScanKey key) {
-    SysTableScan sysscan;
+    SysTableScanDesc sysscan;
 
-    sysscan = (SysTableScan)palloc0(sizeof(SysTableScanData));
+    sysscan = (SysTableScanDesc)palloc0(sizeof(SysTableScanDescData));
     sysscan->heap_rel = heapRel;
     sysscan->heap_scan = heapRel->tb_am->BeginScan(heapRel, nkeys, key);
     return sysscan;
 };
 
 HeapTuple
-systable_getnext(SysTableScan scan) {
+systable_getnext(SysTableScanDesc scan) {
     HeapTuple htup = scan->heap_rel->tb_am->GetNext(scan->heap_scan, ScanDirection::Forward);
     return htup;
 };
 
 void
-systable_endscan(SysTableScan scan) {
+systable_endscan(SysTableScanDesc scan) {
     scan->heap_rel->tb_am->EndScan(scan->heap_scan);
     pfree(scan);
 };

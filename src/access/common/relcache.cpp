@@ -9,11 +9,15 @@
 #include "catalog/mimi_code.hpp"
 #include "storage/smgr.hpp"
 #include "util/builtins.hpp"
+#include "access/sysattr.hpp"
+#include "util/mctx.hpp"
 
 RelCache* relcache = new RelCache{};
 
-// private area
-static const FormData_mimi_attribute desc_pg_class[4] = {
+/*
+* 硬编码的tuple描述信息
+*/
+static const FormData_mimi_attribute Desc_pg_class[4] = {
     {
          1,
          {"oid"},
@@ -43,8 +47,7 @@ static const FormData_mimi_attribute desc_pg_class[4] = {
          1
     }
 };
-
-static const FormData_mimi_attribute desc_pg_attribute[1] = {
+static const FormData_mimi_attribute Desc_pg_attribute[1] = {
     {
          1,
          {"oid"},
@@ -53,15 +56,9 @@ static const FormData_mimi_attribute desc_pg_attribute[1] = {
          1
     } 
 };
+static const FormData_mimi_attribute Desc_pg_type[1] = {
+    {1,"oid", sizeof(int), 1 },
 
-static const FormData_mimi_attribute desc_pg_type[1] = {
-    {
-         1,
-	     {"oid"},
-	     sizeof(int),
-         0,
-         1
-    }
 };
 
 static void RelationIncRefCount(Relation rel);
@@ -73,20 +70,20 @@ static void RelationDecRefCount(Relation rel);
 2. insert the basic system relation
 */
 RelCache::RelCache() {
-    _formrdesc("mimi_class", ClassRelationId, 4, desc_pg_class);
-    _formrdesc("mimi_attribute", AttributeRelationId, 1, desc_pg_attribute);
-    _formrdesc("mimi_type", TypeRelationId, 1, desc_pg_type);
+    _formrdesc("mimi_class", ClassRelationId, 4, Desc_pg_class);
+    _formrdesc("mimi_attribute", AttributeRelationId, 1, Desc_pg_attribute);
+    _formrdesc("mimi_type", TypeRelationId, 1, Desc_pg_type);
 }
 
 Relation
 RelCache::RelationIdGetRelation(Oid relid) {
     RelCacheEntry entry;
-
+    // 查找cache
     if (cache.Get(relid, &entry)) {
         RelationIncRefCount(entry.rel);
         return entry.rel;
     }
-
+    // 从数据库中加载 relation
     Relation rel = BuildRelationDesc(relid, true);
     RelationIncRefCount(rel);
     return rel;
@@ -97,6 +94,7 @@ RelCache::RelationClose(Relation rel) {
     RelationDecRefCount(rel);
     if (rel->refcount == 0) {
         //remove from cache;
+        cache.Remove(rel->rd_id);
     }
 }
 
@@ -135,26 +133,36 @@ RelCache::_formrdesc(const char* relname, Oid reltype, int natts, const FormData
 2. if insert == true, insert into cache
 */
 Relation
-RelCache::BuildRelationDesc(Oid oid, bool insert) {
-    HeapTuple heap_tup;
-    Form_mimi_class rel_class;
+RelCache::BuildRelationDesc(Oid targetRelId, bool insert) {
+    Relation        relation;
+    HeapTuple       mimi_class_tuple;
+    Form_mimi_class relp;
 
-    heap_tup = _scanMimiRelation(oid);
-    rel_class = (Form_mimi_class)(heap_tup->t_data);
+    // 扫描 mimi_class 表，获取meta数据
+    mimi_class_tuple = _ScanMimiRelation(targetRelId);
 
-    Relation heaprel = new RelationData;
-    heaprel->rd_id = oid;
-    heaprel->rd_rel = new FormData_mimi_class;
-    strcpy(heaprel->rd_rel->relname, rel_class->relname);
-
-    //RelationBuildTuple(heaprel);
-
-    heaprel->refcount = 0;
-    if (insert) {
-        RelCacheEntry entry{ heaprel->rd_id, heaprel };
-        cache.Put(heaprel->rd_id, entry);
+    // 没找到，返回空
+    if (mimi_class_tuple == nullptr) {
+        return nullptr;
     }
-    return heaprel;
+
+    relp = (Form_mimi_class)GETSTRUCT(mimi_class_tuple);
+
+    relation = _AllocateRelationDesc(relp);
+
+    //更新attrs
+    _RelationBuildTuple(relation);
+    // 更新物理地址
+    _RelationInitPhysicalAddr(relation);
+    relation->refcount = 0;
+
+    // 释放 heap_tup
+
+    if (insert) {
+        RelCacheEntry entry{ relation->rd_id, relation };
+        cache.Put(relation->rd_id, entry);
+    }
+    return relation;
 }
 
 
@@ -169,45 +177,61 @@ RelCache::BuildLocalRelation(Oid oid, const char* relname, TupleDesc tupdesc) {
     heaprel->rd_rel = new FormData_mimi_class{};
     strcpy(heaprel->rd_rel->relname, relname);
 
-    _relationBuildTuple(heaprel, tupdesc);
+    _RelationBuildTuple(heaprel);
 
     heaprel->refcount = 0;
     return heaprel;
 }
 
-void
-RelCache::_relationBuildTuple(Relation heaprel, TupleDesc tupdesc) {
-    // find tuple desc from meta data
+Relation
+RelCache::_AllocateRelationDesc(Form_mimi_class relp) {
+    Relation rel = (Relation)palloc0(sizeof(RelationData));
+    rel->rd_smgr = nullptr;
+    rel->rd_id = relp->oid;
+    rel->rd_rel = (Form_mimi_class)palloc0(sizeof(FormData_mimi_class));
+    memcpy(rel->rd_rel, relp, sizeof(FormData_mimi_class));
+    return rel;
+}
 
-    heaprel->tupleDesc = new TupleDescData;
-    heaprel->tupleDesc->natts = tupdesc->natts;
-    for (int i = 0; i < heaprel->tupleDesc->natts; i++) {
-        heaprel->tupleDesc->attr[i].att_len = tupdesc->attr[i].att_len;
-        heaprel->tupleDesc->attr[i].typid = tupdesc->attr[i].typid;
-        strcpy(heaprel->tupleDesc->attr[i].att_name, tupdesc->attr[i].att_name);
-    }
+void
+RelCache::_RelationBuildTuple(Relation rel) {
+    // search attribute table by rel->oid
+
+    rel->tupleDesc;// = CreateTupleDesc(tupdesc->natts, tupdesc->attr);
+}
+
+void
+RelCache::_RelationInitPhysicalAddr(Relation rel) {
+    // 扫描class 表，查找relfilenode
 }
 
 /*
  * 扫描 mm_class 表，获取 relation tuple 信息
  */
 HeapTuple
-RelCache::_scanMimiRelation(Oid relid) {
-    HeapTuple tup = NULL;
-    ScanKeyData key[1];
-    Relation pg_class_relation;
-    SysTableScan scan;
+RelCache::_ScanMimiRelation(Oid relid) {
+    HeapTuple        pg_class_tuple;
+    Relation         pg_class_relation;
+    SysTableScanDesc pg_class_scan;
+    ScanKeyData      key[1];
 
-    ScanKeyInit(key, MIMI_CLASS_OID_LOCATION, BTEqualStrategyNumber, relid, OIDEQ_OID);
+    // 生成scan key
+    ScanKeyInit(&key[0], ObjectIdAttributeNumber, BTEqualStrategyNumber, relid, OIDEQ_OID);
+
     pg_class_relation = relation_open(ClassRelationId);
 
-    scan = systable_beginscan(pg_class_relation, 1, key);
-    tup = systable_getnext(scan);
-    systable_endscan(scan);
+    pg_class_scan = systable_beginscan(pg_class_relation, 1, key);
+    pg_class_tuple = systable_getnext(pg_class_scan);
+    // 查找成功，复制一个新 heap tuple
+    if (pg_class_tuple != nullptr) {
+        pg_class_tuple = heap_copytuple(pg_class_tuple);
+    }
+
+    systable_endscan(pg_class_scan);
 
     relation_close(pg_class_relation);
 
-    return tup;
+    return pg_class_tuple;
 }
 
 // === internal method

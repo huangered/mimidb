@@ -23,6 +23,14 @@ heap_form_tuple(TupleDesc desc, Datum* values) {
     return htup;
 }
 
+/*
+* 复制一个新的heap tuple对象
+*/
+HeapTuple
+heap_copytuple(HeapTuple htup) {
+    return htup;
+}
+
 // 释放heaptuple
 void
 heap_free_tuple(HeapTuple tuple) {

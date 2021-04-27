@@ -27,7 +27,10 @@ typedef HeapTupleData* HeapTuple;
 #define HEAP_TUPLE_SIZE            sizeof(HeapTupleData)
 #define HEAP_TUPLE_HEADER_SIZE     sizeof(HeapTupleHeaderData)
 
+#define GETSTRUCT(tup) ((char*)((tup)->t_data) + HEAP_TUPLE_HEADER_SIZE)
+
 HeapTuple heap_form_tuple(TupleDesc desc, Datum* values);
 void heap_free_tuple(HeapTuple tuple);
+HeapTuple heap_copytuple(HeapTuple htup);
 
 #endif // !_heaptuple_h_

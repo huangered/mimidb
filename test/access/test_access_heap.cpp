@@ -1,18 +1,16 @@
-#include "../g.hpp"
+﻿#include "../g.hpp"
 
 #include "access/heap.hpp"
 #include "access/rel.hpp"
+#include "catalog/heap.hpp"
 #include "storage/smgr.hpp"
 #include "util/mctx.hpp"
 // test the basic usage in buff mgr.
 TEST(heap, incr_insert)
 {
-    // insert
-    Relation rel = new RelationData{};
-    rel->rd_id = 2000;
-    rel->rd_node = { 0, rel->rd_id };
-    rel->tb_am = HeapRoute();
+    Relation rel = heap_create_with_catalog("test", 10000, nullptr);
 
+    rel = relation_open(10000);
     RelationOpenSmgr(rel);
 
     Form_mimi_attribute attr = new FormData_mimi_attribute[2]{};

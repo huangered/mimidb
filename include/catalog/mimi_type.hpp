@@ -3,11 +3,12 @@
 
 #include "mimi.hpp"
 
-typedef struct FormData_mimi_type {
+struct FormData_mimi_type {
     Oid oid;
     char typ_name[NAME_LIMIT];
     int typ_length;
-} FormData_mimi_type;
+    Oid typ_func;
+};
 
 typedef FormData_mimi_type* Form_mimi_type;
 

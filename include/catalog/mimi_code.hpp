@@ -1,5 +1,5 @@
-#ifndef _mimi_code_h_
-#define _mimi_code_h_
+#ifndef _mimi_code_hpp_
+#define _mimi_code_hpp_
 
 #define ClassRelationId         100
 #define AttributeRelationId     101

@@ -11,7 +11,7 @@ struct FormData_mimi_attribute {
     char att_name[NAME_LIMIT];
     int att_len;
     int att_order;  // att的位置，从0开始
-    Oid typid;
+    Oid typ_id;
 };
 
 typedef FormData_mimi_attribute* Form_mimi_attribute;

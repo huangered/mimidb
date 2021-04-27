@@ -29,12 +29,12 @@ typedef HeapScanDescData* HeapScanDesc;
 // 索引表扫描描述
 
 // 系统表扫描描述
-struct SysTableScanData {
+struct SysTableScanDescData {
 	Relation heap_rel;
 	HeapScanDesc heap_scan;
 };
 
-typedef SysTableScanData* SysTableScan;
+typedef SysTableScanDescData* SysTableScanDesc;
 
 enum class ScanDirection {
 	Backward,
