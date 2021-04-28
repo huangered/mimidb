@@ -20,7 +20,7 @@ struct RelationData {
     Oid rd_id;
 
     Form_mimi_class rd_rel; /* relation 详细描述 */
-    TupleDesc tupleDesc;    /* relation tuple 结构描述 */
+    TupleDesc rd_tupledesc;    /* relation tuple 结构描述 */
     int refcount;
     Heap* tb_am;
     IndexAm* index_am;
@@ -29,11 +29,11 @@ struct RelationData {
     Form_mimi_index rd_index;
 };
 
-inline BlockNumber RelationGetTargetBlock(RelationData* relation) {
+inline BlockNumber RelationGetTargetBlock(Relation relation) {
     return relation->rd_smgr != nullptr ? relation->rd_smgr->smgr_target_block : INVALID_BLOCK;
 }
 
-inline void RelationSetTargetBlock(RelationData* relation, BlockNumber targetblock) {
+inline void RelationSetTargetBlock(Relation relation, BlockNumber targetblock) {
     RelationOpenSmgr(relation);
     relation->rd_smgr->smgr_target_block = targetblock;
 }

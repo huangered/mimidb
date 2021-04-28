@@ -11,6 +11,8 @@ typedef struct FormData_mimi_class {
     int tuples;     /* num of tuples */
     Oid relam;      /* 索引类型，如果不是索引，为0 */
     Oid relfilenode;
+
+    int relnatts;    /* 属性数量 */
 } FormData_mimi_class;
 
 typedef FormData_mimi_class* Form_mimi_class;

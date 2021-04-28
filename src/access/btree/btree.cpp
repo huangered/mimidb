@@ -125,7 +125,7 @@ BtreeIndex::debug(Relation rel) {
     OffsetNumber low = P_FIRSTDATAKEY(special);
     OffsetNumber high = PageGetMaxOffsetNumber(page);
 
-    for (; low < high; low++) {
+    for (; low <= high; low++) {
         ItemId itemId = PageGetItemId(page, low);
         Item item = PageGetItem(page, itemId);
         IndexTuple tuple = (IndexTuple)item;

@@ -10,7 +10,7 @@
 
 static Relation heap_create(Oid relid, const char* name, TupleDesc tupdesc);
 static void AddRelationPgClass(Relation mimiclassdesc, Relation heaprel);
-static void AddRelationMimiAttribute(Oid relId, TupleDesc tupleDesc);
+static void AddRelationMimiAttribute(Oid relId, TupleDesc rd_tupledesc);
 static void InsertMimiClassTuple(Relation mimiclassdesc, Form_mimi_class heaprel);
 static void InsertMimiAttributeTuple(Relation mimi_attribute_rel, Form_mimi_attribute new_attribute);
 /*
@@ -73,7 +73,7 @@ InsertMimiClassTuple(Relation mimi_class_desc, Form_mimi_class new_rel_reltup) {
     values[2] = IntGetDatum(new_rel_reltup->relpages);
     values[3] = IntGetDatum(new_rel_reltup->tuples);
 
-    HeapTuple tuple = heap_form_tuple(mimi_class_desc->tupleDesc, values);
+    HeapTuple tuple = heap_form_tuple(mimi_class_desc->rd_tupledesc, values);
 
     mimi_class_desc->tb_am->simple_heap_insert(mimi_class_desc, tuple);
 
@@ -81,11 +81,11 @@ InsertMimiClassTuple(Relation mimi_class_desc, Form_mimi_class new_rel_reltup) {
 }
 
 void
-AddRelationMimiAttribute(Oid relId, TupleDesc tupleDesc) {
+AddRelationMimiAttribute(Oid relId, TupleDesc rd_tupledesc) {
     Relation rel = relation_open(AttributeRelationId);
 
-    for (int i = 0; i < tupleDesc->natts; i++) {
-        Form_mimi_attribute attr = &tupleDesc->attr[i];
+    for (int i = 0; i < rd_tupledesc->natts; i++) {
+        Form_mimi_attribute attr = &rd_tupledesc->attr[i];
         attr->att_relid = relId;
         InsertMimiAttributeTuple(rel, attr);
     }
@@ -104,7 +104,7 @@ InsertMimiAttributeTuple(Relation mimi_attribute_rel, Form_mimi_attribute new_at
     values[2] = PointerGetDatum(new_attribute->att_name);
     values[3] = IntGetDatum(new_attribute->typ_id);
 
-    HeapTuple tuple = heap_form_tuple(mimi_attribute_rel->tupleDesc, values);
+    HeapTuple tuple = heap_form_tuple(mimi_attribute_rel->rd_tupledesc, values);
 
     mimi_attribute_rel->tb_am->simple_heap_insert(mimi_attribute_rel, tuple);
 

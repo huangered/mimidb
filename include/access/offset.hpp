@@ -9,4 +9,6 @@ typedef unsigned int OffsetNumber;
 #define InvalidOffsetNumber     ((OffsetNumber)0)
 #define FirstOffsetNumber       ((OffsetNumber)1)
 
+#define OffsetIsValid(offset)	((offset) != InvalidOffsetNumber)
+
 #endif // !_offset_h_

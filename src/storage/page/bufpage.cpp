@@ -1,4 +1,4 @@
-#include "access/indextuple.hpp"
+﻿#include "access/indextuple.hpp"
 #include "access/offset.hpp"
 #include "storage/page.hpp"
 #include "util/mctx.hpp"
@@ -20,35 +20,58 @@ PageInit(Page page, Size pageSize, Size specialSize) {
 
 }
 
+// 插入item到页中
+// 返回插入的offset
 OffsetNumber 
 PageAddItem(Page page, Item item, Size itemsz, OffsetNumber offsetNumber) {
-    // if the offset == invalid, find a new one
-    if (offsetNumber == InvalidOffsetNumber) {
-        offsetNumber = PageGetMaxOffsetNumber(page);
-        offsetNumber = OffsetNumberNext(offsetNumber);
+    PageHeader header = PageGetHeader(page);
+    OffsetNumber limit;
+    ItemId itemId;
+    int lower;
+    int upper;
+    bool needshuffle{ false };
+
+    // 设定offset最后位置
+    limit = OffsetNumberNext(PageGetMaxOffsetNumber(page));
+
+    // 如果传入的offset是无效的，找个新位置
+    if (OffsetIsValid(offsetNumber)) {
+        // 查找没有在使用的item
+    }
+    else {
+        offsetNumber = limit;
     }
 
-    PageHeader header = PageGetHeader(page);
+    if (offsetNumber < limit) {
+        needshuffle = true;
+    }
+
+    // 计算新的lower和upper位置
+    if (offsetNumber == limit || needshuffle) {
+        lower = header->pd_lower + sizeof(ItemIdData);
+    }
+    else {
+        lower = header->pd_lower;
+    }
+
+    upper = header->pd_upper - itemsz;
+
     // move item
-
-    ItemId itemId = PageGetItemId(page, offsetNumber);
-
-    OffsetNumber limit = OffsetNumberNext(PageGetMaxOffsetNumber(page));
-
-    memmove(itemId + 1, itemId, (limit - offsetNumber) * sizeof(ItemIdData));
-
-    header->pd_lower = header->pd_lower + sizeof(ItemIdData);
-
-    // add index
-
-    header->pd_upper = header->pd_upper - itemsz;
+    itemId = PageGetItemId(page, offsetNumber);   
+    
+    if (needshuffle) {
+        memmove(itemId + 1, itemId, (limit - offsetNumber) * sizeof(ItemIdData));
+    }    
 
     // update item;
-    itemId->lp_off = header->pd_upper;
+    itemId->lp_off = upper;
     // itemId->lp_flags = IID_USE;
     itemId->lp_len = itemsz;
 
-    memcpy((char*)page + header->pd_upper, item, itemsz);
+    memcpy((char*)page + upper, item, itemsz);
+
+    header->pd_lower = lower;
+    header->pd_upper = upper;
 
     return offsetNumber;
 }

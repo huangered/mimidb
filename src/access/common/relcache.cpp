@@ -116,10 +116,10 @@ RelCache::_formrdesc(const char* relname, Oid reltype, int natts, const FormData
 
     rel->tb_am = nullptr;// table_route();
     // build relation tuple desc
-    rel->tupleDesc = CreateTempTupleDesc(natts);
+    rel->rd_tupledesc = CreateTempTupleDesc(natts);
     for (int i = 0; i < natts; i++) {
         FormData_mimi_attribute* attr = (FormData_mimi_attribute*)(attrs + i);
-        memcpy(&rel->tupleDesc->attr[i], attr, sizeof(FormData_mimi_attribute));
+        memcpy(&rel->rd_tupledesc->attr[i], attr, sizeof(FormData_mimi_attribute));
 
     }
     rel->rd_smgr = nullptr;
@@ -151,7 +151,7 @@ RelCache::BuildRelationDesc(Oid targetRelId, bool insert) {
     relation = _AllocateRelationDesc(relp);
 
     //更新attrs
-    _RelationBuildTuple(relation);
+    _RelationBuildTupleDesc(relation);
     // 更新物理地址
     _RelationInitPhysicalAddr(relation);
     relation->refcount = 0;
@@ -177,7 +177,7 @@ RelCache::BuildLocalRelation(Oid oid, const char* relname, TupleDesc tupdesc) {
     heaprel->rd_rel = new FormData_mimi_class{};
     strcpy(heaprel->rd_rel->relname, relname);
 
-    _RelationBuildTuple(heaprel);
+    _RelationBuildTupleDesc(heaprel);
 
     heaprel->refcount = 0;
     return heaprel;
@@ -190,14 +190,21 @@ RelCache::_AllocateRelationDesc(Form_mimi_class relp) {
     rel->rd_id = relp->oid;
     rel->rd_rel = (Form_mimi_class)palloc0(sizeof(FormData_mimi_class));
     memcpy(rel->rd_rel, relp, sizeof(FormData_mimi_class));
+
+    rel->rd_tupledesc = CreateTempTupleDesc(relp->relnatts);
+
     return rel;
 }
 
 void
-RelCache::_RelationBuildTuple(Relation rel) {
+RelCache::_RelationBuildTupleDesc(Relation rel) {
+    HeapTuple        pg_attr_tuple;
+    Relation         pg_attr_relation;
+    SysTableScanDesc pg_attr_scan;
+    ScanKeyData      key[1];
     // search attribute table by rel->oid
 
-    rel->tupleDesc;// = CreateTupleDesc(tupdesc->natts, tupdesc->attr);
+    // 填充rel->tupleDesc
 }
 
 void
