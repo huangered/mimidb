@@ -77,6 +77,12 @@ Smgr::Close(SMgrRelation reln) {
     _data.Remove(reln->rd_node);
 }
 
+void
+Smgr::Remove(SMgrRelation reln) {
+    for (int i{ 0 }; i < INIT_FORKNUM; i++) {
+        md->Remove(reln, (ForkNumber)i);
+    }
+}
 
 // ------
 void RelationOpenSmgr(Relation rel) {

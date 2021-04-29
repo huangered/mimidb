@@ -8,5 +8,5 @@ void RelationCreateStorage(Relation rel) {
 
 void
 RelationDropStorage(Relation rel) {
-
+    smgr->Remove(rel->rd_smgr);
 }

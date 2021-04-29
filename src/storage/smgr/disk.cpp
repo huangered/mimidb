@@ -95,3 +95,10 @@ Md::Exist(SMgrRelation reln, ForkNumber forknum) {
 	auto path = GetRelPath2(reln->rd_node.dbNode, reln->rd_node.relNode, forknum);
 	return std::filesystem::exists(path);
 }
+
+void
+Md::Remove(SMgrRelation reln, ForkNumber forknum) {
+	Close(reln, forknum);
+	auto path = GetRelPath2(reln->rd_node.dbNode, reln->rd_node.relNode, forknum);
+	std::filesystem::remove(path);
+}

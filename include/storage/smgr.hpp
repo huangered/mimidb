@@ -30,6 +30,7 @@ public:
     int Extend(SMgrRelation reln, ForkNumber forknum, BlockNumber blocknum, char* buffer);
     bool Exist(SMgrRelation reln, ForkNumber forknum);
     void Create(SMgrRelation reln, ForkNumber forknum);
+    void Remove(SMgrRelation reln, ForkNumber forknum);
 };
 
 class Smgr {
@@ -47,6 +48,7 @@ public:
     void Write(SMgrRelation reln, ForkNumber forknum, BlockNumber blocknum, char* buf);
     void Extend(SMgrRelation reln, ForkNumber forknum, BlockNumber blocknum, char* buf);
     void Close(SMgrRelation reln);
+    void Remove(SMgrRelation reln);
 };
 
 extern Smgr* smgr;
