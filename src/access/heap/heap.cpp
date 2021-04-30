@@ -83,7 +83,7 @@ Heap::_heap_get_tuple(HeapScanDesc scan, ScanDirection direction) {
     }
     else {
         blkno = scan->rs_curblock;
-        offset = OffsetNumberNext(scan->rs_curtuple.t_data->t_ctid.offset);
+        offset = OffsetNumberNext(scan->rs_curtuple.t_data->t_ctid.ip_offset);
     }
 
     buf = ReadBuffer(scan->rs_rd, blkno);
@@ -103,8 +103,8 @@ Heap::_heap_get_tuple(HeapScanDesc scan, ScanDirection direction) {
 
             if (TestKey(tuple, scan)) {
                 scan->rs_curblock = blkno;
-                tuple->t_data->t_ctid.blocknum = blkno;
-                tuple->t_data->t_ctid.offset = offset;
+                tuple->t_data->t_ctid.ip_blkno = blkno;
+                tuple->t_data->t_ctid.ip_offset = offset;
                 return;
             }
         }
@@ -212,8 +212,8 @@ Heap::Update(Relation rel, ItemPointer otid, HeapTuple newtuple) {
 // 移除操作
 bool
 Heap::Remove(Relation rel, ItemPointer otid) {
-    BlockNumber blkNum = otid->blocknum;
-    OffsetNumber offset = otid->offset;
+    BlockNumber blkNum = otid->ip_blkno;
+    OffsetNumber offset = otid->ip_offset;
     int cur_tran = 0xffff;
     Buffer buf = ReadBuffer(rel, blkNum);
 
@@ -249,7 +249,7 @@ Heap::debug(Relation rel) {
         Page page = BufferGetPage(buf);
         OffsetNumber max = PageGetMaxOffsetNumber(page);
 
-        for (OffsetNumber offset{ 1 }; offset <= max; offset++) {
+        for (OffsetNumber offset{ FirstOffsetNumber }; offset <= max; offset++) {
             ItemId itemid = PageGetItemId(page, offset);
             Item item = PageGetItem(page, itemid);
             HeapTupleHeader tup = (HeapTupleHeader)item;
@@ -258,7 +258,7 @@ Heap::debug(Relation rel) {
             int* a = (int*)data;
             printf(">>> debug min,max: (%d , %d) bo, (%d, %d) value: (%d , %d)\r\n",
                 tup->t_heap.t_xmin, tup->t_heap.t_xmax,
-                tup->t_ctid.blocknum, tup->t_ctid.offset,
+                tup->t_ctid.ip_blkno, tup->t_ctid.ip_offset,
                 *a, *(a + 1));
             total++;
         }

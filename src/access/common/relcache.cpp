@@ -196,15 +196,33 @@ RelCache::_AllocateRelationDesc(Form_mimi_class relp) {
     return rel;
 }
 
+// 填充 attr
 void
 RelCache::_RelationBuildTupleDesc(Relation rel) {
     HeapTuple        pg_attr_tuple;
     Relation         pg_attr_relation;
     SysTableScanDesc pg_attr_scan;
     ScanKeyData      key[1];
+
+    ScanKeyInit(&key[0], ObjectIdAttributeNumber, BTEqualStrategyNumber, rel->rd_id, OIDEQ_OID);
     // search attribute table by rel->oid
 
+    pg_attr_relation = relation_open(AttributeRelationId);
+    pg_attr_scan = systable_beginscan(pg_attr_relation, 1, key);
+
     // 填充rel->tupleDesc
+    while ((pg_attr_tuple = systable_getnext(pg_attr_scan))) {
+        Form_mimi_attribute attp;
+        int att_num;
+
+        attp = (Form_mimi_attribute)GETSTRUCT(pg_attr_tuple);
+        att_num = attp->att_order;
+        memcpy(rel->rd_tupledesc->attr + att_num, attp, sizeof(FormData_mimi_attribute));
+    }
+
+    systable_endscan(pg_attr_scan);
+
+    relation_close(pg_attr_relation);
 }
 
 void

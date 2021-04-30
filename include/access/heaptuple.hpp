@@ -3,7 +3,7 @@
 
 #include "mimi.hpp"
 #include "access/tupledesc.hpp"
-#include "access/itemid.hpp"
+#include "storage/itemptr.hpp"
 
 struct HeapTupleFields {
     int t_xmin;

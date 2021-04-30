@@ -63,13 +63,10 @@ PageAddItem(Page page, Item item, Size itemsz, OffsetNumber offsetNumber) {
         memmove(itemId + 1, itemId, (limit - offsetNumber) * sizeof(ItemIdData));
     }    
 
-    // update item;
-    itemId->lp_off = upper;
-    // itemId->lp_flags = IID_USE;
-    itemId->lp_len = itemsz;
-
+    ItemIdSetNormal(itemId, upper, itemsz);
+    // 复制数据
     memcpy((char*)page + upper, item, itemsz);
-
+    // 调整 header
     header->pd_lower = lower;
     header->pd_upper = upper;
 

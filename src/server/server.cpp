@@ -33,6 +33,16 @@ public:
 
         return p;
     }
+
+   /* void* operator new(size_t size)
+    {
+        cout << "Overloading new operator with size: " << size << endl;
+        size_t q = offsetof(A, q);
+        q += sizeof(int) * 5;
+        void* p = malloc(q);
+
+        return p;
+    }*/
 };
 
 class G :public Mctx {

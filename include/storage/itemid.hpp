@@ -18,4 +18,14 @@ enum LpFlag {
 
 typedef void* Item;
 
+inline void ItemIdSetNormal(ItemId itemId, int offset, int len) {
+    itemId->lp_flags = LP_NORMAL;
+    itemId->lp_off = offset;
+    itemId->lp_len = len;
+}
+
+inline void ItemIdSetDead(ItemId itemId) {
+    itemId->lp_flags = LP_DEAD;
+}
+
 #endif

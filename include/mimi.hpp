@@ -10,6 +10,9 @@ typedef unsigned long long Oid;
 
 typedef uintptr_t Datum;
 
+#define OidGetDatum(X)      ((Datum)(X))
+#define DatumGetOid(X)      ((Oid)(X))
+
 #define IntGetDatum(X)      ((Datum)(X))
 #define DatumGetInt(X)      ((int)(X))
 

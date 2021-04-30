@@ -57,8 +57,8 @@ Heap::_relation_put_heap_tuple(Relation rel, Buffer buf, HeapTuple htup) {
 
     offset = PageAddItem(page, (htup->t_data), htup->t_len, InvalidOffsetNumber);
 
-    htup->t_data->t_ctid.blocknum = GetBufferDesc(buf)->tag.blockNum;
-    htup->t_data->t_ctid.offset = offset;
+    htup->t_data->t_ctid.ip_blkno = GetBufferDesc(buf)->tag.blockNum;
+    htup->t_data->t_ctid.ip_offset = offset;
 
     // 更新 ctid 相关数据
     ItemId itemId = PageGetItemId(page, offset);
