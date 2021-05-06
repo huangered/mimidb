@@ -84,8 +84,8 @@ void
 AddRelationMimiAttribute(Oid relId, TupleDesc rd_tupledesc) {
     Relation rel = relation_open(AttributeRelationId);
 
-    for (int i = 0; i < rd_tupledesc->natts; i++) {
-        Form_mimi_attribute attr = &rd_tupledesc->attr[i];
+    for (int i = 0; i < rd_tupledesc->GetNatts(); i++) {
+        Form_mimi_attribute attr = rd_tupledesc->GetNatt(i);
         attr->att_relid = relId;
         InsertMimiAttributeTuple(rel, attr);
     }

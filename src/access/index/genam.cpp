@@ -9,7 +9,7 @@ SysTableScanDesc
 systable_beginscan(Relation heapRel, int nkeys, ScanKey key) {
     SysTableScanDesc sysscan;
 
-    sysscan = (SysTableScanDesc)palloc0(sizeof(SysTableScanDescData));
+    sysscan = new SysTableScanDescData();
     sysscan->heap_rel = heapRel;
     sysscan->heap_scan = heapRel->tb_am->BeginScan(heapRel, nkeys, key);
     return sysscan;
@@ -24,5 +24,5 @@ systable_getnext(SysTableScanDesc scan) {
 void
 systable_endscan(SysTableScanDesc scan) {
     scan->heap_rel->tb_am->EndScan(scan->heap_scan);
-    pfree(scan);
+    std::free(scan);
 };

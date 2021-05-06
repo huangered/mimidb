@@ -61,12 +61,31 @@ class G :public Mctx {
     }
 };
 
+template<typename T>
+uintptr_t test2(T i) {
+    return static_cast<uintptr_t>(i);
+}
+
+template<typename T>
+T revert2(uintptr_t ptr) {
+    return static_cast<T>(ptr);
+}
+
 int main(int argc, char* argv[])
 {
-     A* a = new(10) A {};
-     cout << sizeof(A) << endl;
-     cout << is_pod_v<A> << endl;
-     cout << is_pod_v<G> << endl;
+    int* i = new int{ 10 };
+    std::cout <<std::hex<< i << std::endl;
+    uintptr_t g2 = reinterpret_cast<uintptr_t>(i);
+    std::cout <<std::hex<< g2 << std::endl;
+    int* j = reinterpret_cast<int*>(g2);
+
+    int q{ 20 };
+
+    uintptr_t g3 = static_cast<uintptr_t>(q);
+    
+    int j22 = static_cast<int>(g3);
+
+
 
     return 0;
 }

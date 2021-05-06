@@ -3,12 +3,19 @@
 
 typedef unsigned int OffsetNumber;
 
-#define OffsetNumberPrev(num)   ( num - 1 )
-#define OffsetNumberNext(num)   ( num + 1 )
+const OffsetNumber InvalidOffsetNumber{ 0 };
+const OffsetNumber FirstOffsetNumber{ 1 };
 
-#define InvalidOffsetNumber     ((OffsetNumber)0)
-#define FirstOffsetNumber       ((OffsetNumber)1)
+inline OffsetNumber OffsetNumberPrev(OffsetNumber num) {
+	return  num - 1;
+}
 
-#define OffsetIsValid(offset)	((offset) != InvalidOffsetNumber)
+inline OffsetNumber  OffsetNumberNext(OffsetNumber num) {
+	return  num + 1;
+}
+
+inline bool OffsetIsValid(OffsetNumber offset) {
+	return 	offset != InvalidOffsetNumber;
+}
 
 #endif // !_offset_h_

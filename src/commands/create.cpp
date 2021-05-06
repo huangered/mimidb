@@ -24,7 +24,7 @@ DefineRelation(CreateTableStmt* stmt) {
 	heap_rel = heap_create_with_catalog(name, id, tupdesc);
 
 	// 创建索引
-
+	// index_create(name, id, id, nullptr);
 }
 
 // 从 column def 创建 attribute对象
@@ -39,7 +39,7 @@ formTupleDesc(List* columns) {
 		columndef = (ColumnDef*)cell->data.ptr_value;
 
 		// 生产 attr 对象
-		formAttr(tupdesc->attr, columndef);
+		formAttr(tupdesc->GetNatt(0), columndef);
 	}
 	return tupdesc;
 }

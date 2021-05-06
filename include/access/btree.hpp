@@ -1,7 +1,6 @@
 #ifndef _btree_hpp_
 #define _btree_hpp_
 
-#include "mimi.hpp"
 #include "access/amapi.hpp"
 #include "access/offset.hpp"
 #include "access/rel.hpp"
@@ -9,7 +8,7 @@
 #include "storage/block.hpp"
 #include "storage/bufmgr.hpp"
 
-#define BTREE_METAPAGE  0
+const int BTREE_METAPAGE{ 0 };
 
 struct BTreeMetaData {
     uint32_t btm_magic;
@@ -75,8 +74,8 @@ typedef BTreeSearchKeyData* BTreeSearchKey;
 #define P_ISLEAF(special)       ((special->flags & BTP_LEAF) != 0 )
 #define P_ISROOT(special)       ((special->flags & BTP_ROOT) != 0 )
 
-#define P_HIKEY                 ((OffsetNumber) 1)
-#define P_FIRSTKEY              ((OffsetNumber) 2)
+const OffsetNumber P_HIKEY{ 1 };
+const OffsetNumber P_FIRSTKEY{ 2 };
 #define P_FIRSTDATAKEY(special) (P_RIGHTMOST(special) ? P_HIKEY:P_FIRSTKEY)
 
 #define BTreeTupleGetDownLink(itup) (itup->ht_id)

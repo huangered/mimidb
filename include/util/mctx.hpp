@@ -3,10 +3,10 @@
 
 #include "c.hpp"
 
-void* palloc(Size size);
-void* palloc0(Size size);
+//void* palloc(Size size);
+//void* palloc0(Size size);
 
-void pfree(void* ptr);
+//void pfree(void* ptr);
 
 class Mctx {
 public:

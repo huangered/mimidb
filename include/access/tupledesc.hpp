@@ -5,9 +5,16 @@
 
 #define MAX_NATTS
 
-struct TupleDescData {
+class TupleDescData {
     int natts;
-    FormData_mimi_attribute attr[MAX_NATTS];
+    Form_mimi_attribute attrs;
+public:
+    TupleDescData(int _natts);
+    TupleDescData(int _natts, Form_mimi_attribute _attrs);
+    ~TupleDescData();
+
+    int GetNatts();
+    Form_mimi_attribute GetNatt(int index);
 };
 
 typedef TupleDescData* TupleDesc;

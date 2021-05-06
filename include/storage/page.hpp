@@ -1,11 +1,12 @@
-#ifndef _page_hpp_
+﻿#ifndef _page_hpp_
 #define _page_hpp_
 
 #include "mimi.hpp"
 #include "storage/itemid.hpp"
 #include "access/offset.hpp"
 
-#define BLKSZ 8192
+// page 默认大小 8k
+const int BLKSZ{ 8192 };
 
 typedef char* Page;
 

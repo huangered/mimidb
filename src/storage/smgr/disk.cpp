@@ -63,9 +63,9 @@ int
 Md::Open(SMgrRelation reln, ForkNumber forknum) {
 	int fd = reln->fd[forknum];
 	if (fd <= 0) {
-		auto path = GetRelPath2(reln->rd_node.dbNode, reln->rd_node.relNode, forknum);
+		char* path = GetRelPath(reln->rd_node.dbNode, reln->rd_node.relNode, forknum);
 
-		int fd2 = PathNameOpenFile(path.string().c_str());
+		int fd2 = PathNameOpenFile(path);
 		reln->fd[forknum] = fd2;
 		fd = fd2;
 	}
@@ -92,13 +92,16 @@ Md::Create(SMgrRelation reln, ForkNumber forknum) {
 
 bool
 Md::Exist(SMgrRelation reln, ForkNumber forknum) {
-	auto path = GetRelPath2(reln->rd_node.dbNode, reln->rd_node.relNode, forknum);
-	return std::filesystem::exists(path);
+	char* path = GetRelPath(reln->rd_node.dbNode, reln->rd_node.relNode, forknum);
+	bool existed = (access(path, 0) == 0);
+	delete[] path;
+	return existed;
 }
 
 void
 Md::Remove(SMgrRelation reln, ForkNumber forknum) {
 	Close(reln, forknum);
-	auto path = GetRelPath2(reln->rd_node.dbNode, reln->rd_node.relNode, forknum);
-	std::filesystem::remove(path);
+	char* path = GetRelPath(reln->rd_node.dbNode, reln->rd_node.relNode, forknum);
+	remove(path);
+	delete[] path;
 }

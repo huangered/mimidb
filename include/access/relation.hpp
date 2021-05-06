@@ -3,7 +3,7 @@
 
 #include "mimi.hpp"
 
-typedef struct RelationData* Relation;
+typedef class RelationData* Relation;
 
 Relation relation_open(Oid relid);
 void relation_close(Relation rel);

@@ -11,7 +11,7 @@ static FmgrBuildin fmgr_buildins[] = {
     {INT8CMP_OID, "int8cmp", int8cmp},
     {INT16CMP_OID, "int16cmp", int16cmp},
     {INT32CMP_OID, "int32cmp", int32cmp},
-    {OIDEQ_OID, "oideq", oideq},
+    {OIDCMP_OID, "oidcmp", oidcmp},
 
 };
 

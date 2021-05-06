@@ -17,7 +17,7 @@ TEST(btree, incr_insert)
     rel->index_am = BtreeRoute();
     rel->index_am->BuildEmpty(rel);
 
-    for (int i = 0; i < 1000; i++) {
+    for (int i{ 0 }; i < 1000; i++) {
         bool result = rel->index_am->Insert(rel, i, i);
         EXPECT_TRUE(result);
     }
@@ -63,7 +63,7 @@ TEST(btree, decr_insert)
 
 TEST(btree, blk_insert)
 {
-    Relation rel = (Relation)palloc0(sizeof(RelationData));
+    Relation rel = new RelationData{};
     rel->rd_id = 30000;
     rel->rd_node = { 10000, rel->rd_id };
     RelationOpenSmgr(rel);
@@ -77,13 +77,13 @@ TEST(btree, blk_insert)
         EXPECT_TRUE(result);
     }
 
-    IndexScanDesc scan = (IndexScanDesc)palloc0(sizeof(IndexScanDescData));
+    IndexScanDesc scan = new IndexScanDescData{};
     scan->index_rel = rel;
     scan->key = 5;
     scan->block = INVALID_BLOCK;
     bool result = rel->index_am->GetNext(scan, ScanDirection::Forward);
 
     EXPECT_EQ(5, scan->value);
-    pfree(scan);
-    pfree(rel);
+    delete scan;
+    delete rel;
 }

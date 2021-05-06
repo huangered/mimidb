@@ -13,7 +13,8 @@
 class Heap;
 class IndexAm;
 
-struct RelationData {
+class RelationData {
+public:
     SMgrRelation rd_smgr; /* 保存的文件句柄*/
     RelFileNode rd_node;  /* relation的物理位置*/
 
@@ -27,15 +28,35 @@ struct RelationData {
 
     void* rd_metacache;   /* meta 缓存对象 */
     Form_mimi_index rd_index;
+
+public:
+    RelationData() {
+        rd_smgr = nullptr;
+        rd_rel = nullptr;
+        rd_tupledesc = nullptr;
+        rd_metacache = nullptr;
+        rd_index = nullptr;
+    }
+
+    ~RelationData() {
+    }
+
+    void IncRefCnt() {
+        refcount++;
+    }
+    void DecRefCnt() {
+        refcount--;
+    }
+
+
+    BlockNumber RelationGetTargetBlock() {
+        return rd_smgr != nullptr ? rd_smgr->smgr_target_block : INVALID_BLOCK;
+    }
+
+    void RelationSetTargetBlock(BlockNumber targetblock) {
+        RelationOpenSmgr(this);
+        rd_smgr->smgr_target_block = targetblock;
+    }
 };
-
-inline BlockNumber RelationGetTargetBlock(Relation relation) {
-    return relation->rd_smgr != nullptr ? relation->rd_smgr->smgr_target_block : INVALID_BLOCK;
-}
-
-inline void RelationSetTargetBlock(Relation relation, BlockNumber targetblock) {
-    RelationOpenSmgr(relation);
-    relation->rd_smgr->smgr_target_block = targetblock;
-}
 
 #endif

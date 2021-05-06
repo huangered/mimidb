@@ -61,10 +61,6 @@ static const FormData_mimi_attribute Desc_pg_type[1] = {
 
 };
 
-static void RelationIncRefCount(Relation rel);
-static void RelationDecRefCount(Relation rel);
-
-
 /*
 1. init the relation cache
 2. insert the basic system relation
@@ -80,18 +76,18 @@ RelCache::RelationIdGetRelation(Oid relid) {
     RelCacheEntry entry;
     // 查找cache
     if (cache.Get(relid, &entry)) {
-        RelationIncRefCount(entry.rel);
+        entry.rel->IncRefCnt();
         return entry.rel;
     }
     // 从数据库中加载 relation
     Relation rel = BuildRelationDesc(relid, true);
-    RelationIncRefCount(rel);
+    rel->IncRefCnt();
     return rel;
 }
 
 void
 RelCache::RelationClose(Relation rel) {
-    RelationDecRefCount(rel);
+    rel->DecRefCnt();
     if (rel->refcount == 0) {
         //remove from cache;
         cache.Remove(rel->rd_id);
@@ -117,9 +113,9 @@ RelCache::_formrdesc(const char* relname, Oid reltype, int natts, const FormData
     rel->tb_am = nullptr;// table_route();
     // build relation tuple desc
     rel->rd_tupledesc = CreateTempTupleDesc(natts);
-    for (int i = 0; i < natts; i++) {
+    for (int i{ 0 }; i < natts; i++) {
         FormData_mimi_attribute* attr = (FormData_mimi_attribute*)(attrs + i);
-        memcpy(&rel->rd_tupledesc->attr[i], attr, sizeof(FormData_mimi_attribute));
+        memcpy(rel->rd_tupledesc->GetNatt(i), attr, sizeof(FormData_mimi_attribute));
 
     }
     rel->rd_smgr = nullptr;
@@ -185,10 +181,10 @@ RelCache::BuildLocalRelation(Oid oid, const char* relname, TupleDesc tupdesc) {
 
 Relation
 RelCache::_AllocateRelationDesc(Form_mimi_class relp) {
-    Relation rel = (Relation)palloc0(sizeof(RelationData));
+    Relation rel = new RelationData();
     rel->rd_smgr = nullptr;
     rel->rd_id = relp->oid;
-    rel->rd_rel = (Form_mimi_class)palloc0(sizeof(FormData_mimi_class));
+    rel->rd_rel = new FormData_mimi_class();
     memcpy(rel->rd_rel, relp, sizeof(FormData_mimi_class));
 
     rel->rd_tupledesc = CreateTempTupleDesc(relp->relnatts);
@@ -204,7 +200,7 @@ RelCache::_RelationBuildTupleDesc(Relation rel) {
     SysTableScanDesc pg_attr_scan;
     ScanKeyData      key[1];
 
-    ScanKeyInit(&key[0], ObjectIdAttributeNumber, BTEqualStrategyNumber, rel->rd_id, OIDEQ_OID);
+    ScanKeyInit(&key[0], ObjectIdAttributeNumber, BTEqualStrategyNumber, rel->rd_id, OIDCMP_OID);
     // search attribute table by rel->oid
 
     pg_attr_relation = relation_open(AttributeRelationId);
@@ -217,7 +213,7 @@ RelCache::_RelationBuildTupleDesc(Relation rel) {
 
         attp = (Form_mimi_attribute)GETSTRUCT(pg_attr_tuple);
         att_num = attp->att_order;
-        memcpy(rel->rd_tupledesc->attr + att_num, attp, sizeof(FormData_mimi_attribute));
+        memcpy(rel->rd_tupledesc->GetNatt(att_num), attp, sizeof(FormData_mimi_attribute));
     }
 
     systable_endscan(pg_attr_scan);
@@ -241,7 +237,7 @@ RelCache::_ScanMimiRelation(Oid relid) {
     ScanKeyData      key[1];
 
     // 生成scan key
-    ScanKeyInit(&key[0], ObjectIdAttributeNumber, BTEqualStrategyNumber, relid, OIDEQ_OID);
+    ScanKeyInit(&key[0], ObjectIdAttributeNumber, BTEqualStrategyNumber, relid, OIDCMP_OID);
 
     pg_class_relation = relation_open(ClassRelationId);
 
@@ -257,16 +253,4 @@ RelCache::_ScanMimiRelation(Oid relid) {
     relation_close(pg_class_relation);
 
     return pg_class_tuple;
-}
-
-// === internal method
-
-void
-RelationIncRefCount(Relation rel) {
-    rel->refcount += 1;
-}
-
-void
-RelationDecRefCount(Relation rel) {
-    rel->refcount -= 1;
 }

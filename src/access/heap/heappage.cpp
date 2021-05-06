@@ -12,7 +12,7 @@ Heap::_get_buffer_for_tuple(Relation rel, Size len) {
     Buffer buffer = INVALID_BUFFER;
 
     // 获取 rel smgr里保存的target block
-    targetBlock = RelationGetTargetBlock(rel);
+    targetBlock = rel->RelationGetTargetBlock();
 
     if (targetBlock == INVALID_BLOCK) {
         targetBlock = GetPageWithFreeSpace(rel, len);
@@ -25,7 +25,7 @@ Heap::_get_buffer_for_tuple(Relation rel, Size len) {
         page = BufferGetPage(buffer);
         pageFreeSpace = PageGetFreeSpace(page);
         if (len < pageFreeSpace) {
-            RelationSetTargetBlock(rel, targetBlock);
+            rel->RelationSetTargetBlock(targetBlock);
             return buffer;
         }
 
@@ -38,7 +38,7 @@ Heap::_get_buffer_for_tuple(Relation rel, Size len) {
     page = BufferGetPage(buffer);
     PageInit(page, BLKSZ, 0);
 
-    RelationSetTargetBlock(rel, BufferGetBlockNumber(buffer));
+    rel->RelationSetTargetBlock(BufferGetBlockNumber(buffer));
 
     return buffer;
 }

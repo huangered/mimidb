@@ -133,7 +133,7 @@ Heap::BeginScan(Relation rel, int nkeys, ScanKey key) {
     scan = new HeapScanDescData{};
     scan->rs_rd = rel;
     scan->rs_nkeys = nkeys;
-    scan->rs_key = (ScanKey)palloc0(sizeof(ScanKeyData) * nkeys);
+    scan->rs_key = new ScanKeyData[nkeys];
 
     if (key != nullptr) {
         memcpy(scan->rs_key, key, nkeys * sizeof(ScanKeyData));

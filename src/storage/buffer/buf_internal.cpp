@@ -3,12 +3,12 @@
 #include "storage/smgr.hpp"
 #include "storage/bufmgr.hpp"
 
-#define NBuffer 32
+const int NBuffer{ 32 };
 
 BufferMgr::BufferMgr() {
-    size_t size = NBuffer * BLKSZ;
+    Size size = NBuffer * BLKSZ;
     _blocks = (char*)std::malloc(size);
-    assert(_blocks);
+    Assert(_blocks);
     memset(_blocks, 0, size);
 
     _buffDesc = new BufferDesc[NBuffer]{};
@@ -21,7 +21,6 @@ BufferMgr::BufferMgr() {
     
     _buffDesc[NBuffer - 1].freeNext = INVALID_BUFFER;
     _freeBuffDesc = _buffDesc;
-        //index = 0;
 }
 
 BufferMgr::~BufferMgr() {

@@ -13,13 +13,13 @@ BtreeIndex::BtreeIndex() {
 
 void
 BtreeIndex::BuildEmpty(Relation rel) {
-    Page metap = (Page)palloc(BLKSZ);
+    Page metap = (Page)new char[BLKSZ];
     _bt_init_page(metap);
 
     // write to local file system
     smgr->Write(rel->rd_smgr, MAIN_FORKNUM, BTREE_METAPAGE, metap);
 
-    pfree(metap);
+    delete[] metap;
 }
 
 bool
