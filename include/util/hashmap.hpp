@@ -10,7 +10,7 @@
 template<class K, class Enable = void>
 struct hash_to {
 	int operator()(const K& obj) const {
-		if (std::is_class_v<K>) {
+		if (std::is_class<K>::value) {
 			return obj.hash();
 		}
 		else {
@@ -23,7 +23,7 @@ struct hash_to {
 只支持默认基础类型
 */
 template<class K>
-struct hash_to<K, typename std::enable_if<std::is_integral_v<K>>::type> {
+struct hash_to<K, typename std::enable_if<std::is_integral<K>::value>::type> {
 	int operator()(const K& obj) const {
 		return (int)obj;
 	}
