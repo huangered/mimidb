@@ -4,5 +4,5 @@
 
 TEST(test_pod, pod)
 {
-	EXPECT_TRUE(std::is_pod_v<HeapTupleData>);
+	EXPECT_TRUE(std::is_pod<HeapTupleData>::value);
 }
