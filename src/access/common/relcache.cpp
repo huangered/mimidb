@@ -198,9 +198,7 @@ RelCache::_RelationBuildTupleDesc(Relation rel) {
     HeapTuple        pg_attr_tuple;
     Relation         pg_attr_relation;
     SysTableScanDesc pg_attr_scan;
-    ScanKeyData      key[1];
-
-    ScanKeyInit(&key[0], ObjectIdAttributeNumber, BTEqualStrategyNumber, rel->rd_id, OIDCMP_OID);
+    ScanKeyData      key[1] = { {ObjectIdAttributeNumber, BTEqualStrategyNumber, rel->rd_id, OIDCMP_OID} };
     // search attribute table by rel->oid
 
     pg_attr_relation = relation_open(AttributeRelationId);
@@ -234,10 +232,7 @@ RelCache::_ScanMimiRelation(Oid relid) {
     HeapTuple        pg_class_tuple;
     Relation         pg_class_relation;
     SysTableScanDesc pg_class_scan;
-    ScanKeyData      key[1];
-
-    // 生成scan key
-    ScanKeyInit(&key[0], ObjectIdAttributeNumber, BTEqualStrategyNumber, relid, OIDCMP_OID);
+    ScanKeyData      key[1] = { { ObjectIdAttributeNumber, BTEqualStrategyNumber, relid, OIDCMP_OID} };
 
     pg_class_relation = relation_open(ClassRelationId);
 

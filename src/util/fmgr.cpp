@@ -1,18 +1,17 @@
 ﻿#include "util/fmgr.hpp"
 #include "util/builtins.hpp"
 
-typedef struct FmgrBuildin {
+struct FmgrBuildin {
     Oid			foid;			/* OID of the function */
     const char* name;
-    Method	func;
-} FmgrBuildin;
+    Method      func;
+};
 
 static FmgrBuildin fmgr_buildins[] = {
     {INT8CMP_OID, "int8cmp", int8cmp},
     {INT16CMP_OID, "int16cmp", int16cmp},
     {INT32CMP_OID, "int32cmp", int32cmp},
     {OIDCMP_OID, "oidcmp", oidcmp},
-
 };
 
 static FmgrBuildin* fmgr_isbuildin(Oid functionId) {

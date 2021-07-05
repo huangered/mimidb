@@ -4,7 +4,7 @@ List* new_list(NodeTag type) {
 	List* newlist = malloc(sizeof(List));
 	newlist->type = type;
 	newlist->length = 0;
-	newlist->head = 0;
+	newlist->head = NULL;
 	return newlist;
 }
 

@@ -43,12 +43,20 @@ struct BTStackData {
 
 typedef BTStackData* BTStack;
 
-struct BTreeScanData {
+class BTreeScanData {
+public:
     IndexTuple itup;
     Size itemsz;
     bool nextkey;
     int keysz;
-    ScanKeyData scankeys[12];
+    ScanKey scankeys;
+public:
+    BTreeScanData(Size keysz) {
+        scankeys = new ScanKeyData[keysz];
+    }
+    ~BTreeScanData() {
+        delete[] scankeys;
+    }
 };
 
 typedef BTreeScanData* BTreeScan;

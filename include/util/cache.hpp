@@ -1,8 +1,8 @@
 /*
 system simple cache
 */
-#ifndef _CACHE_H_
-#define _CACHE_H_
+#ifndef _cache_hpp_
+#define _cache_hpp_
 
 
 #endif

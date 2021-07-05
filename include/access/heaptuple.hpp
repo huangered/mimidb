@@ -33,4 +33,17 @@ HeapTuple heap_form_tuple(TupleDesc desc, Datum* values);
 void heap_free_tuple(HeapTuple tuple);
 HeapTuple heap_copytuple(HeapTuple htup);
 
+typedef class HeapTupleData2* HeapTuple2;
+
+class HeapTupleData2 {
+    int t_len;
+    HeapTupleHeader t_data;
+public:
+    HeapTupleData2(TupleDesc tupdesc, Datum* values);
+    ~HeapTupleData2();
+
+    HeapTuple2 CopyTuple();
+    char* GetStruct();
+};
+
 #endif // !_heaptuple_h_

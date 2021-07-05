@@ -16,7 +16,7 @@ TEST(parser, basic)
 
 TEST(parser, basic_insert)
 {
-	InsertStmt* raw = (InsertStmt*)raw_parse("insert into s values ( 123,'a','jkl' );");
+	InsertStmt* raw = (InsertStmt*)raw_parse("insert into s values ( 123 , 'a','asdf');");
 	EXPECT_TRUE(raw != NULL);
 	EXPECT_EQ(raw->nodetag, NT_InsertStmt);
 	EXPECT_STREQ(raw->relname, "s");

@@ -36,6 +36,9 @@ public:
         rd_tupledesc = nullptr;
         rd_metacache = nullptr;
         rd_index = nullptr;
+
+        tb_am = nullptr;
+        index_am = nullptr;
     }
 
     ~RelationData() {
