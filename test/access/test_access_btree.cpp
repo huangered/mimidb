@@ -22,15 +22,18 @@ TEST(btree, incr_insert)
         EXPECT_TRUE(result);
     }
 
-    IndexScanDesc scan = rel->index_am->BeginScan(rel, 1, nullptr);
-    scan = new IndexScanDescData{};
-    scan->index_rel = rel;
-    scan->key = 5;
-    scan->block = INVALID_BLOCK;
-    bool result = rel->index_am->GetNext(scan, ScanDirection::Forward);
+    for (int i = 0; i < 1000; i++) {
+        IndexScanDesc scan = rel->index_am->BeginScan(rel, 1, nullptr);
+        scan = new IndexScanDescData{};
+        scan->index_rel = rel;
+        scan->key = i;
+        scan->block = INVALID_BLOCK;
+        bool result = rel->index_am->GetNext(scan, ScanDirection::Forward);
 
-    EXPECT_EQ(5, scan->value);
-    delete scan;
+        EXPECT_EQ(i, scan->value);
+        delete scan;
+    }
+
     delete rel;
 }
 
