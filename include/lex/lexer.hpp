@@ -3,9 +3,9 @@
 
 #include "util/string.hpp"
 
-enum Tok
+enum Tok :int
 {
-	Select,
+	Select = 1,
 	WhiteSpace,
 	From,
 	Insert,
@@ -14,6 +14,8 @@ enum Tok
 	Create,
 	Table,
 	View,
+
+	Plus,
 
 	Comma,
 	Semicolon,
@@ -24,16 +26,22 @@ enum Tok
 	Number,
 	Identifier,
 
+	Money,
+
 	Unknown,
 };
 
 struct LexToken {
 	Tok tok;
 	yih::String str;
+
+	int compare(const LexToken& token) {
+		return tok - token.tok;
+	}
 };
 
 struct LexerOption {
-	int i;
+	bool skipWhiteSpace;
 };
 
 class Lexer {

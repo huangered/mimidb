@@ -16,3 +16,23 @@ TEST(string_test, basic_int)
     a.Append("");
     EXPECT_EQ(a.Len(), 7);
 }
+
+
+TEST(string_test, equal)
+{
+    yih::String a{ "abcd" };
+    yih::String b{ "abcd" };
+
+    EXPECT_EQ(0, a.compare(a));
+    EXPECT_EQ(0, a.compare(b));   
+}
+
+TEST(string_test, not_equal)
+{
+    yih::String a{ "abcd" };
+    yih::String b{ "abcd1" };
+    yih::String c{ "abce" };
+
+    EXPECT_NE(0, a.compare(b));
+    EXPECT_NE(0, a.compare(c));
+}

@@ -20,6 +20,15 @@ String::String(const String& str) {
 	strcpy(_data, str._data);
 }
 
+String&
+String::operator=(const String& str) {
+	_len = str._len;
+	_data = new char[_len + 1];
+	strcpy(_data, str._data);
+	return *this;
+}
+
+
 String::~String() {
 	if (_data != nullptr) {
 		delete[] _data;
@@ -50,4 +59,23 @@ String::Append(const char* data) {
 	delete _data;
 	_data = buf;
 	return *this;
+}
+
+int
+String::compare(const String& other) {
+	if (this == &other) {
+		return 0;
+	}
+	int i;
+	if ((i = (_len - other._len)) != 0) {
+		return i;
+	}
+
+	for (int j = 0; j < _len; j++) {
+		if ((i = _data[j] - other._data[j]) != 0) {
+			return i;
+		}
+	}
+
+	return 0;
 }

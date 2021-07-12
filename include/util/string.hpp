@@ -10,12 +10,15 @@ namespace yih {
 		String();
 		String(const char* data);
 		String(const String& str);
+		String& operator=(const String& str);
 		~String();
 		const char* Data();
 		int Len() const;
 	public:
 		// common methods
 		String& Append(const char* data);
+
+		int compare(const String& other);
 	};
 }
 #endif // !_ustring_hpp_
