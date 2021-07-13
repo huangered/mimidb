@@ -109,15 +109,15 @@ Parser::GenerateParseTable(void) {
 	generateTable();
 }
 
-Node*
-Parser::Parse(std::vector<LexToken*> input) {
+Node
+Parser::Parse(std::vector<LexToken> input) {
 	// init stach
 	std::stack<StateItem> state_stack;
 	state_stack.push(new StateItemData{ 0, false });
-	std::stack<Node*> token_stack;
+	std::stack<Node> token_stack;
 	std::stack<SemaToken> input_stack;
 
-	token_stack.push(new Node{ new SemaTokenData{-2, false, {Tok::Money}} });
+	token_stack.push(new NodeData{ new SemaTokenData{-2, false, {Tok::Money}} });
 	for (auto iter = input.rbegin(); iter != input.rend(); iter++) {
 		input_stack.push(new SemaTokenData(-2, false, **iter));
 	}
@@ -234,10 +234,7 @@ Parser::expandRules(State state) {
 		count = 0;
 		std::set<Rule*> copied;
 
-		std::vector<Rule*> mock{ state->getRules() };
-
-
-		for (Rule* r : mock) {
+		for (Rule* r : state->getRules()) {
 			r->cur_state = state->GetId();
 			if (r->isDotEnd()) {
 				continue;
@@ -247,11 +244,11 @@ Parser::expandRules(State state) {
 				// non terminals
 				// update state list
 
-				auto match1 = [word](Rule* rule) -> bool {
+				auto rule_left_id_eq = [&](Rule* rule) -> bool {
 					return rule->left->id == word->id;
 				};
 				std::vector<Rule*> match;
-				findSameRule1(_rules, match, match1);
+				find_all(_rules, match, rule_left_id_eq);
 				for (Rule* rule : match) {
 					SemaTokenList tokens = _firstSet->Find(r->GetStringAfterDot(), r->getTokens());
 
@@ -259,16 +256,16 @@ Parser::expandRules(State state) {
 					copy->dot = 0;
 					copy->setTokens(tokens);
 					// 如果是新rule
-					auto m2 = [copy](Rule* rule)-> bool {
+					auto rule_eq = [copy](Rule* rule)-> bool {
 						return rule->compare(*copy) == 0;
 					};
-					std::vector<Rule*> gg = state->getRules();
-					std::vector<Rule*> iter2;
-					findSameRule1(gg, iter2, m2);
-					if (iter2.size() == 0) {
+					std::vector<Rule*> src = state->getRules();
+					std::vector<Rule*> dest;
+					find_all(src, dest, rule_eq);
+					if (dest.size() == 0) {
 						copied.insert(copy);
 						count++;
-					}// todo :delete copy
+					}
 					else {
 						delete copy;
 					}
@@ -323,24 +320,24 @@ SemaTokenListEqual(SemaTokenList& left, SemaTokenList& right) {
 }
 
 bool
-Parser::reduce(std::stack<StateItem>& states, std::stack<Node*>& syms, Record curRecord) {
+Parser::reduce(std::stack<StateItem>& states, std::stack<Node>& syms, Record curRecord) {
 	bool op = false;
 	Record record = curRecord;
 	StateItem curStateId = states.top();
-	Node* curNode = syms.top();
+	Node curNode = syms.top();
 	if (curRecord == nullptr && !curNode->getToken()->sema) {
 		record = _actionTable->find(curStateId->id, curNode->getToken()->id);
 	}
 	if (record != nullptr && !record->state) {
 		op = true;
 		Rule* rule = _rules[record->id];
-		std::vector<Node*> child;
+		std::vector<Node> child;
 		for (int i = 0; i < rule->right.size(); i++) {
 			child.push_back(syms.top());
 			syms.pop();
 			states.pop();
 		}
-		Node* left = rule->format(rule->left, child);
+		Node left = rule->format(rule->left, child);
 		syms.push(left);
 
 		// find goto table
@@ -360,7 +357,7 @@ Parser::reduce(std::stack<StateItem>& states, std::stack<Node*>& syms, Record cu
 	return op;
 }
 bool
-Parser::eatToken(std::stack<StateItem>& states, std::stack<Node*>& syms, std::stack<SemaToken>& input) {
+Parser::eatToken(std::stack<StateItem>& states, std::stack<Node>& syms, std::stack<SemaToken>& input) {
 	bool op = false;
 	StateItem curStateId = states.top();
 	SemaToken token = input.top();
@@ -369,7 +366,7 @@ Parser::eatToken(std::stack<StateItem>& states, std::stack<Node*>& syms, std::st
 		op = true;
 		if (record->state) {
 			states.push(new StateItemData{ record->id });
-			syms.push(new Node(token));
+			syms.push(new NodeData(token));
 			input.pop();
 			return op;
 		}

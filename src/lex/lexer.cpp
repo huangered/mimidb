@@ -6,7 +6,7 @@ Lexer::Lexer(const char* buf, int size) :_cur{ 0 }, _size{ size }, _buf{ buf }{
 }
 
 
-LexToken*
+LexToken
 Lexer::getLexerToken() {
 	if (_cur >= _size) {
 		return nullptr;
@@ -64,11 +64,11 @@ Lexer::getLexerToken() {
 		break;
 	}
 	_cur++;
-	LexToken* token = new LexToken{ tok };
+	LexToken token = new LexTokenData{ tok };
 	return token;
 }
 
-LexToken*
+LexToken
 Lexer::LexIdentifier() {
 	int start = _cur;
 	int count = 0;
@@ -86,14 +86,14 @@ Lexer::LexIdentifier() {
 	strncpy(p, _buf + start, count);
 	p[count] = '\0';
 
-	LexToken* token = new LexToken{ Tok::Identifier, yih::String{ p } };
+	LexToken token = new LexTokenData{ Tok::Identifier, yih::String{ p } };
 
 	delete[] p;
 
 	return token;
 }
 
-LexToken*
+LexToken
 Lexer::LexNumber() {
 	int start = _cur;
 	int count = 0;
@@ -110,7 +110,7 @@ Lexer::LexNumber() {
 	char* p = new char[count+1];
 	strncpy(p, _buf + start, count);
 	p[count] = '\0';
-	LexToken* token = new LexToken{ Tok::Number, yih::String{ p } };
+	LexToken token = new LexTokenData{ Tok::Number, yih::String{ p } };
 
 	delete[] p;
 	return token;

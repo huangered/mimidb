@@ -12,7 +12,7 @@
 #include <ostream>
 
 template <typename Iter, typename Pr>
-void findSameRule1(Iter& src, Iter& dest, Pr pred) {
+void find_all(Iter& src, Iter& dest, Pr pred) {
 	typename Iter::iterator begin = src.begin();
 	typename Iter::iterator end = src.end();
 	for (auto iter = std::find_if(begin, end, pred); iter != end; iter = std::find_if(++iter, end, pred)) {
@@ -24,7 +24,7 @@ struct SemaTokenData {
 	int id;
 	bool sema;
 	yih::String name;
-	LexToken lexToken;
+	LexTokenData lexToken;
 
 public:
 	SemaTokenData(int _id, bool _sema, yih::String _name) {
@@ -33,7 +33,7 @@ public:
 		name = _name;
 	}
 
-	SemaTokenData(int _id, bool _sema, LexToken _lexToken) {
+	SemaTokenData(int _id, bool _sema, LexTokenData _lexToken) {
 		id = _id;
 		sema = _sema;
 		lexToken = _lexToken;
@@ -57,15 +57,19 @@ public:
 typedef SemaTokenData* SemaToken;
 typedef std::vector<SemaToken> SemaTokenList;
 
-class Node {
-	std::vector<Node*> _nodes;
+class NodeData;
+
+typedef NodeData* Node;
+
+class NodeData {
+	std::vector<Node> _nodes;
 	const SemaToken _token;
 
 public:
-	Node(SemaToken token) :_token{ token } {}
+	NodeData(SemaToken token) :_token{ token } {}
 
-	void addAll(std::vector<Node*> nodes) {
-		for (Node* n : nodes) {
+	void addAll(std::vector<Node> nodes) {
+		for (Node n : nodes) {
 			_nodes.push_back(n);
 		}
 	}
@@ -179,8 +183,8 @@ struct Rule {
 	}
 
 	// 用户自定义的规则
-	Node* format(SemaToken token, std::vector<Node*> children) {
-		Node* n = new Node{token};
+	Node format(SemaToken token, std::vector<Node> children) {
+		Node n = new NodeData{token};
 		n->addAll(children);
 		return n;
 	}
@@ -513,15 +517,15 @@ public:
 	Parser(std::vector<Rule1> rules, SemaTokenList terminals, SemaTokenList nonTerminals);
 	~Parser();
 	void GenerateParseTable(void);
-	Node* Parse(std::vector<LexToken*> input);
+	Node Parse(std::vector<LexToken> input);
 private:
 	void handleState(int i);
 	void generateTable(void);
 	void expandRules(State state);
 	int searchSameState(std::vector<Rule*> newStateRules);
 
-	bool reduce(std::stack<StateItem>& states, std::stack<Node*>& syms, Record curRecord);
-	bool eatToken(std::stack<StateItem>& states, std::stack<Node*>& syms, std::stack<SemaToken>& input);
+	bool reduce(std::stack<StateItem>& states, std::stack<Node>& syms, Record curRecord);
+	bool eatToken(std::stack<StateItem>& states, std::stack<Node>& syms, std::stack<SemaToken>& input);
 };
 
 #endif

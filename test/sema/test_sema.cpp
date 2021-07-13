@@ -11,9 +11,9 @@ TEST(Sema, FirstSetTest) {
 	SemaToken t2 = new SemaTokenData{ 4, false, {Tok::Identifier, "id"} };
 	SemaToken eof = new SemaTokenData{ 5, false, {Tok::Money, "$"} };
 
-	LexToken* l1 = new LexToken{ Tok::Identifier };
-	LexToken* l2 = new LexToken{ Tok::Identifier };
-	LexToken* l3 = new LexToken{ Tok::Money };
+	LexTokenData* l1 = new LexTokenData{ Tok::Identifier };
+	LexTokenData* l2 = new LexTokenData{ Tok::Identifier };
+	LexTokenData* l3 = new LexTokenData{ Tok::Money };
 
 	Rule1 r1 = make_rule(0, Q, { S });
 	Rule1 r2 = make_rule(1, S, { C, C });
@@ -24,7 +24,10 @@ TEST(Sema, FirstSetTest) {
 
 	Parser parser(rules, { t1, t2, eof }, { Q, S,C });
 	parser.GenerateParseTable();
-	Node* n = parser.Parse({ l1, l2 , l3 });
+	Node n = parser.Parse({ l1, l2 , l3 });
+
+	EXPECT_TRUE(n != nullptr);
+
 	for (Rule1 r : rules) {
 		delete r;
 	}

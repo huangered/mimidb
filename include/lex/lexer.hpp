@@ -31,14 +31,16 @@ enum Tok :int
 	Unknown,
 };
 
-struct LexToken {
+struct LexTokenData {
 	Tok tok;
 	yih::String str;
 
-	int compare(const LexToken& token) {
+	int compare(const LexTokenData& token) {
 		return tok - token.tok;
 	}
 };
+
+typedef LexTokenData* LexToken;
 
 struct LexerOption {
 	bool skipWhiteSpace;
@@ -53,10 +55,10 @@ private:
 public:
 	Lexer(const char* buf, int size);
 
-	LexToken* getLexerToken();
+	LexToken getLexerToken();
 private:
-	LexToken* LexNumber();
-	LexToken* LexIdentifier();
+	LexToken LexNumber();
+	LexToken LexIdentifier();
 };
 
 #endif // !_lexer_hpp_
