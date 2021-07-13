@@ -55,7 +55,7 @@ Parser::Parser(std::vector<SimpleRule> rules, SemaTokenList terminals, SemaToken
 	}
 	_rules[0]->root = true;
 	Rule rule = _rules[0]->clone();
-	rule->SetToken(terminals[terminals.size() - 1]);
+	rule->SetToken(terminals[terminals.size() - 1]->lexToken->tok);
 	_stateList->Add(0, rule);
 }
 
@@ -79,6 +79,16 @@ yih::String join(const std::vector<SemaToken>& v) {
 	return a;
 }
 
+yih::String join2(const std::vector<Tok>& v) {
+	yih::String a;
+	for (Tok t : v) {
+
+		//a.Append(itoa(t)).Append(",");
+
+	}
+	return a;
+}
+
 void
 Parser::GenerateParseTable(void) {
 	_firstSet->Gen();
@@ -98,7 +108,7 @@ Parser::GenerateParseTable(void) {
 		std::cout << "state " << i << std::endl;
 		for (Rule r : _stateList->GetRules(i)) {
 			std::cout << r->left->name << " => " << join(r->right);
-			std::cout << " "<< join(r->tokens);
+			std::cout << " "<< join2(r->tokens);
 			std::cout << " " << r->dot << " ";
 
 			if (!r->isDotEnd()) {
@@ -208,8 +218,8 @@ Parser::generateTable(void) {
 				for (int g = 0; g < _rules.size(); g++) {
 					Rule c = _rules[g];
 					if (c->left->id==r->left->id && SemaTokenListEqual(c->right, r->right)) {
-						for (SemaToken token : r->getTokens()) {
-							_actionTable->addRule(i, token->lexToken->tok, g, r->root);
+						for (Tok token : r->getTokens()) {
+							_actionTable->addRule(i, token, g, r->root);
 						}
 					}
 				}
@@ -255,7 +265,7 @@ Parser::expandRules(State state) {
 				RuleList match;
 				find_all(_rules, match, rule_left_id_eq);
 				for (Rule rule : match) {
-					SemaTokenList tokens = _firstSet->Find(r->GetStringAfterDot(), r->getTokens());
+					std::vector<Tok> tokens = _firstSet->Find(r->GetStringAfterDot(), r->getTokens());
 
 					Rule copy = rule->clone();
 					copy->dot = 0;

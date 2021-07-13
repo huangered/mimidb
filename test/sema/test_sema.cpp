@@ -31,7 +31,7 @@ TEST(Sema, FirstSetTest) {
 	Node n = parser.Parse({ l1, l2, l3 });
 
 	EXPECT_TRUE(n != nullptr);
-
+	EXPECT_EQ(n->getToken()->id, Q->id);
 	for (SimpleRule r : rules) {
 		delete r;
 	}
