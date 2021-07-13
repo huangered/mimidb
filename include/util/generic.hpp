@@ -1,6 +1,8 @@
 #ifndef _generic_hpp_
 #define _generic_hpp_
 
+#include <algorithm>
+
 template <typename Iter, typename Pr>
 void find_all(Iter& src, Iter& dest, Pr pred) {
 	typename Iter::iterator begin = src.begin();
