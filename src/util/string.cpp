@@ -1,5 +1,6 @@
 #include "util/string.hpp"
 #include <cstring>
+
 using namespace yih;
 
 String::String() {
@@ -79,4 +80,3 @@ String::compare(const String& other) {
 
 	return 0;
 }
-

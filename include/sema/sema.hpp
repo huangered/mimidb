@@ -464,7 +464,7 @@ public:
 			for (Rule1 rule : _rules) {
 				SemaToken left = rule->left;
 
-				if (!_firstSet.contains(left->id)) {
+				if (_firstSet.count(left->id) == 0) {
 					_firstSet[left->id] = {};
 				}
 
@@ -474,13 +474,13 @@ public:
 				}
 				else {
 					SemaToken firstRight = rule->right[0];
-					if (_firstSet.contains(firstRight->id)) {
+					if (_firstSet.count(firstRight->id) > 0) {
 						auto tokens = _firstSet[firstRight->id];
 						c.insert(tokens.begin(), tokens.end());
 					}
 				}
 				for (int cc : c) {
-					if (!_firstSet[left->id].contains(cc)) {
+					if (_firstSet[left->id].count(cc) == 0) {
 						_firstSet[left->id].insert(cc);
 						count++;
 					}
