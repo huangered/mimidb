@@ -35,8 +35,8 @@ String::~String() {
 	}
 }
 
-const char*
-String::Data() {
+char*
+String::Data() const {
 	return _data;
 }
 
@@ -79,3 +79,4 @@ String::compare(const String& other) {
 
 	return 0;
 }
+

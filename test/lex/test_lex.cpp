@@ -32,5 +32,5 @@ TEST(Lexer, Lexer) {
 
 TEST(Lexer, FirstSet_Test) {
 
-    int i = Tok::Unknown;
+    
 }

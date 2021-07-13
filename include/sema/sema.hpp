@@ -11,6 +11,15 @@
 #include <stack>
 #include <ostream>
 
+template <typename Iter, typename Pr>
+void findSameRule1(Iter& src, Iter& dest, Pr pred) {
+	typename Iter::iterator begin = src.begin();
+	typename Iter::iterator end = src.end();
+	for (auto iter = std::find_if(begin, end, pred); iter != end; iter = std::find_if(++iter, end, pred)) {
+		dest.push_back(*iter);
+	}
+}
+
 struct SemaTokenData {
 	int id;
 	bool sema;
@@ -171,7 +180,9 @@ struct Rule {
 
 	// 用户自定义的规则
 	Node* format(SemaToken token, std::vector<Node*> children) {
-		return nullptr;
+		Node* n = new Node{token};
+		n->addAll(children);
+		return n;
 	}
 };
 
@@ -290,9 +301,9 @@ public:
 	}
 
 	void add(int stateId, int tokenId, int nextStateId) {
-		auto record = _data[stateId][tokenId];
-		if (record == nullptr) {
-			record = new RecordData{ .id = nextStateId };
+		Record* record = &_data[stateId][tokenId];
+		if (*record == nullptr) {
+			*record = new RecordData{ .state = true , .id = nextStateId };
 		}
 	}
 
@@ -316,7 +327,7 @@ public:
 			for (int i{ 0 }; i < _col;i++) {
 				Record record = _data[stateId][i];
 				if (record != nullptr) {
-					std::cout << record;
+					std::cout << *record;
 				}
 				else {
 					std::cout << "  ";
@@ -354,22 +365,22 @@ public:
 	}
 
 	void addRule(int stateId, int lexTokenId, int ruleId, bool acc) {
-		Record r = _data[stateId][lexTokenId];
-		if (r == nullptr) {
-			r = new RecordData{};
+		Record* r = &_data[stateId][lexTokenId];
+		if (*r == nullptr) {
+			*r = new RecordData{};
 		}
-		r->id = ruleId;
-		r->state = false;
-		r->acc = acc;
+		(*r)->id = ruleId;
+		(*r)->state = false;
+		(*r)->acc = acc;
 	}
 
 	void add(int stateId, int lexTokenId, int nextStateId) {
-		Record r = _data[stateId][lexTokenId];
-		if (r == nullptr) {
-			r = new RecordData{};
+		Record* r = &_data[stateId][lexTokenId];
+		if (*r == nullptr) {
+			*r = new RecordData{};
 		}
-		r->id = nextStateId;
-		r->state = true;
+		(*r)->id = nextStateId;
+		(*r)->state = true;
 	}
 
 	void print() {
@@ -382,7 +393,7 @@ public:
 			for (int i{ 0 }; i < _col; i++) {
 				Record record = _data[stateId][i];
 				if (record != nullptr) {
-					std::cout << record;
+					std::cout << *record;
 				}
 				else {
 					std::cout << "  ";
@@ -502,15 +513,15 @@ public:
 	Parser(std::vector<Rule1> rules, SemaTokenList terminals, SemaTokenList nonTerminals);
 	~Parser();
 	void GenerateParseTable(void);
-	std::vector<Node*> Parse(std::vector<LexToken*> input);
+	Node* Parse(std::vector<LexToken*> input);
 private:
 	void handleState(int i);
 	void generateTable(void);
 	void expandRules(State state);
 	int searchSameState(std::vector<Rule*> newStateRules);
 
-	bool reduce(std::stack<StateItem> states, std::stack<Node*> syms, Record curRecord);
-	bool eatToken(std::stack<StateItem> states, std::stack<Node*> syms, std::stack<SemaToken> input);
+	bool reduce(std::stack<StateItem>& states, std::stack<Node*>& syms, Record curRecord);
+	bool eatToken(std::stack<StateItem>& states, std::stack<Node*>& syms, std::stack<SemaToken>& input);
 };
 
 #endif

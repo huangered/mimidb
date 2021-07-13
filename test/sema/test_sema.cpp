@@ -7,9 +7,9 @@ TEST(Sema, FirstSetTest) {
 	SemaToken Q = new SemaTokenData{ 0, true, "Q" };
 	SemaToken S = new SemaTokenData{ 1, true, "S" };
 	SemaToken C = new SemaTokenData{ 2, true, "C" };
-	SemaToken t1 = new SemaTokenData{ 3, false,{Tok::Plus} };
-	SemaToken t2 = new SemaTokenData{ 4, false, {Tok::Identifier} };
-	SemaToken eof = new SemaTokenData{ 5, false, {Tok::Money} };
+	SemaToken t1 = new SemaTokenData{ 3, false,{Tok::Plus, "+"} };
+	SemaToken t2 = new SemaTokenData{ 4, false, {Tok::Identifier, "id"} };
+	SemaToken eof = new SemaTokenData{ 5, false, {Tok::Money, "$"} };
 
 	LexToken* l1 = new LexToken{ Tok::Identifier };
 	LexToken* l2 = new LexToken{ Tok::Identifier };
@@ -22,9 +22,9 @@ TEST(Sema, FirstSetTest) {
 
 	std::vector<Rule1> rules{ r1,r2,r3,r4 };
 
-	//Parser parser(rules, { t1, t2, eof }, { Q, S,C });
-	//parser.GenerateParseTable();
-	//parser.Parse({ l1, l2 , l3 });
+	Parser parser(rules, { t1, t2, eof }, { Q, S,C });
+	parser.GenerateParseTable();
+	Node* n = parser.Parse({ l1, l2 , l3 });
 	for (Rule1 r : rules) {
 		delete r;
 	}
