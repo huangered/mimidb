@@ -9,7 +9,7 @@ StateCollection::Size() {
 	
 bool
 StateCollection::IsEmpty(int stateId) {
-	return stateList[stateId]->getRules().size() == 0;
+	return stateList[stateId]->GetRules().size() == 0;
 }
 
 void
@@ -18,17 +18,17 @@ StateCollection::Add(State state) {
 }
 
 void
-StateCollection::Add(int stateId, Rule* rule) {
-	stateList[stateId]->add(rule);
+StateCollection::Add(int stateId, Rule rule) {
+	stateList[stateId]->Add(rule);
 }
 
-std::vector<Rule*>
-StateCollection::getRules(int stateId) {
-	return stateList[stateId]->getRules();
+RuleList
+StateCollection::GetRules(int stateId) {
+	return stateList[stateId]->GetRules();
 }
 
 State
-StateCollection::getState(int stateId) {
+StateCollection::GetState(int stateId) {
 	return stateList[stateId];
 }
 
@@ -36,22 +36,25 @@ StateCollection::getState(int stateId) {
 
 
 
-Parser::Parser(std::vector<Rule1> rules, SemaTokenList terminals, SemaTokenList nonTerminals) {
+Parser::Parser(std::vector<SimpleRule> rules, SemaTokenList terminals, SemaTokenList nonTerminals) {
 	_maxState = 0;
 	_terminals = terminals;
 	_nonTerminals = nonTerminals;
 	_firstSet = new FirstSet(rules);
 	_stateList = new StateCollection();
 	_stateList->Add(new StateData{ 0 });
-	for (Rule1 rule : rules) {
-		Rule* r = new Rule{};
+	_gotoTable = nullptr;
+	_actionTable = nullptr;
+
+	for (SimpleRule rule : rules) {
+		Rule r = new RuleData{};
 		r->id = rule->id;
 		r->left = rule->left;
 		r->right = rule->right;
 		_rules.push_back(r);
 	}
 	_rules[0]->root = true;
-	Rule* rule = _rules[0]->clone();
+	Rule rule = _rules[0]->clone();
 	rule->SetToken(terminals[terminals.size() - 1]);
 	_stateList->Add(0, rule);
 }
@@ -70,7 +73,7 @@ yih::String join(const std::vector<SemaToken>& v) {
 			a.Append(t->name.Data()).Append(",");
 		}
 		else {
-			a.Append(t->lexToken.str.Data()).Append(",");
+			a.Append(t->lexToken->str.Data()).Append(",");
 		}
 	}
 	return a;
@@ -93,7 +96,7 @@ Parser::GenerateParseTable(void) {
 			break;
 		}
 		std::cout << "state " << i << std::endl;
-		for (Rule* r : _stateList->getRules(i)) {
+		for (Rule r : _stateList->GetRules(i)) {
 			std::cout << r->left->name << " => " << join(r->right);
 			std::cout << " "<< join(r->tokens);
 			std::cout << " " << r->dot << " ";
@@ -117,11 +120,13 @@ Parser::Parse(std::vector<LexToken> input) {
 	std::stack<Node> token_stack;
 	std::stack<SemaToken> input_stack;
 
-	token_stack.push(new NodeData{ new SemaTokenData{-2, false, {Tok::Money}} });
-	for (auto iter = input.rbegin(); iter != input.rend(); iter++) {
-		input_stack.push(new SemaTokenData(-2, false, **iter));
-	}
+	LexToken end = new LexTokenData{ Tok::Money, "$" };
 
+	token_stack.push(new NodeData{ new SemaTokenData{ -2, false, end } });
+
+	for (auto iter = input.rbegin(); iter != input.rend(); iter++) {
+		input_stack.push(new SemaTokenData(-2, false, *iter));
+	}
 
 	while (!state_stack.top()->acc) {
 		bool op = reduce(state_stack, token_stack, nullptr);
@@ -138,12 +143,12 @@ Parser::Parse(std::vector<LexToken> input) {
 // === private part ===
 void
 Parser::handleState(int stateId) {
-	State state = _stateList->getState(stateId);
+	State state = _stateList->GetState(stateId);
 	// 1. 扩展规则
 	expandRules(state);
 	// 2. 构建新状态
 	std::map<int, SemaToken> tokens;
-	for (Rule* rule : state->getRules()) {
+	for (Rule rule : state->GetRules()) {
 		if (!rule->isDotEnd()) {
 			SemaToken token = rule->getTokenAfterDot();
 			tokens[token->id] = token;
@@ -153,13 +158,13 @@ Parser::handleState(int stateId) {
 	for (auto iter = tokens.begin(); iter != tokens.end(); iter++) {
 		SemaToken token = iter->second;
 
-		std::vector<Rule*> movedRules;
-		std::vector<Rule*> newStateRules;
-		for (Rule* r : state->getRules()) {
+		RuleList movedRules;
+		RuleList newStateRules;
+		for (Rule r : state->GetRules()) {
 			if (!r->isDotEnd() && r->right[r->dot]->id == token->id) {
 				movedRules.push_back(r);
 
-				Rule* n = r->clone();
+				Rule n = r->clone();
 				n->dot++;
 				newStateRules.push_back(n);
 			}
@@ -171,19 +176,19 @@ Parser::handleState(int stateId) {
 		if (stateId1 == -1) {
 			// 没找到
 			_maxState++;
-			std::for_each(movedRules.begin(), movedRules.end(), [&](Rule* r) {r->next_state = _maxState; });
+			std::for_each(movedRules.begin(), movedRules.end(), [&](Rule r) {r->next_state = _maxState; });
 			if (_stateList->Size() <= _maxState) {
 				for (int i = _stateList->Size(); i <= _maxState; i++) {
 					_stateList->Add(new StateData(i));
 				}
 			}
-		for(Rule* newRule :	newStateRules){
-				_stateList->getState(_maxState)->add(newRule);
+		for(Rule newRule : newStateRules){
+				_stateList->GetState(_maxState)->Add(newRule);
 			};
 		}
 		else {
 			// 找到了
-			for (Rule* r : movedRules) {
+			for (Rule r : movedRules) {
 				r->next_state = stateId1;
 			}
 		}
@@ -196,15 +201,15 @@ Parser::generateTable(void) {
 	_actionTable = new ActionTable(_stateList->Size() , Tok::Unknown);
 
 	for (int i = 0; i < _stateList->Size(); i++) {
-		for (Rule* r : _stateList->getRules(i)) {
+		for (Rule r : _stateList->GetRules(i)) {
 			if (r->isDotEnd()) {
 				// find rule id
 				// add r1 in action
 				for (int g = 0; g < _rules.size(); g++) {
-					Rule* c = _rules[g];
+					Rule c = _rules[g];
 					if (c->left->id==r->left->id && SemaTokenListEqual(c->right, r->right)) {
 						for (SemaToken token : r->getTokens()) {
-							_actionTable->addRule(i, token->lexToken.tok, g, r->root);
+							_actionTable->addRule(i, token->lexToken->tok, g, r->root);
 						}
 					}
 				}
@@ -217,7 +222,7 @@ Parser::generateTable(void) {
 				}
 				else {
 					// update action
-					_actionTable->add(i, w->lexToken.tok, r->next_state);
+					_actionTable->add(i, w->lexToken->tok, r->next_state);
 				}
 			}
 		}
@@ -232,9 +237,9 @@ Parser::expandRules(State state) {
 
 	for (;;) {
 		count = 0;
-		std::set<Rule*> copied;
+		std::set<Rule> copied;
 
-		for (Rule* r : state->getRules()) {
+		for (Rule r : state->GetRules()) {
 			r->cur_state = state->GetId();
 			if (r->isDotEnd()) {
 				continue;
@@ -244,23 +249,23 @@ Parser::expandRules(State state) {
 				// non terminals
 				// update state list
 
-				auto rule_left_id_eq = [&](Rule* rule) -> bool {
+				auto rule_left_id_eq = [word](Rule rule) -> bool {
 					return rule->left->id == word->id;
 				};
-				std::vector<Rule*> match;
+				RuleList match;
 				find_all(_rules, match, rule_left_id_eq);
-				for (Rule* rule : match) {
+				for (Rule rule : match) {
 					SemaTokenList tokens = _firstSet->Find(r->GetStringAfterDot(), r->getTokens());
 
-					Rule* copy = rule->clone();
+					Rule copy = rule->clone();
 					copy->dot = 0;
 					copy->setTokens(tokens);
 					// 如果是新rule
-					auto rule_eq = [copy](Rule* rule)-> bool {
-						return rule->compare(*copy) == 0;
+					auto rule_eq = [copy](Rule rule)-> bool {
+						return rule->Compare(*copy) == 0;
 					};
-					std::vector<Rule*> src = state->getRules();
-					std::vector<Rule*> dest;
+					RuleList src = state->GetRules();
+					RuleList dest;
 					find_all(src, dest, rule_eq);
 					if (dest.size() == 0) {
 						copied.insert(copy);
@@ -277,19 +282,38 @@ Parser::expandRules(State state) {
 			break;
 		}
 		else {
-			state->add(copied);
+			state->Add(copied);
 		}
 	}
 
-	// 合并 state 里的 rules
+	RuleList tmp;
 
+	// 合并 state 里的 rules
+	for (Rule rule : state->GetRules()) {
+		auto check_exist = [rule](Rule r)-> bool {
+			return r->dot == rule->dot &&
+				r->left->id == rule->left->id &&
+				SemaTokenListEqual(r->right, rule->right);
+		};
+
+		auto iter = std::find_if(tmp.begin(), tmp.end(), check_exist);
+		if (iter != tmp.end()) {
+			Rule r = *iter;
+			r->AppendTokens(rule->tokens);
+			//todo: 要delete多余的rule；
+		}
+		else {
+			tmp.push_back(rule);
+		}
+	}
+	state->ResetRules(tmp);
 }
 
 int
-Parser::searchSameState(std::vector<Rule*> newStateRules) {
+Parser::searchSameState(RuleList newStateRules) {
 	for (int i{ 0 }; i < _stateList->Size(); i++) {
-		State state = _stateList->getState(i);
-		if (state->matchRule(newStateRules)) {
+		State state = _stateList->GetState(i);
+		if (state->MatchRule(newStateRules)) {
 			return i;
 		}
 	}
@@ -302,11 +326,11 @@ SemaTokenListEqual(SemaTokenList& left, SemaTokenList& right) {
 		return false;
 	}
 
-	std::sort(left.begin(), left.end(), [](SemaToken l, SemaToken r) {
+	std::sort(left.begin(), left.end(), [](const SemaToken l, const SemaToken r) {
 		return l->id < r->id;
 		});
 
-	std::sort(right.begin(), right.end(), [](SemaToken l, SemaToken r) {
+	std::sort(right.begin(), right.end(), [](const SemaToken l, const SemaToken r) {
 		return l->id < r->id;
 		});
 
@@ -330,7 +354,7 @@ Parser::reduce(std::stack<StateItem>& states, std::stack<Node>& syms, Record cur
 	}
 	if (record != nullptr && !record->state) {
 		op = true;
-		Rule* rule = _rules[record->id];
+		Rule rule = _rules[record->id];
 		std::vector<Node> child;
 		for (int i = 0; i < rule->right.size(); i++) {
 			child.push_back(syms.top());
@@ -361,7 +385,7 @@ Parser::eatToken(std::stack<StateItem>& states, std::stack<Node>& syms, std::sta
 	bool op = false;
 	StateItem curStateId = states.top();
 	SemaToken token = input.top();
-	Record record = _actionTable->find(curStateId->id, token->lexToken.tok);
+	Record record = _actionTable->find(curStateId->id, token->lexToken->tok);
 	if (record != nullptr) {
 		op = true;
 		if (record->state) {

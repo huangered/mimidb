@@ -23,8 +23,8 @@ TEST(string_test, equal)
     yih::String a{ "abcd" };
     yih::String b{ "abcd" };
 
-    EXPECT_EQ(0, a.compare(a));
-    EXPECT_EQ(0, a.compare(b));   
+    EXPECT_EQ(0, a.Compare(a));
+    EXPECT_EQ(0, a.Compare(b));   
 }
 
 TEST(string_test, not_equal)
@@ -33,6 +33,6 @@ TEST(string_test, not_equal)
     yih::String b{ "abcd1" };
     yih::String c{ "abce" };
 
-    EXPECT_NE(0, a.compare(b));
-    EXPECT_NE(0, a.compare(c));
+    EXPECT_NE(0, a.Compare(b));
+    EXPECT_NE(0, a.Compare(c));
 }

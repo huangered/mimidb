@@ -63,7 +63,7 @@ String::Append(const char* data) {
 }
 
 int
-String::compare(const String& other) {
+String::Compare(const String& other) {
 	if (this == &other) {
 		return 0;
 	}

@@ -5,11 +5,11 @@
 
 namespace yih {
 	class String {
-	  friend std::ostream& operator<<(std::ostream& os, const String& dt) {
-	    os<<dt._data;
-	    return os;
-	  }
-	  
+		friend std::ostream& operator<<(std::ostream& os, const String& dt) {
+			os << dt._data;
+			return os;
+		}
+
 	private:
 		char* _data;
 		int _len;
@@ -25,7 +25,7 @@ namespace yih {
 		// common methods
 		String& Append(const char* data);
 
-		int compare(const String& other);
+		int Compare(const String& other);
 	};
 }
 
