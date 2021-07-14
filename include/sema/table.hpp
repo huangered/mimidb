@@ -24,11 +24,11 @@ public:
 		}
 	}
 
-	void add(int stateId, int tokenId, int nextStateId);
+	void Add(int stateId, int tokenId, int nextStateId);
 
-	Record find(int stateId, int tokenId);
+	Record Find(int stateId, int tokenId);
 
-	void print();
+	void Print();
 };
 
 class ActionTable {
@@ -47,13 +47,13 @@ public:
 		}
 	}
 
-	Record find(int stateId, int lexTokenId);
+	Record Find(int stateId, int lexTokenId);
 
-	void addRule(int stateId, int lexTokenId, int ruleId, bool acc);
+	void AddRule(int stateId, int lexTokenId, int ruleId, bool acc);
 
-	void add(int stateId, int lexTokenId, int nextStateId);
+	void Add(int stateId, int lexTokenId, int nextStateId);
 
-	void print();
+	void Print();
 };
 
 #endif

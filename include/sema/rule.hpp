@@ -1,4 +1,4 @@
-﻿#ifndef _rule_hpp_
+#ifndef _rule_hpp_
 #define _rule_hpp_
 
 #include "lex/lexer.hpp"
@@ -40,7 +40,7 @@ struct RuleData {
 		return dot == right.size();
 	}
 
-	SemaToken getTokenAfterDot() {
+	SemaToken GetTokenAfterDot() {
 		return right[dot];
 	}
 
@@ -52,15 +52,11 @@ struct RuleData {
 		return tokens;
 	}
 
-	void SetToken(Tok token) {
-		tokens.push_back(token);
-	}
+    void SetToken(Tok token);
 
-	void AppendTokens(std::vector<Tok> tokens) {
-		this->tokens.insert(this->tokens.end(), tokens.begin(), tokens.end());
-	}
+    void AppendTokens(std::vector<Tok> tokens);
 
-	RuleData* clone() {
+	RuleData* Clone() {
 		RuleData* rule = new RuleData{};
 		rule->id = id;
 		rule->left = left;
@@ -71,18 +67,16 @@ struct RuleData {
 		return rule;
 	}
 
-	std::vector<Tok> getTokens() {
+	std::vector<Tok> GetTokens() {
 		return tokens;
 	}
 
-	void setTokens(std::vector<Tok> tokens) {
-		this->tokens = tokens;
-	}
-
+    void SetTokens(std::vector<Tok> tokens);
+    
 	int Compare(RuleData& other);
 
 	// 用户自定义的规则
-	Node format(SemaToken token, std::vector<Node> children) {
+	Node Format(SemaToken token, std::vector<Node> children) {
 		Node n = new NodeData{ token };
 		n->addAll(children);
 		return n;

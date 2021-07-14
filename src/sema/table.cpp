@@ -2,7 +2,7 @@
 #include "sema/sema.hpp"
 
 void
-GotoTable::add(int stateId, int tokenId, int nextStateId) {
+GotoTable::Add(int stateId, int tokenId, int nextStateId) {
 	Record* record = &_data[stateId][tokenId];
 	if (*record == nullptr) {
 		*record = new RecordData{ .state = true , .id = nextStateId };
@@ -10,7 +10,7 @@ GotoTable::add(int stateId, int tokenId, int nextStateId) {
 }
 
 Record
-GotoTable::find(int stateId, int tokenId) {
+GotoTable::Find(int stateId, int tokenId) {
 	if (stateId < 0 || stateId > _row || tokenId < 0 || tokenId > _col) {
 		return nullptr;
 	}
@@ -20,7 +20,7 @@ GotoTable::find(int stateId, int tokenId) {
 }
 
 void
-GotoTable::print() {
+GotoTable::Print() {
 
 	for (int i{ 0 }; i < _col; i++) {
 		std::cout << " " << i << "|";
@@ -43,7 +43,7 @@ GotoTable::print() {
 }
 
 Record
-ActionTable::find(int stateId, int lexTokenId) {
+ActionTable::Find(int stateId, int lexTokenId) {
 		if (stateId<0 || stateId>_row || lexTokenId< 0 || lexTokenId>_col) {
 			return nullptr;
 		}
@@ -53,7 +53,7 @@ ActionTable::find(int stateId, int lexTokenId) {
 	}
 
 void
-ActionTable::addRule(int stateId, int lexTokenId, int ruleId, bool acc) {
+ActionTable::AddRule(int stateId, int lexTokenId, int ruleId, bool acc) {
 		Record* r = &_data[stateId][lexTokenId];
 		if (*r == nullptr) {
 			*r = new RecordData{};
@@ -64,7 +64,7 @@ ActionTable::addRule(int stateId, int lexTokenId, int ruleId, bool acc) {
 	}
 
 void
-ActionTable::add(int stateId, int lexTokenId, int nextStateId) {
+ActionTable::Add(int stateId, int lexTokenId, int nextStateId) {
 	Record* r = &_data[stateId][lexTokenId];
 	if (*r == nullptr) {
 		*r = new RecordData{};
@@ -74,7 +74,7 @@ ActionTable::add(int stateId, int lexTokenId, int nextStateId) {
 }
 
 void
-ActionTable::print() {
+ActionTable::Print() {
 	for (int i{ 0 }; i < _col; i++) {
 		std::cout << " " << i << "|";
 	}

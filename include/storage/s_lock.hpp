@@ -13,7 +13,7 @@
 	static __inline__ int
 	tas(volatile slock_t* lock)
 	{
-		register slock_t _res = 1;
+		 slock_t _res = 1;
 
 		/*
 		 * Use a non-locking test before asserting the bus lock.  Note that the
@@ -26,15 +26,15 @@
 		 * testing to verify that.  Without some empirical evidence, better to
 		 * leave it alone.
 		 */
-		__asm__ __volatile__(
-			"	cmpb	$0,%1	\n"
-			"	jne		1f		\n"
-			"	lock			\n"
-			"	xchgb	%0,%1	\n"
-			"1: \n"
-			:		"+q"(_res), "+m"(*lock)
-			:		/* no inputs */
-			: "memory", "cc");
+//		__asm__ __volatile__(
+//			"	cmpb	$0,%1	\n"
+//			"	jne		1f		\n"
+//			"	lock			\n"
+//			"	xchgb	%0,%1	\n"
+//			"1: \n"
+//			//:		"+q"(_res), "+m"(*lock)
+//			:		/* no inputs */
+//			: "memory", "cc");
 		return (int)_res;
 	}
 	#define TAS_SPIN(lock)    TAS(lock)

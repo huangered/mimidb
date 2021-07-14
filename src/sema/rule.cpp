@@ -1,6 +1,34 @@
 #include "sema/rule.hpp"
 #include "sema/sema.hpp"
 
+void
+RuleData::SetToken(Tok token){
+    tokens.push_back(token);
+    auto j = [](Tok l, Tok r) -> bool {
+        return l < r;
+    };
+    std::sort(tokens.begin(),tokens.end(),j);
+}
+
+void
+RuleData::AppendTokens(std::vector<Tok> tokenList) {
+    tokens.insert(tokens.end(), tokenList.begin(), tokenList.end());
+    
+    auto j = [](Tok l, Tok r) -> bool {
+        return l < r;
+    };
+    std::sort(tokens.begin(),tokens.end(),j);
+}
+
+void
+RuleData::SetTokens(std::vector<Tok> tokenList) {
+    tokens.swap(tokenList);
+    auto j = [](Tok l, Tok r) -> bool {
+        return l < r;
+    };
+    std::sort(tokens.begin(),tokens.end(),j);
+}
+
 int
 RuleData::Compare(RuleData& other) {
 	int i;
@@ -21,13 +49,6 @@ RuleData::Compare(RuleData& other) {
 	if ((i = (tokens.size() - other.tokens.size())) != 0) {
 		return i;
 	}
-
-	auto j = [](Tok l, Tok r) -> bool {
-		return l < r;
-	};
-
-	std::sort(tokens.begin(), tokens.end(), j);
-	std::sort(other.tokens.begin(), other.tokens.end(), j);
 
 	for (int j = 0; j < tokens.size(); j++) {
 		if ((i = tokens[j] - other.tokens[j]) != 0) {

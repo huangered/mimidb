@@ -7,11 +7,11 @@
 
 TEST(Lexer, Lexer) {
 
-    std::vector<LexTokenData*> arr;
+    std::vector<LexToken> arr;
     const char* a = "((()) ab 1234";
     Lexer* b = new Lexer(a, strlen(a));
-    LexTokenData* token;
-    while ((token = b->getLexerToken()) != nullptr) {
+    LexToken token;
+    while ((token = b->GetLexerToken()) != nullptr) {
         arr.push_back(token);
     }
 

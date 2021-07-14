@@ -28,6 +28,8 @@ enum Tok :int
 
 	Money,
 
+    Eof,
+    
 	Unknown,
 };
 
@@ -55,10 +57,10 @@ private:
 public:
 	Lexer(const char* buf, int size);
 
-	LexToken getLexerToken();
+	LexToken GetLexerToken();
 private:
-	LexToken LexNumber();
-	LexToken LexIdentifier();
+	LexToken lexNumber();
+	LexToken lexIdentifier();
 };
 
 #endif // !_lexer_hpp_

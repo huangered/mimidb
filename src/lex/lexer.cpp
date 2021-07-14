@@ -7,7 +7,7 @@ Lexer::Lexer(const char* buf, int size) :_cur{ 0 }, _size{ size }, _buf{ buf }{
 
 
 LexToken
-Lexer::getLexerToken() {
+Lexer::GetLexerToken() {
 	if (_cur >= _size) {
 		return nullptr;
 	}
@@ -25,7 +25,7 @@ Lexer::getLexerToken() {
     case '7':
     case '8':
     case '9':
-		return LexNumber();
+		return lexNumber();
 	case 'a':
 	case 'b':
 	case 'c':
@@ -52,7 +52,7 @@ Lexer::getLexerToken() {
 	case 'x':
 	case 'y':
 	case 'z':
-		return LexIdentifier();
+		return lexIdentifier();
 	case '(':
 		tok = Tok::LeftBrace;
 		break;
@@ -69,7 +69,7 @@ Lexer::getLexerToken() {
 }
 
 LexToken
-Lexer::LexIdentifier() {
+Lexer::lexIdentifier() {
 	int start = _cur;
 	int count = 0;
 	for (; _cur < _size; _cur++) {
@@ -94,7 +94,7 @@ Lexer::LexIdentifier() {
 }
 
 LexToken
-Lexer::LexNumber() {
+Lexer::lexNumber() {
 	int start = _cur;
 	int count = 0;
 	for (; _cur < _size; _cur++) {

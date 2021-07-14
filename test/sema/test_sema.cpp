@@ -1,4 +1,4 @@
-﻿#include "../g.hpp"
+#include "../g.hpp"
 #include "lex/lexer.hpp"
 #include "sema/sema.hpp"
 
@@ -6,7 +6,7 @@ TEST(Sema, FirstSetTest) {
 
 	LexToken a1 = new LexTokenData{ Tok::Plus, "+" };
 	LexToken a2 = new LexTokenData{ Tok::Identifier, "id" };
-	LexToken a3 = new LexTokenData{ Tok::Money, "$" };
+	LexToken a3 = new LexTokenData{ Tok::Eof, "$" };
 
 	SemaToken Q = new SemaTokenData{ 0, true, "Q" };
 	SemaToken S = new SemaTokenData{ 1, true, "S" };
@@ -17,7 +17,7 @@ TEST(Sema, FirstSetTest) {
 
 	LexTokenData* l1 = new LexTokenData{ Tok::Identifier };
 	LexTokenData* l2 = new LexTokenData{ Tok::Identifier };
-	LexTokenData* l3 = new LexTokenData{ Tok::Money };
+	LexTokenData* l3 = new LexTokenData{ Tok::Eof };
 
 	SimpleRule r1 = make_rule(0, Q, { S });
 	SimpleRule r2 = make_rule(1, S, { C, C });

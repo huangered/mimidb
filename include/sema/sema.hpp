@@ -1,8 +1,7 @@
-﻿#ifndef _sema_hpp_
+#ifndef _sema_hpp_
 #define _sema_hpp_
 
 #include "lex/lexer.hpp"
-#include "sema/dictionary.hpp"
 #include "util/generic.hpp"
 #include "sema/node.hpp"
 #include "sema/rule.hpp"
@@ -10,12 +9,7 @@
 
 #include <map>
 #include <set>
-#include <vector>
-#include <algorithm>
-#include <iostream>
 #include <stack>
-#include <ostream>
-
 
 struct SemaTokenData {
 	int id;
@@ -53,7 +47,6 @@ public:
 
 typedef SemaTokenData* SemaToken;
 typedef std::vector<SemaToken> SemaTokenList;
-
 
 struct StateItemData {
 	int id;
