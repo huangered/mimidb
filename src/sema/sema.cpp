@@ -69,34 +69,6 @@ Parser::~Parser()
     delete _stateList;
 }
 
-yih::String join(const SemaTokenList &v)
-{
-    yih::String a;
-    for (SemaToken t : v)
-    {
-        if (t->sema)
-        {
-            a.Append(t->name.Data()).Append(",");
-        }
-        else
-        {
-            a.Append(t->lexToken->str.Data()).Append(",");
-        }
-    }
-    return a;
-}
-
-yih::String join2(const std::vector<Tok> &v)
-{
-    yih::String a;
-    for (Tok t : v)
-    {
-
-        // a.Append(itoa(t)).Append(",");
-    }
-    return a;
-}
-
 void Parser::GenerateParseTable(void)
 {
     _firstSet->Gen();
@@ -203,9 +175,9 @@ void Parser::handleState(int stateId)
         }
 
         // 寻找相同的状态集合。
-        int stateId1 = searchSameState(newStateRules);
+        State sameState = searchSameState(newStateRules);
 
-        if (stateId1 == -1)
+        if (sameState == nullptr)
         {
             // 没找到
             _maxState++;
@@ -227,7 +199,7 @@ void Parser::handleState(int stateId)
             // 找到了
             for (Rule r : movedRules)
             {
-                r->next_state = stateId1;
+                r->next_state = sameState->GetId();
             }
         }
     }
@@ -363,39 +335,17 @@ void Parser::expandRules(State state)
     state->ResetRules(tmp);
 }
 
-int Parser::searchSameState(RuleList newStateRules)
+State Parser::searchSameState(RuleList newStateRules)
 {
     for (int i{0}; i < _stateList->Size(); i++)
     {
         State state = _stateList->GetState(i);
         if (state->MatchRule(newStateRules))
         {
-            return i;
+            return state;
         }
     }
-    return -1;
-}
-
-bool SemaTokenListEqual(SemaTokenList &left, SemaTokenList &right)
-{
-    if (left.size() != right.size())
-    {
-        return false;
-    }
-
-    std::sort(left.begin(), left.end(), [](const SemaToken l, const SemaToken r) { return l->id < r->id; });
-
-    std::sort(right.begin(), right.end(), [](const SemaToken l, const SemaToken r) { return l->id < r->id; });
-
-    for (int i{0}; i < left.size(); i++)
-    {
-        if (left[i]->id != right[i]->id)
-        {
-            return false;
-        }
-    }
-
-    return true;
+    return nullptr;
 }
 
 bool Parser::reduce(std::stack<StateItem> &states, std::stack<Node> &syms, Record curRecord)
@@ -439,6 +389,7 @@ bool Parser::reduce(std::stack<StateItem> &states, std::stack<Node> &syms, Recor
     }
     return op;
 }
+
 bool Parser::eatToken(std::stack<StateItem> &states, std::stack<Node> &syms, std::stack<SemaToken> &input)
 {
     bool op = false;
@@ -461,4 +412,56 @@ bool Parser::eatToken(std::stack<StateItem> &states, std::stack<Node> &syms, std
         }
     }
     return op;
+}
+
+yih::String join(const SemaTokenList &v)
+{
+    yih::String a;
+    for (SemaToken t : v)
+    {
+        if (t->sema)
+        {
+            a.Append(t->name.Data()).Append(",");
+        }
+        else
+        {
+            a.Append(t->lexToken->str.Data()).Append(",");
+        }
+    }
+    return a;
+}
+
+yih::String join2(const std::vector<Tok> &v)
+{
+    yih::String a;
+    for (Tok t : v)
+    {
+
+        // a.Append(itoa(t)).Append(",");
+    }
+    return a;
+}
+
+bool SemaTokenListEqual(SemaTokenList &left, SemaTokenList &right)
+{
+    if (left.size() != right.size())
+    {
+        return false;
+    }
+
+    auto cmp = [](const SemaToken l, const SemaToken r) { return l->id < r->id; };
+    
+    std::sort(left.begin(), left.end(), cmp);
+
+    std::sort(right.begin(), right.end(), cmp);
+
+    for (int i{0}; i < left.size(); i++)
+    {
+        if (left[i]->id != right[i]->id)
+        {
+            return false;
+        }
+    }
+
+    return true;
 }

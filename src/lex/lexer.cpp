@@ -62,6 +62,12 @@ Lexer::GetLexerToken() {
 	case ' ':
 		tok = Tok::WhiteSpace;
 		break;
+    case '*':
+        tok= Tok::Mul;
+        break;
+        case ';':
+            tok=Tok::Semicolon;
+            break;
 	}
 	_cur++;
 	LexToken token = new LexTokenData{ tok };
@@ -90,6 +96,22 @@ Lexer::lexIdentifier() {
 
 	delete[] p;
 
+    if (strcmp("select", token->str.Data())==0) {
+        token->tok = Tok::Select;
+    } else if (strcmp("from", token->str.Data())==0) {
+        token->tok = Tok::From;
+    } else if (strcmp("table", token->str.Data())==0) {
+        token->tok  = Tok::Table;
+    } else if (strcmp("create", token->str.Data())==0){
+        token->tok = Tok::Create;
+    } else if(strcmp("into",token->str.Data())==0) {
+        token->tok = Tok::Into;
+    } else if (strcmp("values",token->str.Data())==0) {
+        token ->tok=Tok::Values;
+    } else if(strcmp("view", token->str.Data())==0) {
+        token->tok = Tok::View;
+    }
+    
 	return token;
 }
 

@@ -257,7 +257,7 @@ private:
 	void handleState(int i);
 	void generateTable(void);
 	void expandRules(State state);
-	int searchSameState(RuleList newStateRules);
+	State searchSameState(RuleList newStateRules);
 
 	bool reduce(std::stack<StateItem>& states, std::stack<Node>& syms, Record curRecord);
 	bool eatToken(std::stack<StateItem>& states, std::stack<Node>& syms, std::stack<SemaToken>& input);

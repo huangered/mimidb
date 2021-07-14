@@ -16,7 +16,8 @@ enum Tok :int
 	View,
 
 	Plus,
-
+    Mul,
+    
 	Comma,
 	Semicolon,
 
