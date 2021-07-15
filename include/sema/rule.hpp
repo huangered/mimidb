@@ -17,11 +17,7 @@ struct SimpleRuleData {
 
 typedef SimpleRuleData* SimpleRule;
 
-static SimpleRule
-make_rule(int id, SemaToken left, SemaTokenList right) {
-    SimpleRule rule = new SimpleRuleData{id, left, right};
-    return rule;
-}
+SimpleRule make_rule(int id, SemaToken left, SemaTokenList right);
 
 struct RuleData {
     int id;
@@ -37,57 +33,26 @@ struct RuleData {
     // look ahead 检查
     std::vector<Tok> tokens;
 
-    bool
-    isDotEnd() {
-        return dot == right.size();
-    }
+    bool IsDotEnd();
 
-    SemaToken
-    GetTokenAfterDot() {
-        return right[dot];
-    }
+    SemaToken GetTokenAfterDot();
 
-    SemaTokenList
-    GetStringAfterDot() {
-        SemaTokenList tokens;
-        for (int i = dot + 1; i != right.size(); i++) {
-            tokens.push_back(right[i]);
-        }
-        return tokens;
-    }
+    SemaTokenList GetStringAfterDot();
 
     void SetToken(Tok token);
 
-    void AppendTokens(std::vector<Tok> tokens);
+    void AppendTokens(TokList tokens);
 
-    RuleData*
-    Clone() {
-        RuleData* rule = new RuleData{};
-        rule->id = id;
-        rule->left = left;
-        rule->right = right;
-        rule->dot = dot;
-        rule->root = root;
-        rule->tokens = tokens;
-        return rule;
-    }
+    RuleData* Clone();
 
-    std::vector<Tok>
-    GetTokens() {
-        return tokens;
-    }
+    TokList GetTokens();
 
-    void SetTokens(std::vector<Tok> tokens);
+    void SetTokens(TokList tokens);
 
     int Compare(RuleData& other);
 
     // 用户自定义的规则
-    Node
-    Format(SemaToken token, std::vector<Node> children) {
-        Node n = new NodeData{token};
-        n->addAll(children);
-        return n;
-    }
+    Node Format(SemaToken token, std::vector<Node> children);
 };
 
 typedef RuleData* Rule;

@@ -100,7 +100,7 @@ Parser::GenerateParseTable(void) {
             std::cout << " " << join2(r->tokens);
             std::cout << " " << r->dot << " ";
 
-            if (!r->isDotEnd()) {
+            if (!r->IsDotEnd()) {
                 std::cout << "next " << r->next_state;
             }
 
@@ -113,15 +113,16 @@ Parser::GenerateParseTable(void) {
 
 Node
 Parser::Parse(std::vector<LexToken> input) {
-    // init stach
+    Node node                = nullptr;
+    StateItem firstStateItem = new StateItemData{0, false};
+    Node firstNode           = new NodeData{new SemaTokenData{-2, false, new LexTokenData{Tok::Eof, "eof"}}};
+    // init stack
     std::stack<StateItem> state_stack;
-    state_stack.push(new StateItemData{0, false});
     std::stack<Node> token_stack;
     std::stack<SemaToken> input_stack;
 
-    LexToken end = new LexTokenData{Tok::Eof, "$"};
-
-    token_stack.push(new NodeData{new SemaTokenData{-2, false, end}});
+    state_stack.push(firstStateItem);
+    token_stack.push(firstNode);
 
     for (auto iter = input.rbegin(); iter != input.rend(); iter++) {
         input_stack.push(new SemaTokenData(-2, false, *iter));
@@ -136,7 +137,13 @@ Parser::Parse(std::vector<LexToken> input) {
             break;
         }
     }
-    return token_stack.top();
+
+    node = token_stack.top();
+
+    delete firstNode;
+    delete firstStateItem;
+
+    return node;
 }
 
 // === private part ===
@@ -148,7 +155,7 @@ Parser::handleState(int stateId) {
     // 2. 构建新状态
     std::map<int, SemaToken> tokens;
     for (Rule rule : state->GetRules()) {
-        if (!rule->isDotEnd()) {
+        if (!rule->IsDotEnd()) {
             SemaToken token = rule->GetTokenAfterDot();
             tokens[token->id] = token;
         }
@@ -160,7 +167,7 @@ Parser::handleState(int stateId) {
         RuleList movedRules;
         RuleList newStateRules;
         for (Rule r : state->GetRules()) {
-            if (!r->isDotEnd() && r->right[r->dot]->id == token->id) {
+            if (!r->IsDotEnd() && r->right[r->dot]->id == token->id) {
                 movedRules.push_back(r);
 
                 Rule n = r->Clone();
@@ -200,7 +207,7 @@ Parser::generateTable(void) {
 
     for (int i = 0; i < _stateList->Size(); i++) {
         for (Rule r : _stateList->GetRules(i)) {
-            if (r->isDotEnd()) {
+            if (r->IsDotEnd()) {
                 // find rule id
                 // add r1 in action
                 for (int g = 0; g < _rules.size(); g++) {
@@ -237,7 +244,7 @@ Parser::expandRules(State state) {
 
         for (Rule r : state->GetRules()) {
             r->cur_state = state->GetId();
-            if (r->isDotEnd()) {
+            if (r->IsDotEnd()) {
                 continue;
             }
             SemaToken word = r->GetTokenAfterDot();
@@ -311,15 +318,16 @@ Parser::searchSameState(RuleList newStateRules) {
 
 bool
 Parser::reduce(std::stack<StateItem>& states, std::stack<Node>& syms, Record curRecord) {
-    bool op = false;
-    Record record = curRecord;
+    bool op              = false;
+    Node curNode         = syms.top();
+    Record record        = curRecord;
     StateItem curStateId = states.top();
-    Node curNode = syms.top();
+
     if (curRecord == nullptr && !curNode->getToken()->sema) {
         record = _actionTable->Find(curStateId->id, curNode->getToken()->id);
     }
     if (record != nullptr && !record->state) {
-        op = true;
+        op        = true;
         Rule rule = _rules[record->id];
         std::vector<Node> child;
         for (int i = 0; i < rule->right.size(); i++) {
@@ -336,7 +344,7 @@ Parser::reduce(std::stack<StateItem>& states, std::stack<Node>& syms, Record cur
         // 找到 acc 事件，结束解析
         if (rule->root) {
             StateItem acc = new StateItemData{0};
-            acc->acc = true;
+            acc->acc      = true;
             states.push(acc);
             return op;
         }

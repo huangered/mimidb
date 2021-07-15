@@ -12,19 +12,8 @@ private:
     Record** _data;
 
 public:
-    GotoTable(int row, int col) {
-        _row = row;
-        _col = col;
-        _data = new Record*[row];
-        for (int i = 0; i < row; i++) {
-            _data[i] = new Record[col]{};
-            for (int j = 0; j < col; j++) {
-                auto q = _data[i] + j;
-                *q = nullptr;
-            }
-        }
-    }
-
+    GotoTable(int row, int col);
+    ~GotoTable();
     void Add(int stateId, int tokenId, int nextStateId);
 
     Record Find(int stateId, int tokenId);
@@ -37,18 +26,8 @@ class ActionTable {
     Record** _data;
 
 public:
-    ActionTable(int row, int col) {
-        _row = row;
-        _col = col;
-        _data = new Record*[row];
-        for (int i = 0; i < row; i++) {
-            _data[i] = new Record[col]{};
-            for (int j = 0; j < col; j++) {
-                _data[i][j] = nullptr;
-            }
-        }
-    }
-
+    ActionTable(int row, int col);
+    ~ActionTable();
     Record Find(int stateId, int lexTokenId);
 
     void AddRule(int stateId, int lexTokenId, int ruleId, bool acc);

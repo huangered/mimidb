@@ -1,6 +1,31 @@
 #include "sema/rule.hpp"
 #include "sema/sema.hpp"
 
+SimpleRule
+make_rule(int id, SemaToken left, SemaTokenList right) {
+    SimpleRule rule = new SimpleRuleData{id, left, right};
+    return rule;
+}
+
+bool
+RuleData::IsDotEnd() {
+    return dot == right.size();
+}
+
+SemaToken
+RuleData::GetTokenAfterDot() {
+    return right[dot];
+}
+
+SemaTokenList
+RuleData::GetStringAfterDot() {
+    SemaTokenList tokens;
+    for (int i = dot + 1; i != right.size(); i++) {
+        tokens.push_back(right[i]);
+    }
+    return tokens;
+}
+
 void
 RuleData::SetToken(Tok token) {
     tokens.push_back(token);
@@ -9,19 +34,37 @@ RuleData::SetToken(Tok token) {
 }
 
 void
-RuleData::AppendTokens(std::vector<Tok> tokenList) {
+RuleData::AppendTokens(TokList tokenList) {
     tokens.insert(tokens.end(), tokenList.begin(), tokenList.end());
 
     auto j = [](Tok l, Tok r) -> bool { return l < r; };
     std::sort(tokens.begin(), tokens.end(), j);
 }
 
+TokList
+RuleData::GetTokens() {
+    return tokens;
+}
+
 void
-RuleData::SetTokens(std::vector<Tok> tokenList) {
+RuleData::SetTokens(TokList tokenList) {
     tokens.swap(tokenList);
     auto j = [](Tok l, Tok r) -> bool { return l < r; };
     std::sort(tokens.begin(), tokens.end(), j);
 }
+
+RuleData*
+RuleData::Clone() {
+    RuleData* rule = new RuleData{};
+    rule->id       = id;
+    rule->left     = left;
+    rule->right    = right;
+    rule->dot      = dot;
+    rule->root     = root;
+    rule->tokens   = tokens;
+    return rule;
+}
+
 
 int
 RuleData::Compare(RuleData& other) {
@@ -51,4 +94,11 @@ RuleData::Compare(RuleData& other) {
     }
 
     return dot - other.dot;
+}
+
+Node
+RuleData::Format(SemaToken token, std::vector<Node> children) {
+    Node n = new NodeData{token};
+    n->addAll(children);
+    return n;
 }

@@ -1,6 +1,30 @@
 #include "sema/table.hpp"
 #include "sema/sema.hpp"
 
+GotoTable::GotoTable(int row, int col) : _row{row}, _col{col} {
+    _data = new Record*[row];
+    for (int i{0}; i < row; i++) {
+        _data[i] = new Record[col]{};
+        for (int j = 0; j < col; j++) {
+            auto q = _data[i] + j;
+            *q     = nullptr;
+        }
+    }
+}
+
+GotoTable::~GotoTable() {
+    for (int i{0}; i < _row; i++) {
+        for (int j{0}; j < _col; j++) {
+            Record* r = _data[i] + j;
+            if (*r != nullptr) {
+                delete *r;
+            }
+        }
+        delete[] _data[i];
+    }
+    delete[] _data;
+}
+
 void
 GotoTable::Add(int stateId, int tokenId, int nextStateId) {
     Record* record = &_data[stateId][tokenId];
@@ -26,7 +50,7 @@ GotoTable::Print() {
         std::cout << " " << i << "|";
     }
     std::cout << std::endl;
-    for (int stateId = 0; stateId != _row; stateId++) {
+    for (int stateId{0}; stateId != _row; stateId++) {
         std::cout << stateId << ":";
         for (int i{0}; i < _col; i++) {
             Record record = _data[stateId][i];
@@ -39,6 +63,29 @@ GotoTable::Print() {
         }
         std::cout << std::endl;
     }
+}
+
+ActionTable::ActionTable(int row, int col) : _row{row}, _col{col} {
+    _data = new Record*[row];
+    for (int i = 0; i < row; i++) {
+        _data[i] = new Record[col]{};
+        for (int j = 0; j < col; j++) {
+            _data[i][j] = nullptr;
+        }
+    }
+}
+
+ActionTable::~ActionTable() {
+    for (int i{0}; i < _row; i++) {
+        for (int j{0}; j < _col; j++) {
+            Record* r = _data[i] + j;
+            if (*r != nullptr) {
+                delete *r;
+            }
+        }
+        delete _data[i];
+    }
+    delete[] _data;
 }
 
 Record

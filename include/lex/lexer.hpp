@@ -2,6 +2,7 @@
 #define _lexer_hpp_
 
 #include "util/string.hpp"
+#include <vector>
 
 enum Tok : int {
     Select = 1,
@@ -32,6 +33,8 @@ enum Tok : int {
 
     Unknown,
 };
+
+typedef std::vector<Tok> TokList;
 
 struct LexTokenData {
     Tok tok;
