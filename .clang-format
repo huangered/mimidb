@@ -1,0 +1,13 @@
+Language: Cpp
+
+BasedOnStyle: Microsoft
+
+PointerAlignment: Left
+
+AccessModifierOffset: -4
+TabWidth: 4
+UseTab: Never
+BreakBeforeBraces: Attach
+AlwaysBreakAfterDefinitionReturnType: All
+
+SortIncludes: false
