@@ -62,13 +62,17 @@ Lexer::GetLexerToken() {
 	case ' ':
 		tok = Tok::WhiteSpace;
 		break;
-    case '*':
-        tok= Tok::Mul;
-        break;
-        case ';':
-            tok=Tok::Semicolon;
-            break;
+	case '*':
+		tok = Tok::Mul;
+		break;
+	case ';':
+		tok = Tok::Semicolon;
+		break;
+	case ',':
+		tok = Tok::Comma;
+		break;
 	}
+
 	_cur++;
 	LexToken token = new LexTokenData{ tok };
 	return token;

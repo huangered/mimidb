@@ -71,8 +71,8 @@ struct RuleData {
 		return tokens;
 	}
 
-    void SetTokens(std::vector<Tok> tokens);
-    
+	void SetTokens(std::vector<Tok> tokens);
+
 	int Compare(RuleData& other);
 
 	// 用户自定义的规则

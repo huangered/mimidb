@@ -6,6 +6,7 @@
 #include "sema/node.hpp"
 #include "sema/rule.hpp"
 #include "sema/table.hpp"
+#include "util/generic.hpp"
 
 #include <map>
 #include <set>
@@ -48,12 +49,11 @@ public:
 typedef SemaTokenData* SemaToken;
 typedef std::vector<SemaToken> SemaTokenList;
 
+
 struct StateItemData {
 	int id;
 	bool acc;
 };
-
-typedef StateItemData* StateItem;
 
 class StateData {
 	int _id;
@@ -61,7 +61,7 @@ class StateData {
 
 public:
 	StateData(int id) :_id{ id } {}
-	
+	~StateData();
 	RuleList GetRules() {
 		return _rules;
 	}
@@ -113,6 +113,7 @@ typedef std::vector<State> StateList;
 class StateCollection {
 	StateList stateList;
 public:
+	~StateCollection();
 	int Size();
 	bool IsEmpty(int stateId);
 	void Add(State state);
@@ -239,8 +240,15 @@ public:
 
 class Parser {
 private:
-	RuleList _rules;
+	struct StateItemData {
+		int id;
+		bool acc;
+	};
+
+	typedef StateItemData* StateItem;
+private:
 	int _maxState;
+	RuleList _rules;
 	GotoTable* _gotoTable;
 	ActionTable* _actionTable;
 	FirstSet* _firstSet;

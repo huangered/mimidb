@@ -4,9 +4,21 @@ static bool SemaTokenListEqual(SemaTokenList &left, SemaTokenList &right);
 static yih::String join(const SemaTokenList &v);
 static yih::String join2(const std::vector<Tok> &v);
 
-int StateCollection::Size()
-{
-    return stateList.size();
+StateData::~StateData() {
+	for (Rule rule : _rules) {
+		delete rule;
+	}
+}
+
+StateCollection::~StateCollection() {
+	for (State state : stateList) {
+		delete state;
+	}
+}
+
+int
+StateCollection::Size() {
+	return stateList.size();
 }
 
 bool StateCollection::IsEmpty(int stateId)
@@ -61,12 +73,11 @@ Parser::Parser(std::vector<SimpleRule> rules, SemaTokenList terminals, SemaToken
     _stateList->Add(0, rule);
 }
 
-Parser::~Parser()
-{
-    delete _gotoTable;
-    delete _actionTable;
-    delete _firstSet;
-    delete _stateList;
+Parser::~Parser() {
+	delete _gotoTable;
+	delete _actionTable;
+	delete _firstSet;
+	delete _stateList;
 }
 
 void Parser::GenerateParseTable(void)
@@ -205,10 +216,10 @@ void Parser::handleState(int stateId)
     }
 }
 
-void Parser::generateTable(void)
-{
-    _gotoTable = new GotoTable(_stateList->Size(), 10);
-    _actionTable = new ActionTable(_stateList->Size(), Tok::Unknown);
+void
+Parser::generateTable(void) {
+	_gotoTable = new GotoTable(_stateList->Size(), _maxState);
+	_actionTable = new ActionTable(_stateList->Size() , Tok::Unknown);
 
     for (int i = 0; i < _stateList->Size(); i++)
     {
@@ -319,20 +330,19 @@ void Parser::expandRules(State state)
             return r->dot == rule->dot && r->left->id == rule->left->id && SemaTokenListEqual(r->right, rule->right);
         };
 
-        auto iter = std::find_if(tmp.begin(), tmp.end(), check_exist);
-        if (iter != tmp.end())
-        {
-            Rule r = *iter;
-            r->AppendTokens(rule->tokens);
-            // todo: 要delete多余的rule；
-            delete r;
-        }
-        else
-        {
-            tmp.push_back(rule);
-        }
-    }
-    state->ResetRules(tmp);
+		auto iter = std::find_if(tmp.begin(), tmp.end(), check_exist);
+		if (iter != tmp.end()) {
+			Rule r = *iter;
+			r->AppendTokens(rule->tokens);
+			//todo: 要delete多余的rule；
+			delete r;
+			*iter = nullptr;
+		}
+		else {
+			tmp.push_back(rule);
+		}
+	}
+	state->ResetRules(tmp);
 }
 
 State Parser::searchSameState(RuleList newStateRules)

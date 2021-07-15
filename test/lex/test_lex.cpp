@@ -7,7 +7,7 @@
 
 TEST(Lexer, Lexer) {
 
-    std::vector<LexToken> arr;
+    std::vector<LexTokenData*> arr;
     const char* a = "((()) ab 1234";
     Lexer* b = new Lexer(a, strlen(a));
     LexToken token;
@@ -30,8 +30,7 @@ TEST(Lexer, Lexer) {
 
 }
 
-TEST(Lexer, FirstSet_Test) {
-
+TEST(Lexer, Lexer1) {
     std::vector<LexToken> arr;
     const char* a = "select * from abc;";
     Lexer* b = new Lexer(a, strlen(a));
