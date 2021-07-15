@@ -7,12 +7,13 @@
 
 static int key = 1234;
 
-void* shmem_init(Size BUF_SIZE) {
+void*
+shmem_init(Size BUF_SIZE) {
     int code = shmget(key, BUF_SIZE, IPC_CREAT);
 }
 
-void shmem_close() {
-
+void
+shmem_close() {
 }
 
 #endif

@@ -25,15 +25,17 @@ struct RelationData {
     Heap* tb_am;
     IndexAm* index_am;
 
-    void* rd_metacache;   /* meta 缓存对象 */
+    void* rd_metacache; /* meta 缓存对象 */
     Form_mimi_index rd_index;
 };
 
-inline BlockNumber RelationGetTargetBlock(RelationData* relation) {
+inline BlockNumber
+RelationGetTargetBlock(RelationData* relation) {
     return relation->rd_smgr != nullptr ? relation->rd_smgr->smgr_target_block : INVALID_BLOCK;
 }
 
-inline void RelationSetTargetBlock(RelationData* relation, BlockNumber targetblock) {
+inline void
+RelationSetTargetBlock(RelationData* relation, BlockNumber targetblock) {
     RelationOpenSmgr(relation);
     relation->rd_smgr->smgr_target_block = targetblock;
 }

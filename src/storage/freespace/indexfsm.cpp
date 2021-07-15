@@ -1,7 +1,8 @@
 #include "storage/freespace.hpp"
 #include "storage/page.hpp"
 
-BlockNumber GetFreeIndexPage(Relation rel) {
+BlockNumber
+GetFreeIndexPage(Relation rel) {
 
     BlockNumber blkno = GetPageWithFreeSpace(rel, BLKSZ / 2);
 
@@ -12,6 +13,7 @@ BlockNumber GetFreeIndexPage(Relation rel) {
     return blkno;
 }
 
-void RecordUsedIndexPage(Relation rel, BlockNumber usedBlock) {
+void
+RecordUsedIndexPage(Relation rel, BlockNumber usedBlock) {
     RecordPageWithFreeSpace(rel, usedBlock, 0);
 }

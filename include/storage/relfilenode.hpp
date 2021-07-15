@@ -4,18 +4,21 @@
 #include "mimi.hpp"
 
 struct RelFileNode {
-	Oid dbNode;
-	Oid relNode;
+    Oid dbNode;
+    Oid relNode;
 
-    int hash() const {
+    int
+    hash() const {
         return dbNode * 17 + relNode;
     }
 
-    friend bool operator==(const RelFileNode& l, const RelFileNode& r) {
+    friend bool
+    operator==(const RelFileNode& l, const RelFileNode& r) {
         return l.dbNode == r.dbNode && l.relNode == r.relNode;
     }
 
-    friend bool operator!=(const RelFileNode& l, const RelFileNode& r) {
+    friend bool
+    operator!=(const RelFileNode& l, const RelFileNode& r) {
         return !(l == r);
     }
 };

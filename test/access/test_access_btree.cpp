@@ -7,11 +7,10 @@
 #include "util/mctx.hpp"
 
 // test the basic usage in buff mgr.
-TEST(btree, incr_insert)
-{
+TEST(btree, incr_insert) {
     Relation rel = new RelationData{};
     rel->rd_id = 10000;
-    rel->rd_node = { 0, rel->rd_id };
+    rel->rd_node = {0, rel->rd_id};
     RelationOpenSmgr(rel);
 
     rel->index_am = BtreeRoute();
@@ -37,18 +36,17 @@ TEST(btree, incr_insert)
     delete rel;
 }
 
-TEST(btree, decr_insert)
-{
+TEST(btree, decr_insert) {
     Relation rel = new RelationData{};
     rel->rd_id = 20000;
-    rel->rd_node = { 10000, rel->rd_id };
+    rel->rd_node = {10000, rel->rd_id};
     RelationOpenSmgr(rel);
 
     rel->index_am = BtreeRoute();
     rel->index_am->BuildEmpty(rel);
 
     for (int i = 10; i > 0; i--) {
-        //printf("insert %d\r\n", i);
+        // printf("insert %d\r\n", i);
         bool result = rel->index_am->Insert(rel, i, i);
         EXPECT_TRUE(result);
     }
@@ -64,18 +62,17 @@ TEST(btree, decr_insert)
     delete rel;
 }
 
-TEST(btree, blk_insert)
-{
+TEST(btree, blk_insert) {
     Relation rel = (Relation)palloc0(sizeof(RelationData));
     rel->rd_id = 30000;
-    rel->rd_node = { 10000, rel->rd_id };
+    rel->rd_node = {10000, rel->rd_id};
     RelationOpenSmgr(rel);
 
     rel->index_am = BtreeRoute();
     rel->index_am->BuildEmpty(rel);
 
     for (int i{}; i < 10; i++) {
-        //printf("insert %d\r\n", i);
+        // printf("insert %d\r\n", i);
         bool result = rel->index_am->Insert(rel, i, i);
         EXPECT_TRUE(result);
     }

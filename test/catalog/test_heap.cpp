@@ -11,7 +11,7 @@
 //
 //
 //
-//TEST(Catalog, heap) {
+// TEST(Catalog, heap) {
 //    //BufferInit();
 //    RelationCacheInit();
 //
@@ -28,7 +28,7 @@
 //    TupleDesc tupdesc = (TupleDesc)palloc(sizeof(TupleDescData));
 //    tupdesc->natts = 0;
 //    Relation rel = heap_create_with_catalog("test", 10000, tupdesc);
-//    
+//
 //    EXPECT_NE(rel, nullptr);
 //
 //

@@ -4,10 +4,10 @@
 #include "mimi.hpp"
 #include "util/fmgr.hpp"
 
-#define INT8CMP_OID		0
-#define INT16CMP_OID	1
-#define INT32CMP_OID	2
-#define OIDEQ_OID		3
+#define INT8CMP_OID 0
+#define INT16CMP_OID 1
+#define INT32CMP_OID 2
+#define OIDEQ_OID 3
 
 // 各种int比较函数
 extern Datum int8cmp(FunctionCallInfo fcinfo);

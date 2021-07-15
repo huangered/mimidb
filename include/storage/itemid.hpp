@@ -12,7 +12,7 @@ typedef ItemIdData* ItemId;
 enum LpFlag {
     LP_UNUSED = 0,
     LP_NORMAL = 1,
-    LP_REDIRECT = 2,   /* heap of tuple 重定向标识 */
+    LP_REDIRECT = 2, /* heap of tuple 重定向标识 */
     LP_DEAD = 3,
 };
 

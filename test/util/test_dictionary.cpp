@@ -2,13 +2,12 @@
 
 #include "sema/dictionary.hpp"
 
-TEST(dictionary_test, basic)
-{
-    int* q = new int{ 3 };
+TEST(dictionary_test, basic) {
+    int* q = new int{3};
     Dictionary<int, int, int*> a1;
     for (int i = 0; i < 10; i++) {
         for (int j = 0; j < 10; j++) {
-            a1.put(i, j, new int{ 3 });
+            a1.put(i, j, new int{3});
         }
     }
 

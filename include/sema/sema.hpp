@@ -13,262 +13,269 @@
 #include <stack>
 
 struct SemaTokenData {
-	int id;
-	bool sema;
-	yih::String name;
-	LexToken lexToken;
+    int id;
+    bool sema;
+    yih::String name;
+    LexToken lexToken;
 
 public:
-	SemaTokenData(int _id, bool _sema, yih::String _name) {
-		id = _id;
-		sema = _sema;
-		name = _name;
-	}
+    SemaTokenData(int _id, bool _sema, yih::String _name) {
+        id = _id;
+        sema = _sema;
+        name = _name;
+    }
 
-	SemaTokenData(int _id, bool _sema, LexToken _lexToken) {
-		id = _id;
-		sema = _sema;
-		lexToken = _lexToken;
-	}
+    SemaTokenData(int _id, bool _sema, LexToken _lexToken) {
+        id = _id;
+        sema = _sema;
+        lexToken = _lexToken;
+    }
 
-	int Compare(const SemaTokenData* token) {
-		int i;
-		if ((i = (sema - token->sema)) != 0) {
-			return i;
-		}
+    int
+    Compare(const SemaTokenData* token) {
+        int i;
+        if ((i = (sema - token->sema)) != 0) {
+            return i;
+        }
 
-		if (sema) {
-			return name.Compare(token->name);
-		}
-		else {
-			return lexToken->compare(*token->lexToken);
-		}
-	}
+        if (sema) {
+            return name.Compare(token->name);
+        } else {
+            return lexToken->compare(*token->lexToken);
+        }
+    }
 };
 
 typedef SemaTokenData* SemaToken;
 typedef std::vector<SemaToken> SemaTokenList;
 
-
 struct StateItemData {
-	int id;
-	bool acc;
+    int id;
+    bool acc;
 };
 
 class StateData {
-	int _id;
-	RuleList _rules;
+    int _id;
+    RuleList _rules;
 
 public:
-	StateData(int id) :_id{ id } {}
-	~StateData();
-	RuleList GetRules() {
-		return _rules;
-	}
+    StateData(int id) : _id{id} {
+    }
+    ~StateData();
+    RuleList
+    GetRules() {
+        return _rules;
+    }
 
-	void ResetRules(RuleList rules) {
-		_rules.swap(rules);
-	}
+    void
+    ResetRules(RuleList rules) {
+        _rules.swap(rules);
+    }
 
-	void Add(Rule rule) {
-		auto cmp = [rule](Rule r) -> bool {
-			return r->Compare(*rule) == 0;
-		};
+    void
+    Add(Rule rule) {
+        auto cmp = [rule](Rule r) -> bool { return r->Compare(*rule) == 0; };
 
-		auto iter = std::find_if(_rules.begin(), _rules.end(), cmp);
+        auto iter = std::find_if(_rules.begin(), _rules.end(), cmp);
 
-		if (iter == _rules.end()) {
-			_rules.push_back(rule);
-		}
-	}
+        if (iter == _rules.end()) {
+            _rules.push_back(rule);
+        }
+    }
 
-	void Add(std::set<Rule> rules) {
-		for (auto iter = rules.begin(); iter != rules.end(); iter++) {
-			Add(*iter);
-		}
-	}
+    void
+    Add(std::set<Rule> rules) {
+        for (auto iter = rules.begin(); iter != rules.end(); iter++) {
+            Add(*iter);
+        }
+    }
 
-	bool MatchRule(RuleList rules1) {
-		for (auto rules = rules1.begin(); rules != rules1.end(); rules++) {
-			Rule r = *rules;
-			auto match = [&](Rule rule)->bool {
-				return rule->Compare(*r) == 0;
-			};
-			auto iter = std::find_if(_rules.begin(), _rules.end(), match);
-			if (iter == _rules.end()) {
-				return false;
-			}
-		}
-		return true;
-	}
+    bool
+    MatchRule(RuleList rules1) {
+        for (auto rules = rules1.begin(); rules != rules1.end(); rules++) {
+            Rule r = *rules;
+            auto match = [&](Rule rule) -> bool { return rule->Compare(*r) == 0; };
+            auto iter = std::find_if(_rules.begin(), _rules.end(), match);
+            if (iter == _rules.end()) {
+                return false;
+            }
+        }
+        return true;
+    }
 
-	int GetId() {
-		return _id;
-	}
+    int
+    GetId() {
+        return _id;
+    }
 };
 
 typedef StateData* State;
 typedef std::vector<State> StateList;
 
 class StateCollection {
-	StateList stateList;
+    StateList stateList;
+
 public:
-	~StateCollection();
-	int Size();
-	bool IsEmpty(int stateId);
-	void Add(State state);
-	void Add(int stateId, Rule rule);
-	RuleList GetRules(int stateId);
-	State GetState(int stateId);
+    ~StateCollection();
+    int Size();
+    bool IsEmpty(int stateId);
+    void Add(State state);
+    void Add(int stateId, Rule rule);
+    RuleList GetRules(int stateId);
+    State GetState(int stateId);
 };
 
 struct RecordData {
-	bool acc;
-	bool state;
-	int id;
+    bool acc;
+    bool state;
+    int id;
 
-	friend std::ostream& operator<<(std::ostream& os, const RecordData& dt) {
-		if (dt.id == -1) {
-			os << "  ";
-			return os;
-		}
-		if (dt.acc) {
-			os << "acc";
-			return os;
-		}
-		if (dt.state) {
-			os << "s" << dt.id;
-		}
-		else {
-			os << "r" << dt.id;
-		}
-		return os;
-	}
+    friend std::ostream&
+    operator<<(std::ostream& os, const RecordData& dt) {
+        if (dt.id == -1) {
+            os << "  ";
+            return os;
+        }
+        if (dt.acc) {
+            os << "acc";
+            return os;
+        }
+        if (dt.state) {
+            os << "s" << dt.id;
+        } else {
+            os << "r" << dt.id;
+        }
+        return os;
+    }
 };
 
 typedef RecordData* Record;
 
-
 class FirstSet {
 private:
-	std::vector<SimpleRule> _rules;
+    std::vector<SimpleRule> _rules;
 
-	// <sema token id, tok id>
-	std::map<int, std::set<Tok>> _firstSet;
+    // <sema token id, tok id>
+    std::map<int, std::set<Tok>> _firstSet;
 
 public:
-	FirstSet(std::vector<SimpleRule> rules) {
-		_rules = rules;
-		// 更新 _semaTokens;
-		for (SimpleRule rule : _rules) {
-			SemaToken left = rule->left;
-			//_semaTokens[left->id] = left;
+    FirstSet(std::vector<SimpleRule> rules) {
+        _rules = rules;
+        // 更新 _semaTokens;
+        for (SimpleRule rule : _rules) {
+            SemaToken left = rule->left;
+            //_semaTokens[left->id] = left;
 
-			for (SemaToken r : rule->right) {
-				//_semaTokens[r->id] = r;
-			}
-		}
-	}
+            for (SemaToken r : rule->right) {
+                //_semaTokens[r->id] = r;
+            }
+        }
+    }
 
-	std::vector<Tok> Find(SemaToken nonTerminal) {
-		std::set<Tok> r = _firstSet[nonTerminal->id];
-		std::vector<Tok> rList;
-		
-		rList.insert(rList.end(), r.begin(), r.end());
-		
-		return rList;
-	}
+    std::vector<Tok>
+    Find(SemaToken nonTerminal) {
+        std::set<Tok> r = _firstSet[nonTerminal->id];
+        std::vector<Tok> rList;
 
-	std::vector<Tok> Find(SemaTokenList tokens, std::vector<Tok> extra) {
-		if (tokens.size() == 0) {
-			return extra;
-		}
-		for (SemaToken c : tokens) {
-			if (!c->sema) {
-				return { c->lexToken->tok };
-			}
-			return Find(tokens[0]);
-		}
-		return {};
-	}
+        rList.insert(rList.end(), r.begin(), r.end());
 
-	void Gen() {
-		int count;
-		do {
-			count = 0;
+        return rList;
+    }
 
-			for (SimpleRule rule : _rules) {
-				SemaToken left = rule->left;
+    std::vector<Tok>
+    Find(SemaTokenList tokens, std::vector<Tok> extra) {
+        if (tokens.size() == 0) {
+            return extra;
+        }
+        for (SemaToken c : tokens) {
+            if (!c->sema) {
+                return {c->lexToken->tok};
+            }
+            return Find(tokens[0]);
+        }
+        return {};
+    }
 
-				if (_firstSet.count(left->id) == 0) {
-					_firstSet[left->id] = {};
-				}
+    void
+    Gen() {
+        int count;
+        do {
+            count = 0;
 
-				std::set<Tok> c{};
-				if (!rule->right[0]->sema) {
-					c.insert(rule->right[0]->lexToken->tok);
-				}
-				else {
-					SemaToken firstRight = rule->right[0];
-					if (_firstSet.count(firstRight->id) > 0) {
-						auto tokens = _firstSet[firstRight->id];
-						c.insert(tokens.begin(), tokens.end());
-					}
-				}
-				for (Tok cc : c) {
-					if (_firstSet[left->id].count(cc) == 0) {
-						_firstSet[left->id].insert(cc);
-						count++;
-					}
-				}
-			}
+            for (SimpleRule rule : _rules) {
+                SemaToken left = rule->left;
 
-		} while (count > 0);
-	}
+                if (_firstSet.count(left->id) == 0) {
+                    _firstSet[left->id] = {};
+                }
 
-	void print() {
-		for (auto entry = _firstSet.begin(); entry != _firstSet.end(); entry++)
-		{
-			std::cout << entry->first << " => ";
-			for (Tok i : entry->second) {
-				std::cout << i << ",";
-			}
-			std::cout << std::endl;
-		}
-	}
+                std::set<Tok> c{};
+                if (!rule->right[0]->sema) {
+                    c.insert(rule->right[0]->lexToken->tok);
+                } else {
+                    SemaToken firstRight = rule->right[0];
+                    if (_firstSet.count(firstRight->id) > 0) {
+                        auto tokens = _firstSet[firstRight->id];
+                        c.insert(tokens.begin(), tokens.end());
+                    }
+                }
+                for (Tok cc : c) {
+                    if (_firstSet[left->id].count(cc) == 0) {
+                        _firstSet[left->id].insert(cc);
+                        count++;
+                    }
+                }
+            }
+
+        } while (count > 0);
+    }
+
+    void
+    print() {
+        for (auto entry = _firstSet.begin(); entry != _firstSet.end(); entry++) {
+            std::cout << entry->first << " => ";
+            for (Tok i : entry->second) {
+                std::cout << i << ",";
+            }
+            std::cout << std::endl;
+        }
+    }
 };
 
 class Parser {
 private:
-	struct StateItemData {
-		int id;
-		bool acc;
-	};
+    struct StateItemData {
+        int id;
+        bool acc;
+    };
 
-	typedef StateItemData* StateItem;
+    typedef StateItemData* StateItem;
+
 private:
-	int _maxState;
-	RuleList _rules;
-	GotoTable* _gotoTable;
-	ActionTable* _actionTable;
-	FirstSet* _firstSet;
-	StateCollection* _stateList;
+    int _maxState;
+    RuleList _rules;
+    GotoTable* _gotoTable;
+    ActionTable* _actionTable;
+    FirstSet* _firstSet;
+    StateCollection* _stateList;
 
-	SemaTokenList _terminals;
-	SemaTokenList _nonTerminals;
+    SemaTokenList _terminals;
+    SemaTokenList _nonTerminals;
+
 public:
-	Parser(std::vector<SimpleRule> rules, SemaTokenList terminals, SemaTokenList nonTerminals);
-	~Parser();
-	void GenerateParseTable(void);
-	Node Parse(std::vector<LexToken> input);
-private:
-	void handleState(int i);
-	void generateTable(void);
-	void expandRules(State state);
-	State searchSameState(RuleList newStateRules);
+    Parser(std::vector<SimpleRule> rules, SemaTokenList terminals, SemaTokenList nonTerminals);
+    ~Parser();
+    void GenerateParseTable(void);
+    Node Parse(std::vector<LexToken> input);
 
-	bool reduce(std::stack<StateItem>& states, std::stack<Node>& syms, Record curRecord);
-	bool eatToken(std::stack<StateItem>& states, std::stack<Node>& syms, std::stack<SemaToken>& input);
+private:
+    void handleState(int i);
+    void generateTable(void);
+    void expandRules(State state);
+    State searchSameState(RuleList newStateRules);
+
+    bool reduce(std::stack<StateItem>& states, std::stack<Node>& syms, Record curRecord);
+    bool eatToken(std::stack<StateItem>& states, std::stack<Node>& syms, std::stack<SemaToken>& input);
 };
 
 #endif

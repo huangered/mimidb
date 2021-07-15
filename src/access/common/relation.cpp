@@ -2,14 +2,14 @@
 #include "access/rel.hpp"
 #include "access/relcache.hpp"
 
-Relation 
+Relation
 relation_open(Oid relid) {
     Relation rel = relcache->RelationIdGetRelation(relid);
 
     return rel;
 }
 
-void 
+void
 relation_close(Relation rel) {
     relcache->RelationClose(rel);
 }

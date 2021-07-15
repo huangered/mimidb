@@ -20,7 +20,7 @@ Create a heap relation
 3. add relation tup into mimi_class table
 4. close the relation
 */
-Relation 
+Relation
 heap_create_with_catalog(const char* name, Oid relid, TupleDesc tupDesc) {
     Relation pg_class_rel;
     Relation heap_rel;
@@ -53,7 +53,8 @@ heap_create(Oid relid, const char* name, TupleDesc tupdesc) {
     return heap_rel;
 }
 
-void AddRelationPgClass(Relation mimi_class_desc, Relation heap_rel) {
+void
+AddRelationPgClass(Relation mimi_class_desc, Relation heap_rel) {
     Form_mimi_class new_rel_reltup;
 
     new_rel_reltup = heap_rel->rd_rel;

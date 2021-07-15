@@ -5,93 +5,93 @@
 #include "node/list.h"
 
 typedef struct NodeWrap {
-	Node* node;
+    Node* node;
 } NodeWrap;
 
 typedef struct ExprStmt {
-	NodeTag nodetag;
-	char* key;
+    NodeTag nodetag;
+    char* key;
 } ExprStmt;
 
 typedef struct SelectStmt {
-	NodeTag nodetag;
-	char* relname;
-	List* columns;
+    NodeTag nodetag;
+    char* relname;
+    List* columns;
 } SelectStmt;
 
 typedef struct InsertStmt {
-	NodeTag nodetag;
-	char* relname;
-	List* columns;
+    NodeTag nodetag;
+    char* relname;
+    List* columns;
 } InsertStmt;
 
 typedef struct UpdateStmt {
-	NodeTag nodetag;
-	char* relname;
-	List* columns;
-	Node* where_cause;
+    NodeTag nodetag;
+    char* relname;
+    List* columns;
+    Node* where_cause;
 } UpdateStmt;
 
 typedef struct AssignStmt {
-	NodeTag nodetag;
-	char* col_name;
-	Node* value;
+    NodeTag nodetag;
+    char* col_name;
+    Node* value;
 } AssignStmt;
 
 typedef struct CreateTableStmt {
-	NodeTag nodetag;
-	char* relname;
-	List* columns;
+    NodeTag nodetag;
+    char* relname;
+    List* columns;
 } CreateTableStmt;
 
 typedef struct CreateTableParam {
-	NodeTag nodetag;
-	char* colname;
-	char* type;
-	int primary;
+    NodeTag nodetag;
+    char* colname;
+    char* type;
+    int primary;
 } CreateTableParam;
 
 /*
 index 描述
 */
 typedef struct CreateIndexStmt {
-	NodeTag nodetag;
-	char* relname;
-	List* columns;
+    NodeTag nodetag;
+    char* relname;
+    List* columns;
 } CreateIndexStmt;
 
 typedef struct ParamStmt {
-	NodeTag nodetag;
-	char* key;
-	char* type;
+    NodeTag nodetag;
+    char* key;
+    char* type;
 } ParamStmt;
 
 typedef struct WhereStmt {
-	NodeTag nodetag;
-	List* columns;
+    NodeTag nodetag;
+    List* columns;
 } WhereStmt;
 
 typedef struct IntValue {
-	NodeTag nodetag;
-	int number;
+    NodeTag nodetag;
+    int number;
 } IntValue;
 
 typedef struct StrValue {
-	NodeTag nodetag;
-	char* str;
+    NodeTag nodetag;
+    char* str;
 } StrValue;
 
 typedef struct TypeName {
-	NodeTag nodetag;
-	char* name;
-	long typeOid;
+    NodeTag nodetag;
+    char* name;
+    long typeOid;
 } TypeName;
 
 typedef struct ColumnDef {
-	NodeTag nodetag;
-	char* colname;
-	TypeName* typeName;
-	int primary;
+    NodeTag nodetag;
+    char* colname;
+    TypeName* typeName;
+    int primary;
 } ColumnDef;
 
 Node* makeIntValue(int i);

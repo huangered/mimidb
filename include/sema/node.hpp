@@ -10,22 +10,24 @@ typedef SemaTokenData* SemaToken;
 typedef NodeData* Node;
 
 class NodeData {
-	std::vector<Node> _nodes;
-	const SemaToken _token;
+    std::vector<Node> _nodes;
+    const SemaToken _token;
 
 public:
-	NodeData(SemaToken token) :_token{ token } {}
+    NodeData(SemaToken token) : _token{token} {
+    }
 
-	void addAll(std::vector<Node> nodes) {
-		for (Node n : nodes) {
-			_nodes.push_back(n);
-		}
-	}
+    void
+    addAll(std::vector<Node> nodes) {
+        for (Node n : nodes) {
+            _nodes.push_back(n);
+        }
+    }
 
-	SemaToken getToken() {
-		return _token;
-	}
+    SemaToken
+    getToken() {
+        return _token;
+    }
 };
-
 
 #endif

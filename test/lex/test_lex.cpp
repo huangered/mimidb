@@ -26,8 +26,6 @@ TEST(Lexer, Lexer) {
     }
 
     delete b;
-
-
 }
 
 TEST(Lexer, Lexer1) {
@@ -36,7 +34,7 @@ TEST(Lexer, Lexer1) {
     Lexer* b = new Lexer(a, strlen(a));
     LexToken token;
     while ((token = b->GetLexerToken()) != nullptr) {
-        if(token->tok == Tok::WhiteSpace) {
+        if (token->tok == Tok::WhiteSpace) {
             delete token;
         } else {
             arr.push_back(token);
