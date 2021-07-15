@@ -244,14 +244,6 @@ public:
 
 class Parser {
 private:
-    struct StateItemData {
-        int id;
-        bool acc;
-    };
-
-    typedef StateItemData* StateItem;
-
-private:
     int _maxState;
     RuleList _rules;
     GotoTable* _gotoTable;
@@ -274,8 +266,8 @@ private:
     void expandRules(State state);
     State searchSameState(RuleList newStateRules);
 
-    bool reduce(std::stack<StateItem>& states, std::stack<Node>& syms, Record curRecord);
-    bool eatToken(std::stack<StateItem>& states, std::stack<Node>& syms, std::stack<SemaToken>& input);
+    bool reduce(std::stack<int>& states, std::stack<Node>& syms, Record curRecord);
+    bool eatToken(std::stack<int>& states, std::stack<Node>& syms, std::stack<SemaToken>& input, bool* acc);
 };
 
 #endif

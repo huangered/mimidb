@@ -113,24 +113,22 @@ Parser::GenerateParseTable(void) {
 
 Node
 Parser::Parse(std::vector<LexToken> input) {
-    Node node                = nullptr;
-    StateItem firstStateItem = new StateItemData{0, false};
-    Node firstNode           = new NodeData{new SemaTokenData{-2, false, new LexTokenData{Tok::Eof, "eof"}}};
+    bool acc  = false;
+    Node node = nullptr;
     // init stack
-    std::stack<StateItem> state_stack;
+    std::stack<int> state_stack;
     std::stack<Node> token_stack;
     std::stack<SemaToken> input_stack;
 
-    state_stack.push(firstStateItem);
-    token_stack.push(firstNode);
+    state_stack.push(0);
 
     for (auto iter = input.rbegin(); iter != input.rend(); iter++) {
         input_stack.push(new SemaTokenData(-2, false, *iter));
     }
 
-    while (!state_stack.top()->acc) {
-        bool op = reduce(state_stack, token_stack, nullptr);
-        op |= eatToken(state_stack, token_stack, input_stack);
+    while (!acc) {
+        // bool op = reduce(state_stack, token_stack, nullptr);
+        bool op = eatToken(state_stack, token_stack, input_stack, &acc);
 
         if (!op) {
             std::cout << "no action" << std::endl;
@@ -139,9 +137,6 @@ Parser::Parse(std::vector<LexToken> input) {
     }
 
     node = token_stack.top();
-
-    delete firstNode;
-    delete firstStateItem;
 
     return node;
 }
@@ -317,15 +312,12 @@ Parser::searchSameState(RuleList newStateRules) {
 }
 
 bool
-Parser::reduce(std::stack<StateItem>& states, std::stack<Node>& syms, Record curRecord) {
-    bool op              = false;
-    Node curNode         = syms.top();
-    Record record        = curRecord;
-    StateItem curStateId = states.top();
+Parser::reduce(std::stack<int>& states, std::stack<Node>& syms, Record curRecord) {
+    bool op        = false;
+    Node curNode   = syms.top();
+    Record record  = curRecord;
+    int curStateId = states.top();
 
-    if (curRecord == nullptr && !curNode->getToken()->sema) {
-        record = _actionTable->Find(curStateId->id, curNode->getToken()->id);
-    }
     if (record != nullptr && !record->state) {
         op        = true;
         Rule rule = _rules[record->id];
@@ -341,30 +333,28 @@ Parser::reduce(std::stack<StateItem>& states, std::stack<Node>& syms, Record cur
         // find goto table
         curStateId = states.top();
 
-        // 找到 acc 事件，结束解析
-        if (rule->root) {
-            StateItem acc = new StateItemData{0};
-            acc->acc      = true;
-            states.push(acc);
-            return op;
-        }
-
-        int nextStateId = _gotoTable->Find(curStateId->id, rule->left->id)->id;
-        states.push(new StateItemData{nextStateId});
+        int nextStateId = _gotoTable->Find(curStateId, rule->left->id)->id;
+        states.push(nextStateId);
     }
     return op;
 }
 
 bool
-Parser::eatToken(std::stack<StateItem>& states, std::stack<Node>& syms, std::stack<SemaToken>& input) {
-    bool op = false;
-    StateItem curStateId = states.top();
+Parser::eatToken(std::stack<int>& states, std::stack<Node>& syms, std::stack<SemaToken>& input, bool* acc) {
+    bool op         = false;
+    int curStateId  = states.top();
     SemaToken token = input.top();
-    Record record = _actionTable->Find(curStateId->id, token->lexToken->tok);
+    Record record   = _actionTable->Find(curStateId, token->lexToken->tok);
     if (record != nullptr) {
         op = true;
+
+        if (record->acc) {
+            *acc = true;
+            return true;
+        }
+
         if (record->state) {
-            states.push(new StateItemData{record->id});
+            states.push(record->id);
             syms.push(new NodeData(token));
             input.pop();
             return op;

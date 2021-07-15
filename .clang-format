@@ -14,3 +14,7 @@ SortIncludes: false
 
 # 连续赋值时，对齐所有等号
 AlignConsecutiveAssignments: true
+
+#函数参数换行
+AllowAllParametersOfDeclarationOnNextLine: true
+
