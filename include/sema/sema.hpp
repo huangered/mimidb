@@ -19,94 +19,37 @@ struct SemaTokenData {
     LexToken lexToken;
 
 public:
-    SemaTokenData(int _id, bool _sema, yih::String _name) {
-        id = _id;
-        sema = _sema;
-        name = _name;
-    }
+    SemaTokenData(int _id, bool _sema, yih::String _name);
 
-    SemaTokenData(int _id, bool _sema, LexToken _lexToken) {
-        id = _id;
-        sema = _sema;
-        lexToken = _lexToken;
-    }
+    SemaTokenData(int _id, bool _sema, LexToken _lexToken);
 
-    int
-    Compare(const SemaTokenData* token) {
-        int i;
-        if ((i = (sema - token->sema)) != 0) {
-            return i;
-        }
+    ~SemaTokenData();
 
-        if (sema) {
-            return name.Compare(token->name);
-        } else {
-            return lexToken->compare(*token->lexToken);
-        }
-    }
+    int Compare(const SemaTokenData* token);
 };
 
 typedef SemaTokenData* SemaToken;
 typedef std::vector<SemaToken> SemaTokenList;
-
-struct StateItemData {
-    int id;
-    bool acc;
-};
 
 class StateData {
     int _id;
     RuleList _rules;
 
 public:
-    StateData(int id) : _id{id} {
-    }
+    StateData(int id);
     ~StateData();
-    RuleList
-    GetRules() {
-        return _rules;
-    }
 
-    void
-    ResetRules(RuleList rules) {
-        _rules.swap(rules);
-    }
+    RuleList GetRules();
 
-    void
-    Add(Rule rule) {
-        auto cmp = [rule](Rule r) -> bool { return r->Compare(*rule) == 0; };
+    void ResetRules(RuleList rules);
 
-        auto iter = std::find_if(_rules.begin(), _rules.end(), cmp);
+    void Add(Rule rule);
 
-        if (iter == _rules.end()) {
-            _rules.push_back(rule);
-        }
-    }
+    void Add(std::set<Rule> rules);
 
-    void
-    Add(std::set<Rule> rules) {
-        for (auto iter = rules.begin(); iter != rules.end(); iter++) {
-            Add(*iter);
-        }
-    }
+    bool MatchRule(RuleList rules1);
 
-    bool
-    MatchRule(RuleList rules1) {
-        for (auto rules = rules1.begin(); rules != rules1.end(); rules++) {
-            Rule r = *rules;
-            auto match = [&](Rule rule) -> bool { return rule->Compare(*r) == 0; };
-            auto iter = std::find_if(_rules.begin(), _rules.end(), match);
-            if (iter == _rules.end()) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    int
-    GetId() {
-        return _id;
-    }
+    int GetId();
 };
 
 typedef StateData* State;
@@ -159,87 +102,15 @@ private:
     std::map<int, std::set<Tok>> _firstSet;
 
 public:
-    FirstSet(std::vector<SimpleRule> rules) {
-        _rules = rules;
-        // 更新 _semaTokens;
-        for (SimpleRule rule : _rules) {
-            SemaToken left = rule->left;
-            //_semaTokens[left->id] = left;
+    FirstSet(std::vector<SimpleRule> rules);
 
-            for (SemaToken r : rule->right) {
-                //_semaTokens[r->id] = r;
-            }
-        }
-    }
+    TokList Find(SemaToken nonTerminal);
 
-    std::vector<Tok>
-    Find(SemaToken nonTerminal) {
-        std::set<Tok> r = _firstSet[nonTerminal->id];
-        std::vector<Tok> rList;
+    TokList Find(SemaTokenList tokens, TokList extra);
 
-        rList.insert(rList.end(), r.begin(), r.end());
+    void Gen();
 
-        return rList;
-    }
-
-    std::vector<Tok>
-    Find(SemaTokenList tokens, std::vector<Tok> extra) {
-        if (tokens.size() == 0) {
-            return extra;
-        }
-        for (SemaToken c : tokens) {
-            if (!c->sema) {
-                return {c->lexToken->tok};
-            }
-            return Find(tokens[0]);
-        }
-        return {};
-    }
-
-    void
-    Gen() {
-        int count;
-        do {
-            count = 0;
-
-            for (SimpleRule rule : _rules) {
-                SemaToken left = rule->left;
-
-                if (_firstSet.count(left->id) == 0) {
-                    _firstSet[left->id] = {};
-                }
-
-                std::set<Tok> c{};
-                if (!rule->right[0]->sema) {
-                    c.insert(rule->right[0]->lexToken->tok);
-                } else {
-                    SemaToken firstRight = rule->right[0];
-                    if (_firstSet.count(firstRight->id) > 0) {
-                        auto tokens = _firstSet[firstRight->id];
-                        c.insert(tokens.begin(), tokens.end());
-                    }
-                }
-                for (Tok cc : c) {
-                    if (_firstSet[left->id].count(cc) == 0) {
-                        _firstSet[left->id].insert(cc);
-                        count++;
-                    }
-                }
-            }
-
-        } while (count > 0);
-    }
-
-    void
-    print() {
-        for (auto entry = _firstSet.begin(); entry != _firstSet.end(); entry++) {
-            std::cout << entry->first << " => ";
-            for (Tok i : entry->second) {
-                std::cout << i << ",";
-            }
-            std::cout << std::endl;
-        }
-    }
+    void print();
 };
 
 class Parser {

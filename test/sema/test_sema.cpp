@@ -46,3 +46,25 @@ TEST(Sema, FirstSetTest) {
     delete a2;
     delete a3;
 }
+
+TEST(Sema, tok_eq) {
+    std::set<Tok> a;
+    std::set<Tok> b;
+
+    a.insert(Tok::Comma);
+    
+    b.insert(Tok::Comma);
+
+    EXPECT_TRUE(a == b);
+}
+
+TEST(Sema, tok_ne) {
+    std::set<Tok> a;
+    std::set<Tok> b;
+
+    a.insert(Tok::Comma);
+
+    b.insert(Tok::Select);
+
+    EXPECT_TRUE(a != b);
+}

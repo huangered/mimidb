@@ -86,7 +86,7 @@ RuleData::Compare(RuleData& other) {
     if ((i = (tokens.size() - other.tokens.size())) != 0) {
         return i;
     }
-
+    
     for (int j = 0; j < tokens.size(); j++) {
         if ((i = tokens[j] - other.tokens[j]) != 0) {
             return i;

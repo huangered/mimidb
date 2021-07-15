@@ -4,12 +4,6 @@ static bool SemaTokenListEqual(SemaTokenList& left, SemaTokenList& right);
 static yih::String join(const SemaTokenList& v);
 static yih::String join2(const std::vector<Tok>& v);
 
-StateData::~StateData() {
-    for (Rule rule : _rules) {
-        delete rule;
-    }
-}
-
 StateCollection::~StateCollection() {
     for (State state : stateList) {
         delete state;
@@ -127,7 +121,6 @@ Parser::Parse(std::vector<LexToken> input) {
     }
 
     while (!acc) {
-        // bool op = reduce(state_stack, token_stack, nullptr);
         bool op = eatToken(state_stack, token_stack, input_stack, &acc);
 
         if (!op) {
