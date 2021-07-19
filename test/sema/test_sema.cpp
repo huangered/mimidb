@@ -1,11 +1,11 @@
 #include "../g.hpp"
 #include "lex/lexer.hpp"
 #include "sema/sema.hpp"
-
+#include "sema/rulereader.hpp"
 TEST(Sema, FirstSetTest) {
 
-    LexToken a1 = new LexTokenData{Tok::Plus, "+"};
-    LexToken a2 = new LexTokenData{Tok::Identifier, "id"};
+    LexToken a1 = new LexTokenData{Tok::plus, "+"};
+    LexToken a2 = new LexTokenData{Tok::identifier, "id"};
     LexToken a3 = new LexTokenData{Tok::Eof, "$"};
 
     SemaToken Q = new SemaTokenData{0, true, "Q"};
@@ -15,9 +15,9 @@ TEST(Sema, FirstSetTest) {
     SemaToken t2 = new SemaTokenData{4, false, a2};
     SemaToken eof = new SemaTokenData{5, false, a3};
 
-    LexTokenData* l1 = new LexTokenData{Tok::Identifier};
-    LexTokenData* l2 = new LexTokenData{Tok::Identifier};
-    LexTokenData* l3 = new LexTokenData{Tok::Eof};
+    LexToken l1 = new LexTokenData{Tok::identifier};
+    LexToken l2 = new LexTokenData{Tok::identifier};
+    LexToken l3 = new LexTokenData{Tok::Eof};
 
     SimpleRule r1 = make_rule(0, Q, {S});
     SimpleRule r2 = make_rule(1, S, {C, C});
@@ -26,12 +26,12 @@ TEST(Sema, FirstSetTest) {
 
     std::vector<SimpleRule> rules{r1, r2, r3, r4};
 
-    Parser parser(rules, {t1, t2, eof}, {Q, S, C});
+    Parser parser(rules);
     parser.GenerateParseTable();
     Node n = parser.Parse({l1, l2, l3});
 
     EXPECT_TRUE(n != nullptr);
-    EXPECT_EQ(n->getToken()->id, S->id);
+    //EXPECT_EQ(n->getToken()->tok, S->id);
     for (SimpleRule r : rules) {
         delete r;
     }
@@ -51,9 +51,9 @@ TEST(Sema, tok_eq) {
     std::set<Tok> a;
     std::set<Tok> b;
 
-    a.insert(Tok::Comma);
+    a.insert(Tok::comma);
     
-    b.insert(Tok::Comma);
+    b.insert(Tok::comma);
 
     EXPECT_TRUE(a == b);
 }
@@ -62,9 +62,13 @@ TEST(Sema, tok_ne) {
     std::set<Tok> a;
     std::set<Tok> b;
 
-    a.insert(Tok::Comma);
+    a.insert(Tok::comma);
 
-    b.insert(Tok::Select);
+    b.insert(Tok::kw_select);
 
     EXPECT_TRUE(a != b);
+}
+
+TEST(Sema, ggg) {
+    readRules("C:\\work\\mimidb\\sql.rule");
 }

@@ -1,0 +1,33 @@
+#ifndef TOK
+#define TOK(X)
+#endif
+
+#ifndef KEYWORD
+#define KEYWORD(X, Y) TOK(kw_ ## X)
+#endif
+
+TOK(Eof)
+TOK(whitespace)
+TOK(plus)
+TOK(mul)
+TOK(comma)
+TOK(semicolon)
+TOK(l_brace)
+TOK(r_brace)
+TOK(number)
+TOK(identifier)
+TOK(money)
+TOK(unknown)
+
+KEYWORD(delete, delete)
+KEYWORD(select, select)
+KEYWORD(from, from)
+KEYWORD(insert, insert)
+KEYWORD(into, into)
+KEYWORD(values, values)
+KEYWORD(create, create)
+KEYWORD(update, update)
+KEYWORD(table, table)
+KEYWORD(view, view)
+
+#undef TOK

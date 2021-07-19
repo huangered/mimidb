@@ -1,49 +1,20 @@
 #ifndef _lexer_hpp_
 #define _lexer_hpp_
 
-#include "util/string.hpp"
 #include <vector>
+#include <string>
+#include <map>
 
-enum Tok : int {
-    Select = 1,
-    WhiteSpace,
-    From,
-    Insert,
-    Into,
-    Values,
-    Create,
-    Table,
-    View,
+#include "lex/TokenKinds.hpp"
 
-    Plus,
-    Mul,
-
-    Comma,
-    Semicolon,
-
-    LeftBrace,
-    RightBrace,
-
-    Number,
-    Identifier,
-
-    Money,
-
-    Eof,
-
-    Unknown,
-};
-
-typedef std::vector<Tok> TokList;
+#define IsLex(id)  (id > 0)
+#define IsSema(id) (!IsLex(id))
 
 struct LexTokenData {
     Tok tok;
-    yih::String str;
-
-    int
-    compare(const LexTokenData& token) {
-        return tok - token.tok;
-    }
+    std::string name;
+    
+    int Compare(const LexTokenData& token);
 };
 
 typedef LexTokenData* LexToken;
@@ -57,12 +28,12 @@ private:
     int _cur;
     int _size;
     const char* _buf;
+    std::map<std::string, Tok> _meta;
 
 public:
     Lexer(const char* buf, int size);
 
     LexToken GetLexerToken();
-
 private:
     LexToken lexNumber();
     LexToken lexIdentifier();

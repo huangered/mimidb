@@ -1,8 +1,27 @@
 #include "sema/sema.hpp"
+#include <string>
+
+std::ostream&
+operator<<(std::ostream& os, const RecordData& dt) {
+    if (dt.id == -1) {
+        os << "  ";
+        return os;
+    }
+    if (dt.acc) {
+        os << "acc";
+        return os;
+    }
+    if (dt.state) {
+        os << "s" << dt.id;
+    } else {
+        os << "r" << dt.id;
+    }
+    return os;
+}
 
 static bool SemaTokenListEqual(SemaTokenList& left, SemaTokenList& right);
-static yih::String join(const SemaTokenList& v);
-static yih::String join2(const std::vector<Tok>& v);
+static std::string join(const SemaTokenList& v);
+static std::string join2(const std::vector<Tok>& v);
 
 StateCollection::~StateCollection() {
     for (State state : stateList) {
@@ -42,10 +61,8 @@ StateCollection::GetState(int stateId) {
 
 // end
 
-Parser::Parser(std::vector<SimpleRule> rules, SemaTokenList terminals, SemaTokenList nonTerminals) {
+Parser::Parser(std::vector<SimpleRule> rules) {
     _maxState = 0;
-    _terminals = terminals;
-    _nonTerminals = nonTerminals;
     _firstSet = new FirstSet(rules);
     _stateList = new StateCollection();
     _stateList->Add(new StateData{0});
@@ -61,7 +78,7 @@ Parser::Parser(std::vector<SimpleRule> rules, SemaTokenList terminals, SemaToken
     }
     _rules[0]->root = true;
     Rule rule = _rules[0]->Clone();
-    rule->SetToken(terminals[terminals.size() - 1]->lexToken->tok);
+    rule->SetToken(Tok::Eof);
     _stateList->Add(0, rule);
 }
 
@@ -75,7 +92,7 @@ Parser::~Parser() {
 void
 Parser::GenerateParseTable(void) {
     _firstSet->Gen();
-    _firstSet->print();
+    _firstSet->Print();
     for (int i = 0; i < _stateList->Size(); i++) {
         if (_stateList->IsEmpty(i)) {
             break;
@@ -112,12 +129,12 @@ Parser::Parse(std::vector<LexToken> input) {
     // init stack
     std::stack<int> state_stack;
     std::stack<Node> token_stack;
-    std::stack<SemaToken> input_stack;
+    std::stack<LexToken> input_stack;
 
     state_stack.push(0);
 
     for (auto iter = input.rbegin(); iter != input.rend(); iter++) {
-        input_stack.push(new SemaTokenData(-2, false, *iter));
+        input_stack.push(*iter);
     }
 
     while (!acc) {
@@ -191,7 +208,7 @@ Parser::handleState(int stateId) {
 void
 Parser::generateTable(void) {
     _gotoTable = new GotoTable(_stateList->Size(), _maxState);
-    _actionTable = new ActionTable(_stateList->Size(), Tok::Unknown);
+    _actionTable = new ActionTable(_stateList->Size(), Tok::unknown);
 
     for (int i = 0; i < _stateList->Size(); i++) {
         for (Rule r : _stateList->GetRules(i)) {
@@ -320,6 +337,7 @@ Parser::reduce(std::stack<int>& states, std::stack<Node>& syms, Record curRecord
             syms.pop();
             states.pop();
         }
+
         Node left = rule->Format(rule->left, child);
         syms.push(left);
 
@@ -333,11 +351,11 @@ Parser::reduce(std::stack<int>& states, std::stack<Node>& syms, Record curRecord
 }
 
 bool
-Parser::eatToken(std::stack<int>& states, std::stack<Node>& syms, std::stack<SemaToken>& input, bool* acc) {
-    bool op         = false;
-    int curStateId  = states.top();
-    SemaToken token = input.top();
-    Record record   = _actionTable->Find(curStateId, token->lexToken->tok);
+Parser::eatToken(std::stack<int>& states, std::stack<Node>& syms, std::stack<LexToken>& input, bool* acc) {
+    bool op        = false;
+    int curStateId = states.top();
+    LexToken token = input.top();
+    Record record  = _actionTable->Find(curStateId, token->tok);
     if (record != nullptr) {
         op = true;
 
@@ -358,25 +376,27 @@ Parser::eatToken(std::stack<int>& states, std::stack<Node>& syms, std::stack<Sem
     return op;
 }
 
-yih::String
+std::string
 join(const SemaTokenList& v) {
-    yih::String a;
+    std::string a;
     for (SemaToken t : v) {
         if (t->sema) {
-            a.Append(t->name.Data()).Append(",");
+            a += t->name;
+            a += ",";
         } else {
-            a.Append(t->lexToken->str.Data()).Append(",");
+            a += t->lexToken->name;
+            a += ",";
         }
     }
     return a;
 }
 
-yih::String
+std::string
 join2(const std::vector<Tok>& v) {
-    yih::String a;
+    std::string a;
     for (Tok t : v) {
-
-        // a.Append(itoa(t)).Append(",");
+        a += t;
+        a += ",";
     }
     return a;
 }

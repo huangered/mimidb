@@ -18,3 +18,10 @@ AlignConsecutiveAssignments: true
 #函数参数换行
 AllowAllParametersOfDeclarationOnNextLine: true
 
+AlignAfterOpenBracket: Align
+
+AlignConsecutiveMacros: AcrossEmptyLines
+
+SpacesInContainerLiterals: true
+
+Cpp11BracedListStyle: false

@@ -1,8 +1,6 @@
 #ifndef _table_hpp_
 #define _table_hpp_
 
-#include <iostream>
-
 class RecordData;
 typedef RecordData* Record;
 

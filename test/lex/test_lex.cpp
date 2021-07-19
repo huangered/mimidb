@@ -15,11 +15,11 @@ TEST(Lexer, Lexer) {
         arr.push_back(token);
     }
 
-    EXPECT_EQ(Tok::LeftBrace, arr[0]->tok);
-    EXPECT_EQ(Tok::LeftBrace, arr[1]->tok);
-    EXPECT_EQ(Tok::LeftBrace, arr[2]->tok);
-    EXPECT_EQ(Tok::RightBrace, arr[3]->tok);
-    EXPECT_EQ(Tok::RightBrace, arr[4]->tok);
+    EXPECT_EQ(Tok::l_brace, arr[0]->tok);
+    EXPECT_EQ(Tok::l_brace, arr[1]->tok);
+    EXPECT_EQ(Tok::l_brace, arr[2]->tok);
+    EXPECT_EQ(Tok::r_brace, arr[3]->tok);
+    EXPECT_EQ(Tok::r_brace, arr[4]->tok);
 
     for (auto i : arr) {
         delete i;
@@ -34,18 +34,18 @@ TEST(Lexer, Lexer1) {
     Lexer* b = new Lexer(a, strlen(a));
     LexToken token;
     while ((token = b->GetLexerToken()) != nullptr) {
-        if (token->tok == Tok::WhiteSpace) {
+        if (token->tok == Tok::whitespace) {
             delete token;
         } else {
             arr.push_back(token);
         }
     }
 
-    EXPECT_EQ(Tok::Select, arr[0]->tok);
-    EXPECT_EQ(Tok::Mul, arr[1]->tok);
-    EXPECT_EQ(Tok::From, arr[2]->tok);
-    EXPECT_EQ(Tok::Identifier, arr[3]->tok);
-    EXPECT_EQ(Tok::Semicolon, arr[4]->tok);
+    EXPECT_EQ(Tok::kw_select, arr[0]->tok);
+    EXPECT_EQ(Tok::mul, arr[1]->tok);
+    EXPECT_EQ(Tok::kw_from, arr[2]->tok);
+    EXPECT_EQ(Tok::identifier, arr[3]->tok);
+    EXPECT_EQ(Tok::semicolon, arr[4]->tok);
 
     for (auto i : arr) {
         delete i;

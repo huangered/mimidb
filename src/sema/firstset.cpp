@@ -35,25 +35,26 @@ FirstSet::Gen() {
         count = 0;
 
         for (SimpleRule rule : _rules) {
+            std::set<Tok> tokSet;
             SemaToken left = rule->left;
 
             if (_firstSet.count(left->id) == 0) {
                 _firstSet[left->id] = {};
             }
 
-            std::set<Tok> c{};
+
             if (!rule->right[0]->sema) {
-                c.insert(rule->right[0]->lexToken->tok);
+                tokSet.insert(rule->right[0]->lexToken->tok);
             } else {
                 SemaToken firstRight = rule->right[0];
                 if (_firstSet.count(firstRight->id) > 0) {
                     auto tokens = _firstSet[firstRight->id];
-                    c.insert(tokens.begin(), tokens.end());
+                    tokSet.insert(tokens.begin(), tokens.end());
                 }
             }
-            for (Tok cc : c) {
-                if (_firstSet[left->id].count(cc) == 0) {
-                    _firstSet[left->id].insert(cc);
+            for (Tok tok : tokSet) {
+                if (_firstSet[left->id].count(tok) == 0) {
+                    _firstSet[left->id].insert(tok);
                     count++;
                 }
             }
@@ -63,7 +64,7 @@ FirstSet::Gen() {
 }
 
 void
-FirstSet::print() {
+FirstSet::Print() {
     for (auto entry = _firstSet.begin(); entry != _firstSet.end(); entry++) {
         std::cout << entry->first << " => ";
         for (Tok i : entry->second) {

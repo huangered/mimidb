@@ -69,23 +69,23 @@ struct BTreeSearchKeyData {
 
 typedef BTreeSearchKeyData* BTreeSearchKey;
 
-#define P_NEW INVALID_BLOCK
-#define P_NONE 0
-#define P_RIGHTMOST(special) ((special)->block_next == P_NONE)
+#define P_NEW                       INVALID_BLOCK
+#define P_NONE                      0
+#define P_RIGHTMOST(special)        ((special)->block_next == P_NONE)
 
-#define BTP_LEAF (1 << 0)
-#define BTP_ROOT (1 << 1)
-#define BTP_META (1 << 2)
+#define BTP_LEAF                    (1 << 0)
+#define BTP_ROOT                    (1 << 1)
+#define BTP_META                    (1 << 2)
 
-#define IID_USE (1 << 0)
-#define IID_DEL (1 << 1)
+#define IID_USE                     (1 << 0)
+#define IID_DEL                     (1 << 1)
 
-#define P_ISLEAF(special) ((special->flags & BTP_LEAF) != 0)
-#define P_ISROOT(special) ((special->flags & BTP_ROOT) != 0)
+#define P_ISLEAF(special)           ((special->flags & BTP_LEAF) != 0)
+#define P_ISROOT(special)           ((special->flags & BTP_ROOT) != 0)
 
-#define P_HIKEY ((OffsetNumber)1)
-#define P_FIRSTKEY ((OffsetNumber)2)
-#define P_FIRSTDATAKEY(special) (P_RIGHTMOST(special) ? P_HIKEY : P_FIRSTKEY)
+#define P_HIKEY                     ((OffsetNumber)1)
+#define P_FIRSTKEY                  ((OffsetNumber)2)
+#define P_FIRSTDATAKEY(special)     (P_RIGHTMOST(special) ? P_HIKEY : P_FIRSTKEY)
 
 #define BTreeTupleGetDownLink(itup) (itup->ht_id)
 

@@ -11,15 +11,27 @@
 #include <map>
 #include <set>
 #include <stack>
+#include <string>
+#include <iostream>
+
+struct SemaTokenData1 {
+    int id;
+    std::string name;
+};
+
+class TokenData {
+    public:
+        virtual int GetId();
+};
 
 struct SemaTokenData {
     int id;
     bool sema;
-    yih::String name;
+    std::string name;
     LexToken lexToken;
 
 public:
-    SemaTokenData(int _id, bool _sema, yih::String _name);
+    SemaTokenData(int _id, bool _sema, std::string _name);
 
     SemaTokenData(int _id, bool _sema, LexToken _lexToken);
 
@@ -72,25 +84,9 @@ struct RecordData {
     bool acc;
     bool state;
     int id;
-
-    friend std::ostream&
-    operator<<(std::ostream& os, const RecordData& dt) {
-        if (dt.id == -1) {
-            os << "  ";
-            return os;
-        }
-        if (dt.acc) {
-            os << "acc";
-            return os;
-        }
-        if (dt.state) {
-            os << "s" << dt.id;
-        } else {
-            os << "r" << dt.id;
-        }
-        return os;
-    }
 };
+
+std::ostream& operator<<(std::ostream& os, const RecordData& dt);
 
 typedef RecordData* Record;
 
@@ -110,7 +106,7 @@ public:
 
     void Gen();
 
-    void print();
+    void Print();
 };
 
 class Parser {
@@ -122,11 +118,8 @@ private:
     FirstSet* _firstSet;
     StateCollection* _stateList;
 
-    SemaTokenList _terminals;
-    SemaTokenList _nonTerminals;
-
 public:
-    Parser(std::vector<SimpleRule> rules, SemaTokenList terminals, SemaTokenList nonTerminals);
+    Parser(std::vector<SimpleRule> rules);
     ~Parser();
     void GenerateParseTable(void);
     Node Parse(std::vector<LexToken> input);
@@ -138,7 +131,7 @@ private:
     State searchSameState(RuleList newStateRules);
 
     bool reduce(std::stack<int>& states, std::stack<Node>& syms, Record curRecord);
-    bool eatToken(std::stack<int>& states, std::stack<Node>& syms, std::stack<SemaToken>& input, bool* acc);
+    bool eatToken(std::stack<int>& states, std::stack<Node>& syms, std::stack<LexToken>& input, bool* acc);
 };
 
 #endif

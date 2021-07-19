@@ -98,7 +98,7 @@ RuleData::Compare(RuleData& other) {
 
 Node
 RuleData::Format(SemaToken token, std::vector<Node> children) {
-    Node n = new NodeData{token};
-    n->addAll(children);
+    Node n = new NodeData{};
+    n->AddAll(children);
     return n;
 }

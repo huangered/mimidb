@@ -1,0 +1,37 @@
+@token Select
+@token From
+@token Identifier
+@token Mul
+@token Semicolon
+@token Comma
+@token LeftBrace
+@token RightBrace
+@token Insert
+@token Into
+@token Values
+@token Create
+@token Table
+@token View
+
+Q = StmtList {}
+
+StmtList = StmtList Stmt {}
+StmtList = Stmt {}
+
+Stmt = Create Table TableName TableRef Semicolon {}
+Stmt = Create View TableName Semicolon {}
+Stmt = Select Params From TableName Semicolon {}
+Stmt = Insert Into TableName Values LeftBrace Params RightBrace Semicolon {}
+
+Params = Params Comma T {}
+Params = T {}
+T = Identifier {}
+T = Star {}
+
+Star = Mul {}
+TableName = Identifier {}
+
+TableRef = LeftBrace ColumnRefs RightBrace {} # (int, string,)
+ColumnRefs = ColumnRefs Comma ColumnRef {}    # int, string,
+ColumnRefs = ColumnRef {}                     # int, string,
+ColumnRef = Identifier Identifier {}                     # abc int,

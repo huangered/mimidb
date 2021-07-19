@@ -1,7 +1,14 @@
 #include "lex/lexer.hpp"
 #include "c.hpp"
 
-Lexer::Lexer(const char* buf, int size) : _cur{0}, _size{size}, _buf{buf} {
+int
+LexTokenData::Compare(const LexTokenData& token) {
+    return tok - token.tok;
+}
+
+Lexer::Lexer(const char* buf, int size) : _cur{ 0 }, _size{ size }, _buf{ buf } {
+#define KEYWORD(X, Y) _meta[#Y] = Tok::kw_##X;
+#include "lex/tok.def"
 }
 
 LexToken
@@ -9,9 +16,9 @@ Lexer::GetLexerToken() {
     if (_cur >= _size) {
         return nullptr;
     }
-    Tok tok{Tok::Unknown};
+    Tok tok{ Tok::unknown };
     char Char = _buf[_cur];
-
+    
     switch (Char) {
     case '0':
     case '1':
@@ -52,27 +59,27 @@ Lexer::GetLexerToken() {
     case 'z':
         return lexIdentifier();
     case '(':
-        tok = Tok::LeftBrace;
+        tok = Tok::l_brace;
         break;
     case ')':
-        tok = Tok::RightBrace;
+        tok = Tok::r_brace;
         break;
     case ' ':
-        tok = Tok::WhiteSpace;
+        tok = Tok::whitespace;
         break;
     case '*':
-        tok = Tok::Mul;
+        tok = Tok::mul;
         break;
     case ';':
-        tok = Tok::Semicolon;
+        tok = Tok::semicolon;
         break;
     case ',':
-        tok = Tok::Comma;
+        tok = Tok::comma;
         break;
     }
 
     _cur++;
-    LexToken token = new LexTokenData{tok};
+    LexToken token = new LexTokenData{ tok };
     return token;
 }
 
@@ -93,24 +100,12 @@ Lexer::lexIdentifier() {
     strncpy(p, _buf + start, count);
     p[count] = '\0';
 
-    LexToken token = new LexTokenData{Tok::Identifier, yih::String{p}};
+    LexToken token = new LexTokenData{ Tok::identifier, p };
 
     delete[] p;
 
-    if (strcmp("select", token->str.Data()) == 0) {
-        token->tok = Tok::Select;
-    } else if (strcmp("from", token->str.Data()) == 0) {
-        token->tok = Tok::From;
-    } else if (strcmp("table", token->str.Data()) == 0) {
-        token->tok = Tok::Table;
-    } else if (strcmp("create", token->str.Data()) == 0) {
-        token->tok = Tok::Create;
-    } else if (strcmp("into", token->str.Data()) == 0) {
-        token->tok = Tok::Into;
-    } else if (strcmp("values", token->str.Data()) == 0) {
-        token->tok = Tok::Values;
-    } else if (strcmp("view", token->str.Data()) == 0) {
-        token->tok = Tok::View;
+    if (_meta.count(token->name) > 0) {
+        token->tok = _meta[token->name];
     }
 
     return token;
@@ -132,7 +127,8 @@ Lexer::lexNumber() {
     char* p = new char[count + 1];
     strncpy(p, _buf + start, count);
     p[count] = '\0';
-    LexToken token = new LexTokenData{Tok::Number, yih::String{p}};
+
+    LexToken token = new LexTokenData{ Tok::number, p };
 
     delete[] p;
     return token;

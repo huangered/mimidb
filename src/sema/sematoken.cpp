@@ -1,6 +1,6 @@
 #include "sema/sema.hpp"
 
-SemaTokenData::SemaTokenData(int _id, bool _sema, yih::String _name) {
+SemaTokenData::SemaTokenData(int _id, bool _sema, std::string _name) {
     id       = _id;
     sema     = _sema;
     name     = _name;
@@ -26,7 +26,7 @@ SemaTokenData::Compare(const SemaTokenData* token) {
     if (sema) {
         return id - token->id;
     } else {
-        return lexToken->compare(*token->lexToken);
+        return lexToken->Compare(*token->lexToken);
     }
 }
 
