@@ -12,6 +12,19 @@ GotoTable::GotoTable(int row, int col) : _row{row}, _col{col} {
     }
 }
 
+GotoTable::GotoTable(const GotoTable& tb) {
+    _row = tb._row;
+    _col = tb._col;
+    _data = new Record*[_row];
+    for (int i{ 0 }; i < _row; i++) {
+        _data[i] = new Record[_col]{};
+        for (int j = 0; j < _col; j++) {
+            auto q = _data[i] + j;
+            *q     = nullptr;
+        }
+    }
+}
+
 GotoTable::~GotoTable() {
     for (int i{0}; i < _row; i++) {
         for (int j{0}; j < _col; j++) {
@@ -70,6 +83,18 @@ ActionTable::ActionTable(int row, int col) : _row{row}, _col{col} {
     for (int i = 0; i < row; i++) {
         _data[i] = new Record[col]{};
         for (int j = 0; j < col; j++) {
+            _data[i][j] = nullptr;
+        }
+    }
+}
+
+ActionTable::ActionTable(const ActionTable& tb) {
+    _row  = tb._row;
+    _col  = tb._col;
+    _data = new Record*[_row];
+    for (int i = 0; i < _row; i++) {
+        _data[i] = new Record[_col]{};
+        for (int j = 0; j < _col; j++) {
             _data[i][j] = nullptr;
         }
     }

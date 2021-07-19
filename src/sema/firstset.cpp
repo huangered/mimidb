@@ -7,7 +7,7 @@ FirstSet::FirstSet(std::vector<SimpleRule> rules) {
 TokList
 FirstSet::Find(SemaToken nonTerminal) {
     std::set<Tok> r = _firstSet[nonTerminal->id];
-    std::vector<Tok> rList;
+    TokList rList;
 
     rList.insert(rList.end(), r.begin(), r.end());
 
@@ -15,13 +15,13 @@ FirstSet::Find(SemaToken nonTerminal) {
 }
 
 TokList
-FirstSet::Find(SemaTokenList tokens, std::vector<Tok> extra) {
+FirstSet::Find(SemaTokenList tokens, TokList extra) {
     if (tokens.size() == 0) {
         return extra;
     }
     for (SemaToken c : tokens) {
         if (!c->sema) {
-            return {c->lexToken->tok};
+            return { c->lexToken->tok };
         }
         return Find(tokens[0]);
     }

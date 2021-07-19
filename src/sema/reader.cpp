@@ -17,7 +17,7 @@ readRules(const char* path) {
     while (getline(file, myText)) {
 
         if (myText.starts_with('@')) {
-            //@token 
+            // handle @token
             myText = myText.substr(7);
             lexTokens.insert(myText);
             continue;
@@ -32,7 +32,6 @@ readRules(const char* path) {
         std::string left = lines[0];
 
         for (int i{ 2 }; i < lines.size(); i++) {
-
         }
     }
     return {};

@@ -61,39 +61,33 @@ StateCollection::GetState(int stateId) {
 
 // end
 
-Parser::Parser(std::vector<SimpleRule> rules) {
-    _maxState = 0;
-    _firstSet = new FirstSet(rules);
-    _stateList = new StateCollection();
-    _stateList->Add(new StateData{0});
-    _gotoTable = nullptr;
-    _actionTable = nullptr;
+Parser::Parser(std::vector<SimpleRule> rules) : _maxState{ 0 } {
+    _firstSet  = std::make_unique<FirstSet>(rules);
+    _stateList = std::make_unique<StateCollection>();
+    _stateList->Add(new StateData{ 0 });
 
     for (SimpleRule rule : rules) {
-        Rule r = new RuleData{};
-        r->id = rule->id;
-        r->left = rule->left;
+        Rule r   = new RuleData{};
+        r->id    = rule->id;
+        r->left  = rule->left;
         r->right = rule->right;
         _rules.push_back(r);
     }
     _rules[0]->root = true;
+
     Rule rule = _rules[0]->Clone();
     rule->SetToken(Tok::Eof);
     _stateList->Add(0, rule);
 }
 
 Parser::~Parser() {
-    delete _gotoTable;
-    delete _actionTable;
-    delete _firstSet;
-    delete _stateList;
 }
 
 void
 Parser::GenerateParseTable(void) {
     _firstSet->Gen();
     _firstSet->Print();
-    for (int i = 0; i < _stateList->Size(); i++) {
+    for (int i{}; i < _stateList->Size(); i++) {
         if (_stateList->IsEmpty(i)) {
             break;
         }
@@ -101,7 +95,7 @@ Parser::GenerateParseTable(void) {
         handleState(i);
     }
 
-    for (int i = 0; i < _stateList->Size(); i++) {
+    for (int i{}; i < _stateList->Size(); i++) {
         if (_stateList->IsEmpty(i)) {
             break;
         }
@@ -207,30 +201,30 @@ Parser::handleState(int stateId) {
 
 void
 Parser::generateTable(void) {
-    _gotoTable = new GotoTable(_stateList->Size(), _maxState);
-    _actionTable = new ActionTable(_stateList->Size(), Tok::unknown);
+    _gotoTable   = std::make_unique<GotoTable>(_stateList->Size(), _maxState);
+    _actionTable = std::make_unique<ActionTable>(_stateList->Size(), Tok::unknown);
 
-    for (int i = 0; i < _stateList->Size(); i++) {
-        for (Rule r : _stateList->GetRules(i)) {
+    for (int stateId{}; stateId < _stateList->Size(); stateId++) {
+        for (Rule r : _stateList->GetRules(stateId)) {
             if (r->IsDotEnd()) {
                 // find rule id
                 // add r1 in action
-                for (int g = 0; g < _rules.size(); g++) {
-                    Rule c = _rules[g];
+                for (int ruleId{}; ruleId < _rules.size(); ruleId++) {
+                    Rule c = _rules[ruleId];
                     if (c->left->id == r->left->id && SemaTokenListEqual(c->right, r->right)) {
                         for (Tok token : r->GetTokens()) {
-                            _actionTable->AddRule(i, token, g, r->root);
+                            _actionTable->AddRule(stateId, token, ruleId, r->root);
                         }
                     }
                 }
             } else {
-                SemaToken w = r->right[r->dot];
-                if (w->sema) {
+                SemaToken token = r->right[r->dot];
+                if (token->sema) {
                     // update goto
-                    _gotoTable->Add(i, w->id, r->next_state);
+                    _gotoTable->Add(stateId, token->id, r->next_state);
                 } else {
                     // update action
-                    _actionTable->Add(i, w->lexToken->tok, r->next_state);
+                    _actionTable->Add(stateId, token->lexToken->tok, r->next_state);
                 }
             }
         }
@@ -352,12 +346,10 @@ Parser::reduce(std::stack<int>& states, std::stack<Node>& syms, Record curRecord
 
 bool
 Parser::eatToken(std::stack<int>& states, std::stack<Node>& syms, std::stack<LexToken>& input, bool* acc) {
-    bool op        = false;
     int curStateId = states.top();
     LexToken token = input.top();
     Record record  = _actionTable->Find(curStateId, token->tok);
     if (record != nullptr) {
-        op = true;
 
         if (record->acc) {
             *acc = true;
@@ -368,12 +360,12 @@ Parser::eatToken(std::stack<int>& states, std::stack<Node>& syms, std::stack<Lex
             states.push(record->id);
             syms.push(new NodeData(token));
             input.pop();
-            return op;
+            return true;
         } else {
             return reduce(states, syms, record);
         }
     }
-    return op;
+    return false;
 }
 
 std::string

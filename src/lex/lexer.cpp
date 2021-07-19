@@ -7,7 +7,7 @@ LexTokenData::Compare(const LexTokenData& token) {
 }
 
 Lexer::Lexer(const char* buf, int size) : _cur{ 0 }, _size{ size }, _buf{ buf } {
-#define KEYWORD(X, Y) _meta[#Y] = Tok::kw_##X;
+#define KEYWORD(X, Y) _meta[#X] = Tok::kw_##X;
 #include "lex/tok.def"
 }
 
@@ -75,6 +75,12 @@ Lexer::GetLexerToken() {
         break;
     case ',':
         tok = Tok::comma;
+        break;
+    case '/':
+        tok = Tok::slash;
+        break;
+    case '=':
+        tok = Tok::equal;
         break;
     }
 

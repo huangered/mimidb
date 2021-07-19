@@ -1,6 +1,8 @@
 #ifndef  _token_kinds_hpp_
 #define _token_kinds_hpp_
 
+#include <vector>
+
 enum Tok : unsigned int
 {
 #define TOK(X) X,

@@ -31,7 +31,7 @@ struct RuleData {
     SemaToken left;
     SemaTokenList right;
     // look ahead 检查
-    std::vector<Tok> tokens;
+    TokList tokens;
 
     bool IsDotEnd();
 

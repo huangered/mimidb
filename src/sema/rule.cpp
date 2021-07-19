@@ -20,7 +20,7 @@ RuleData::GetTokenAfterDot() {
 SemaTokenList
 RuleData::GetStringAfterDot() {
     SemaTokenList tokens;
-    for (int i = dot + 1; i != right.size(); i++) {
+    for (int i{ dot + 1 }; i != right.size(); i++) {
         tokens.push_back(right[i]);
     }
     return tokens;

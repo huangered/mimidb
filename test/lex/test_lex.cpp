@@ -30,8 +30,8 @@ TEST(Lexer, Lexer) {
 
 TEST(Lexer, Lexer1) {
     std::vector<LexToken> arr;
-    const char* a = "select * from abc;";
-    Lexer* b = new Lexer(a, strlen(a));
+    const char* a = "select * from abc where a = 10;";
+    Lexer* b      = new Lexer(a, strlen(a));
     LexToken token;
     while ((token = b->GetLexerToken()) != nullptr) {
         if (token->tok == Tok::whitespace) {
@@ -45,7 +45,11 @@ TEST(Lexer, Lexer1) {
     EXPECT_EQ(Tok::mul, arr[1]->tok);
     EXPECT_EQ(Tok::kw_from, arr[2]->tok);
     EXPECT_EQ(Tok::identifier, arr[3]->tok);
-    EXPECT_EQ(Tok::semicolon, arr[4]->tok);
+    EXPECT_EQ(Tok::kw_where, arr[4]->tok);
+    EXPECT_EQ(Tok::identifier, arr[5]->tok);
+    EXPECT_EQ(Tok::equal, arr[6]->tok);
+    EXPECT_EQ(Tok::number, arr[7]->tok);
+    EXPECT_EQ(Tok::semicolon, arr[8]->tok);
 
     for (auto i : arr) {
         delete i;

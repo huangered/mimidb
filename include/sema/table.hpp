@@ -11,6 +11,7 @@ private:
 
 public:
     GotoTable(int row, int col);
+    GotoTable(const GotoTable&);
     ~GotoTable();
     void Add(int stateId, int tokenId, int nextStateId);
 
@@ -25,6 +26,7 @@ class ActionTable {
 
 public:
     ActionTable(int row, int col);
+    ActionTable(const ActionTable&);
     ~ActionTable();
     Record Find(int stateId, int lexTokenId);
 

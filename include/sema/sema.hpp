@@ -113,10 +113,10 @@ class Parser {
 private:
     int _maxState;
     RuleList _rules;
-    GotoTable* _gotoTable;
-    ActionTable* _actionTable;
-    FirstSet* _firstSet;
-    StateCollection* _stateList;
+    std::unique_ptr<GotoTable> _gotoTable;
+    std::unique_ptr<ActionTable> _actionTable;
+    std::unique_ptr<FirstSet> _firstSet;
+    std::unique_ptr<StateCollection> _stateList;
 
 public:
     Parser(std::vector<SimpleRule> rules);
