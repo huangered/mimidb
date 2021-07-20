@@ -59,7 +59,7 @@ TEST(Sema, tok_ne) {
 
     EXPECT_TRUE(a != b);
 }
-
+/*
 TEST(Sema, select_test) {
     auto rList = ReadRules("C:\\work\\mimidb\\sql.rule");
     EXPECT_TRUE(rList.size(), 17);
@@ -83,3 +83,4 @@ TEST(Sema, select_test) {
 
     delete n;
 }
+*/
