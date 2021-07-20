@@ -7,9 +7,6 @@
 
 #include "lex/TokenKinds.hpp"
 
-#define IsLex(id)  (id > 0)
-#define IsSema(id) (!IsLex(id))
-
 struct LexTokenData {
     Tok tok;
     std::string name;
@@ -18,6 +15,8 @@ struct LexTokenData {
 };
 
 typedef LexTokenData* LexToken;
+
+#define EndLexToken (new LexTokenData{Tok::Eof, "eof"})
 
 struct LexerOption {
     bool skipWhiteSpace;

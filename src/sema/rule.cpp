@@ -55,13 +55,15 @@ RuleData::SetTokens(TokList tokenList) {
 
 RuleData*
 RuleData::Clone() {
-    RuleData* rule = new RuleData{};
-    rule->id       = id;
-    rule->left     = left;
-    rule->right    = right;
-    rule->dot      = dot;
-    rule->root     = root;
-    rule->tokens   = tokens;
+    RuleData* rule   = new RuleData{};
+    rule->id         = id;
+    rule->left       = left;
+    rule->right      = right;
+    rule->dot        = dot;
+    rule->cur_state  = cur_state;
+    rule->next_state = next_state;
+    rule->root       = root;
+    rule->tokens     = tokens;
     return rule;
 }
 
@@ -69,7 +71,7 @@ RuleData::Clone() {
 int
 RuleData::Compare(RuleData& other) {
     int i;
-    if ((i = left->Compare(other.left)) != 0) {
+    if ((i = left->Compare(*other.left)) != 0) {
         return i;
     }
 
@@ -78,7 +80,7 @@ RuleData::Compare(RuleData& other) {
     }
 
     for (int j = 0; j < right.size(); j++) {
-        if ((i = right[j]->Compare(other.right[j])) != 0) {
+        if ((i = right[j]->Compare(*other.right[j])) != 0) {
             return i;
         }
     }

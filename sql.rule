@@ -1,37 +1,39 @@
-@token Select
-@token From
-@token Identifier
-@token Mul
-@token Semicolon
-@token Comma
-@token LeftBrace
-@token RightBrace
-@token Insert
-@token Into
-@token Values
-@token Create
-@token Table
-@token View
+@token identifier
+@token star
+@token semicolon
+@token comma
+@token l_brace
+@token r_brace
+@token l_paren
+@token r_paren
+@token kw_insert
+@token kw_into
+@token kw_values
+@token kw_create
+@token kw_table
+@token kw_view
+@token kw_select
+@token kw_from
 
 Q = StmtList {}
 
 StmtList = StmtList Stmt {}
 StmtList = Stmt {}
 
-Stmt = Create Table TableName TableRef Semicolon {}
-Stmt = Create View TableName Semicolon {}
-Stmt = Select Params From TableName Semicolon {}
-Stmt = Insert Into TableName Values LeftBrace Params RightBrace Semicolon {}
+Stmt = kw_create kw_table TableName TableRef semicolon {}
+Stmt = kw_create kw_view TableName semicolon {}
+Stmt = kw_select Params kw_from TableName semicolon {}
+Stmt = kw_insert kw_into TableName kw_values l_brace Params r_brace semicolon {}
 
-Params = Params Comma T {}
+Params = Params comma T {}
 Params = T {}
-T = Identifier {}
+T = identifier {}
 T = Star {}
 
-Star = Mul {}
-TableName = Identifier {}
+Star = star {}
+TableName = identifier {}
 
-TableRef = LeftBrace ColumnRefs RightBrace {} # (int, string,)
-ColumnRefs = ColumnRefs Comma ColumnRef {}    # int, string,
+TableRef = l_brace ColumnRefs r_brace {} # (int, string,)
+ColumnRefs = ColumnRefs comma ColumnRef {}    # int, string,
 ColumnRefs = ColumnRef {}                     # int, string,
-ColumnRef = Identifier Identifier {}                     # abc int,
+ColumnRef = identifier identifier {}                     # abc int,

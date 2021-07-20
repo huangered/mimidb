@@ -2,6 +2,7 @@
 #define _token_kinds_hpp_
 
 #include <vector>
+#include <string>
 
 enum Tok : unsigned int
 {
@@ -11,6 +12,8 @@ enum Tok : unsigned int
 };
 
 typedef std::vector<Tok> TokList;
+
+Tok GetTokByName(std::string name);
 
 #endif // ! _token_kinds_hpp_
 

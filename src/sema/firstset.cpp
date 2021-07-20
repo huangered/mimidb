@@ -21,7 +21,7 @@ FirstSet::Find(SemaTokenList tokens, TokList extra) {
     }
     for (SemaToken c : tokens) {
         if (!c->sema) {
-            return { c->lexToken->tok };
+            return { GetTokByName(c->name) };
         }
         return Find(tokens[0]);
     }
@@ -44,7 +44,7 @@ FirstSet::Gen() {
 
 
             if (!rule->right[0]->sema) {
-                tokSet.insert(rule->right[0]->lexToken->tok);
+                tokSet.insert(GetTokByName(rule->right[0]->name));
             } else {
                 SemaToken firstRight = rule->right[0];
                 if (_firstSet.count(firstRight->id) > 0) {

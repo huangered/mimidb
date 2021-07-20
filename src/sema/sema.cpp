@@ -1,5 +1,11 @@
 #include "sema/sema.hpp"
 #include <string>
+#include <functional>
+
+static bool SemaTokenListEqual(SemaTokenList& left, SemaTokenList& right);
+static bool SemaTokenListLess(const SemaTokenList& left, const SemaTokenList& right);
+static std::string join(const SemaTokenList& v);
+static std::string join2(const std::vector<Tok>& v);
 
 std::ostream&
 operator<<(std::ostream& os, const RecordData& dt) {
@@ -19,9 +25,20 @@ operator<<(std::ostream& os, const RecordData& dt) {
     return os;
 }
 
-static bool SemaTokenListEqual(SemaTokenList& left, SemaTokenList& right);
-static std::string join(const SemaTokenList& v);
-static std::string join2(const std::vector<Tok>& v);
+
+bool
+group_key::operator<(const group_key& g1) const {
+    int i{ 0 };
+
+    if ((i = dot - g1.dot) != 0) {
+        return i < 0 ? true : false;
+    }
+    if ((i = left->id - g1.left->id) != 0) {
+        return i < 0 ? true : false;
+    }
+
+    return SemaTokenListLess(right, g1.right);
+}
 
 StateCollection::~StateCollection() {
     for (State state : stateList) {
@@ -202,7 +219,7 @@ Parser::handleState(int stateId) {
 void
 Parser::generateTable(void) {
     _gotoTable   = std::make_unique<GotoTable>(_stateList->Size(), _maxState);
-    _actionTable = std::make_unique<ActionTable>(_stateList->Size(), Tok::unknown);
+    _actionTable = std::make_unique<ActionTable>(_stateList->Size(), Tok::NUM_TOKENS);
 
     for (int stateId{}; stateId < _stateList->Size(); stateId++) {
         for (Rule r : _stateList->GetRules(stateId)) {
@@ -224,7 +241,7 @@ Parser::generateTable(void) {
                     _gotoTable->Add(stateId, token->id, r->next_state);
                 } else {
                     // update action
-                    _actionTable->Add(stateId, token->lexToken->tok, r->next_state);
+                    _actionTable->Add(stateId, GetTokByName(token->name), r->next_state);
                 }
             }
         }
@@ -283,6 +300,7 @@ Parser::expandRules(State state) {
     }
 
     RuleList tmp;
+    std::multimap<group_key, Rule, std::less<group_key>> gg;
 
     // 合并 state 里的 rules
     for (Rule rule : state->GetRules()) {
@@ -294,14 +312,12 @@ Parser::expandRules(State state) {
         if (iter != tmp.end()) {
             Rule r = *iter;
             r->AppendTokens(rule->tokens);
-            // todo: 要delete多余的rule；
-            delete r;
-            *iter = nullptr;
         } else {
-            tmp.push_back(rule);
+            tmp.push_back(rule->Clone());
         }
     }
     state->ResetRules(tmp);
+    std::for_each(tmp.begin(), tmp.end(), [](Rule r) { delete r; });
 }
 
 State
@@ -316,14 +332,8 @@ Parser::searchSameState(RuleList newStateRules) {
 }
 
 bool
-Parser::reduce(std::stack<int>& states, std::stack<Node>& syms, Record curRecord) {
-    bool op        = false;
-    Node curNode   = syms.top();
-    Record record  = curRecord;
-    int curStateId = states.top();
-
-    if (record != nullptr && !record->state) {
-        op        = true;
+Parser::reduce(std::stack<int>& states, std::stack<Node>& syms, Record record) {
+    if (!record->state) {
         Rule rule = _rules[record->id];
         std::vector<Node> child;
         for (int i = 0; i < rule->right.size(); i++) {
@@ -336,12 +346,13 @@ Parser::reduce(std::stack<int>& states, std::stack<Node>& syms, Record curRecord
         syms.push(left);
 
         // find goto table
-        curStateId = states.top();
+        int curStateId = states.top();
 
         int nextStateId = _gotoTable->Find(curStateId, rule->left->id)->id;
         states.push(nextStateId);
+        return true;
     }
-    return op;
+    return false;
 }
 
 bool
@@ -376,7 +387,7 @@ join(const SemaTokenList& v) {
             a += t->name;
             a += ",";
         } else {
-            a += t->lexToken->name;
+            a += GetTokByName(t->name);
             a += ",";
         }
     }
@@ -399,12 +410,6 @@ SemaTokenListEqual(SemaTokenList& left, SemaTokenList& right) {
         return false;
     }
 
-    auto cmp = [](const SemaToken l, const SemaToken r) { return l->id < r->id; };
-
-    std::sort(left.begin(), left.end(), cmp);
-
-    std::sort(right.begin(), right.end(), cmp);
-
     for (int i{0}; i < left.size(); i++) {
         if (left[i]->id != right[i]->id) {
             return false;
@@ -412,4 +417,21 @@ SemaTokenListEqual(SemaTokenList& left, SemaTokenList& right) {
     }
 
     return true;
+}
+
+bool
+SemaTokenListLess(const SemaTokenList& left, const SemaTokenList& right) {
+    int i{ 0 };
+
+    if ((i = left.size() - right.size()) != 0) {
+        return i < 0 ? true : false;
+    }
+
+    for (int j{ 0 }; j < left.size(); j++) {
+        if ((i = left[j]->id - right[j]->id) != 0) {
+            return i < 0 ? true : false;
+        }
+    }
+
+    return false;
 }

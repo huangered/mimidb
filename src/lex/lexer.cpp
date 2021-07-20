@@ -68,7 +68,7 @@ Lexer::GetLexerToken() {
         tok = Tok::whitespace;
         break;
     case '*':
-        tok = Tok::mul;
+        tok = Tok::star;
         break;
     case ';':
         tok = Tok::semicolon;
@@ -78,6 +78,12 @@ Lexer::GetLexerToken() {
         break;
     case '/':
         tok = Tok::slash;
+        break;
+    case '+':
+        tok = Tok::plus;
+        break;
+    case '-':
+        tok = Tok::minus;
         break;
     case '=':
         tok = Tok::equal;

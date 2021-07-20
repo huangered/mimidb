@@ -2,49 +2,40 @@
 #include "lex/lexer.hpp"
 #include "sema/sema.hpp"
 #include "sema/rulereader.hpp"
-TEST(Sema, FirstSetTest) {
 
-    LexToken a1 = new LexTokenData{Tok::plus, "+"};
-    LexToken a2 = new LexTokenData{Tok::identifier, "id"};
-    LexToken a3 = new LexTokenData{Tok::Eof, "$"};
+TEST(Sema, GroupKeyTest1) {
+    group_key k1{ 1, nullptr, {} };
+    group_key k2{ 2, nullptr, {} };
 
-    SemaToken Q = new SemaTokenData{0, true, "Q"};
-    SemaToken S = new SemaTokenData{1, true, "S"};
-    SemaToken C = new SemaTokenData{2, true, "C"};
-    SemaToken t1 = new SemaTokenData{3, false, a1};
-    SemaToken t2 = new SemaTokenData{4, false, a2};
-    SemaToken eof = new SemaTokenData{5, false, a3};
+    EXPECT_TRUE(k1 < k2);
+}
 
-    LexToken l1 = new LexTokenData{Tok::identifier};
-    LexToken l2 = new LexTokenData{Tok::identifier};
-    LexToken l3 = new LexTokenData{Tok::Eof};
+TEST(Sema, GroupKeyTest2) {
+    SemaToken t1 = new SemaTokenData(1, true, "");
+    SemaToken t2 = new SemaTokenData(2, true, "");
 
-    SimpleRule r1 = make_rule(0, Q, {S});
-    SimpleRule r2 = make_rule(1, S, {C, C});
-    SimpleRule r3 = make_rule(2, C, {t1, C});
-    SimpleRule r4 = make_rule(3, C, {t2});
+    group_key k1{ 1, t1, {} };
+    group_key k2{ 1, t2, {} };
 
-    std::vector<SimpleRule> rules{r1, r2, r3, r4};
+    EXPECT_TRUE(k1 < k2);
 
-    Parser parser(rules);
-    parser.GenerateParseTable();
-    Node n = parser.Parse({l1, l2, l3});
 
-    EXPECT_TRUE(n != nullptr);
-    //EXPECT_EQ(n->getToken()->tok, S->id);
-    for (SimpleRule r : rules) {
-        delete r;
-    }
-
-    delete Q;
-    delete S;
-    delete C;
     delete t1;
     delete t2;
+}
 
-    delete a1;
-    delete a2;
-    delete a3;
+
+TEST(Sema, GroupKeyTest3) {
+    SemaToken t1 = new SemaTokenData(1, true, "");
+    SemaToken t2 = new SemaTokenData(2, true, "");
+
+    group_key k1{ 1, t1, {} };
+    group_key k2{ 1, t2, {} };
+
+    EXPECT_TRUE(k1 < k2);
+
+    delete t1;
+    delete t2;
 }
 
 TEST(Sema, tok_eq) {
@@ -69,6 +60,26 @@ TEST(Sema, tok_ne) {
     EXPECT_TRUE(a != b);
 }
 
-TEST(Sema, ggg) {
-    readRules("C:\\work\\mimidb\\sql.rule");
+TEST(Sema, select_test) {
+    auto rList = ReadRules("C:\\work\\mimidb\\sql.rule");
+    EXPECT_TRUE(rList.size(), 17);
+
+    const char* str = "select * from asdf;select * from asdf;";
+
+    Lexer lexer(str, strlen(str));
+
+    LexToken t;
+    std::vector<LexToken> data;
+    while ((t = lexer.GetLexerToken()) != nullptr) {
+        if (t->tok != Tok::whitespace) {
+            data.push_back(t);
+        }
+    }
+    data.push_back(EndLexToken);
+    Parser parser(rList);
+    parser.GenerateParseTable();
+    Node n = parser.Parse(data);
+    EXPECT_TRUE(n != nullptr);
+
+    delete n;
 }

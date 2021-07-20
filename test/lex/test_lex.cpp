@@ -42,7 +42,7 @@ TEST(Lexer, Lexer1) {
     }
 
     EXPECT_EQ(Tok::kw_select, arr[0]->tok);
-    EXPECT_EQ(Tok::mul, arr[1]->tok);
+    EXPECT_EQ(Tok::star, arr[1]->tok);
     EXPECT_EQ(Tok::kw_from, arr[2]->tok);
     EXPECT_EQ(Tok::identifier, arr[3]->tok);
     EXPECT_EQ(Tok::kw_where, arr[4]->tok);
@@ -56,4 +56,10 @@ TEST(Lexer, Lexer1) {
     }
 
     delete b;
+}
+
+TEST(Lex, Token) {
+
+    Tok a = GetTokByName("plus");
+    EXPECT_EQ(a, Tok::plus);
 }

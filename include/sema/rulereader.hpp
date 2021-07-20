@@ -3,6 +3,6 @@
 
 #include "sema/rule.hpp"
 
-RuleList readRules(const char* path);
+std::vector<SimpleRule> ReadRules(const char* path);
 
 #endif // !_rule_reader_hpp_

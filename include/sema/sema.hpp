@@ -14,34 +14,28 @@
 #include <string>
 #include <iostream>
 
-struct SemaTokenData1 {
-    int id;
-    std::string name;
-};
-
-class TokenData {
-    public:
-        virtual int GetId();
-};
-
 struct SemaTokenData {
     int id;
     bool sema;
     std::string name;
-    LexToken lexToken;
-
 public:
     SemaTokenData(int _id, bool _sema, std::string _name);
 
-    SemaTokenData(int _id, bool _sema, LexToken _lexToken);
-
     ~SemaTokenData();
 
-    int Compare(const SemaTokenData* token);
+    int Compare(const SemaTokenData& token);
 };
 
 typedef SemaTokenData* SemaToken;
 typedef std::vector<SemaToken> SemaTokenList;
+
+struct group_key {
+    int dot;
+    SemaToken left;
+    SemaTokenList right;
+
+    bool operator<(const group_key& other) const;
+};
 
 class StateData {
     int _id;
@@ -53,13 +47,13 @@ public:
 
     RuleList GetRules();
 
-    void ResetRules(RuleList rules);
+    void ResetRules(RuleList& rules);
 
     void Add(Rule rule);
 
     void Add(std::set<Rule> rules);
 
-    bool MatchRule(RuleList rules1);
+    bool MatchRule(const RuleList& rules);
 
     int GetId();
 };
@@ -125,7 +119,7 @@ public:
     Node Parse(std::vector<LexToken> input);
 
 private:
-    void handleState(int i);
+    void handleState(int stateId);
     void generateTable(void);
     void expandRules(State state);
     State searchSameState(RuleList newStateRules);
