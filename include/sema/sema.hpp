@@ -15,7 +15,8 @@
 #include <iostream>
 #include <memory>
 
-struct SemaTokenData {
+class SemaTokenData {
+public:
     int id;
     bool sema;
     std::string name;
@@ -75,7 +76,8 @@ public:
     State GetState(int stateId);
 };
 
-struct RecordData {
+class RecordData {
+public:
     bool acc;
     bool state;
     int id;
@@ -113,9 +115,6 @@ private:
     std::unique_ptr<ActionTable> _actionTable;
     std::unique_ptr<FirstSet> _firstSet;
     std::unique_ptr<StateCollection> _stateList;
-
-    std::set<int> epsilon;
-
 public:
     Parser(std::vector<SimpleRule> rules);
     ~Parser();

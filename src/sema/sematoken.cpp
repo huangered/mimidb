@@ -1,9 +1,9 @@
 #include "sema/sema.hpp"
 
 SemaTokenData::SemaTokenData(int _id, bool _sema, std::string _name) {
-    id       = _id;
-    sema     = _sema;
-    name     = _name;
+    id   = _id;
+    sema = _sema;
+    name = _name;
 }
 
 SemaTokenData::~SemaTokenData() {
@@ -16,7 +16,7 @@ SemaTokenData::Compare(const SemaTokenData& token) {
 
 // ===
 
-StateData::StateData(int id) : _id{id} {
+StateData::StateData(int id) : _id{ id } {
 }
 
 StateData::~StateData() {

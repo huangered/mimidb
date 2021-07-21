@@ -7,8 +7,6 @@ NodeData::NodeData(LexToken token) : _token{ token } {
 }
 
 void
-NodeData::AddAll(std::vector<Node> nodes) {
-    for (Node n : nodes) {
-        _nodes.push_back(n);
-    }
+NodeData::AddAll(const std::vector<Node>& nodes) {
+    _nodes.insert(_nodes.begin(), nodes.begin(), nodes.end());
 }

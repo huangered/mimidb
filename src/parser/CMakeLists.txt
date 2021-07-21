@@ -16,4 +16,4 @@ add_library(parser ${BISON_MyParser_OUTPUTS}
                    "parse_expr.c"
                    "parse_stmt.c"
                    "list.c")
-#target_link_libraries(parser)
+target_link_libraries(parser)

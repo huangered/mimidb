@@ -10,7 +10,8 @@ class SemaTokenData;
 typedef SemaTokenData* SemaToken;
 typedef std::vector<SemaToken> SemaTokenList;
 
-struct SimpleRuleData {
+class SimpleRuleData {
+public:
     int id;
     SemaToken left;
     SemaTokenList right;
@@ -35,6 +36,7 @@ public:
     // look ahead 检查
     TokList tokens;
 
+public:
     bool IsDotEnd();
 
     SemaToken GetTokenAfterDot();
