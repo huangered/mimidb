@@ -57,7 +57,7 @@ TEST(Sema, tok_ne) {
 
     EXPECT_TRUE(a != b);
 }
-/*
+
 TEST(Sema, select_test) {
     auto rList = ReadRules("C:\\work\\mimidb\\sql.rule");
     EXPECT_EQ(rList.size(), 19);
@@ -77,9 +77,37 @@ TEST(Sema, select_test) {
 
     Parser parser(rList);
     parser.GenerateParseTable();
-    Node n = parser.Parse(data);
-    EXPECT_TRUE(n != nullptr);
+    auto n = parser.Parse(data);
+    EXPECT_TRUE(n.first);
+    Node node = n.second;
+    EXPECT_TRUE(node != nullptr);
 
-    delete n;
+    delete n.second;
 }
-*/
+
+TEST(Sema, select_where_test) {
+    auto rList = ReadRules("C:\\work\\mimidb\\sql.rule");
+    EXPECT_EQ(rList.size(), 19);
+
+    const char* str = "select * from asdf where;";
+
+    Lexer lexer(str, strlen(str));
+
+    LexToken t;
+    std::vector<LexToken> data;
+    while ((t = lexer.GetLexerToken()) != nullptr) {
+        if (t->tok != Tok::whitespace) {
+            data.push_back(t);
+        }
+    }
+    data.push_back(EndLexToken);
+
+    Parser parser(rList);
+    parser.GenerateParseTable();
+    auto n = parser.Parse(data);
+    EXPECT_TRUE(n.first);
+    Node node = n.second;
+    EXPECT_TRUE(node != nullptr);
+
+    delete n.second;
+}

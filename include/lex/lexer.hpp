@@ -7,10 +7,12 @@
 
 #include "lex/TokenKinds.hpp"
 
-struct LexTokenData {
+class LexTokenData {
+public:
     Tok tok;
     std::string name;
-    
+
+public:
     int Compare(const LexTokenData& token);
 };
 

@@ -119,7 +119,7 @@ public:
     Parser(std::vector<SimpleRule> rules);
     ~Parser();
     void GenerateParseTable(void);
-    Node Parse(std::vector<LexToken> input);
+    std::pair<bool, Node> Parse(const std::vector<LexToken>& input);
 
 private:
     void handleState(int stateId);
