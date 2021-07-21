@@ -58,6 +58,28 @@ TEST(Lexer, Lexer1) {
     delete b;
 }
 
+TEST(Lexer, Lexer2) {
+    std::vector<LexToken> arr;
+    const char* a = "\"abcd\" qqq;";
+    Lexer* b      = new Lexer(a, strlen(a));
+    LexToken token;
+    while ((token = b->GetLexerToken()) != nullptr) {
+        if (token->tok == Tok::whitespace) {
+            delete token;
+        } else {
+            arr.push_back(token);
+        }
+    }
+
+    EXPECT_EQ(Tok::str, arr[0]->tok);
+
+    for (auto i : arr) {
+        delete i;
+    }
+
+    delete b;
+}
+
 TEST(Lex, Token) {
 
     Tok a = GetTokByName("plus");

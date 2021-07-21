@@ -89,6 +89,10 @@ Parser::Parser(std::vector<SimpleRule> rules) : _maxState{ 0 } {
         r->left  = rule->left;
         r->right = rule->right;
         _rules.push_back(r);
+
+        if (r->right.size() == 0) {
+            epsilon.insert(r->left->id);
+        }
     }
     _rules[0]->root = true;
 
@@ -272,8 +276,9 @@ Parser::expandRules(State state) {
                 RuleList match;
                 find_all(_rules, match, rule_left_id_eq);
                 for (Rule rule : match) {
-                    std::vector<Tok> tokens = _firstSet->Find(r->GetStringAfterDot(), r->GetTokens());
-
+                    SemaTokenList tokenList = r->GetStringAfterDot();
+                    std::vector<Tok> tokens = _firstSet->Find(tokenList, r->GetTokens());
+                    std::remove_if(tokens.begin(), tokens.end(), [](Tok t) -> bool { return t == Tok::epsilon; });
                     Rule copy = rule->Clone();
                     copy->dot = 0;
                     copy->SetTokens(tokens);

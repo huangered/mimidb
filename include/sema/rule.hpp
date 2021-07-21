@@ -4,6 +4,7 @@
 #include "lex/lexer.hpp"
 #include "sema/node.hpp"
 #include <vector>
+#include <set>
 
 class SemaTokenData;
 typedef SemaTokenData* SemaToken;
@@ -19,7 +20,8 @@ typedef SimpleRuleData* SimpleRule;
 
 SimpleRule make_rule(int id, SemaToken left, SemaTokenList right);
 
-struct RuleData {
+class RuleData {
+public:
     int id;
 
     int dot;

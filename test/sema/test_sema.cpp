@@ -42,8 +42,7 @@ TEST(Sema, tok_eq) {
     std::set<Tok> a;
     std::set<Tok> b;
 
-    a.insert(Tok::comma);
-    
+    a.insert(Tok::comma);    
     b.insert(Tok::comma);
 
     EXPECT_TRUE(a == b);
@@ -54,7 +53,6 @@ TEST(Sema, tok_ne) {
     std::set<Tok> b;
 
     a.insert(Tok::comma);
-
     b.insert(Tok::kw_select);
 
     EXPECT_TRUE(a != b);
@@ -62,9 +60,9 @@ TEST(Sema, tok_ne) {
 /*
 TEST(Sema, select_test) {
     auto rList = ReadRules("C:\\work\\mimidb\\sql.rule");
-    EXPECT_TRUE(rList.size(), 17);
+    EXPECT_EQ(rList.size(), 19);
 
-    const char* str = "select * from asdf;select * from asdf;";
+    const char* str = "select * from asdf;";
 
     Lexer lexer(str, strlen(str));
 
@@ -76,6 +74,7 @@ TEST(Sema, select_test) {
         }
     }
     data.push_back(EndLexToken);
+
     Parser parser(rList);
     parser.GenerateParseTable();
     Node n = parser.Parse(data);

@@ -5,9 +5,20 @@ FirstSet::FirstSet(std::vector<SimpleRule> rules) {
 }
 
 TokList
-FirstSet::Find(SemaToken nonTerminal) {
-    std::set<Tok> r = _firstSet[nonTerminal->id];
+FirstSet::find(SemaTokenList tokens) {
+    SemaToken t     = tokens[0];
+    std::set<Tok> r = _firstSet[t->id];
     TokList rList;
+
+    if (r.empty()) {
+        return {};
+    }
+
+    if (r.contains(Tok::epsilon)) {
+        tokens.erase(tokens.begin());
+        TokList q = find(tokens);
+        rList.insert(rList.end(), q.begin(), q.end());
+    }
 
     rList.insert(rList.end(), r.begin(), r.end());
 
@@ -19,13 +30,12 @@ FirstSet::Find(SemaTokenList tokens, TokList extra) {
     if (tokens.size() == 0) {
         return extra;
     }
-    for (SemaToken c : tokens) {
-        if (!c->sema) {
-            return { GetTokByName(c->name) };
-        }
-        return Find(tokens[0]);
+    SemaToken c = tokens[0];
+    if (c->sema) {
+        return find(tokens);
+    } else {
+        return { GetTokByName(c->name) };
     }
-    return {};
 }
 
 void
@@ -42,14 +52,17 @@ FirstSet::Gen() {
                 _firstSet[left->id] = {};
             }
 
-
-            if (!rule->right[0]->sema) {
-                tokSet.insert(GetTokByName(rule->right[0]->name));
+            if (rule->right.size() == 0) {
+                tokSet.insert(Tok::epsilon);
             } else {
-                SemaToken firstRight = rule->right[0];
-                if (_firstSet.count(firstRight->id) > 0) {
-                    auto tokens = _firstSet[firstRight->id];
-                    tokSet.insert(tokens.begin(), tokens.end());
+                if (!rule->right[0]->sema) {
+                    tokSet.insert(GetTokByName(rule->right[0]->name));
+                } else {
+                    SemaToken firstRight = rule->right[0];
+                    if (_firstSet.count(firstRight->id) > 0) {
+                        auto tokens = _firstSet[firstRight->id];
+                        tokSet.insert(tokens.begin(), tokens.end());
+                    }
                 }
             }
             for (Tok tok : tokSet) {

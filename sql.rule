@@ -14,6 +14,7 @@
 @token kw_view
 @token kw_select
 @token kw_from
+@token kw_where
 
 Q = StmtList {}
 
@@ -22,7 +23,7 @@ StmtList = Stmt {}
 
 Stmt = kw_create kw_table TableName TableRef semicolon {}
 Stmt = kw_create kw_view TableName semicolon {}
-Stmt = kw_select Params kw_from TableName semicolon {}
+Stmt = kw_select Params kw_from TableName WhereStmt semicolon {}
 Stmt = kw_insert kw_into TableName kw_values l_brace Params r_brace semicolon {}
 
 Params = Params comma T {}
@@ -32,6 +33,9 @@ T = Star {}
 
 Star = star {}
 TableName = identifier {}
+
+WhereStmt = kw_where {}
+WhereStmt = {}
 
 TableRef = l_brace ColumnRefs r_brace {} # (int, string,)
 ColumnRefs = ColumnRefs comma ColumnRef {}    # int, string,

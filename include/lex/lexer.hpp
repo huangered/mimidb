@@ -16,7 +16,7 @@ struct LexTokenData {
 
 typedef LexTokenData* LexToken;
 
-#define EndLexToken (new LexTokenData{Tok::Eof, "eof"})
+#define EndLexToken ( new LexTokenData{ Tok::Eof, "eof" } )
 
 struct LexerOption {
     bool skipWhiteSpace;
@@ -36,6 +36,7 @@ public:
 private:
     LexToken lexNumber();
     LexToken lexIdentifier();
+    LexToken lexString();
 };
 
 #endif // !_lexer_hpp_

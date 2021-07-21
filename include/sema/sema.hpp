@@ -94,13 +94,14 @@ private:
 public:
     FirstSet(std::vector<SimpleRule> rules);
 
-    TokList Find(SemaToken nonTerminal);
-
     TokList Find(SemaTokenList tokens, TokList extra);
 
     void Gen();
 
     void Print();
+
+private:
+    TokList find(SemaTokenList tokens);
 };
 
 class Parser {
@@ -111,6 +112,8 @@ private:
     std::unique_ptr<ActionTable> _actionTable;
     std::unique_ptr<FirstSet> _firstSet;
     std::unique_ptr<StateCollection> _stateList;
+
+    std::set<int> epsilon;
 
 public:
     Parser(std::vector<SimpleRule> rules);

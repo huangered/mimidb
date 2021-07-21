@@ -76,6 +76,9 @@ Lexer::GetLexerToken() {
     case ',':
         tok = Tok::comma;
         break;
+    case '.':
+        tok = Tok::dot;
+        break;
     case '/':
         tok = Tok::slash;
         break;
@@ -88,6 +91,8 @@ Lexer::GetLexerToken() {
     case '=':
         tok = Tok::equal;
         break;
+    case '"':
+        return lexString();
     }
 
     _cur++;
@@ -141,6 +146,30 @@ Lexer::lexNumber() {
     p[count] = '\0';
 
     LexToken token = new LexTokenData{ Tok::number, p };
+
+    delete[] p;
+    return token;
+}
+
+LexToken
+Lexer::lexString() {
+    int start = _cur;
+    int count = 2;
+    _cur++; // skip first "
+    for (; _cur < _size; _cur++) {
+        char c = _buf[_cur];
+        if (c != '"') {
+            count++;
+        } else {
+            break;
+        }
+    }
+    _cur++; // skip end "
+    char* p = new char[count + 1];
+    strncpy(p, _buf + start, count);
+    p[count] = '\0';
+
+    LexToken token = new LexTokenData{ Tok::str, p };
 
     delete[] p;
     return token;
