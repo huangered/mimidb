@@ -2,6 +2,11 @@
 
 BasedOnStyle: Microsoft
 
+ColumnLimit: 80
+
+# 连续的空行保留几行
+MaxEmptyLinesToKeep: 1
+
 PointerAlignment: Left
 
 AccessModifierOffset: -4
@@ -25,3 +30,8 @@ AlignConsecutiveMacros: AcrossEmptyLines
 SpacesInContainerLiterals: true
 
 Cpp11BracedListStyle: false
+
+#在构造函数初始化时按逗号断行，并以冒号对齐
+BreakConstructorInitializersBeforeComma: true
+
+BreakBeforeBinaryOperators: None

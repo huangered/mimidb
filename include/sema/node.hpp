@@ -17,7 +17,7 @@ public:
 
     NodeData(LexToken token);
 
-    void AddAll(std::vector<Node> nodes);
+    void AddAll(const std::vector<Node>& nodes);
 };
 
 #endif
