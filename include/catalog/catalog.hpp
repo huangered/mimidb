@@ -1,6 +1,6 @@
 ﻿/*
-*catalog 相关代码
-*/
+ *catalog 相关代码
+ */
 #ifndef _CATALOG_H_
 #define _CATALOG_H_
 

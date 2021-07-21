@@ -26,6 +26,6 @@ heap_form_tuple(TupleDesc desc, Datum* values) {
 // 释放heaptuple
 void
 heap_free_tuple(HeapTuple tuple) {
-    
+
     pfree(tuple);
 }

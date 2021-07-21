@@ -28,8 +28,8 @@ struct HeapTupleData {
 
 typedef HeapTupleData* HeapTuple;
 
-#define HEAP_TUPLE_SIZE            sizeof(HeapTupleData)
-#define HEAP_TUPLE_HEADER_SIZE     sizeof(HeapTupleHeaderData)
+#define HEAP_TUPLE_SIZE sizeof(HeapTupleData)
+#define HEAP_TUPLE_HEADER_SIZE sizeof(HeapTupleHeaderData)
 
 HeapTuple heap_form_tuple(TupleDesc desc, Datum* values);
 void heap_free_tuple(HeapTuple tuple);

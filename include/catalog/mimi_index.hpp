@@ -4,9 +4,9 @@
 #include "mimi.hpp"
 
 struct FormData_mimi_index {
-    Oid index_id;       /* index 的 relation id */
-    Oid index_relid;    /* index 索引的 relation id */
-    int index_natts;    /* index 的属性数 */
+    Oid index_id;    /* index 的 relation id */
+    Oid index_relid; /* index 索引的 relation id */
+    int index_natts; /* index 的属性数 */
 };
 
 typedef FormData_mimi_index* Form_mimi_index;

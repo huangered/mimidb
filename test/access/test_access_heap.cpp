@@ -5,12 +5,11 @@
 #include "storage/smgr.hpp"
 #include "util/mctx.hpp"
 // test the basic usage in buff mgr.
-TEST(heap, incr_insert)
-{
+TEST(heap, incr_insert) {
     // insert
     Relation rel = new RelationData{};
     rel->rd_id = 2000;
-    rel->rd_node = { 0, rel->rd_id };
+    rel->rd_node = {0, rel->rd_id};
     rel->tb_am = HeapRoute();
 
     RelationOpenSmgr(rel);
@@ -23,7 +22,7 @@ TEST(heap, incr_insert)
     delete[] attr;
 
     for (int i = 0; i < 1000; i++) {
-        int* value = new int[2]{ i, i * 10 };
+        int* value = new int[2]{i, i * 10};
         HeapTuple tuple = heap_form_tuple(rel->tupleDesc, (Datum*)value);
         bool result = rel->tb_am->Insert(rel, tuple);
         EXPECT_TRUE(result);
@@ -48,9 +47,9 @@ TEST(heap, incr_insert)
 
     rel->tb_am->EndScan(hsDesc);
 
-    //rel->tb_am->debug(rel);
+    // rel->tb_am->debug(rel);
 
-    //if (htup)
+    // if (htup)
     //    delete htup;
     pfree(skey);
 

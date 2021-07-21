@@ -4,7 +4,7 @@
 
 static fsm* _fsm = new fsm{};
 
-BlockNumber 
+BlockNumber
 GetPageWithFreeSpace(Relation rel, Size spaceNeeded) {
     BlockNumber block;
 
@@ -21,7 +21,6 @@ RecordPageWithFreeSpace(Relation rel, BlockNumber usedBlock, Size freeSpace) {
 
     addr = _fsm->fsm_get_location(usedBlock, &slot);
     _fsm->fsm_set_and_search(rel, addr, slot, freeSpace, 0);
-
 }
 
 BlockNumber
@@ -30,11 +29,9 @@ RecordAndGetPageWithFreeSpace(Relation rel, BlockNumber oldPage, Size oldSpaceAv
     return GetPageWithFreeSpace(rel, spaceNeeded);
 }
 
-
 void
 FreeSpaceMapVacuumRange(Relation rel, BlockNumber start, BlockNumber end) {
     if (end > start) {
         _fsm->fsm_vacuum_page(rel, FSM_ROOT_ADDRESS, start, end);
     }
 }
-

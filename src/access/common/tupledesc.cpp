@@ -2,8 +2,8 @@
 #include "util/mctx.hpp"
 
 /*
-* 创建一个空的 tupledesc
-*/
+ * 创建一个空的 tupledesc
+ */
 TupleDesc
 CreateTempTupleDesc(int natts) {
     TupleDesc desc = (TupleDesc)palloc0(offsetof(TupleDescData, attr) + natts * sizeof(FormData_mimi_attribute));
@@ -18,7 +18,7 @@ TupleDesc
 CreateTupleDesc(int natts, Form_mimi_attribute attrs) {
     TupleDesc tupdesc = CreateTempTupleDesc(natts);
     // copy the attrs;
-    for (int i{ 0 }; i < natts; i++) {
+    for (int i{0}; i < natts; i++) {
         memcpy(&tupdesc->attr[i], &attrs[i], sizeof(FormData_mimi_attribute));
     }
     return tupdesc;

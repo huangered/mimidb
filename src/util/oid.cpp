@@ -1,6 +1,6 @@
 ﻿/*
-* oid 相关函数
-*/
+ * oid 相关函数
+ */
 #include "util/builtins.hpp"
 #include "mimi.hpp"
 Datum

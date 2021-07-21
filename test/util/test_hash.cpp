@@ -2,17 +2,16 @@
 
 #include "util/hashmap.hpp"
 
-TEST(hash_test, basic_int)
-{
+TEST(hash_test, basic_int) {
     HashMap<int, int> map;
     for (int i{}; i < 100; i++) {
         map.Put(i, i);
     }
 
-    int v{ -99 };
+    int v{-99};
     EXPECT_TRUE(map.Get(1, &v));
     EXPECT_EQ(v, 1);
-    
+
     map.Remove(1);
 
     EXPECT_FALSE(map.Get(1, &v));
@@ -22,7 +21,7 @@ TEST(hash_test, value_is_pointer) {
     HashMap<int, int*> map;
 
     for (int i{}; i < 100; i++) {
-        map.Put(i, new int{ i });
+        map.Put(i, new int{i});
     }
 
     int* v = nullptr;
@@ -39,7 +38,6 @@ TEST(hash_test, value_is_pointer) {
         map.Remove(i);
         delete v;
     }
-
 }
 
 TEST(hash_test, keys_and_values) {

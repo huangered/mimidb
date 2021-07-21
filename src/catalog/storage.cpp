@@ -2,11 +2,11 @@
 #include "storage/smgr.hpp"
 #include "access/rel.hpp"
 
-void RelationCreateStorage(Relation rel) {
+void
+RelationCreateStorage(Relation rel) {
     smgr->Create(rel->rd_smgr, MAIN_FORKNUM);
 }
 
 void
 RelationDropStorage(Relation rel) {
-
 }

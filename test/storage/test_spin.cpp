@@ -7,7 +7,7 @@
 //
 //
 //// test the basic usage in buff mgr.
-//TEST(Storage, spin)
+// TEST(Storage, spin)
 //{
 //    slock_t a;
 //    SpinLockInit(&a);

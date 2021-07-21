@@ -13,60 +13,17 @@
 RelCache* relcache = new RelCache{};
 
 // private area
-static const FormData_mimi_attribute desc_pg_class[4] = {
-    {
-         1,
-         {"oid"},
-         sizeof(int),
-         0,
-         1
-    },
-    {
-         1,
-         {"relkind"},
-         sizeof(int),
-         0,
-         1
-    },
-    {
-         1,
-         {"relpages"},
-         sizeof(int),
-         0,
-         1
-    },
-    {
-         1,
-         {"tuples"},
-         sizeof(int),
-         0,
-         1
-    }
-};
+static const FormData_mimi_attribute desc_pg_class[4] = {{1, {"oid"}, sizeof(int), 0, 1},
+                                                         {1, {"relkind"}, sizeof(int), 0, 1},
+                                                         {1, {"relpages"}, sizeof(int), 0, 1},
+                                                         {1, {"tuples"}, sizeof(int), 0, 1}};
 
-static const FormData_mimi_attribute desc_pg_attribute[1] = {
-    {
-         1,
-         {"oid"},
-         sizeof(int),
-         0,
-         1
-    } 
-};
+static const FormData_mimi_attribute desc_pg_attribute[1] = {{1, {"oid"}, sizeof(int), 0, 1}};
 
-static const FormData_mimi_attribute desc_pg_type[1] = {
-    {
-         1,
-	     {"oid"},
-	     sizeof(int),
-         0,
-         1
-    }
-};
+static const FormData_mimi_attribute desc_pg_type[1] = {{1, {"oid"}, sizeof(int), 0, 1}};
 
 static void RelationIncRefCount(Relation rel);
 static void RelationDecRefCount(Relation rel);
-
 
 /*
 1. init the relation cache
@@ -96,7 +53,7 @@ void
 RelCache::RelationClose(Relation rel) {
     RelationDecRefCount(rel);
     if (rel->refcount == 0) {
-        //remove from cache;
+        // remove from cache;
     }
 }
 
@@ -116,17 +73,16 @@ RelCache::_formrdesc(const char* relname, Oid reltype, int natts, const FormData
     rel->rd_rel = new FormData_mimi_class{};
     strcpy(rel->rd_rel->relname, relname);
 
-    rel->tb_am = nullptr;// table_route();
+    rel->tb_am = nullptr; // table_route();
     // build relation tuple desc
     rel->tupleDesc = CreateTempTupleDesc(natts);
     for (int i = 0; i < natts; i++) {
         FormData_mimi_attribute* attr = (FormData_mimi_attribute*)(attrs + i);
         memcpy(&rel->tupleDesc->attr[i], attr, sizeof(FormData_mimi_attribute));
-
     }
     rel->rd_smgr = nullptr;
 
-    RelCacheEntry entry{ rel->rd_id, rel };
+    RelCacheEntry entry{rel->rd_id, rel};
     cache.Put(rel->rd_id, entry);
 }
 
@@ -147,16 +103,15 @@ RelCache::BuildRelationDesc(Oid oid, bool insert) {
     heaprel->rd_rel = new FormData_mimi_class;
     strcpy(heaprel->rd_rel->relname, rel_class->relname);
 
-    //RelationBuildTuple(heaprel);
+    // RelationBuildTuple(heaprel);
 
     heaprel->refcount = 0;
     if (insert) {
-        RelCacheEntry entry{ heaprel->rd_id, heaprel };
+        RelCacheEntry entry{heaprel->rd_id, heaprel};
         cache.Put(heaprel->rd_id, entry);
     }
     return heaprel;
 }
-
 
 /*
 1. build a relcache entry

@@ -1,11 +1,10 @@
 #include "storage/fsm_internal.hpp"
 #include "storage/smgr.hpp"
 
-#define parentof(X)         (((X) - 1) / 2 )
+#define parentof(X) (((X)-1) / 2)
 
-#define left_children(X)    ( 2 * (X) + 1 )
-#define right_children(X)   ( 2 * (X) + 2 )
-
+#define left_children(X) (2 * (X) + 1)
+#define right_children(X) (2 * (X) + 2)
 
 /*
 1. find a available block
@@ -14,17 +13,15 @@
 Buffer
 fsm::fsm_readbuf(Relation rel, FSMAddress addr, bool extend) {
     BlockNumber blkno = fsm_logic_to_physical(addr);
-    Buffer      buf;
+    Buffer buf;
 
     // open smgr of rel
 
     // if exist rel fsm file
-    if (rel->rd_smgr->smgr_fsm_nblocks == INVALID_BLOCK ||
-        blkno >= rel->rd_smgr->smgr_fsm_nblocks) {
+    if (rel->rd_smgr->smgr_fsm_nblocks == INVALID_BLOCK || blkno >= rel->rd_smgr->smgr_fsm_nblocks) {
         if (smgr->Exists(rel->rd_smgr, FSM_FORKNUM)) {
             rel->rd_smgr->smgr_fsm_nblocks = smgr->Nblocks(rel->rd_smgr, FSM_FORKNUM);
-        }
-        else {
+        } else {
             rel->rd_smgr->smgr_fsm_nblocks = 0;
         }
     }
@@ -32,8 +29,7 @@ fsm::fsm_readbuf(Relation rel, FSMAddress addr, bool extend) {
     if (blkno >= rel->rd_smgr->smgr_fsm_nblocks) {
         if (extend) {
             fsm_extend(rel, blkno + 1);
-        }
-        else {
+        } else {
             return INVALID_BUFFER;
         }
     }
@@ -58,8 +54,7 @@ fsm::fsm_search(Relation rel, Size spaceNeed) {
 
         if (BufferIsValid(buf)) {
             slot = fsm_search_avail(buf, spaceNeed);
-        }
-        else
+        } else
             slot = -1;
 
         if (slot != -1) {
@@ -67,14 +62,12 @@ fsm::fsm_search(Relation rel, Size spaceNeed) {
                 return fsm_get_heap_blk(address, slot);
 
             address = fsm_get_child(address, slot);
-        }
-        else if (address.level == FSM_ROOT_LEVEL) {
+        } else if (address.level == FSM_ROOT_LEVEL) {
             /*
             at the root, failure means there is no enough space, return invalid.
             */
             return INVALID_BLOCK;
-        }
-        else {
+        } else {
             // create new fsm page
             int parentslot;
             FSMAddress parent;
@@ -98,7 +91,7 @@ fsm::fsm_get_avail(Page page, int slot) {
 
 bool
 fsm::fsm_set_avail(Page page, int slot, int value) {
-    
+
     int nodeno = slot + NonLeafNodesPerPage;
     FSMPage fsmpage = (FSMPage)PageGetContent(page);
     int oldvalue;
@@ -110,8 +103,7 @@ fsm::fsm_set_avail(Page page, int slot, int value) {
 
     fsmpage->fp_nodes[nodeno] = value;
 
-    do
-    {
+    do {
         int newvalue = 0;
         int lchild;
         int rchild;
@@ -122,8 +114,7 @@ fsm::fsm_set_avail(Page page, int slot, int value) {
 
         newvalue = fsmpage->fp_nodes[lchild];
         if (rchild < NodesPerPage)
-            newvalue = std::max(newvalue,
-                fsmpage->fp_nodes[rchild]);
+            newvalue = std::max(newvalue, fsmpage->fp_nodes[rchild]);
 
         oldvalue = fsmpage->fp_nodes[nodeno];
         if (oldvalue == newvalue)
@@ -168,8 +159,7 @@ fsm::fsm_search_avail(Buffer buf, Size spaceNeed) {
         int right = right_children(no);
         if (fsm->fp_nodes[left] >= spaceNeed) {
             no = left;
-        }
-        else if (fsm->fp_nodes[right] >= spaceNeed) {
+        } else if (fsm->fp_nodes[right] >= spaceNeed) {
             no = right;
         }
     }
@@ -182,8 +172,8 @@ fsm::fsm_search_avail(Buffer buf, Size spaceNeed) {
 BlockNumber
 fsm::fsm_logic_to_physical(FSMAddress addr) {
     BlockNumber pages;
-    int         leafno;
-    int         l;
+    int leafno;
+    int l;
 
     leafno = addr.logpageno;
     for (l = 0; l < addr.level; l++) {
@@ -227,8 +217,7 @@ fsm::fsm_get_parent(FSMAddress child, int* slot) {
 }
 
 int
-fsm::fsm_set_and_search(Relation rel, FSMAddress addr, int slot,
-    int newValue, int minValue) {
+fsm::fsm_set_and_search(Relation rel, FSMAddress addr, int slot, int newValue, int minValue) {
     Buffer buf;
     Page page;
     int newslot = -1;
@@ -243,7 +232,7 @@ fsm::fsm_set_and_search(Relation rel, FSMAddress addr, int slot,
 
 FSMAddress
 fsm::fsm_get_location(BlockNumber heapblk, int* slot) {
-    FSMAddress	addr;
+    FSMAddress addr;
 
     addr.level = FSM_BOTTOM_LEVEL;
     addr.logpageno = heapblk / LeafNodesPerPage;
@@ -267,13 +256,9 @@ fsm::fsm_vacuum_page(Relation rel, FSMAddress addr, BlockNumber start, BlockNumb
     page = BufferGetPage(buf);
 
     if (addr.level > FSM_BOTTOM_LEVEL) {
-        FSMAddress fsm_start,
-                   fsm_end;
-        int fsm_start_slot,
-            fsm_end_slot;
-        int slot,
-            start_slot,
-            end_slot;
+        FSMAddress fsm_start, fsm_end;
+        int fsm_start_slot, fsm_end_slot;
+        int slot, start_slot, end_slot;
         bool eof = false;
 
         /*
@@ -286,8 +271,7 @@ fsm::fsm_vacuum_page(Relation rel, FSMAddress addr, BlockNumber start, BlockNumb
         fsm_start = fsm_get_location(start, &fsm_start_slot);
         fsm_end = fsm_get_location(end - 1, &fsm_end_slot);
 
-        while (fsm_start.level < addr.level)
-        {
+        while (fsm_start.level < addr.level) {
             fsm_start = fsm_get_parent(fsm_start, &fsm_start_slot);
             fsm_end = fsm_get_parent(fsm_end, &fsm_end_slot);
         }
@@ -295,7 +279,7 @@ fsm::fsm_vacuum_page(Relation rel, FSMAddress addr, BlockNumber start, BlockNumb
         if (fsm_start.logpageno == addr.logpageno)
             start_slot = fsm_start_slot;
         else if (fsm_start.logpageno > addr.logpageno)
-            start_slot = LeafNodesPerPage;	/* shouldn't get here... */
+            start_slot = LeafNodesPerPage; /* shouldn't get here... */
         else
             start_slot = 0;
 
@@ -304,22 +288,19 @@ fsm::fsm_vacuum_page(Relation rel, FSMAddress addr, BlockNumber start, BlockNumb
         else if (fsm_end.logpageno > addr.logpageno)
             end_slot = LeafNodesPerPage - 1;
         else
-            end_slot = -1;		/* shouldn't get here... */
+            end_slot = -1; /* shouldn't get here... */
 
-        for (slot = start_slot; slot <= end_slot; slot++)
-        {
-            int			child_avail;
+        for (slot = start_slot; slot <= end_slot; slot++) {
+            int child_avail;
 
             /* After we hit end-of-file, just clear the rest of the slots */
             if (!eof)
-                child_avail = fsm_vacuum_page(rel, fsm_get_child(addr, slot),
-                    start, end);
+                child_avail = fsm_vacuum_page(rel, fsm_get_child(addr, slot), start, end);
             else
                 child_avail = 0;
 
             /* Update information about the child */
-            if (fsm_get_avail(page, slot) != child_avail)
-            {
+            if (fsm_get_avail(page, slot) != child_avail) {
                 fsm_set_avail(page, slot, child_avail);
             }
         }

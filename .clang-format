@@ -1,0 +1,27 @@
+﻿Language: Cpp
+
+BasedOnStyle: Microsoft
+
+PointerAlignment: Left
+
+AccessModifierOffset: -4
+TabWidth: 4
+UseTab: Never
+BreakBeforeBraces: Attach
+AlwaysBreakAfterDefinitionReturnType: All
+
+SortIncludes: false
+
+# 连续赋值时，对齐所有等号
+AlignConsecutiveAssignments: true
+
+#函数参数换行
+AllowAllParametersOfDeclarationOnNextLine: true
+
+AlignAfterOpenBracket: Align
+
+AlignConsecutiveMacros: AcrossEmptyLines
+
+SpacesInContainerLiterals: true
+
+Cpp11BracedListStyle: false

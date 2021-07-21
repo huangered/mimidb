@@ -4,7 +4,8 @@
 
 static BtreeIndex btree{};
 
-IndexAm* BtreeRoute() {
+IndexAm*
+BtreeRoute() {
     return &btree;
 }
 
@@ -44,8 +45,7 @@ BtreeIndex::GetNext(IndexScanDesc scan, ScanDirection dir) {
 
     if (scan->block == INVALID_BLOCK) {
         return _bt_first(scan);
-    }
-    else {
+    } else {
         return _bt_next(scan);
     }
 }
@@ -68,7 +68,6 @@ BtreeIndex::_bt_init_metapage(Page page, BlockNumber rootblkno) {
     metad->fastroot = P_NONE;
 }
 
-
 void
 BtreeIndex::_bt_init_page(Page page) {
     PageInit(page, BLKSZ, sizeof(BTreeSpecialData));
@@ -84,12 +83,11 @@ BtreeIndex::_bt_moveright(Relation rel, BTreeScan key, Buffer buf) {
         if (P_RIGHTMOST(special)) {
             break;
         }
-        
+
         if (_bt_compare(rel, key, page, P_HIKEY) >= 0) {
             buf = _bt_relandgetbuf(rel, buf, special->block_next);
             continue;
-        }
-        else {
+        } else {
             break;
         }
     }

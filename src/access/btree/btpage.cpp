@@ -14,7 +14,6 @@ update the metapage and save to disk.
 */
 void
 BtreeIndex::_bt_updatemeta(Buffer metabuf) {
-
 }
 
 /*
@@ -67,8 +66,7 @@ BtreeIndex::_bt_get_root(Relation rel) {
         MarkBufferDirty(metabuf);
         // 释放metabuf
         ReleaseBuffer(metabuf);
-    }
-    else {
+    } else {
         // 如果meta初始化了
         rootblkno = metad->fastroot;
         rel->rd_metacache = metad;
@@ -83,8 +81,7 @@ BtreeIndex::_bt_get_buf(Relation rel, BlockNumber blkno) {
     Buffer buf;
     if (blkno != P_NEW) {
         buf = ReadBuffer(rel, blkno);
-    }
-    else {
+    } else {
         // create new block for cbtree
         blkno = GetFreeIndexPage(rel);
         buf = ReadBuffer(rel, blkno);

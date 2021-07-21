@@ -2,9 +2,9 @@
 #include "util/builtins.hpp"
 
 typedef struct FmgrBuildin {
-    Oid			foid;			/* OID of the function */
+    Oid foid; /* OID of the function */
     const char* name;
-    Method	func;
+    Method func;
 } FmgrBuildin;
 
 static FmgrBuildin fmgr_buildins[] = {
@@ -15,7 +15,8 @@ static FmgrBuildin fmgr_buildins[] = {
 
 };
 
-static FmgrBuildin* fmgr_isbuildin(Oid functionId) {
+static FmgrBuildin*
+fmgr_isbuildin(Oid functionId) {
     return &fmgr_buildins[functionId];
 }
 

@@ -8,5 +8,5 @@
 */
 List*
 transformCreateStmt(CreateTableStmt* stmt) {
-	return 0;
+    return 0;
 }
