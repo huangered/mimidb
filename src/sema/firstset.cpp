@@ -14,7 +14,7 @@ FirstSet::find(SemaTokenList tokens) {
         return {};
     }
 
-    if (r.contains(Tok::epsilon)) {
+    if (r.count(Tok::epsilon) > 0) {
         tokens.erase(tokens.begin());
         TokList q = find(tokens);
         rList.insert(rList.end(), q.begin(), q.end());
