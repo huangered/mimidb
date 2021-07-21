@@ -11,17 +11,17 @@ struct SMgrRelationData {
     RelFileNode rd_node;
 
     BlockNumber smgr_target_block; /* 当前插入的block */
-    BlockNumber smgr_fsm_nblocks;	 /* last known size of fsm fork */
+    BlockNumber smgr_fsm_nblocks;  /* last known size of fsm fork */
 
     int fd[INIT_FORKNUM];
 };
 
 typedef SMgrRelationData* SMgrRelation;
 
-class Md
-{
+class Md {
 private:
     int Open(SMgrRelation reln, ForkNumber forknum);
+
 public:
     int Nblock(SMgrRelation reln, ForkNumber forknum);
     int Write(SMgrRelation reln, ForkNumber forknum, BlockNumber blocknum, char* buffer);
@@ -36,6 +36,7 @@ class Smgr {
 private:
     Md* md;
     HashMap<RelFileNode, SMgrRelation> _data;
+
 public:
     Smgr();
     ~Smgr();

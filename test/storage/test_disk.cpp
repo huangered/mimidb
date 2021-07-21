@@ -6,7 +6,7 @@ TEST(disk, basic)
 {
     char* buf = new char[BLKSZ];
     memset(buf, 96, BLKSZ);
-    
+
     RelFileNode rnode = { 500,500 };
 
     SMgrRelation reln = smgr->Open(rnode);

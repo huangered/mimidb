@@ -8,7 +8,7 @@ init the raw page
 1. set the page header
 2. set the page version
 */
-void 
+void
 PageInit(Page page, Size pageSize, Size specialSize) {
     memset(page, 0, pageSize);
 
@@ -17,10 +17,9 @@ PageInit(Page page, Size pageSize, Size specialSize) {
     header->pd_upper = BLKSZ - specialSize;
     header->pd_special = BLKSZ - specialSize;
     header->pd_flags = 0;
-
 }
 
-OffsetNumber 
+OffsetNumber
 PageAddItem(Page page, Item item, Size itemsz, OffsetNumber offsetNumber) {
     // if the offset == invalid, find a new one
     if (offsetNumber == InvalidOffsetNumber) {
@@ -53,7 +52,8 @@ PageAddItem(Page page, Item item, Size itemsz, OffsetNumber offsetNumber) {
     return offsetNumber;
 }
 
-void PageRemoveItem(Page page, OffsetNumber itemoffset) {
+void
+PageRemoveItem(Page page, OffsetNumber itemoffset) {
     PageHeader header = PageGetHeader(page);
 
     ItemId itemId = PageGetItemId(page, itemoffset);
@@ -65,25 +65,27 @@ void PageRemoveItem(Page page, OffsetNumber itemoffset) {
     header->pd_lower = header->pd_lower - sizeof(ItemIdData);
 }
 
-Page GetTempPage(Page page) {
+Page
+GetTempPage(Page page) {
     char* temp = new char[BLKSZ];
     return temp;
 }
 
-Size PageGetFreeSpace(Page page) {
+Size
+PageGetFreeSpace(Page page) {
     PageHeader header = PageGetHeader(page);
 
     OffsetNumber space = header->pd_upper - header->pd_lower;
     if (space < sizeof(ItemIdData)) {
         return 0;
-    }
-    else {
+    } else {
         space -= sizeof(ItemIdData);
     }
     return space;
 }
 
-void PageRestoreTempPage(Page temp, Page origin) {
+void
+PageRestoreTempPage(Page temp, Page origin) {
     int size = BLKSZ;
     memcpy((char*)origin, (char*)temp, size);
 

@@ -2,7 +2,6 @@
 #include "access/btree.hpp"
 #include "storage/bufmgr.hpp"
 
-
 bool
 BtreeIndex::_bt_do_insert(Relation rel, IndexTuple itup) {
     BTStack stack = NULL;
@@ -13,9 +12,7 @@ BtreeIndex::_bt_do_insert(Relation rel, IndexTuple itup) {
     BTreeScan itup_key = _bt_make_scankey(rel, itup);
 
 top:
-    /*if rel cache buffer */{
-        fastpath = false;
-    }
+    /*if rel cache buffer */ { fastpath = false; }
 
     if (!fastpath) {
         stack = _bt_search(rel, itup_key, &buf);
@@ -129,13 +126,12 @@ BtreeIndex::_bt_split(Relation rel, IndexTuple itup, Buffer buf, OffsetNumber ne
 
     // copy items
 
-    OffsetNumber loffset{ P_FIRSTKEY };
+    OffsetNumber loffset{P_FIRSTKEY};
     OffsetNumber roffset;
 
     if (P_RIGHTMOST(originspecial)) {
         roffset = P_HIKEY;
-    }
-    else {
+    } else {
         roffset = P_FIRSTKEY;
     }
 
@@ -150,7 +146,6 @@ BtreeIndex::_bt_split(Relation rel, IndexTuple itup, Buffer buf, OffsetNumber ne
         Item highKey = PageGetItem(originpage, highKeyId);
 
         _bt_addtup(rightpage, highKey, highKeyId->lp_len, P_HIKEY);
-
     }
 
     OffsetNumber i;
@@ -162,8 +157,7 @@ BtreeIndex::_bt_split(Relation rel, IndexTuple itup, Buffer buf, OffsetNumber ne
                 // insert into left
                 _bt_addtup(leftpage, itup, sizeof(IndexTupleData), loffset);
                 loffset = OffsetNumberNext(loffset);
-            }
-            else {
+            } else {
                 // insert into right;
                 _bt_addtup(rightpage, itup, sizeof(IndexTupleData), roffset);
                 roffset = OffsetNumberNext(roffset);
@@ -176,8 +170,7 @@ BtreeIndex::_bt_split(Relation rel, IndexTuple itup, Buffer buf, OffsetNumber ne
             // insert into left
             _bt_addtup(leftpage, item, itemId->lp_len, loffset);
             loffset = OffsetNumberNext(loffset);
-        }
-        else {
+        } else {
             // insert into right;
             _bt_addtup(rightpage, item, itemId->lp_len, roffset);
             roffset = OffsetNumberNext(roffset);
@@ -205,8 +198,7 @@ BtreeIndex::_bt_insert_parent(Relation rel, Buffer buf, Buffer rbuf, BTStack sta
     if (is_root) {
         Buffer rootbuf;
         rootbuf = _bt_newroot(rel, buf, rbuf);
-    }
-    else {
+    } else {
         Page page = BufferGetPage(buf);
         IndexTuple ritem = (IndexTuple)PageGetItem(page, PageGetItemId(page, P_HIKEY));
         IndexTuple itup = new IndexTupleData;
@@ -222,8 +214,6 @@ BtreeIndex::_bt_insert_parent(Relation rel, Buffer buf, Buffer rbuf, BTStack sta
         ReleaseBuffer(rbuf);
     }
 }
-
-
 
 /*
 创建一个新的root页，返回buffer id
@@ -271,7 +261,7 @@ BtreeIndex::_bt_newroot(Relation rel, Buffer lbuf, Buffer rbuf) {
 
     // get left page high key
     IndexTuple hkey = new IndexTupleData{};
-    //hkey->key = INT_MIN;
+    // hkey->key = INT_MIN;
     hkey->ht_id = lblkno;
     hkey->tuple_size = sizeof(IndexTupleData);
     // set first item

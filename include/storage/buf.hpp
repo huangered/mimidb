@@ -10,24 +10,27 @@ zero is invalid, the index of shared buffer is [1..NBuffers]
 */
 typedef int Buffer;
 
-#define INVALID_BUFFER          0
-#define BufferIsInvalid(buf)    ((buf) == INVALID_BUFFER)
-#define BufferIsValid(buf)      ((buf) != INVALID_BUFFER)
+#define INVALID_BUFFER 0
+#define BufferIsInvalid(buf) ((buf) == INVALID_BUFFER)
+#define BufferIsValid(buf) ((buf) != INVALID_BUFFER)
 
 struct BufferTag {
     RelFileNode rnode;
     ForkNumber forkNum;
     BlockNumber blockNum;
 
-    int hash() const {
+    int
+    hash() const {
         return rnode.relNode * 17 * 17 + forkNum * 17 + blockNum;
     }
 
-    friend bool operator==(const BufferTag& l, const BufferTag& r) {
+    friend bool
+    operator==(const BufferTag& l, const BufferTag& r) {
         return l.rnode == r.rnode && l.forkNum == r.forkNum && l.blockNum == r.blockNum;
     }
 
-    friend bool operator!=(const BufferTag& l, const BufferTag& r) {
+    friend bool
+    operator!=(const BufferTag& l, const BufferTag& r) {
         return !(l == r);
     }
 };

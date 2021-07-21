@@ -9,7 +9,7 @@
 #include "storage/block.hpp"
 #include "storage/bufmgr.hpp"
 
-#define BTREE_METAPAGE  0
+#define BTREE_METAPAGE 0
 
 struct BTreeMetaData {
     uint32_t btm_magic;
@@ -19,8 +19,8 @@ struct BTreeMetaData {
 };
 
 struct IndexTupleData {
-    int ht_id;          // record heap tuple id
-    int tuple_size;     // temporarily value;
+    int ht_id;      // record heap tuple id
+    int tuple_size; // temporarily value;
     int key;
     // data part
 };
@@ -44,12 +44,21 @@ struct BTStackData {
 
 typedef BTStackData* BTStack;
 
-struct BTreeScanData {
+class BTreeScanData {
+public:
     IndexTuple itup;
     Size itemsz;
     bool nextkey;
     int keysz;
-    ScanKeyData scankeys[12];
+    ScanKey scankeys;
+
+public:
+    BTreeScanData(Size _keysz) : keysz(_keysz) {
+        scankeys = new ScanKeyData[_keysz];
+    }
+    ~BTreeScanData() {
+        delete[] scankeys;
+    }
 };
 
 typedef BTreeScanData* BTreeScan;
@@ -60,24 +69,23 @@ struct BTreeSearchKeyData {
 
 typedef BTreeSearchKeyData* BTreeSearchKey;
 
-#define P_NEW                   INVALID_BLOCK
-#define P_NONE                  0
-#define P_RIGHTMOST(special)    ((special)->block_next == P_NONE)
+#define P_NEW                       INVALID_BLOCK
+#define P_NONE                      0
+#define P_RIGHTMOST(special)        ((special)->block_next == P_NONE)
 
+#define BTP_LEAF                    (1 << 0)
+#define BTP_ROOT                    (1 << 1)
+#define BTP_META                    (1 << 2)
 
-#define BTP_LEAF  ( 1 << 0 )
-#define BTP_ROOT  ( 1 << 1 )
-#define BTP_META  ( 1 << 2 )
+#define IID_USE                     (1 << 0)
+#define IID_DEL                     (1 << 1)
 
-#define IID_USE   ( 1 << 0 )
-#define IID_DEL   ( 1 << 1 )
+#define P_ISLEAF(special)           ((special->flags & BTP_LEAF) != 0)
+#define P_ISROOT(special)           ((special->flags & BTP_ROOT) != 0)
 
-#define P_ISLEAF(special)       ((special->flags & BTP_LEAF) != 0 )
-#define P_ISROOT(special)       ((special->flags & BTP_ROOT) != 0 )
-
-#define P_HIKEY                 ((OffsetNumber) 1)
-#define P_FIRSTKEY              ((OffsetNumber) 2)
-#define P_FIRSTDATAKEY(special) (P_RIGHTMOST(special) ? P_HIKEY:P_FIRSTKEY)
+#define P_HIKEY                     ((OffsetNumber)1)
+#define P_FIRSTKEY                  ((OffsetNumber)2)
+#define P_FIRSTDATAKEY(special)     (P_RIGHTMOST(special) ? P_HIKEY : P_FIRSTKEY)
 
 #define BTreeTupleGetDownLink(itup) (itup->ht_id)
 
@@ -121,6 +129,7 @@ private:
     IndexTuple _bt_make_tuple(int key, int ht_id);
     BTreeScan _bt_make_scankey(Relation rel, IndexTuple itup);
     void _bt_freestack(BTStack stack);
+
 public:
     BtreeIndex();
     virtual void BuildEmpty(Relation rel);

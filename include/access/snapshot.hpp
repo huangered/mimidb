@@ -5,11 +5,10 @@
 #define _SHAPSHOT_H_
 
 typedef struct SnapshotData {
-	int xmin;
-	int xmax;
+    int xmin;
+    int xmax;
 } SnapshotData;
 
 typedef SnapshotData* Snapshot;
-
 
 #endif

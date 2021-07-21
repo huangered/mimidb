@@ -19,7 +19,6 @@ struct IndexScanDescData {
     int value;
     BlockNumber block;
     OffsetNumber offset;
-    
 };
 
 typedef IndexScanDescData* IndexScanDesc;

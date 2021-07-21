@@ -23,25 +23,29 @@ typedef struct PageHeaderData {
 
 typedef PageHeaderData* PageHeader;
 
-#define SizeOfPageHeaderData            (offsetof(PageHeaderData, pd_linp))
-#define PageGetHeader(page)             ((PageHeader)page)
-#define PageGetContent(page)            ((char*)(page + SizeOfPageHeaderData ))
-#define PageGetSpecial(page)            (BTreeSpecial)(page + PageGetHeader(page)->pd_special )
+#define SizeOfPageHeaderData (offsetof(PageHeaderData, pd_linp))
+#define PageGetHeader(page) ((PageHeader)page)
+#define PageGetContent(page) ((char*)(page + SizeOfPageHeaderData))
+#define PageGetSpecial(page) (BTreeSpecial)(page + PageGetHeader(page)->pd_special)
 
-inline bool PageIsNew(Page page) {
+inline bool
+PageIsNew(Page page) {
     return ((PageHeader)(page))->pd_upper == 0;
 }
 
-inline size_t PageGetMaxOffsetNumber(Page page) {
+inline size_t
+PageGetMaxOffsetNumber(Page page) {
     OffsetNumber lower = PageGetHeader(page)->pd_lower;
     return lower <= SizeOfPageHeaderData ? 0 : (lower - SizeOfPageHeaderData) / sizeof(ItemIdData);
 }
 
-inline ItemId PageGetItemId(Page page, OffsetNumber offsetnum) {
+inline ItemId
+PageGetItemId(Page page, OffsetNumber offsetnum) {
     return &PageGetHeader(page)->pd_linp[offsetnum - 1];
 }
 
-inline Item PageGetItem(Page page, ItemId itemId) {
+inline Item
+PageGetItem(Page page, ItemId itemId) {
     return (((char*)(page)) + itemId->lp_off);
 }
 
@@ -54,4 +58,4 @@ Page GetTempPage(Page page);
 Size PageGetFreeSpace(Page page);
 void PageRestoreTempPage(Page temp, Page origin);
 
-#endif 
+#endif

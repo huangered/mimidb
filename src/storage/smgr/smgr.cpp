@@ -61,7 +61,6 @@ Smgr::Read(SMgrRelation reln, ForkNumber forknum, BlockNumber blocknum, char* bu
 void
 Smgr::Write(SMgrRelation reln, ForkNumber forknum, BlockNumber blocknum, char* buffer) {
     md->Write(reln, forknum, blocknum, buffer);
-
 }
 
 void
@@ -71,15 +70,15 @@ Smgr::Extend(SMgrRelation reln, ForkNumber forknum, BlockNumber blocknum, char* 
 
 void
 Smgr::Close(SMgrRelation reln) {
-    for (int i{ 0 }; i < INIT_FORKNUM; i++) {
+    for (int i{0}; i < INIT_FORKNUM; i++) {
         md->Close(reln, (ForkNumber)i);
     }
     _data.Remove(reln->rd_node);
 }
 
-
 // ------
-void RelationOpenSmgr(Relation rel) {
+void
+RelationOpenSmgr(Relation rel) {
     if (rel->rd_smgr == nullptr) {
         rel->rd_smgr = smgr->Open(rel->rd_node);
     }

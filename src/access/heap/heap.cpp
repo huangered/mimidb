@@ -4,27 +4,30 @@
 #include "access/relcache.hpp"
 #include "access/rel.hpp"
 
-#define HOT_UPDATED     0
-#define HOT_REMOVED     1
-#define HOT_NORMAL      2
+#define HOT_UPDATED 0
+#define HOT_REMOVED 1
+#define HOT_NORMAL 2
 
 static Heap heap{};
 
-Heap* HeapRoute() {
+Heap*
+HeapRoute() {
     return &heap;
 }
 
 //临时方法，会移到事务管理器中
-static int GetCurrentTransactionId(void) {
+static int
+GetCurrentTransactionId(void) {
     static int i = 0;
     return i++;
 }
 
-static bool TestKey(HeapTuple tuple, HeapScanDesc scan) {
-    bool result1{ true };
+static bool
+TestKey(HeapTuple tuple, HeapScanDesc scan) {
+    bool result1{true};
     char* data = (char*)tuple->t_data + HEAP_TUPLE_HEADER_SIZE;
 
-    for (int i{ 0 }; i < scan->rs_nkeys; i++) {
+    for (int i{0}; i < scan->rs_nkeys; i++) {
         int key = *((int*)data);
         int value = *(((int*)data) + 1);
 
@@ -58,7 +61,6 @@ Heap::Close(Relation rel) {
 }
 
 Heap::Heap() {
-
 }
 
 bool
@@ -79,14 +81,13 @@ Heap::Remove(Relation rel, int key) {
         HeapTuple tup = (HeapTuple)item;
         if (tup->t_data->t_heap.t_xmax == 0) { // for now , only get latest one.
             tup->t_data->t_heap.t_xmax = cur_tran;
-             //add new deleted record?!
+            // add new deleted record?!
             return true;
-        }
-        else {
+        } else {
             blkNum = tup->t_data->t_ctid.blocknum;
             offset = tup->t_data->t_ctid.offset;
         }
-  }
+    }
 
     return false;
 }
@@ -109,8 +110,7 @@ Heap::_heap_get_tuple(HeapScanDesc scan, ScanDirection direction) {
         offset = FirstOffsetNumber;
         scan->rs_inited = true;
         tuple->t_data = nullptr;
-    }
-    else {
+    } else {
         blkno = scan->rs_curblock;
         offset = OffsetNumberNext(scan->rs_curtuple.t_data->t_ctid.offset);
     }
@@ -126,7 +126,8 @@ Heap::_heap_get_tuple(HeapScanDesc scan, ScanDirection direction) {
 
         for (; offset <= max; offset++) {
             ItemId itemid = PageGetItemId(page, offset);
-            tuple->t_data = (HeapTupleHeader)PageGetItem(page, itemid);;
+            tuple->t_data = (HeapTupleHeader)PageGetItem(page, itemid);
+            ;
             tuple->t_len = itemid->lp_len;
             // todo test scan key;
 
@@ -197,9 +198,8 @@ Heap::EndScan(HeapScanDesc scan) {
 1. run the heap page vacuu
 2. update the fsm page
 */
-void 
+void
 Heap::Vacuum(Relation rel) {
-
 }
 
 /*
@@ -241,7 +241,7 @@ Heap::_tuple_prepare_insert(Relation rel, HeapTuple tup, int xmin) {
 
 void
 Heap::debug(Relation rel) {
-    int j{ 0 };
+    int j{0};
     RelationOpenSmgr(rel);
     int nblocks = smgr->Nblocks(rel->rd_smgr, MAIN_FORKNUM);
     for (int i{}; i < nblocks; i++) {
@@ -249,17 +249,15 @@ Heap::debug(Relation rel) {
         Page page = BufferGetPage(buf);
         OffsetNumber max = PageGetMaxOffsetNumber(page);
 
-        for (OffsetNumber offset{ 1 }; offset <= max; offset++) {
+        for (OffsetNumber offset{1}; offset <= max; offset++) {
             ItemId itemid = PageGetItemId(page, offset);
             Item item = PageGetItem(page, itemid);
             HeapTupleHeader tup = (HeapTupleHeader)item;
             // todo test scan key;
             char* data = (char*)tup + HEAP_TUPLE_HEADER_SIZE;
             int* a = (int*)data;
-            printf(">>> debug min,max: (%d , %d) bo, (%d, %d) value: (%d , %d)\r\n",
-                tup->t_heap.t_xmin, tup->t_heap.t_xmax,
-                tup->t_ctid.blocknum, tup->t_ctid.offset, 
-                *a, *(a + 1));
+            printf(">>> debug min,max: (%d , %d) bo, (%d, %d) value: (%d , %d)\r\n", tup->t_heap.t_xmin,
+                   tup->t_heap.t_xmax, tup->t_ctid.blocknum, tup->t_ctid.offset, *a, *(a + 1));
             j++;
         }
         printf(">>>\r\n");

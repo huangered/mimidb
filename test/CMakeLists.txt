@@ -1,4 +1,4 @@
-﻿# Download and unpack googletest at configure time
+# Download and unpack googletest at configure time
 configure_file(CMakeLists.txt.in googletest-download/CMakeLists.txt)
 execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
   RESULT_VARIABLE result
@@ -35,5 +35,5 @@ file(GLOB sub_sources */*.cpp)
 # Now simply link against gtest or gtest_main as needed. Eg
 #add_executable(unittest "access/test_access_heap.cpp")
 add_executable(unittest ${sub_sources})
-target_link_libraries(unittest gtest_main access catalog common parser port storage util)
+target_link_libraries(unittest gtest_main access catalog common port storage util lexer sema)
 add_test(NAME unit_test COMMAND unittest)

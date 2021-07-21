@@ -25,13 +25,12 @@ BtreeIndex::_bt_binsrch(Relation rel, Page page, BTreeScan key) {
         result = _bt_compare(rel, key, page, mid);
         if (result >= cmp) {
             low = mid + 1;
-        }
-        else {
+        } else {
             high = mid;
         }
     }
 
-    //todo
+    // todo
     if (P_ISLEAF(special)) {
         return low;
     }
@@ -44,10 +43,10 @@ bool
 BtreeIndex::_bt_first(IndexScanDesc scan) {
     // bin_srch the point
     BTStack stack{};
-    
+
     OffsetNumber offset;
     Buffer buf;
-    
+
     IndexTuple itup = new IndexTupleData;
     itup->key = scan->key;
     itup->ht_id = scan->value;
@@ -71,7 +70,7 @@ BtreeIndex::_bt_first(IndexScanDesc scan) {
 
     delete itup;
     delete itup_key;
-    
+
     _bt_freestack(stack);
     return true;
 }
@@ -122,7 +121,7 @@ BtreeIndex::_bt_compare(Relation rel, BTreeScan key, Page page, OffsetNumber off
 
     keysz = key->keysz;
     skey = key->scankeys;
-    
+
     for (int i = 0; i < keysz; i++) {
 
         FmgrInfo info = skey->sk_func;

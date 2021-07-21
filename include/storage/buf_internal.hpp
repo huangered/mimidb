@@ -8,34 +8,33 @@
 #include "storage/buf.hpp"
 #include "util/hashmap.hpp"
 
-class BufferMgr
-{
+class BufferMgr {
 private:
-
-	BufferDesc* _freeBuffDesc;
-	BufferDesc* _buffDesc;
-	HashMap<BufferTag, Buffer> _hashMap;
-	char* _blocks;
-    //int index;
+    BufferDesc* _freeBuffDesc;
+    BufferDesc* _buffDesc;
+    HashMap<BufferTag, Buffer> _hashMap;
+    char* _blocks;
+    // int index;
 public:
-	BufferMgr();
-	~BufferMgr();
+    BufferMgr();
+    ~BufferMgr();
 
-	// Read MAIN_FORK 
-	Buffer ReadBuffer(Relation rel, BlockNumber block);
-	Buffer ReadBufferExtend(Relation rel, ForkNumber fork, BlockNumber block);
+    // Read MAIN_FORK
+    Buffer ReadBuffer(Relation rel, BlockNumber block);
+    Buffer ReadBufferExtend(Relation rel, ForkNumber fork, BlockNumber block);
 
-	void ReleaseBuffer(Buffer buffer);
-	void FlushBuffer(BufferDesc* buffDesc);
-	BufferDesc* GetBufferDesc(Buffer buffer);
-	Page GetPage(Buffer bufId);
-	void MarkBufferDirty(Buffer bufId);
-	void Debug(void);
+    void ReleaseBuffer(Buffer buffer);
+    void FlushBuffer(BufferDesc* buffDesc);
+    BufferDesc* GetBufferDesc(Buffer buffer);
+    Page GetPage(Buffer bufId);
+    void MarkBufferDirty(Buffer bufId);
+    void Debug(void);
+
 private:
-	Buffer _ReadBufferCommon(Relation rel, ForkNumber fork, BlockNumber block);
-	BufferDesc* _BufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno, bool* found);
-	Buffer _FindFreeBuffer(void);
-	void _Cleanup(void);
+    Buffer _ReadBufferCommon(Relation rel, ForkNumber fork, BlockNumber block);
+    BufferDesc* _BufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno, bool* found);
+    Buffer _FindFreeBuffer(void);
+    void _Cleanup(void);
 };
 
 #endif

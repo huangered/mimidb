@@ -12,5 +12,4 @@ typedef struct FormData_mimi_am {
 
 typedef FormData_mimi_am* Form_mimi_am;
 
-
 #endif // !_MIMI_AM_H_
