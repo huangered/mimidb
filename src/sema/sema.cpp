@@ -25,7 +25,6 @@ operator<<(std::ostream& os, const RecordData& dt) {
     return os;
 }
 
-
 bool
 group_key::operator<(const group_key& g1) const {
     int i{ 0 };
@@ -105,7 +104,7 @@ Parser::~Parser() {
 void
 Parser::GenerateParseTable(void) {
     _firstSet->Gen();
-    _firstSet->Print();
+    // _firstSet->Print();
     for (int i{}; i < _stateList->Size(); i++) {
         if (_stateList->IsEmpty(i)) {
             break;
@@ -118,6 +117,7 @@ Parser::GenerateParseTable(void) {
         if (_stateList->IsEmpty(i)) {
             break;
         }
+        /*
         std::cout << "state " << i << std::endl;
         for (Rule r : _stateList->GetRules(i)) {
             std::cout << r->left->name << " => " << join(r->right);
@@ -130,13 +130,14 @@ Parser::GenerateParseTable(void) {
 
             std::cout << std::endl;
         }
+        */
     }
 
     generateTable();
 }
 
-Node
-Parser::Parse(std::vector<LexToken> input) {
+std::pair<bool, Node>
+Parser::Parse(const std::vector<LexToken>& input) {
     bool acc{ false };
     Node node{ nullptr };
     // init stack
@@ -161,7 +162,7 @@ Parser::Parse(std::vector<LexToken> input) {
 
     node = token_stack.top();
 
-    return node;
+    return std::make_pair(acc, node);
 }
 
 // === private part ===
@@ -200,8 +201,7 @@ Parser::handleState(int stateId) {
         if (sameState == nullptr) {
             // 没找到
             _maxState++;
-            std::for_each(movedRules.begin(), movedRules.end(),
-                          [&](Rule r) { r->next_state = _maxState; });
+            std::for_each(movedRules.begin(), movedRules.end(), [&](Rule r) { r->next_state = _maxState; });
             if (_stateList->Size() <= _maxState) {
                 for (int i = _stateList->Size(); i <= _maxState; i++) {
                     _stateList->Add(new StateData(i));
@@ -249,8 +249,8 @@ Parser::generateTable(void) {
             }
         }
     }
-    _actionTable->Print();
-    _gotoTable->Print();
+    //_actionTable->Print();
+    //  _gotoTable->Print();
 }
 
 void
@@ -271,24 +271,18 @@ Parser::expandRules(State state) {
                 // non terminals
                 // update state list
 
-                auto rule_left_id_eq = [word](Rule rule) -> bool {
-                    return rule->left->id == word->id;
-                };
+                auto rule_left_id_eq = [word](Rule rule) -> bool { return rule->left->id == word->id; };
                 RuleList match;
                 find_all(_rules, match, rule_left_id_eq);
                 for (Rule rule : match) {
                     SemaTokenList tokenList = r->GetStringAfterDot();
-                    TokList tokens = _firstSet->Find(tokenList, r->GetTokens());
-                    std::remove_if(
-                        tokens.begin(), tokens.end(),
-                        [](Tok t) -> bool { return t == Tok::epsilon; });
+                    TokList tokens          = _firstSet->Find(tokenList, r->GetTokens());
+
                     Rule copy = rule->Clone();
                     copy->dot = 0;
                     copy->SetTokens(tokens);
                     // 如果是新rule
-                    auto rule_eq = [copy](Rule rule) -> bool {
-                        return rule->Compare(*copy) == 0;
-                    };
+                    auto rule_eq = [copy](Rule rule) -> bool { return rule->Compare(*copy) == 0; };
                     RuleList src = state->GetRules();
                     RuleList dest;
                     find_all(src, dest, rule_eq);
@@ -315,8 +309,7 @@ Parser::expandRules(State state) {
     // 合并 state 里的 rules
     for (Rule rule : state->GetRules()) {
         auto check_exist = [rule](Rule r) -> bool {
-            return r->dot == rule->dot && r->left->id == rule->left->id &&
-                   SemaTokenListEqual(r->right, rule->right);
+            return r->dot == rule->dot && r->left->id == rule->left->id && SemaTokenListEqual(r->right, rule->right);
         };
 
         auto iter = std::find_if(tmp.begin(), tmp.end(), check_exist);
@@ -333,7 +326,7 @@ Parser::expandRules(State state) {
 
 State
 Parser::searchSameState(RuleList newStateRules) {
-    for (int i{0}; i < _stateList->Size(); i++) {
+    for (int i{ 0 }; i < _stateList->Size(); i++) {
         State state = _stateList->GetState(i);
         if (state->MatchRule(newStateRules)) {
             return state;
@@ -421,7 +414,7 @@ SemaTokenListEqual(const SemaTokenList& left, const SemaTokenList& right) {
         return false;
     }
 
-    for (int i{0}; i < left.size(); i++) {
+    for (int i{ 0 }; i < left.size(); i++) {
         if (left[i]->id != right[i]->id) {
             return false;
         }

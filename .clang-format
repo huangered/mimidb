@@ -2,7 +2,7 @@
 
 BasedOnStyle: Microsoft
 
-ColumnLimit: 80
+#ColumnLimit: 90
 
 # 连续的空行保留几行
 MaxEmptyLinesToKeep: 1
@@ -34,4 +34,6 @@ Cpp11BracedListStyle: false
 #在构造函数初始化时按逗号断行，并以冒号对齐
 BreakConstructorInitializersBeforeComma: true
 
-BreakBeforeBinaryOperators: None
+BreakBeforeBinaryOperators: All
+
+BreakConstructorInitializers: BeforeColon
