@@ -1,23 +1,14 @@
-/*
 #include "../g.hpp"
-#include "storage/smgr.hpp"
+#include "storage/fd.hpp"
 
-TEST(disk, basic)
+TEST(fd, OpenFile)
 {
-    char* buf = new char[BLKSZ];
-    memset(buf, 96, BLKSZ);
+    char* buf = "C:\\work\\mimidb\\sql.rule";
 
-    RelFileNode rnode = { 500,500 };
+    int fd = PathNameOpenFile(buf);
 
-    SMgrRelation reln = smgr->Open(rnode);
 
-    BlockNumber bn = smgr->Nblocks(reln, MAIN_FORKNUM);
-    EXPECT_EQ(bn, 0);
-    smgr->Write(reln, MAIN_FORKNUM, 0, buf);
 
-    bn = smgr->Nblocks(reln, MAIN_FORKNUM);
-    EXPECT_EQ(bn, 1);
-    smgr->Close(reln);
+    EXPECT_GT(fd, 0);
 
 }
- */
