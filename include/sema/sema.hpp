@@ -25,6 +25,8 @@ public:
 typedef SemaTokenData* SemaToken;
 typedef std::vector<SemaToken> SemaTokenList;
 
+bool SemaTokenListEqual(const SemaTokenList& left, const SemaTokenList& right);
+
 struct group_key {
     int dot;
     SemaToken left;
@@ -120,7 +122,7 @@ private:
     void handleState(int stateId);
     void generateTable(void);
     void expandRules(State state);
-    State searchSameState(RuleList newStateRules);
+    State searchSameState(const RuleList& newStateRules);
 
     bool reduce(std::stack<int>& states, std::stack<Node>& syms, Record curRecord);
     bool eatToken(std::stack<int>& states, std::stack<Node>& syms, std::stack<LexToken>& input, bool* acc);

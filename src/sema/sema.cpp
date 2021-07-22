@@ -2,7 +2,6 @@
 #include <string>
 #include <functional>
 
-static bool SemaTokenListEqual(const SemaTokenList& left, const SemaTokenList& right);
 static bool SemaTokenListLess(const SemaTokenList& left, const SemaTokenList& right);
 static std::string join(const SemaTokenList& v);
 static std::string join2(const std::vector<Tok>& v);
@@ -324,7 +323,7 @@ Parser::expandRules(State state) {
 }
 
 State
-Parser::searchSameState(RuleList newStateRules) {
+Parser::searchSameState(const RuleList& newStateRules) {
     for (int i{ 0 }; i < _stateList->Size(); i++) {
         State state = _stateList->GetState(i);
         if (state->MatchRule(newStateRules)) {

@@ -19,11 +19,8 @@ RuleData::GetTokenAfterDot() {
 
 SemaTokenList
 RuleData::GetStringAfterDot() {
-    SemaTokenList tokens;
-    for (int i{ dot + 1 }; i != right.size(); i++) {
-        tokens.push_back(right[i]);
-    }
-    return tokens;
+    SemaTokenList t{ right.begin() + dot + 1, right.end() };
+    return t;
 }
 
 void
@@ -69,14 +66,8 @@ RuleData::operator==(const RuleData& other) {
         return false;
     }
 
-    if (right.size() != other.right.size()) {
+    if (!SemaTokenListEqual(right, other.right)) {
         return false;
-    }
-
-    for (int j = 0; j < right.size(); j++) {
-        if (right[j]->id != other.right[j]->id) {
-            return false;
-        }
     }
 
     if (tokens != other.tokens) {
