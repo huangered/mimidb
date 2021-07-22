@@ -11,9 +11,6 @@ class LexTokenData {
 public:
     Tok tok;
     std::string name;
-
-public:
-    int Compare(const LexTokenData& token);
 };
 
 typedef LexTokenData* LexToken;
@@ -33,7 +30,7 @@ private:
 
 public:
     Lexer(const char* buf, int size);
-
+    
     LexToken GetLexerToken();
 
 private:

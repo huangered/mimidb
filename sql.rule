@@ -15,29 +15,44 @@
 @token kw_select
 @token kw_from
 @token kw_where
+@token kw_begin
+@token kw_commit
+@token kw_end
 
-Q = StmtList {}
+Q = StmtBlock {}
 
+StmtBlock = StmtList {}
 StmtList = StmtList Stmt {}
 StmtList = Stmt {}
 
-Stmt = kw_create kw_table TableName TableRef semicolon {}
-Stmt = kw_create kw_view TableName semicolon {}
-Stmt = kw_select Params kw_from TableName WhereStmt semicolon {}
-Stmt = kw_insert kw_into TableName kw_values l_brace Params r_brace semicolon {}
+Stmt = SelectStmt {}
+Stmt = TableStmt {}
+Stmt = ViewStmt {}
+Stmt = InsertStmt {}
+Stmt = TxStmt {}
+
+TableStmt = kw_create kw_table TableName TableRef semicolon {}
+ViewStmt = kw_create kw_view TableName semicolon {}
+
+
+SelectStmt = kw_select Params kw_from TableName WhereStmt semicolon {}
+SelectStmt = kw_select Params semicolon {}
+
+InsertStmt = kw_insert kw_into TableName kw_values l_brace Params r_brace semicolon {}
+
+TxStmt = kw_begin StmtList kw_end {}
 
 Params = Params comma T {}
 Params = T {}
 T = identifier {}
-T = Star {}
+T = star {}
 
-Star = star {}
 TableName = identifier {}
 
 WhereStmt = kw_where {}
 WhereStmt = {}
 
-TableRef = l_brace ColumnRefs r_brace {} # (int, string,)
+TableRef = l_brace ColumnRefs r_brace {}      # (int, string,)
 ColumnRefs = ColumnRefs comma ColumnRef {}    # int, string,
 ColumnRefs = ColumnRef {}                     # int, string,
-ColumnRef = identifier identifier {}                     # abc int,
+ColumnRef = identifier identifier {}          # abc int,

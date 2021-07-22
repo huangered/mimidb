@@ -96,9 +96,9 @@ private:
     std::map<int, std::set<Tok>> _firstSet;
 
 public:
-    FirstSet(std::vector<SimpleRule> rules);
+    FirstSet(const std::vector<SimpleRule>& rules);
 
-    TokList Find(SemaTokenList tokens, TokList extra);
+    TokList Find(const SemaTokenList& tokens, const TokList& extra);
 
     void Gen();
 

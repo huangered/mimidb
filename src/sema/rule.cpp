@@ -49,8 +49,8 @@ RuleData::GetTokens() {
 void
 RuleData::SetTokens(TokList tokenList) {
     tokens.swap(tokenList);
-    auto j = [](Tok l, Tok r) -> bool { return l < r; };
-    std::sort(tokens.begin(), tokens.end(), j);
+    //auto j = [](Tok l, Tok r) -> bool { return l < r; };
+    std::sort(tokens.begin(), tokens.end(), std::less<Tok>());
 }
 
 RuleData*
@@ -67,34 +67,27 @@ RuleData::Clone() {
     return rule;
 }
 
-int
-RuleData::Compare(RuleData& other) {
-    int i;
-    if ((i = left->Compare(*other.left)) != 0) {
-        return i;
+bool
+RuleData::operator==(const RuleData& other) {
+    if (left->id != other.left->id) {
+        return false;
     }
 
-    if ((i = (right.size() - other.right.size())) != 0) {
-        return i;
+    if (right.size() != other.right.size()) {
+        return false;
     }
 
     for (int j = 0; j < right.size(); j++) {
-        if ((i = right[j]->Compare(*other.right[j])) != 0) {
-            return i;
+        if (right[j]->id != other.right[j]->id) {
+            return false;
         }
     }
 
-    if ((i = (tokens.size() - other.tokens.size())) != 0) {
-        return i;
+    if (tokens != other.tokens) {
+        return false;
     }
 
-    for (int j = 0; j < tokens.size(); j++) {
-        if ((i = tokens[j] - other.tokens[j]) != 0) {
-            return i;
-        }
-    }
-
-    return dot - other.dot;
+    return dot == other.dot;
 }
 
 Node

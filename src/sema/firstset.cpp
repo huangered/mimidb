@@ -1,6 +1,6 @@
 ﻿#include "sema/sema.hpp"
 
-FirstSet::FirstSet(std::vector<SimpleRule> rules)
+FirstSet::FirstSet(const std::vector<SimpleRule>& rules)
     : _rules{ rules } {
 }
 
@@ -8,7 +8,6 @@ TokList
 FirstSet::find(SemaTokenList tokens) {
     SemaToken t     = tokens[0];
     std::set<Tok> r = _firstSet[t->id];
-    TokList rList;
 
     if (r.empty()) {
         return {};
@@ -22,13 +21,11 @@ FirstSet::find(SemaTokenList tokens) {
 
     r.erase(Tok::epsilon);
 
-    rList.insert(rList.end(), r.begin(), r.end());
-
-    return rList;
+    return { r.begin(), r.end() };
 }
 
 TokList
-FirstSet::Find(SemaTokenList tokens, TokList extra) {
+FirstSet::Find(const SemaTokenList& tokens, const TokList& extra) {
     if (tokens.empty()) {
         return extra;
     }

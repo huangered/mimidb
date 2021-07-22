@@ -58,7 +58,6 @@ TEST(Sema, tok_ne) {
 
 TEST(Sema, select_test) {
     auto rList = ReadRules("C:\\work\\mimidb\\sql.rule");
-    EXPECT_EQ(rList.size(), 19);
 
     const char* str = "select * from asdf;";
 
@@ -85,7 +84,6 @@ TEST(Sema, select_test) {
 
 TEST(Sema, select_where_test) {
     auto rList = ReadRules("C:\\work\\mimidb\\sql.rule");
-    EXPECT_EQ(rList.size(), 19);
 
     const char* str = "select * from asdf where;";
 
