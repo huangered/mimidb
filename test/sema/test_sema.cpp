@@ -11,8 +11,8 @@ TEST(Sema, GroupKeyTest1) {
 }
 
 TEST(Sema, GroupKeyTest2) {
-    SemaToken t1 = new SemaTokenData(1, true, "");
-    SemaToken t2 = new SemaTokenData(2, true, "");
+    SemaToken t1 = new SemaTokenData{ 1, true, "" };
+    SemaToken t2 = new SemaTokenData{ 2, true, "" };
 
     group_key k1{ 1, t1, {} };
     group_key k2{ 1, t2, {} };
@@ -24,8 +24,8 @@ TEST(Sema, GroupKeyTest2) {
 }
 
 TEST(Sema, GroupKeyTest3) {
-    SemaToken t1 = new SemaTokenData(1, true, "");
-    SemaToken t2 = new SemaTokenData(2, true, "");
+    SemaToken t1 = new SemaTokenData{ 1, true, "" };
+    SemaToken t2 = new SemaTokenData{ 2, true, "" };
 
     group_key k1{ 1, t1, {} };
     group_key k2{ 1, t2, {} };

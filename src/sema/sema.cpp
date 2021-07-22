@@ -112,12 +112,12 @@ Parser::GenerateParseTable(void) {
 
         handleState(i);
     }
-
+    /*
     for (int i{}; i < _stateList->Size(); i++) {
         if (_stateList->IsEmpty(i)) {
             break;
         }
-        /*
+
         std::cout << "state " << i << std::endl;
         for (Rule r : _stateList->GetRules(i)) {
             std::cout << r->left->name << " => " << join(r->right);
@@ -130,9 +130,9 @@ Parser::GenerateParseTable(void) {
 
             std::cout << std::endl;
         }
-        */
-    }
 
+    }
+    */
     generateTable();
 }
 
@@ -270,14 +270,13 @@ Parser::expandRules(State state) {
             if (word->sema) {
                 // non terminals
                 // update state list
-
                 auto rule_left_id_eq = [word](Rule rule) -> bool { return rule->left->id == word->id; };
                 RuleList match;
                 find_all(_rules, match, rule_left_id_eq);
                 for (Rule rule : match) {
                     SemaTokenList tokenList = r->GetStringAfterDot();
                     TokList tokens          = _firstSet->Find(tokenList, r->GetTokens());
-
+                    // todo: 这里可以优化这个lazy clone
                     Rule copy = rule->Clone();
                     copy->dot = 0;
                     copy->SetTokens(tokens);

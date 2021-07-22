@@ -20,13 +20,6 @@ public:
     int id;
     bool sema;
     std::string name;
-
-public:
-    SemaTokenData(int _id, bool _sema, std::string _name);
-
-    ~SemaTokenData();
-
-    int Compare(const SemaTokenData& token);
 };
 
 typedef SemaTokenData* SemaToken;

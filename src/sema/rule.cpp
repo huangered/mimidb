@@ -29,16 +29,13 @@ RuleData::GetStringAfterDot() {
 void
 RuleData::SetToken(Tok token) {
     tokens.push_back(token);
-    auto j = [](Tok l, Tok r) -> bool { return l < r; };
-    std::sort(tokens.begin(), tokens.end(), j);
+    std::sort(tokens.begin(), tokens.end(), std::less<Tok>());
 }
 
 void
 RuleData::AppendTokens(TokList tokenList) {
     tokens.insert(tokens.end(), tokenList.begin(), tokenList.end());
-
-    auto j = [](Tok l, Tok r) -> bool { return l < r; };
-    std::sort(tokens.begin(), tokens.end(), j);
+    std::sort(tokens.begin(), tokens.end(), std::less<Tok>());
 }
 
 TokList
@@ -49,7 +46,6 @@ RuleData::GetTokens() {
 void
 RuleData::SetTokens(TokList tokenList) {
     tokens.swap(tokenList);
-    //auto j = [](Tok l, Tok r) -> bool { return l < r; };
     std::sort(tokens.begin(), tokens.end(), std::less<Tok>());
 }
 
@@ -91,8 +87,9 @@ RuleData::operator==(const RuleData& other) {
 }
 
 Node
-RuleData::Format(SemaToken token, std::vector<Node> children) {
-    Node n = new NodeData{};
+RuleData::Format(const SemaToken token, const std::vector<Node>& children) {
+    Node n = new NodeData{ token->name };
+
     n->AddAll(children);
     return n;
 }
