@@ -1,7 +1,8 @@
 #include "sema/node.hpp"
 
-NodeData::NodeData()
-    : _token{ nullptr } {
+NodeData::NodeData(std::string name)
+    : _token{ nullptr }
+    , _name{ name } {
 }
 
 NodeData::NodeData(LexToken token)

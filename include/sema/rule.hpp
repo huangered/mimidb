@@ -54,7 +54,7 @@ public:
     void SetTokens(TokList tokens);
 
     // 用户自定义的规则
-    Node Format(SemaToken token, std::vector<Node> children);
+    Node Format(const SemaToken token, const std::vector<Node>& children);
 
     bool operator==(const RuleData& other);
 };
