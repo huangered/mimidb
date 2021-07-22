@@ -11,11 +11,11 @@ heap_form_tuple(TupleDesc desc, Datum* values) {
         datasz += desc->attr[i].att_len;
     }
 
-    int hoff = HEAP_TUPLE_HEADER_SIZE;
-    int len = HEAP_TUPLE_SIZE + hoff + datasz;
+    int hoff       = HEAP_TUPLE_HEADER_SIZE;
+    int len        = HEAP_TUPLE_SIZE + hoff + datasz;
     HeapTuple htup = (HeapTuple)palloc0(len);
 
-    htup->t_len = datasz + hoff;
+    htup->t_len  = datasz + hoff;
     htup->t_data = td = (HeapTupleHeader)((char*)htup + HEAP_TUPLE_SIZE);
 
     // for simple, we only have (key,value) now.

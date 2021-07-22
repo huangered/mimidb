@@ -9,8 +9,8 @@
 // test the basic usage in buff mgr.
 TEST(btree, incr_insert) {
     Relation rel = new RelationData{};
-    rel->rd_id = 10000;
-    rel->rd_node = {0, rel->rd_id};
+    rel->rd_id   = 10000;
+    rel->rd_node = { 0, rel->rd_id };
     RelationOpenSmgr(rel);
 
     rel->index_am = BtreeRoute();
@@ -23,11 +23,11 @@ TEST(btree, incr_insert) {
 
     for (int i = 0; i < 1000; i++) {
         IndexScanDesc scan = rel->index_am->BeginScan(rel, 1, nullptr);
-        scan = new IndexScanDescData{};
-        scan->index_rel = rel;
-        scan->key = i;
-        scan->block = INVALID_BLOCK;
-        bool result = rel->index_am->GetNext(scan, ScanDirection::Forward);
+        scan               = new IndexScanDescData{};
+        scan->index_rel    = rel;
+        scan->key          = i;
+        scan->block        = INVALID_BLOCK;
+        bool result        = rel->index_am->GetNext(scan, ScanDirection::Forward);
 
         EXPECT_EQ(i, scan->value);
         delete scan;
@@ -38,8 +38,8 @@ TEST(btree, incr_insert) {
 
 TEST(btree, decr_insert) {
     Relation rel = new RelationData{};
-    rel->rd_id = 20000;
-    rel->rd_node = {10000, rel->rd_id};
+    rel->rd_id   = 20000;
+    rel->rd_node = { 10000, rel->rd_id };
     RelationOpenSmgr(rel);
 
     rel->index_am = BtreeRoute();
@@ -52,10 +52,10 @@ TEST(btree, decr_insert) {
     }
 
     IndexScanDesc scan = new IndexScanDescData;
-    scan->index_rel = rel;
-    scan->key = 5;
-    scan->block = INVALID_BLOCK;
-    bool result = rel->index_am->GetNext(scan, ScanDirection::Forward);
+    scan->index_rel    = rel;
+    scan->key          = 5;
+    scan->block        = INVALID_BLOCK;
+    bool result        = rel->index_am->GetNext(scan, ScanDirection::Forward);
 
     EXPECT_EQ(5, scan->value);
     delete scan;
@@ -64,8 +64,8 @@ TEST(btree, decr_insert) {
 
 TEST(btree, blk_insert) {
     Relation rel = (Relation)palloc0(sizeof(RelationData));
-    rel->rd_id = 30000;
-    rel->rd_node = {10000, rel->rd_id};
+    rel->rd_id   = 30000;
+    rel->rd_node = { 10000, rel->rd_id };
     RelationOpenSmgr(rel);
 
     rel->index_am = BtreeRoute();
@@ -78,10 +78,10 @@ TEST(btree, blk_insert) {
     }
 
     IndexScanDesc scan = (IndexScanDesc)palloc0(sizeof(IndexScanDescData));
-    scan->index_rel = rel;
-    scan->key = 5;
-    scan->block = INVALID_BLOCK;
-    bool result = rel->index_am->GetNext(scan, ScanDirection::Forward);
+    scan->index_rel    = rel;
+    scan->key          = 5;
+    scan->block        = INVALID_BLOCK;
+    bool result        = rel->index_am->GetNext(scan, ScanDirection::Forward);
 
     EXPECT_EQ(5, scan->value);
     pfree(scan);

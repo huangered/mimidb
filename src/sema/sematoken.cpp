@@ -16,7 +16,8 @@ SemaTokenData::Compare(const SemaTokenData& token) {
 
 // ===
 
-StateData::StateData(int id) : _id{ id } {
+StateData::StateData(int id)
+    : _id{ id } {
 }
 
 StateData::~StateData() {

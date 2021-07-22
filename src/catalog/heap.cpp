@@ -60,7 +60,7 @@ AddRelationPgClass(Relation mimi_class_desc, Relation heap_rel) {
     new_rel_reltup = heap_rel->rd_rel;
 
     new_rel_reltup->relpages = 0;
-    new_rel_reltup->tuples = 0;
+    new_rel_reltup->tuples   = 0;
 
     /* now build and insert the tuple */
     InsertMimiClassTuple(mimi_class_desc, new_rel_reltup);
@@ -87,7 +87,7 @@ AddRelationMimiAttribute(Oid relId, TupleDesc tupleDesc) {
 
     for (int i = 0; i < tupleDesc->natts; i++) {
         Form_mimi_attribute attr = &tupleDesc->attr[i];
-        attr->att_relid = relId;
+        attr->att_relid          = relId;
         InsertMimiAttributeTuple(rel, attr);
     }
 

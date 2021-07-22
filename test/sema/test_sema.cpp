@@ -19,11 +19,9 @@ TEST(Sema, GroupKeyTest2) {
 
     EXPECT_TRUE(k1 < k2);
 
-
     delete t1;
     delete t2;
 }
-
 
 TEST(Sema, GroupKeyTest3) {
     SemaToken t1 = new SemaTokenData(1, true, "");
@@ -42,7 +40,7 @@ TEST(Sema, tok_eq) {
     std::set<Tok> a;
     std::set<Tok> b;
 
-    a.insert(Tok::comma);    
+    a.insert(Tok::comma);
     b.insert(Tok::comma);
 
     EXPECT_TRUE(a == b);

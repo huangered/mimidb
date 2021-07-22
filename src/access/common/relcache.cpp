@@ -13,14 +13,14 @@
 RelCache* relcache = new RelCache{};
 
 // private area
-static const FormData_mimi_attribute desc_pg_class[4] = {{1, {"oid"}, sizeof(int), 0, 1},
-                                                         {1, {"relkind"}, sizeof(int), 0, 1},
-                                                         {1, {"relpages"}, sizeof(int), 0, 1},
-                                                         {1, {"tuples"}, sizeof(int), 0, 1}};
+static const FormData_mimi_attribute desc_pg_class[4] = { { 1, { "oid" }, sizeof(int), 0, 1 },
+                                                          { 1, { "relkind" }, sizeof(int), 0, 1 },
+                                                          { 1, { "relpages" }, sizeof(int), 0, 1 },
+                                                          { 1, { "tuples" }, sizeof(int), 0, 1 } };
 
-static const FormData_mimi_attribute desc_pg_attribute[1] = {{1, {"oid"}, sizeof(int), 0, 1}};
+static const FormData_mimi_attribute desc_pg_attribute[1] = { { 1, { "oid" }, sizeof(int), 0, 1 } };
 
-static const FormData_mimi_attribute desc_pg_type[1] = {{1, {"oid"}, sizeof(int), 0, 1}};
+static const FormData_mimi_attribute desc_pg_type[1] = { { 1, { "oid" }, sizeof(int), 0, 1 } };
 
 static void RelationIncRefCount(Relation rel);
 static void RelationDecRefCount(Relation rel);
@@ -69,8 +69,8 @@ RelCache::_formrdesc(const char* relname, Oid reltype, int natts, const FormData
     init the ref count: 1 because it needs keep in cache
     */
     rel->refcount = 1;
-    rel->rd_id = reltype;
-    rel->rd_rel = new FormData_mimi_class{};
+    rel->rd_id    = reltype;
+    rel->rd_rel   = new FormData_mimi_class{};
     strcpy(rel->rd_rel->relname, relname);
 
     rel->tb_am = nullptr; // table_route();
@@ -82,7 +82,7 @@ RelCache::_formrdesc(const char* relname, Oid reltype, int natts, const FormData
     }
     rel->rd_smgr = nullptr;
 
-    RelCacheEntry entry{rel->rd_id, rel};
+    RelCacheEntry entry{ rel->rd_id, rel };
     cache.Put(rel->rd_id, entry);
 }
 
@@ -95,19 +95,19 @@ RelCache::BuildRelationDesc(Oid oid, bool insert) {
     HeapTuple heap_tup;
     Form_mimi_class rel_class;
 
-    heap_tup = _scanMimiRelation(oid);
+    heap_tup  = _scanMimiRelation(oid);
     rel_class = (Form_mimi_class)(heap_tup->t_data);
 
     Relation heaprel = new RelationData;
-    heaprel->rd_id = oid;
-    heaprel->rd_rel = new FormData_mimi_class;
+    heaprel->rd_id   = oid;
+    heaprel->rd_rel  = new FormData_mimi_class;
     strcpy(heaprel->rd_rel->relname, rel_class->relname);
 
     // RelationBuildTuple(heaprel);
 
     heaprel->refcount = 0;
     if (insert) {
-        RelCacheEntry entry{heaprel->rd_id, heaprel};
+        RelCacheEntry entry{ heaprel->rd_id, heaprel };
         cache.Put(heaprel->rd_id, entry);
     }
     return heaprel;
@@ -120,8 +120,8 @@ RelCache::BuildRelationDesc(Oid oid, bool insert) {
 Relation
 RelCache::BuildLocalRelation(Oid oid, const char* relname, TupleDesc tupdesc) {
     Relation heaprel = new RelationData{};
-    heaprel->rd_id = oid;
-    heaprel->rd_rel = new FormData_mimi_class{};
+    heaprel->rd_id   = oid;
+    heaprel->rd_rel  = new FormData_mimi_class{};
     strcpy(heaprel->rd_rel->relname, relname);
 
     _relationBuildTuple(heaprel, tupdesc);
@@ -134,11 +134,11 @@ void
 RelCache::_relationBuildTuple(Relation heaprel, TupleDesc tupdesc) {
     // find tuple desc from meta data
 
-    heaprel->tupleDesc = new TupleDescData;
+    heaprel->tupleDesc        = new TupleDescData;
     heaprel->tupleDesc->natts = tupdesc->natts;
     for (int i = 0; i < heaprel->tupleDesc->natts; i++) {
         heaprel->tupleDesc->attr[i].att_len = tupdesc->attr[i].att_len;
-        heaprel->tupleDesc->attr[i].typid = tupdesc->attr[i].typid;
+        heaprel->tupleDesc->attr[i].typid   = tupdesc->attr[i].typid;
         strcpy(heaprel->tupleDesc->attr[i].att_name, tupdesc->attr[i].att_name);
     }
 }
@@ -157,7 +157,7 @@ RelCache::_scanMimiRelation(Oid relid) {
     pg_class_relation = relation_open(ClassRelationId);
 
     scan = systable_beginscan(pg_class_relation, 1, key);
-    tup = systable_getnext(scan);
+    tup  = systable_getnext(scan);
     systable_endscan(scan);
 
     relation_close(pg_class_relation);

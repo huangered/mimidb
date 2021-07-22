@@ -3,7 +3,7 @@
 
 SimpleRule
 make_rule(int id, SemaToken left, SemaTokenList right) {
-    SimpleRule rule = new SimpleRuleData{id, left, right};
+    SimpleRule rule = new SimpleRuleData{ id, left, right };
     return rule;
 }
 
@@ -67,7 +67,6 @@ RuleData::Clone() {
     return rule;
 }
 
-
 int
 RuleData::Compare(RuleData& other) {
     int i;
@@ -88,7 +87,7 @@ RuleData::Compare(RuleData& other) {
     if ((i = (tokens.size() - other.tokens.size())) != 0) {
         return i;
     }
-    
+
     for (int j = 0; j < tokens.size(); j++) {
         if ((i = tokens[j] - other.tokens[j]) != 0) {
             return i;

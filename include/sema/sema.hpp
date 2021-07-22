@@ -20,6 +20,7 @@ public:
     int id;
     bool sema;
     std::string name;
+
 public:
     SemaTokenData(int _id, bool _sema, std::string _name);
 
@@ -115,6 +116,7 @@ private:
     std::unique_ptr<ActionTable> _actionTable;
     std::unique_ptr<FirstSet> _firstSet;
     std::unique_ptr<StateCollection> _stateList;
+
 public:
     Parser(std::vector<SimpleRule> rules);
     ~Parser();

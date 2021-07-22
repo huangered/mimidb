@@ -65,7 +65,7 @@ void
 BtreeIndex::_bt_init_metapage(Page page, BlockNumber rootblkno) {
     _bt_init_page(page);
     BTreeMetaData* metad = (BTreeMetaData*)PageGetContent(page);
-    metad->fastroot = P_NONE;
+    metad->fastroot      = P_NONE;
 }
 
 void
@@ -76,8 +76,8 @@ BtreeIndex::_bt_init_page(Page page) {
 Buffer
 BtreeIndex::_bt_moveright(Relation rel, BTreeScan key, Buffer buf) {
     for (;;) {
-        Page page = BufferGetPage(buf);
-        PageHeader header = PageGetHeader(page);
+        Page page            = BufferGetPage(buf);
+        PageHeader header    = PageGetHeader(page);
         BTreeSpecial special = PageGetSpecial(page);
 
         if (P_RIGHTMOST(special)) {
@@ -104,28 +104,28 @@ BtreeIndex::_bt_relandgetbuf(Relation rel, Buffer obuf, BlockNumber blkno) {
 void
 BtreeIndex::debug(Relation rel) {
     Buffer bufp = _bt_get_root(rel);
-    Page page = BufferGetPage(bufp);
+    Page page   = BufferGetPage(bufp);
 
     BTreeSpecial special = PageGetSpecial(page);
 
     while (!P_ISLEAF(special)) {
-        OffsetNumber low = P_FIRSTDATAKEY(special);
-        ItemId itemId = PageGetItemId(page, low);
-        Item item = PageGetItem(page, itemId);
-        IndexTuple tuple = (IndexTuple)item;
+        OffsetNumber low  = P_FIRSTDATAKEY(special);
+        ItemId itemId     = PageGetItemId(page, low);
+        Item item         = PageGetItem(page, itemId);
+        IndexTuple tuple  = (IndexTuple)item;
         BlockNumber blkno = BTreeTupleGetDownLink(tuple);
 
-        bufp = ReadBuffer(rel, blkno);
-        page = BufferGetPage(bufp);
+        bufp    = ReadBuffer(rel, blkno);
+        page    = BufferGetPage(bufp);
         special = PageGetSpecial(page);
     }
 
-    OffsetNumber low = P_FIRSTDATAKEY(special);
+    OffsetNumber low  = P_FIRSTDATAKEY(special);
     OffsetNumber high = PageGetMaxOffsetNumber(page);
 
     for (; low < high; low++) {
-        ItemId itemId = PageGetItemId(page, low);
-        Item item = PageGetItem(page, itemId);
+        ItemId itemId    = PageGetItemId(page, low);
+        Item item        = PageGetItem(page, itemId);
         IndexTuple tuple = (IndexTuple)item;
         printf(">>> %d %d\r\n", tuple->key, tuple->ht_id);
     }

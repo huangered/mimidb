@@ -4,7 +4,7 @@
 
 BTreeMetaData*
 BtreeIndex::_bt_getmeta(Relation rel, Buffer metabuf) {
-    Page metap = BufferGetPage(metabuf);
+    Page metap           = BufferGetPage(metabuf);
     BTreeMetaData* metad = (BTreeMetaData*)PageGetContent(metap);
     return metad;
 }
@@ -42,24 +42,24 @@ BtreeIndex::_bt_get_root(Relation rel) {
     }
 
     // 从 blocknum 0 加载 meta
-    metabuf = _bt_get_buf(rel, BTREE_METAPAGE);
+    metabuf  = _bt_get_buf(rel, BTREE_METAPAGE);
     metapage = BufferGetPage(metabuf);
-    metad = (BTreeMetaData*)PageGetContent(metapage);
+    metad    = (BTreeMetaData*)PageGetContent(metapage);
 
     if (metad->root == P_NONE) {
         // 如果meta没有初始化，初始化
         // 1. 创建root block
-        rootbuf = _bt_get_buf(rel, P_NEW);
+        rootbuf   = _bt_get_buf(rel, P_NEW);
         rootblkno = GetBufferDesc(rootbuf)->tag.blockNum;
         // 1.1 更新root block
-        rootpage = BufferGetPage(rootbuf);
+        rootpage                 = BufferGetPage(rootbuf);
         BTreeSpecial rootspecial = (BTreeSpecial)PageGetSpecial(rootpage);
-        rootspecial->block_next = P_NONE;
-        rootspecial->block_prev = P_NONE;
-        rootspecial->flags = (BTP_LEAF | BTP_ROOT);
+        rootspecial->block_next  = P_NONE;
+        rootspecial->block_prev  = P_NONE;
+        rootspecial->flags       = (BTP_LEAF | BTP_ROOT);
 
         // 2. 更新meta
-        metad->root = rootblkno;
+        metad->root     = rootblkno;
         metad->fastroot = rootblkno;
 
         MarkBufferDirty(rootbuf);
@@ -68,9 +68,9 @@ BtreeIndex::_bt_get_root(Relation rel) {
         ReleaseBuffer(metabuf);
     } else {
         // 如果meta初始化了
-        rootblkno = metad->fastroot;
+        rootblkno         = metad->fastroot;
         rel->rd_metacache = metad;
-        rootbuf = _bt_get_buf(rel, rootblkno);
+        rootbuf           = _bt_get_buf(rel, rootblkno);
     }
 
     return rootbuf;
@@ -83,8 +83,8 @@ BtreeIndex::_bt_get_buf(Relation rel, BlockNumber blkno) {
         buf = ReadBuffer(rel, blkno);
     } else {
         // create new block for cbtree
-        blkno = GetFreeIndexPage(rel);
-        buf = ReadBuffer(rel, blkno);
+        blkno     = GetFreeIndexPage(rel);
+        buf       = ReadBuffer(rel, blkno);
         Page page = BufferGetPage(buf);
         _bt_init_page(page);
     }

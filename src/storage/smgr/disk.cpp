@@ -65,9 +65,9 @@ Md::Open(SMgrRelation reln, ForkNumber forknum) {
     if (fd <= 0) {
         auto path = GetRelPath2(reln->rd_node.dbNode, reln->rd_node.relNode, forknum);
 
-        int fd2 = PathNameOpenFile(path.string().c_str());
+        int fd2           = PathNameOpenFile(path.string().c_str());
         reln->fd[forknum] = fd2;
-        fd = fd2;
+        fd                = fd2;
     }
     return fd;
 }

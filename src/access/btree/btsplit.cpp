@@ -4,7 +4,7 @@
 OffsetNumber
 BtreeIndex::_bt_find_split_offset(Buffer buf) {
     // use half for simple
-    Page page = BufferGetPage(buf);
+    Page page           = BufferGetPage(buf);
     OffsetNumber offset = PageGetMaxOffsetNumber(page);
     return offset / 2;
 }
