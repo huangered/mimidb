@@ -1,7 +1,22 @@
 #include "storage/fd.hpp"
-#include "port/port.hpp"
+#include <fcntl.h>
+#ifdef __linux__
+#include <unistd.h>
+#else
+#include <io.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#endif
+
 
 int
 PathNameOpenFile(const char* filename) {
-    return open(filename, O_CREAT | O_RDWR | O_TRUNC, S_IRUSR | S_IWUSR);
+    int fd;
+#ifdef __linux__
+    fd = open(filename, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
+#else
+    fd = open(filename, O_CREAT | O_RDWR , S_IREAD | S_IWRITE);
+#endif
+
+    return fd;
 }
