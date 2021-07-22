@@ -54,26 +54,27 @@ extern int yydebug;
 /* Token type.  */
 #ifndef YYTOKENTYPE
 #define YYTOKENTYPE
-enum yytokentype {
-    EOL = 258,
-    CREATE = 259,
-    TABLE = 260,
-    INSERT = 261,
-    INTO = 262,
-    VALUES = 263,
-    SELECT = 264,
-    FROM = 265,
-    TEXT = 266,
+enum yytokentype
+{
+    EOL     = 258,
+    CREATE  = 259,
+    TABLE   = 260,
+    INSERT  = 261,
+    INTO    = 262,
+    VALUES  = 263,
+    SELECT  = 264,
+    FROM    = 265,
+    TEXT    = 266,
     INTEGER = 267,
-    UPDATE = 268,
-    SET = 269,
-    WHERE = 270,
-    QUOTE = 271,
-    AND = 272,
-    EQ = 273,
-    IDENT = 274,
+    UPDATE  = 268,
+    SET     = 269,
+    WHERE   = 270,
+    QUOTE   = 271,
+    AND     = 272,
+    EQ      = 273,
+    IDENT   = 274,
     PRIMARY = 275,
-    KEY = 276
+    KEY     = 276
 };
 #endif
 
@@ -90,7 +91,7 @@ union YYSTYPE {
 #line 94 "/home/peter/Desktop/mimidb/src/parser/parser.tab.h"
 };
 typedef union YYSTYPE YYSTYPE;
-#define YYSTYPE_IS_TRIVIAL 1
+#define YYSTYPE_IS_TRIVIAL  1
 #define YYSTYPE_IS_DECLARED 1
 #endif
 
@@ -104,7 +105,7 @@ struct YYLTYPE {
     int last_column;
 };
 #define YYLTYPE_IS_DECLARED 1
-#define YYLTYPE_IS_TRIVIAL 1
+#define YYLTYPE_IS_TRIVIAL  1
 #endif
 
 int yyparse(NodeWrap* yyscanner);

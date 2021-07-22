@@ -18,10 +18,10 @@ void
 DefineRelation(CreateTableStmt* stmt) {
     Relation heap_rel;
     // 创建堆表
-    const char* name = stmt->relname;
-    Oid id = GetNewOid();
+    const char* name  = stmt->relname;
+    Oid id            = GetNewOid();
     TupleDesc tupdesc = formTupleDesc(stmt->columns);
-    heap_rel = heap_create_with_catalog(name, id, tupdesc);
+    heap_rel          = heap_create_with_catalog(name, id, tupdesc);
 
     // 创建索引
 }
@@ -45,7 +45,7 @@ formTupleDesc(List* columns) {
 
 void
 formAttr(FormData_mimi_attribute* attr, ColumnDef* def) {
-    attr->typid = def->typeName->typeOid;
+    attr->typid   = def->typeName->typeOid;
     attr->att_len = 255;
     // memcpy(attr->attname, def->colname, attr->attlen);
 }

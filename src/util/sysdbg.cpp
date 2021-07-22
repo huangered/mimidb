@@ -8,7 +8,7 @@ static void pprint(Relation rel, Page page);
 void
 pprint(Relation rel, Page page) {
 
-    PageHeader header = PageGetHeader(page);
+    PageHeader header    = PageGetHeader(page);
     BTreeSpecial special = (BTreeSpecial)PageGetSpecial(page);
 
     int max = PageGetMaxOffsetNumber(page);

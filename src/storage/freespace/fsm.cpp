@@ -1,9 +1,9 @@
 #include "storage/fsm_internal.hpp"
 #include "storage/smgr.hpp"
 
-#define parentof(X) (((X)-1) / 2)
+#define parentof(X)       (((X)-1) / 2)
 
-#define left_children(X) (2 * (X) + 1)
+#define left_children(X)  (2 * (X) + 1)
 #define right_children(X) (2 * (X) + 2)
 
 /*
@@ -92,7 +92,7 @@ fsm::fsm_get_avail(Page page, int slot) {
 bool
 fsm::fsm_set_avail(Page page, int slot, int value) {
 
-    int nodeno = slot + NonLeafNodesPerPage;
+    int nodeno      = slot + NonLeafNodesPerPage;
     FSMPage fsmpage = (FSMPage)PageGetContent(page);
     int oldvalue;
 
@@ -147,7 +147,7 @@ fsm::fsm_search_avail(Buffer buf, Size spaceNeed) {
     int no = 0;
     int slot;
 
-    Page page = BufferGetPage(buf);
+    Page page   = BufferGetPage(buf);
     FSMPage fsm = (FSMPage)PageGetContent(page);
 
     if (fsm->fp_nodes[no] < spaceNeed) {
@@ -155,7 +155,7 @@ fsm::fsm_search_avail(Buffer buf, Size spaceNeed) {
     }
 
     while (no < NonLeafNodesPerPage) {
-        int left = left_children(no);
+        int left  = left_children(no);
         int right = right_children(no);
         if (fsm->fp_nodes[left] >= spaceNeed) {
             no = left;
@@ -200,7 +200,7 @@ fsm::fsm_get_heap_blk(FSMAddress addr, int slot) {
 FSMAddress
 fsm::fsm_get_child(FSMAddress addr, int slot) {
     FSMAddress child;
-    child.level = addr.level - 1;
+    child.level     = addr.level - 1;
     child.logpageno = addr.logpageno * LeafNodesPerPage + slot;
     return child;
 }
@@ -209,9 +209,9 @@ FSMAddress
 fsm::fsm_get_parent(FSMAddress child, int* slot) {
     FSMAddress parent;
 
-    parent.level = child.level + 1;
+    parent.level     = child.level + 1;
     parent.logpageno = child.logpageno / LeafNodesPerPage;
-    *slot = child.logpageno % LeafNodesPerPage;
+    *slot            = child.logpageno % LeafNodesPerPage;
 
     return parent;
 }
@@ -222,7 +222,7 @@ fsm::fsm_set_and_search(Relation rel, FSMAddress addr, int slot, int newValue, i
     Page page;
     int newslot = -1;
 
-    buf = fsm_readbuf(rel, addr, true);
+    buf  = fsm_readbuf(rel, addr, true);
     page = BufferGetPage(buf);
 
     fsm_set_avail(page, slot, newValue);
@@ -234,9 +234,9 @@ FSMAddress
 fsm::fsm_get_location(BlockNumber heapblk, int* slot) {
     FSMAddress addr;
 
-    addr.level = FSM_BOTTOM_LEVEL;
+    addr.level     = FSM_BOTTOM_LEVEL;
     addr.logpageno = heapblk / LeafNodesPerPage;
-    *slot = heapblk % LeafNodesPerPage;
+    *slot          = heapblk % LeafNodesPerPage;
 
     return addr;
 }
@@ -269,11 +269,11 @@ fsm::fsm_vacuum_page(Relation rel, FSMAddress addr, BlockNumber start, BlockNumb
          * in each recursive call, but it's cheap enough to not worry about.)
          */
         fsm_start = fsm_get_location(start, &fsm_start_slot);
-        fsm_end = fsm_get_location(end - 1, &fsm_end_slot);
+        fsm_end   = fsm_get_location(end - 1, &fsm_end_slot);
 
         while (fsm_start.level < addr.level) {
             fsm_start = fsm_get_parent(fsm_start, &fsm_start_slot);
-            fsm_end = fsm_get_parent(fsm_end, &fsm_end_slot);
+            fsm_end   = fsm_get_parent(fsm_end, &fsm_end_slot);
         }
 
         if (fsm_start.logpageno == addr.logpageno)

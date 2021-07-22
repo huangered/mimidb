@@ -1,4 +1,4 @@
-#ifndef  _token_kinds_hpp_
+#ifndef _token_kinds_hpp_
 #define _token_kinds_hpp_
 
 #include <vector>
@@ -16,5 +16,3 @@ typedef std::vector<Tok> TokList;
 Tok GetTokByName(std::string name);
 
 #endif // ! _token_kinds_hpp_
-
-

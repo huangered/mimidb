@@ -9,8 +9,8 @@ SysTableScan
 systable_beginscan(Relation heapRel, int nkeys, ScanKey key) {
     SysTableScan sysscan;
 
-    sysscan = (SysTableScan)palloc0(sizeof(SysTableScanData));
-    sysscan->heap_rel = heapRel;
+    sysscan            = (SysTableScan)palloc0(sizeof(SysTableScanData));
+    sysscan->heap_rel  = heapRel;
     sysscan->heap_scan = heapRel->tb_am->BeginScan(heapRel, nkeys, key);
     return sysscan;
 };

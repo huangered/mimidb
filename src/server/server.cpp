@@ -6,7 +6,7 @@
 #include <cstdio>
 int
 main(int argc, char* argv[]) {
-    int fd = PathNameOpenFile("test.txt");
+    int fd           = PathNameOpenFile("test.txt");
     const char* data = "12345";
     lseek(fd, 1, SEEK_SET);
     write(fd, data, 5);

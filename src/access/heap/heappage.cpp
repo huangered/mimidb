@@ -22,7 +22,7 @@ Heap::_get_buffer_for_tuple(Relation rel, Size len) {
         buffer = ReadBuffer(rel, targetBlock);
 
         // 检查 buffer的空间是否足够
-        page = BufferGetPage(buffer);
+        page          = BufferGetPage(buffer);
         pageFreeSpace = PageGetFreeSpace(page);
         if (len < pageFreeSpace) {
             RelationSetTargetBlock(rel, targetBlock);
@@ -35,7 +35,7 @@ Heap::_get_buffer_for_tuple(Relation rel, Size len) {
 
     // 没有找到page，需要extend 空间
     buffer = ReadBuffer(rel, P_NEW);
-    page = BufferGetPage(buffer);
+    page   = BufferGetPage(buffer);
     PageInit(page, BLKSZ, 0);
 
     RelationSetTargetBlock(rel, BufferGetBlockNumber(buffer));
@@ -58,10 +58,10 @@ Heap::_relation_put_heap_tuple(Relation rel, Buffer buf, HeapTuple htup) {
     offset = PageAddItem(page, (htup->t_data), htup->t_len, InvalidOffsetNumber);
 
     htup->t_data->t_ctid.blocknum = GetBufferDesc(buf)->tag.blockNum;
-    htup->t_data->t_ctid.offset = offset;
+    htup->t_data->t_ctid.offset   = offset;
 
     // 更新 ctid 相关数据
-    ItemId itemId = PageGetItemId(page, offset);
+    ItemId itemId        = PageGetItemId(page, offset);
     HeapTupleHeader item = (HeapTupleHeader)PageGetItem(page, itemId);
-    item->t_ctid = htup->t_data->t_ctid;
+    item->t_ctid         = htup->t_data->t_ctid;
 }

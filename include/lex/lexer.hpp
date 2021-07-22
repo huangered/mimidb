@@ -18,7 +18,7 @@ public:
 
 typedef LexTokenData* LexToken;
 
-#define EndLexToken ( new LexTokenData{ Tok::Eof, "eof" } )
+#define EndLexToken (new LexTokenData{ Tok::Eof, "eof" })
 
 struct LexerOption {
     bool skipWhiteSpace;
@@ -35,6 +35,7 @@ public:
     Lexer(const char* buf, int size);
 
     LexToken GetLexerToken();
+
 private:
     LexToken lexNumber();
     LexToken lexIdentifier();
