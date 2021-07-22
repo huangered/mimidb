@@ -2,7 +2,10 @@
 #define _fd_hpp_
 
 #include <sys/types.h>
+
+#ifdef __linux__
 #include <dirent.h>
+#endif
 
 typedef int File;
 

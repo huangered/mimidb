@@ -22,13 +22,13 @@ PathNameOpenFile(const char* filename) {
 
 int
 FileRead(File fd, char* buf, int amount) {
-    ssize_t num = read(fd, buf, amount);
+    int num = read(fd, buf, amount);
     return num;
 }
 
 int
 FileWrite(File fd, char* buf, int amount) {
-    ssize_t num = write(fd, buf, amount);
+    int num = write(fd, buf, amount);
     return num;
 }
 
