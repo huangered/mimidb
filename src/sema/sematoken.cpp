@@ -1,5 +1,5 @@
 #include "sema/sema.hpp"
-
+#include <algorithm>
 SemaTokenData::SemaTokenData(int _id, bool _sema, std::string _name) {
     id   = _id;
     sema = _sema;
@@ -38,7 +38,7 @@ StateData::ResetRules(RuleList& rules) {
 
 void
 StateData::Add(Rule rule) {
-    auto cmp = [rule](Rule r) -> bool { return r->Compare(*rule) == 0; };
+    auto cmp = [rule](Rule r) -> bool { return *r == *rule; };
 
     auto iter = std::find_if(_rules.begin(), _rules.end(), cmp);
 
@@ -58,7 +58,7 @@ bool
 StateData::MatchRule(const RuleList& rules1) {
     for (auto rules = rules1.begin(); rules != rules1.end(); rules++) {
         Rule r     = *rules;
-        auto match = [&](Rule rule) -> bool { return rule->Compare(*r) == 0; };
+        auto match = [&](Rule rule) -> bool { return *rule == *r; };
         auto iter  = std::find_if(_rules.begin(), _rules.end(), match);
         if (iter == _rules.end()) {
             return false;

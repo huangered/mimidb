@@ -13,6 +13,6 @@ enum Tok : unsigned int
 
 typedef std::vector<Tok> TokList;
 
-Tok GetTokByName(std::string name);
+Tok GetTokByName(const std::string& name);
 
 #endif // ! _token_kinds_hpp_

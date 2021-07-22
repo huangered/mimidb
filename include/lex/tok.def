@@ -43,6 +43,8 @@ KEYWORD(view, psql)
 KEYWORD(float, psql)
 KEYWORD(int, psql)
 KEYWORD(begin, psql)
+KEYWORD(commit, psql)
 KEYWORD(end, psql)
 
 #undef TOK
+#undef KEYWORD

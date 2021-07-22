@@ -282,7 +282,7 @@ Parser::expandRules(State state) {
                     copy->dot = 0;
                     copy->SetTokens(tokens);
                     // 如果是新rule
-                    auto rule_eq = [copy](Rule rule) -> bool { return rule->Compare(*copy) == 0; };
+                    auto rule_eq = [copy](Rule rule) -> bool { return *rule == *copy; };
                     RuleList src = state->GetRules();
                     RuleList dest;
                     find_all(src, dest, rule_eq);
