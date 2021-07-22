@@ -49,7 +49,7 @@ BtreeIndex::_bt_search(Relation rel, BTreeScan itup_key, Buffer* bufp) {
 
         page = BufferGetPage(*bufp);
 
-        PageHeader header = PageGetHeader(page);
+        PageHeader header    = PageGetHeader(page);
         BTreeSpecial special = (BTreeSpecial)PageGetSpecial(page);
 
         if (P_ISLEAF(special)) {
@@ -57,14 +57,14 @@ BtreeIndex::_bt_search(Relation rel, BTreeScan itup_key, Buffer* bufp) {
         }
 
         offsetnum = _bt_binsrch(rel, page, itup_key);
-        itemid = PageGetItemId(page, offsetnum);
-        itup = (IndexTuple)PageGetItem(page, itemid);
-        blkno = BTreeTupleGetDownLink(itup);
+        itemid    = PageGetItemId(page, offsetnum);
+        itup      = (IndexTuple)PageGetItem(page, itemid);
+        blkno     = BTreeTupleGetDownLink(itup);
         par_blkno = GetBufferDesc(*bufp)->tag.blockNum;
 
         BTStack new_stack = new BTStackData{};
         new_stack->parent = stack_in;
-        new_stack->blkno = par_blkno;
+        new_stack->blkno  = par_blkno;
         new_stack->offset = offsetnum;
         // read child downstream
         *bufp = _bt_relandgetbuf(rel, *bufp, blkno);
@@ -80,7 +80,7 @@ BtreeIndex::_bt_insertonpg(Relation rel, Buffer buffer, OffsetNumber newitemoffs
     Page page = BufferGetPage(buffer);
 
     // size enough
-    PageHeader header = PageGetHeader(page);
+    PageHeader header    = PageGetHeader(page);
     BTreeSpecial special = (BTreeSpecial)PageGetSpecial(page);
     // if size not enough
     // split and insert into parent
@@ -101,32 +101,32 @@ BtreeIndex::_bt_insertonpg(Relation rel, Buffer buffer, OffsetNumber newitemoffs
 Buffer
 BtreeIndex::_bt_split(Relation rel, IndexTuple itup, Buffer buf, OffsetNumber newitemoff) {
     OffsetNumber splitoff = _bt_find_split_offset(buf);
-    Page originpage = BufferGetPage(buf);
-    Page leftpage = GetTempPage(originpage);
+    Page originpage       = BufferGetPage(buf);
+    Page leftpage         = GetTempPage(originpage);
     _bt_init_page(leftpage);
-    Buffer rbuf = _bt_get_buf(rel, P_NEW);
+    Buffer rbuf    = _bt_get_buf(rel, P_NEW);
     Page rightpage = BufferGetPage(rbuf);
     _bt_init_page(rightpage);
 
     BTreeSpecial originspecial = PageGetSpecial(originpage);
-    BTreeSpecial leftspecial = PageGetSpecial(leftpage);
-    BTreeSpecial rightspecial = PageGetSpecial(rightpage);
+    BTreeSpecial leftspecial   = PageGetSpecial(leftpage);
+    BTreeSpecial rightspecial  = PageGetSpecial(rightpage);
 
     // update right / left point
-    leftspecial->block_next = GetBufferDesc(rbuf)->tag.blockNum;
+    leftspecial->block_next  = GetBufferDesc(rbuf)->tag.blockNum;
     rightspecial->block_next = originspecial->block_next;
 
-    leftspecial->block_prev = originspecial->block_prev;
+    leftspecial->block_prev  = originspecial->block_prev;
     rightspecial->block_prev = GetBufferDesc(buf)->tag.blockNum;
 
     if (P_ISLEAF(originspecial)) {
-        leftspecial->flags = BTP_LEAF;
+        leftspecial->flags  = BTP_LEAF;
         rightspecial->flags = BTP_LEAF;
     }
 
     // copy items
 
-    OffsetNumber loffset{P_FIRSTKEY};
+    OffsetNumber loffset{ P_FIRSTKEY };
     OffsetNumber roffset;
 
     if (P_RIGHTMOST(originspecial)) {
@@ -137,13 +137,13 @@ BtreeIndex::_bt_split(Relation rel, IndexTuple itup, Buffer buf, OffsetNumber ne
 
     // update high key
     ItemId splitItemId = PageGetItemId(originpage, splitoff);
-    Item splitItem = PageGetItem(originpage, splitItemId);
+    Item splitItem     = PageGetItem(originpage, splitItemId);
 
     _bt_addtup(leftpage, splitItem, splitItemId->lp_len, P_HIKEY);
 
     if (!P_RIGHTMOST(originspecial)) {
         ItemId highKeyId = PageGetItemId(originpage, P_HIKEY);
-        Item highKey = PageGetItem(originpage, highKeyId);
+        Item highKey     = PageGetItem(originpage, highKeyId);
 
         _bt_addtup(rightpage, highKey, highKeyId->lp_len, P_HIKEY);
     }
@@ -164,7 +164,7 @@ BtreeIndex::_bt_split(Relation rel, IndexTuple itup, Buffer buf, OffsetNumber ne
             }
         }
         ItemId itemId = PageGetItemId(originpage, i);
-        Item item = PageGetItem(originpage, itemId);
+        Item item     = PageGetItem(originpage, itemId);
 
         if (i < splitoff) {
             // insert into left
@@ -199,14 +199,14 @@ BtreeIndex::_bt_insert_parent(Relation rel, Buffer buf, Buffer rbuf, BTStack sta
         Buffer rootbuf;
         rootbuf = _bt_newroot(rel, buf, rbuf);
     } else {
-        Page page = BufferGetPage(buf);
-        IndexTuple ritem = (IndexTuple)PageGetItem(page, PageGetItemId(page, P_HIKEY));
-        IndexTuple itup = new IndexTupleData;
-        itup->key = ritem->key;
-        itup->ht_id = GetBufferDesc(rbuf)->tag.blockNum;
-        itup->tuple_size = sizeof(IndexTupleData);
+        Page page          = BufferGetPage(buf);
+        IndexTuple ritem   = (IndexTuple)PageGetItem(page, PageGetItemId(page, P_HIKEY));
+        IndexTuple itup    = new IndexTupleData;
+        itup->key          = ritem->key;
+        itup->ht_id        = GetBufferDesc(rbuf)->tag.blockNum;
+        itup->tuple_size   = sizeof(IndexTupleData);
         BTreeScan itup_key = _bt_make_scankey(rel, itup);
-        Buffer pbuf = _bt_get_buf(rel, stack->blkno);
+        Buffer pbuf        = _bt_get_buf(rel, stack->blkno);
         _bt_insertonpg(rel, pbuf, stack->offset + 1, itup_key, stack->parent);
         delete itup;
         delete itup_key;
@@ -231,38 +231,38 @@ BtreeIndex::_bt_newroot(Relation rel, Buffer lbuf, Buffer rbuf) {
     BTreeSpecial rootspecial;
     BTreeMetaData* metad;
 
-    lblkno = GetBufferDesc(lbuf)->tag.blockNum;
-    rblkno = GetBufferDesc(rbuf)->tag.blockNum;
-    lpage = BufferGetPage(lbuf);
+    lblkno   = GetBufferDesc(lbuf)->tag.blockNum;
+    rblkno   = GetBufferDesc(rbuf)->tag.blockNum;
+    lpage    = BufferGetPage(lbuf);
     lspecial = (BTreeSpecial)PageGetSpecial(lpage);
 
     /* 创建新的 root buf */
-    rootbuf = _bt_get_buf(rel, P_NEW);
-    rootpage = BufferGetPage(rootbuf);
+    rootbuf   = _bt_get_buf(rel, P_NEW);
+    rootpage  = BufferGetPage(rootbuf);
     rootblkno = GetBufferDesc(rootbuf)->tag.blockNum;
 
     /* 获取索引 meta 页 */
-    metabuf = _bt_get_buf(rel, BTREE_METAPAGE);
+    metabuf  = _bt_get_buf(rel, BTREE_METAPAGE);
     metapage = BufferGetPage(metabuf);
-    metad = (BTreeMetaData*)PageGetContent(metapage);
+    metad    = (BTreeMetaData*)PageGetContent(metapage);
 
     _bt_init_page(rootpage);
     PageHeader header = PageGetHeader(rootpage);
-    header->pd_flags = BTP_ROOT;
+    header->pd_flags  = BTP_ROOT;
 
     /* 更新 root special */
-    rootspecial = (BTreeSpecial)PageGetSpecial(rootpage);
-    rootspecial->flags = BTP_ROOT;
-    rootspecial->level = lspecial->level + 1;
+    rootspecial             = (BTreeSpecial)PageGetSpecial(rootpage);
+    rootspecial->flags      = BTP_ROOT;
+    rootspecial->level      = lspecial->level + 1;
     rootspecial->block_next = rootspecial->block_prev = P_NONE;
     /* 更新 meta */
-    metad->root = rootblkno;
+    metad->root     = rootblkno;
     metad->fastroot = rootblkno;
 
     // get left page high key
     IndexTuple hkey = new IndexTupleData{};
     // hkey->key = INT_MIN;
-    hkey->ht_id = lblkno;
+    hkey->ht_id      = lblkno;
     hkey->tuple_size = sizeof(IndexTupleData);
     // set first item
     _bt_addtup(rootpage, hkey, sizeof(IndexTupleData), P_HIKEY);
@@ -272,9 +272,9 @@ BtreeIndex::_bt_newroot(Relation rel, Buffer lbuf, Buffer rbuf) {
     IndexTuple second;
     IndexTuple lphkey = (IndexTuple)PageGetItem(lpage, PageGetItemId(lpage, P_HIKEY));
 
-    second = new IndexTupleData{};
-    second->key = lphkey->key;
-    second->ht_id = rblkno;
+    second             = new IndexTupleData{};
+    second->key        = lphkey->key;
+    second->ht_id      = rblkno;
     second->tuple_size = sizeof(IndexTupleData);
     _bt_addtup(rootpage, second, sizeof(IndexTupleData), P_FIRSTKEY);
 

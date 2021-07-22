@@ -53,7 +53,8 @@ public:
     ScanKey scankeys;
 
 public:
-    BTreeScanData(Size _keysz) : keysz(_keysz) {
+    BTreeScanData(Size _keysz)
+        : keysz(_keysz) {
         scankeys = new ScanKeyData[_keysz];
     }
     ~BTreeScanData() {

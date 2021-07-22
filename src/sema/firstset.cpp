@@ -1,14 +1,13 @@
 ﻿#include "sema/sema.hpp"
 
-FirstSet::FirstSet(std::vector<SimpleRule> rules) {
-    _rules = rules;
+FirstSet::FirstSet(const std::vector<SimpleRule>& rules)
+    : _rules{ rules } {
 }
 
 TokList
 FirstSet::find(SemaTokenList tokens) {
     SemaToken t     = tokens[0];
     std::set<Tok> r = _firstSet[t->id];
-    TokList rList;
 
     if (r.empty()) {
         return {};
@@ -16,18 +15,18 @@ FirstSet::find(SemaTokenList tokens) {
 
     if (r.count(Tok::epsilon) > 0) {
         tokens.erase(tokens.begin());
-        TokList q = find(tokens);
-        rList.insert(rList.end(), q.begin(), q.end());
+        TokList q = Find(tokens, {});
+        r.insert(q.begin(), q.end());
     }
 
-    rList.insert(rList.end(), r.begin(), r.end());
+    r.erase(Tok::epsilon);
 
-    return rList;
+    return { r.begin(), r.end() };
 }
 
 TokList
-FirstSet::Find(SemaTokenList tokens, TokList extra) {
-    if (tokens.size() == 0) {
+FirstSet::Find(const SemaTokenList& tokens, const TokList& extra) {
+    if (tokens.empty()) {
         return extra;
     }
     SemaToken c = tokens[0];
@@ -52,7 +51,7 @@ FirstSet::Gen() {
                 _firstSet[left->id] = {};
             }
 
-            if (rule->right.size() == 0) {
+            if (rule->right.empty()) {
                 tokSet.insert(Tok::epsilon);
             } else {
                 if (!rule->right[0]->sema) {

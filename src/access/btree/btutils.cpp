@@ -9,10 +9,10 @@ BtreeIndex::_bt_make_scankey(Relation rel, IndexTuple itup) {
     ScanKey skey;
 
     BTreeScan key = new BTreeScanData(nkeys);
-    key->itup = itup;
-    key->itemsz = sizeof(IndexTupleData);
-    key->nextkey = false;
-    key->keysz = nkeys;
+    key->itup     = itup;
+    key->itemsz   = sizeof(IndexTupleData);
+    key->nextkey  = false;
+    key->keysz    = nkeys;
 
     skey = key->scankeys;
 
@@ -28,9 +28,9 @@ make a index tuple
 */
 IndexTuple
 BtreeIndex::_bt_make_tuple(int key, int ht_id) {
-    IndexTuple tup = new IndexTupleData{};
-    tup->key = key;
-    tup->ht_id = ht_id;
+    IndexTuple tup  = new IndexTupleData{};
+    tup->key        = key;
+    tup->ht_id      = ht_id;
     tup->tuple_size = sizeof(IndexTupleData);
     return tup;
 }

@@ -3,7 +3,8 @@
 
 #include <stdlib.h>
 
-typedef enum NodeTag {
+typedef enum NodeTag
+{
     // ddl
     NT_InsertStmt,
     NT_UpdateStmt,
@@ -31,7 +32,8 @@ typedef struct Node {
     NodeTag nodetag;
 } Node;
 
-typedef enum Op {
+typedef enum Op
+{
     OP_AND,
     OP_OR,
     OP_NOT,

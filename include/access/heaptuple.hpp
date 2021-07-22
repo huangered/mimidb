@@ -28,7 +28,7 @@ struct HeapTupleData {
 
 typedef HeapTupleData* HeapTuple;
 
-#define HEAP_TUPLE_SIZE sizeof(HeapTupleData)
+#define HEAP_TUPLE_SIZE        sizeof(HeapTupleData)
 #define HEAP_TUPLE_HEADER_SIZE sizeof(HeapTupleHeaderData)
 
 HeapTuple heap_form_tuple(TupleDesc desc, Datum* values);

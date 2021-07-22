@@ -3,7 +3,7 @@
 
 SimpleRule
 make_rule(int id, SemaToken left, SemaTokenList right) {
-    SimpleRule rule = new SimpleRuleData{id, left, right};
+    SimpleRule rule = new SimpleRuleData{ id, left, right };
     return rule;
 }
 
@@ -19,26 +19,20 @@ RuleData::GetTokenAfterDot() {
 
 SemaTokenList
 RuleData::GetStringAfterDot() {
-    SemaTokenList tokens;
-    for (int i{ dot + 1 }; i != right.size(); i++) {
-        tokens.push_back(right[i]);
-    }
-    return tokens;
+    SemaTokenList t{ right.begin() + dot + 1, right.end() };
+    return t;
 }
 
 void
 RuleData::SetToken(Tok token) {
     tokens.push_back(token);
-    auto j = [](Tok l, Tok r) -> bool { return l < r; };
-    std::sort(tokens.begin(), tokens.end(), j);
+    std::sort(tokens.begin(), tokens.end(), std::less<Tok>());
 }
 
 void
 RuleData::AppendTokens(TokList tokenList) {
     tokens.insert(tokens.end(), tokenList.begin(), tokenList.end());
-
-    auto j = [](Tok l, Tok r) -> bool { return l < r; };
-    std::sort(tokens.begin(), tokens.end(), j);
+    std::sort(tokens.begin(), tokens.end(), std::less<Tok>());
 }
 
 TokList
@@ -49,8 +43,7 @@ RuleData::GetTokens() {
 void
 RuleData::SetTokens(TokList tokenList) {
     tokens.swap(tokenList);
-    auto j = [](Tok l, Tok r) -> bool { return l < r; };
-    std::sort(tokens.begin(), tokens.end(), j);
+    std::sort(tokens.begin(), tokens.end(), std::less<Tok>());
 }
 
 RuleData*
@@ -67,40 +60,27 @@ RuleData::Clone() {
     return rule;
 }
 
-
-int
-RuleData::Compare(RuleData& other) {
-    int i;
-    if ((i = left->Compare(*other.left)) != 0) {
-        return i;
+bool
+RuleData::operator==(const RuleData& other) {
+    if (left->id != other.left->id) {
+        return false;
     }
 
-    if ((i = (right.size() - other.right.size())) != 0) {
-        return i;
+    if (!SemaTokenListEqual(right, other.right)) {
+        return false;
     }
 
-    for (int j = 0; j < right.size(); j++) {
-        if ((i = right[j]->Compare(*other.right[j])) != 0) {
-            return i;
-        }
+    if (tokens != other.tokens) {
+        return false;
     }
 
-    if ((i = (tokens.size() - other.tokens.size())) != 0) {
-        return i;
-    }
-    
-    for (int j = 0; j < tokens.size(); j++) {
-        if ((i = tokens[j] - other.tokens[j]) != 0) {
-            return i;
-        }
-    }
-
-    return dot - other.dot;
+    return dot == other.dot;
 }
 
 Node
-RuleData::Format(SemaToken token, std::vector<Node> children) {
-    Node n = new NodeData{};
+RuleData::Format(const SemaToken token, const std::vector<Node>& children) {
+    Node n = new NodeData{ token->name };
+
     n->AddAll(children);
     return n;
 }

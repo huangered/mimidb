@@ -7,16 +7,15 @@
 
 #include "lex/TokenKinds.hpp"
 
-struct LexTokenData {
+class LexTokenData {
+public:
     Tok tok;
     std::string name;
-    
-    int Compare(const LexTokenData& token);
 };
 
 typedef LexTokenData* LexToken;
 
-#define EndLexToken ( new LexTokenData{ Tok::Eof, "eof" } )
+#define EndLexToken (new LexTokenData{ Tok::Eof, "eof" })
 
 struct LexerOption {
     bool skipWhiteSpace;
@@ -31,8 +30,9 @@ private:
 
 public:
     Lexer(const char* buf, int size);
-
+    
     LexToken GetLexerToken();
+
 private:
     LexToken lexNumber();
     LexToken lexIdentifier();

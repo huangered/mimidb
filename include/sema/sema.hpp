@@ -15,20 +15,17 @@
 #include <iostream>
 #include <memory>
 
-struct SemaTokenData {
+class SemaTokenData {
+public:
     int id;
     bool sema;
     std::string name;
-public:
-    SemaTokenData(int _id, bool _sema, std::string _name);
-
-    ~SemaTokenData();
-
-    int Compare(const SemaTokenData& token);
 };
 
 typedef SemaTokenData* SemaToken;
 typedef std::vector<SemaToken> SemaTokenList;
+
+bool SemaTokenListEqual(const SemaTokenList& left, const SemaTokenList& right);
 
 struct group_key {
     int dot;
@@ -75,7 +72,8 @@ public:
     State GetState(int stateId);
 };
 
-struct RecordData {
+class RecordData {
+public:
     bool acc;
     bool state;
     int id;
@@ -93,9 +91,9 @@ private:
     std::map<int, std::set<Tok>> _firstSet;
 
 public:
-    FirstSet(std::vector<SimpleRule> rules);
+    FirstSet(const std::vector<SimpleRule>& rules);
 
-    TokList Find(SemaTokenList tokens, TokList extra);
+    TokList Find(const SemaTokenList& tokens, const TokList& extra);
 
     void Gen();
 
@@ -114,19 +112,17 @@ private:
     std::unique_ptr<FirstSet> _firstSet;
     std::unique_ptr<StateCollection> _stateList;
 
-    std::set<int> epsilon;
-
 public:
     Parser(std::vector<SimpleRule> rules);
     ~Parser();
     void GenerateParseTable(void);
-    Node Parse(std::vector<LexToken> input);
+    std::pair<bool, Node> Parse(const std::vector<LexToken>& input);
 
 private:
     void handleState(int stateId);
     void generateTable(void);
     void expandRules(State state);
-    State searchSameState(RuleList newStateRules);
+    State searchSameState(const RuleList& newStateRules);
 
     bool reduce(std::stack<int>& states, std::stack<Node>& syms, Record curRecord);
     bool eatToken(std::stack<int>& states, std::stack<Node>& syms, std::stack<LexToken>& input, bool* acc);

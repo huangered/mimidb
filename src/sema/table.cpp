@@ -1,9 +1,11 @@
 #include "sema/table.hpp"
 #include "sema/sema.hpp"
 
-GotoTable::GotoTable(int row, int col) : _row{row}, _col{col} {
+GotoTable::GotoTable(int row, int col)
+    : _row{ row }
+    , _col{ col } {
     _data = new Record*[row];
-    for (int i{0}; i < row; i++) {
+    for (int i{ 0 }; i < row; i++) {
         _data[i] = new Record[col]{};
         for (int j = 0; j < col; j++) {
             auto q = _data[i] + j;
@@ -13,8 +15,8 @@ GotoTable::GotoTable(int row, int col) : _row{row}, _col{col} {
 }
 
 GotoTable::GotoTable(const GotoTable& tb) {
-    _row = tb._row;
-    _col = tb._col;
+    _row  = tb._row;
+    _col  = tb._col;
     _data = new Record*[_row];
     for (int i{ 0 }; i < _row; i++) {
         _data[i] = new Record[_col]{};
@@ -26,8 +28,8 @@ GotoTable::GotoTable(const GotoTable& tb) {
 }
 
 GotoTable::~GotoTable() {
-    for (int i{0}; i < _row; i++) {
-        for (int j{0}; j < _col; j++) {
+    for (int i{ 0 }; i < _row; i++) {
+        for (int j{ 0 }; j < _col; j++) {
             Record* r = _data[i] + j;
             if (*r != nullptr) {
                 delete *r;
@@ -42,8 +44,12 @@ void
 GotoTable::Add(int stateId, int tokenId, int nextStateId) {
     Record* record = &_data[stateId][tokenId];
     if (*record == nullptr) {
-        *record = new RecordData{.state = true, .id = nextStateId};
+        *record = new RecordData{};
     }
+
+    (*record)->id = nextStateId;
+    (*record)->state = true;
+    (*record)->acc   = false;
 }
 
 Record
@@ -59,13 +65,13 @@ GotoTable::Find(int stateId, int tokenId) {
 void
 GotoTable::Print() {
 
-    for (int i{0}; i < _col; i++) {
+    for (int i{ 0 }; i < _col; i++) {
         std::cout << " " << i << "|";
     }
     std::cout << std::endl;
-    for (int stateId{0}; stateId != _row; stateId++) {
+    for (int stateId{ 0 }; stateId != _row; stateId++) {
         std::cout << stateId << ":";
-        for (int i{0}; i < _col; i++) {
+        for (int i{ 0 }; i < _col; i++) {
             Record record = _data[stateId][i];
             if (record != nullptr) {
                 std::cout << *record;
@@ -78,7 +84,9 @@ GotoTable::Print() {
     }
 }
 
-ActionTable::ActionTable(int row, int col) : _row{row}, _col{col} {
+ActionTable::ActionTable(int row, int col)
+    : _row{ row }
+    , _col{ col } {
     _data = new Record*[row];
     for (int i = 0; i < row; i++) {
         _data[i] = new Record[col]{};
@@ -101,8 +109,8 @@ ActionTable::ActionTable(const ActionTable& tb) {
 }
 
 ActionTable::~ActionTable() {
-    for (int i{0}; i < _row; i++) {
-        for (int j{0}; j < _col; j++) {
+    for (int i{ 0 }; i < _row; i++) {
+        for (int j{ 0 }; j < _col; j++) {
             Record* r = _data[i] + j;
             if (*r != nullptr) {
                 delete *r;
@@ -129,9 +137,9 @@ ActionTable::AddRule(int stateId, int lexTokenId, int ruleId, bool acc) {
     if (*r == nullptr) {
         *r = new RecordData{};
     }
-    (*r)->id = ruleId;
+    (*r)->id    = ruleId;
     (*r)->state = false;
-    (*r)->acc = acc;
+    (*r)->acc   = acc;
 }
 
 void
@@ -140,19 +148,19 @@ ActionTable::Add(int stateId, int lexTokenId, int nextStateId) {
     if (*r == nullptr) {
         *r = new RecordData{};
     }
-    (*r)->id = nextStateId;
+    (*r)->id    = nextStateId;
     (*r)->state = true;
 }
 
 void
 ActionTable::Print() {
-    for (int i{0}; i < _col; i++) {
+    for (int i{ 0 }; i < _col; i++) {
         std::cout << " " << i << "|";
     }
     std::cout << std::endl;
     for (int stateId = 0; stateId != _row; stateId++) {
         std::cout << stateId << ":";
-        for (int i{0}; i < _col; i++) {
+        for (int i{ 0 }; i < _col; i++) {
             Record record = _data[stateId][i];
             if (record != nullptr) {
                 std::cout << *record;

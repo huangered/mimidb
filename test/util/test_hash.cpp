@@ -8,7 +8,7 @@ TEST(hash_test, basic_int) {
         map.Put(i, i);
     }
 
-    int v{-99};
+    int v{ -99 };
     EXPECT_TRUE(map.Get(1, &v));
     EXPECT_EQ(v, 1);
 
@@ -21,7 +21,7 @@ TEST(hash_test, value_is_pointer) {
     HashMap<int, int*> map;
 
     for (int i{}; i < 100; i++) {
-        map.Put(i, new int{i});
+        map.Put(i, new int{ i });
     }
 
     int* v = nullptr;
@@ -33,7 +33,7 @@ TEST(hash_test, value_is_pointer) {
 
     EXPECT_FALSE(map.Get(0, &v));
 
-    for (int i{1}; i < 100; i++) {
+    for (int i{ 1 }; i < 100; i++) {
         map.Get(i, &v);
         map.Remove(i);
         delete v;

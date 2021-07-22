@@ -8,7 +8,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_BUILD_TYPE Debug)
 
 if(MSVC) 
-  add_compile_options("/std:c++latest")
+  add_compile_options("/std:c++17")
 else()
   add_compile_options("-std=c++17")
 endif()

@@ -11,13 +11,14 @@ typedef NodeData* Node;
 class NodeData {
     std::vector<Node> _nodes;
     const LexToken _token;
+    std::string _name;
 
 public:
-    NodeData();
+    NodeData(std::string name);
 
     NodeData(LexToken token);
 
-    void AddAll(std::vector<Node> nodes);
+    void AddAll(const std::vector<Node>& nodes);
 };
 
 #endif
