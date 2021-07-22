@@ -11,23 +11,21 @@ TEST(Sema, GroupKeyTest1) {
 }
 
 TEST(Sema, GroupKeyTest2) {
-    SemaToken t1 = new SemaTokenData(1, true, "");
-    SemaToken t2 = new SemaTokenData(2, true, "");
+    SemaToken t1 = new SemaTokenData{ 1, true, "" };
+    SemaToken t2 = new SemaTokenData{ 2, true, "" };
 
     group_key k1{ 1, t1, {} };
     group_key k2{ 1, t2, {} };
 
     EXPECT_TRUE(k1 < k2);
 
-
     delete t1;
     delete t2;
 }
 
-
 TEST(Sema, GroupKeyTest3) {
-    SemaToken t1 = new SemaTokenData(1, true, "");
-    SemaToken t2 = new SemaTokenData(2, true, "");
+    SemaToken t1 = new SemaTokenData{ 1, true, "" };
+    SemaToken t2 = new SemaTokenData{ 2, true, "" };
 
     group_key k1{ 1, t1, {} };
     group_key k2{ 1, t2, {} };
@@ -42,7 +40,7 @@ TEST(Sema, tok_eq) {
     std::set<Tok> a;
     std::set<Tok> b;
 
-    a.insert(Tok::comma);    
+    a.insert(Tok::comma);
     b.insert(Tok::comma);
 
     EXPECT_TRUE(a == b);
@@ -57,10 +55,9 @@ TEST(Sema, tok_ne) {
 
     EXPECT_TRUE(a != b);
 }
-/*
+
 TEST(Sema, select_test) {
     auto rList = ReadRules("C:\\work\\mimidb\\sql.rule");
-    EXPECT_EQ(rList.size(), 19);
 
     const char* str = "select * from asdf;";
 
@@ -77,9 +74,36 @@ TEST(Sema, select_test) {
 
     Parser parser(rList);
     parser.GenerateParseTable();
-    Node n = parser.Parse(data);
-    EXPECT_TRUE(n != nullptr);
+    auto n = parser.Parse(data);
+    EXPECT_TRUE(n.first);
+    Node node = n.second;
+    EXPECT_TRUE(node != nullptr);
 
-    delete n;
+    delete n.second;
 }
-*/
+
+TEST(Sema, select_where_test) {
+    auto rList = ReadRules("C:\\work\\mimidb\\sql.rule");
+
+    const char* str = "select * from asdf where;";
+
+    Lexer lexer(str, strlen(str));
+
+    LexToken t;
+    std::vector<LexToken> data;
+    while ((t = lexer.GetLexerToken()) != nullptr) {
+        if (t->tok != Tok::whitespace) {
+            data.push_back(t);
+        }
+    }
+    data.push_back(EndLexToken);
+
+    Parser parser(rList);
+    parser.GenerateParseTable();
+    auto n = parser.Parse(data);
+    EXPECT_TRUE(n.first);
+    Node node = n.second;
+    EXPECT_TRUE(node != nullptr);
+
+    delete n.second;
+}

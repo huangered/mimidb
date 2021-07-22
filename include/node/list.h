@@ -17,9 +17,9 @@ typedef struct List {
     ListCell* head;
 } List;
 
-#define list_len(l) (l->length)
+#define list_len(l)        (l->length)
 #define list_first_elem(l) (l->head)
-#define list_next_elem(l) (l->next)
+#define list_next_elem(l)  (l->next)
 
 extern List* new_list(NodeTag tag);
 extern List* append_list(List* list, void* value);

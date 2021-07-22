@@ -31,11 +31,11 @@ Smgr::Open(RelFileNode reln) {
     if (_data.Get(reln, &rel))
         return rel;
 
-    rel = new SMgrRelationData{};
+    rel                    = new SMgrRelationData{};
     rel->smgr_target_block = INVALID_BLOCK;
-    rel->smgr_fsm_nblocks = INVALID_BLOCK;
-    rel->rd_node = reln;
-    for (int i{0}; i < INIT_FORKNUM; i++) {
+    rel->smgr_fsm_nblocks  = INVALID_BLOCK;
+    rel->rd_node           = reln;
+    for (int i{ 0 }; i < INIT_FORKNUM; i++) {
         rel->fd[i] = 0;
     }
 
@@ -70,7 +70,7 @@ Smgr::Extend(SMgrRelation reln, ForkNumber forknum, BlockNumber blocknum, char* 
 
 void
 Smgr::Close(SMgrRelation reln) {
-    for (int i{0}; i < INIT_FORKNUM; i++) {
+    for (int i{ 0 }; i < INIT_FORKNUM; i++) {
         md->Close(reln, (ForkNumber)i);
     }
     _data.Remove(reln->rd_node);

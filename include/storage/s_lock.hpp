@@ -51,7 +51,7 @@ tas(volatile slock_t* lock) {
 
 typedef long slock_t;
 
-#define TAS(lock) (InterlockedCompareExchange(lock, 1, 0))
+#define TAS(lock)      (InterlockedCompareExchange(lock, 1, 0))
 #define TAS_SPIN(lock) TAS(lock)
 
 #include <intrin.h>
@@ -65,7 +65,7 @@ typedef long slock_t;
 
 #endif
 
-#define S_LOCK(lock) (TAS(lock) ? s_lock((lock), __FILE__, __LINE__) : 0)
+#define S_LOCK(lock)      (TAS(lock) ? s_lock((lock), __FILE__, __LINE__) : 0)
 
 #define S_INIT_LOCK(lock) S_UNLOCK(lock)
 

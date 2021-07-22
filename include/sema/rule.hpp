@@ -10,7 +10,8 @@ class SemaTokenData;
 typedef SemaTokenData* SemaToken;
 typedef std::vector<SemaToken> SemaTokenList;
 
-struct SimpleRuleData {
+class SimpleRuleData {
+public:
     int id;
     SemaToken left;
     SemaTokenList right;
@@ -35,6 +36,7 @@ public:
     // look ahead 检查
     TokList tokens;
 
+public:
     bool IsDotEnd();
 
     SemaToken GetTokenAfterDot();
@@ -51,10 +53,10 @@ public:
 
     void SetTokens(TokList tokens);
 
-    int Compare(RuleData& other);
-
     // 用户自定义的规则
-    Node Format(SemaToken token, std::vector<Node> children);
+    Node Format(const SemaToken token, const std::vector<Node>& children);
+
+    bool operator==(const RuleData& other);
 };
 
 typedef RuleData* Rule;

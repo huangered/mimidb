@@ -1,12 +1,10 @@
 #include "lex/lexer.hpp"
 #include "c.hpp"
 
-int
-LexTokenData::Compare(const LexTokenData& token) {
-    return tok - token.tok;
-}
-
-Lexer::Lexer(const char* buf, int size) : _cur{ 0 }, _size{ size }, _buf{ buf } {
+Lexer::Lexer(const char* buf, int size)
+    : _cur{ 0 }
+    , _size{ size }
+    , _buf{ buf } {
 #define KEYWORD(X, Y) _meta[#X] = Tok::kw_##X;
 #include "lex/tok.def"
 }
@@ -18,7 +16,7 @@ Lexer::GetLexerToken() {
     }
     Tok tok{ Tok::unknown };
     char Char = _buf[_cur];
-    
+
     switch (Char) {
     case '0':
     case '1':

@@ -54,7 +54,7 @@ private:
 
 public:
     HashMap() {
-        count = 0;
+        count    = 0;
         _buckets = new Bucket[NUM];
         for (int i{}; i < NUM; i++) {
             (_buckets + i)->_list = nullptr;
@@ -64,7 +64,7 @@ public:
     ~HashMap() {
         for (int i{}; i < NUM; i++) {
             Bucket* bucket = _buckets + i;
-            Entry* head = bucket->_list;
+            Entry* head    = bucket->_list;
             while (head != nullptr) {
                 Entry* tmp = head->_next;
                 delete head;
@@ -76,20 +76,20 @@ public:
 
     void
     Put(K k, V v) {
-        int hash = _hash(k);
-        int index = hash % NUM;
+        int hash       = _hash(k);
+        int index      = hash % NUM;
         Bucket* bucket = _buckets + index;
-        Entry* entry = new Entry{k, v, bucket->_list};
-        bucket->_list = entry;
+        Entry* entry   = new Entry{ k, v, bucket->_list };
+        bucket->_list  = entry;
         count++;
     }
 
     bool
     Get(K k, V* v) {
-        int hash = _hash(k);
-        int index = hash % NUM;
+        int hash       = _hash(k);
+        int index      = hash % NUM;
         Bucket* bucket = _buckets + index;
-        Entry* head = bucket->_list;
+        Entry* head    = bucket->_list;
 
         while (head != nullptr) {
             if (_equal(head->_k, k)) {
@@ -104,10 +104,10 @@ public:
 
     void
     Remove(K k) {
-        int hash = _hash(k);
-        int index = hash % NUM;
+        int hash       = _hash(k);
+        int index      = hash % NUM;
         Bucket* bucket = _buckets + index;
-        Entry** head = &bucket->_list;
+        Entry** head   = &bucket->_list;
 
         for (Entry* entry{}; *head != nullptr;) {
             entry = *head;
@@ -123,10 +123,10 @@ public:
 
     bool
     Exist(K k) {
-        int hash = _hash(k);
-        int index = hash % NUM;
+        int hash       = _hash(k);
+        int index      = hash % NUM;
         Bucket* bucket = _buckets + index;
-        Entry* head = bucket->_list;
+        Entry* head    = bucket->_list;
 
         while (head != nullptr) {
             if (_equal(head->_k, k)) {
@@ -143,7 +143,7 @@ public:
         std::list<K> keys;
         for (int i{}; i < NUM; i++) {
             Bucket* bucket = _buckets + i;
-            Entry* head = bucket->_list;
+            Entry* head    = bucket->_list;
 
             while (head != nullptr) {
                 keys.push_back(head->_k);
@@ -158,7 +158,7 @@ public:
         std::list<V> values;
         for (int i{}; i < NUM; i++) {
             Bucket* bucket = _buckets + i;
-            Entry* head = bucket->_list;
+            Entry* head    = bucket->_list;
 
             while (head != nullptr) {
                 values.push_back(head->_v);

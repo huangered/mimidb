@@ -2,7 +2,6 @@
 #include <string>
 #include <functional>
 
-static bool SemaTokenListEqual(SemaTokenList& left, SemaTokenList& right);
 static bool SemaTokenListLess(const SemaTokenList& left, const SemaTokenList& right);
 static std::string join(const SemaTokenList& v);
 static std::string join2(const std::vector<Tok>& v);
@@ -24,7 +23,6 @@ operator<<(std::ostream& os, const RecordData& dt) {
     }
     return os;
 }
-
 
 bool
 group_key::operator<(const group_key& g1) const {
@@ -78,9 +76,11 @@ StateCollection::GetState(int stateId) {
 
 // end
 
-Parser::Parser(std::vector<SimpleRule> rules) : _maxState{ 0 } {
-    _firstSet  = std::make_unique<FirstSet>(rules);
-    _stateList = std::make_unique<StateCollection>();
+Parser::Parser(std::vector<SimpleRule> rules)
+    : _maxState{ 0 }
+    , _firstSet{ std::make_unique<FirstSet>(rules) }
+    , _stateList{ std::make_unique<StateCollection>() } {
+
     _stateList->Add(new StateData{ 0 });
 
     for (SimpleRule rule : rules) {
@@ -89,10 +89,6 @@ Parser::Parser(std::vector<SimpleRule> rules) : _maxState{ 0 } {
         r->left  = rule->left;
         r->right = rule->right;
         _rules.push_back(r);
-
-        if (r->right.size() == 0) {
-            epsilon.insert(r->left->id);
-        }
     }
     _rules[0]->root = true;
 
@@ -107,7 +103,7 @@ Parser::~Parser() {
 void
 Parser::GenerateParseTable(void) {
     _firstSet->Gen();
-    _firstSet->Print();
+    // _firstSet->Print();
     for (int i{}; i < _stateList->Size(); i++) {
         if (_stateList->IsEmpty(i)) {
             break;
@@ -115,11 +111,12 @@ Parser::GenerateParseTable(void) {
 
         handleState(i);
     }
-
+    /*
     for (int i{}; i < _stateList->Size(); i++) {
         if (_stateList->IsEmpty(i)) {
             break;
         }
+
         std::cout << "state " << i << std::endl;
         for (Rule r : _stateList->GetRules(i)) {
             std::cout << r->left->name << " => " << join(r->right);
@@ -132,15 +129,16 @@ Parser::GenerateParseTable(void) {
 
             std::cout << std::endl;
         }
-    }
 
+    }
+    */
     generateTable();
 }
 
-Node
-Parser::Parse(std::vector<LexToken> input) {
-    bool acc  = false;
-    Node node = nullptr;
+std::pair<bool, Node>
+Parser::Parse(const std::vector<LexToken>& input) {
+    bool acc{ false };
+    Node node{ nullptr };
     // init stack
     std::stack<int> state_stack;
     std::stack<Node> token_stack;
@@ -163,7 +161,7 @@ Parser::Parse(std::vector<LexToken> input) {
 
     node = token_stack.top();
 
-    return node;
+    return std::make_pair(acc, node);
 }
 
 // === private part ===
@@ -176,7 +174,7 @@ Parser::handleState(int stateId) {
     std::map<int, SemaToken> tokens;
     for (Rule rule : state->GetRules()) {
         if (!rule->IsDotEnd()) {
-            SemaToken token = rule->GetTokenAfterDot();
+            SemaToken token   = rule->GetTokenAfterDot();
             tokens[token->id] = token;
         }
     }
@@ -250,8 +248,8 @@ Parser::generateTable(void) {
             }
         }
     }
-    _actionTable->Print();
-    _gotoTable->Print();
+    //_actionTable->Print();
+    //  _gotoTable->Print();
 }
 
 void
@@ -271,23 +269,22 @@ Parser::expandRules(State state) {
             if (word->sema) {
                 // non terminals
                 // update state list
-
                 auto rule_left_id_eq = [word](Rule rule) -> bool { return rule->left->id == word->id; };
                 RuleList match;
                 find_all(_rules, match, rule_left_id_eq);
                 for (Rule rule : match) {
                     SemaTokenList tokenList = r->GetStringAfterDot();
-                    std::vector<Tok> tokens = _firstSet->Find(tokenList, r->GetTokens());
-                    std::remove_if(tokens.begin(), tokens.end(), [](Tok t) -> bool { return t == Tok::epsilon; });
+                    TokList tokens          = _firstSet->Find(tokenList, r->GetTokens());
+                    // todo: 这里可以优化这个lazy clone
                     Rule copy = rule->Clone();
                     copy->dot = 0;
                     copy->SetTokens(tokens);
                     // 如果是新rule
-                    auto rule_eq = [copy](Rule rule) -> bool { return rule->Compare(*copy) == 0; };
+                    auto rule_eq = [copy](Rule rule) -> bool { return *rule == *copy; };
                     RuleList src = state->GetRules();
                     RuleList dest;
                     find_all(src, dest, rule_eq);
-                    if (dest.size() == 0) {
+                    if (dest.empty()) {
                         copied.insert(copy);
                         count++;
                     } else {
@@ -326,8 +323,8 @@ Parser::expandRules(State state) {
 }
 
 State
-Parser::searchSameState(RuleList newStateRules) {
-    for (int i{0}; i < _stateList->Size(); i++) {
+Parser::searchSameState(const RuleList& newStateRules) {
+    for (int i{ 0 }; i < _stateList->Size(); i++) {
         State state = _stateList->GetState(i);
         if (state->MatchRule(newStateRules)) {
             return state;
@@ -341,7 +338,7 @@ Parser::reduce(std::stack<int>& states, std::stack<Node>& syms, Record record) {
     if (!record->state) {
         Rule rule = _rules[record->id];
         std::vector<Node> child;
-        for (int i = 0; i < rule->right.size(); i++) {
+        for (int i{ 0 }; i < rule->right.size(); i++) {
             child.push_back(syms.top());
             syms.pop();
             states.pop();
@@ -400,7 +397,7 @@ join(const SemaTokenList& v) {
 }
 
 std::string
-join2(const std::vector<Tok>& v) {
+join2(const TokList& v) {
     std::string a;
     for (Tok t : v) {
         a += t;
@@ -410,12 +407,12 @@ join2(const std::vector<Tok>& v) {
 }
 
 bool
-SemaTokenListEqual(SemaTokenList& left, SemaTokenList& right) {
+SemaTokenListEqual(const SemaTokenList& left, const SemaTokenList& right) {
     if (left.size() != right.size()) {
         return false;
     }
 
-    for (int i{0}; i < left.size(); i++) {
+    for (int i{ 0 }; i < left.size(); i++) {
         if (left[i]->id != right[i]->id) {
             return false;
         }

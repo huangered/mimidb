@@ -8,10 +8,10 @@ typedef struct FmgrBuildin {
 } FmgrBuildin;
 
 static FmgrBuildin fmgr_buildins[] = {
-    {INT8CMP_OID, "int8cmp", int8cmp},
-    {INT16CMP_OID, "int16cmp", int16cmp},
-    {INT32CMP_OID, "int32cmp", int32cmp},
-    {OIDEQ_OID, "oideq", oideq},
+    { INT8CMP_OID, "int8cmp", int8cmp },
+    { INT16CMP_OID, "int16cmp", int16cmp },
+    { INT32CMP_OID, "int32cmp", int32cmp },
+    { OIDEQ_OID, "oideq", oideq },
 
 };
 
@@ -27,7 +27,7 @@ fmgr_info(Oid functionId, FmgrInfo* finfo) {
 
     if ((fbp = fmgr_isbuildin(functionId)) != nullptr) {
         finfo->fn_method = fbp->func;
-        finfo->fn_id = functionId;
+        finfo->fn_id     = functionId;
         return;
     }
 
@@ -37,10 +37,10 @@ fmgr_info(Oid functionId, FmgrInfo* finfo) {
 Datum
 DirectFunctionCall2Coll(Method func, Datum arg1, Datum arg2) {
     FunctionCallInfoData fdata{};
-    fdata.flinfo = &func;
-    fdata.nargs = 2;
+    fdata.flinfo  = &func;
+    fdata.nargs   = 2;
     fdata.args[0] = arg1;
     fdata.args[1] = arg2;
-    Datum result = (*fdata.flinfo)(&fdata);
+    Datum result  = (*fdata.flinfo)(&fdata);
     return result;
 }

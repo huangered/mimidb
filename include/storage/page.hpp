@@ -24,7 +24,7 @@ typedef struct PageHeaderData {
 typedef PageHeaderData* PageHeader;
 
 #define SizeOfPageHeaderData (offsetof(PageHeaderData, pd_linp))
-#define PageGetHeader(page) ((PageHeader)page)
+#define PageGetHeader(page)  ((PageHeader)page)
 #define PageGetContent(page) ((char*)(page + SizeOfPageHeaderData))
 #define PageGetSpecial(page) (BTreeSpecial)(page + PageGetHeader(page)->pd_special)
 

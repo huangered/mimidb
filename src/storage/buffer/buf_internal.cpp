@@ -7,20 +7,20 @@
 
 BufferMgr::BufferMgr() {
     size_t size = NBuffer * BLKSZ;
-    _blocks = (char*)std::malloc(size);
+    _blocks     = (char*)std::malloc(size);
     assert(_blocks);
     memset(_blocks, 0, size);
 
     _buffDesc = new BufferDesc[NBuffer]{};
 
-    for (int i{0}; i < NBuffer; i++) {
+    for (int i{ 0 }; i < NBuffer; i++) {
         BufferDesc* desc = &_buffDesc[i];
-        desc->buf_id = i + 1;
-        desc->freeNext = i + 2;
+        desc->buf_id     = i + 1;
+        desc->freeNext   = i + 2;
     }
 
     _buffDesc[NBuffer - 1].freeNext = INVALID_BUFFER;
-    _freeBuffDesc = _buffDesc;
+    _freeBuffDesc                   = _buffDesc;
     // index = 0;
 }
 
@@ -57,7 +57,7 @@ BufferMgr::_ReadBufferCommon(Relation rel, ForkNumber forkNumber, BlockNumber bl
 
         blkno = smgr->Nblocks(rel->rd_smgr, forkNumber);
     }
-    desc = _BufferAlloc(rel, forkNumber, blkno, &found);
+    desc      = _BufferAlloc(rel, forkNumber, blkno, &found);
     Page page = GetPage(desc->buf_id);
     if (found) {
         if (!isExtend) {
@@ -77,7 +77,7 @@ BufferMgr::_ReadBufferCommon(Relation rel, ForkNumber forkNumber, BlockNumber bl
 BufferDesc*
 BufferMgr::_BufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno, bool* found) {
     Buffer buf_id = INVALID_BUFFER;
-    BufferTag tag{rel->rd_node, forkNumber, blkno};
+    BufferTag tag{ rel->rd_node, forkNumber, blkno };
 
     // use buftag to find
     *found = _hashMap.Get(tag, &buf_id);
@@ -110,7 +110,7 @@ BufferMgr::ReleaseBuffer(Buffer buffer) {
 void
 BufferMgr::FlushBuffer(BufferDesc* buffDesc) {
     SMgrRelation reln = smgr->Open(buffDesc->tag.rnode);
-    char* buf = GetPage(buffDesc->buf_id);
+    char* buf         = GetPage(buffDesc->buf_id);
     smgr->Write(reln, buffDesc->tag.forkNum, buffDesc->tag.blockNum, buf);
 }
 
@@ -130,7 +130,7 @@ BufferMgr::GetBufferDesc(Buffer bufId) {
 void
 BufferMgr::MarkBufferDirty(Buffer bufId) {
     BufferDesc* bd = &_buffDesc[bufId - 1];
-    bd->dirty = true;
+    bd->dirty      = true;
 }
 
 Buffer
@@ -172,7 +172,7 @@ BufferMgr::_Cleanup() {
 
 void
 BufferMgr::Debug(void) {
-    for (int i{0}; i < NBuffer; i++) {
+    for (int i{ 0 }; i < NBuffer; i++) {
         BufferDesc* desc = &_buffDesc[i];
         printf("buf id %d , refcnt %d , dirty %d\r\n", desc->buf_id, desc->refcnt, desc->dirty);
     }
