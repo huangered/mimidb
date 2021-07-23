@@ -9,7 +9,7 @@
 #include "storage/block.hpp"
 #include "storage/bufmgr.hpp"
 
-#define BTREE_METAPAGE 0
+
 
 struct BTreeMetaData {
     uint32_t btm_magic;
@@ -70,6 +70,7 @@ struct BTreeSearchKeyData {
 
 typedef BTreeSearchKeyData* BTreeSearchKey;
 
+#define BTREE_METAPAGE              0
 #define P_NEW                       INVALID_BLOCK
 #define P_NONE                      0
 #define P_RIGHTMOST(special)        ((special)->block_next == P_NONE)
