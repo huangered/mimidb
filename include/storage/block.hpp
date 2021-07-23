@@ -1,9 +1,7 @@
-#ifndef _BLOCK_H_
-#define _BLOCK_H_
+#ifndef _block_h_
+#define _block_h_
 
-#include "mimi.hpp"
-
-typedef uint32 BlockNumber;
+typedef unsigned int BlockNumber;
 
 #define INVALID_BLOCK 0xffff
 

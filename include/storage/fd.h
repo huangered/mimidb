@@ -1,5 +1,5 @@
-#ifndef _fd_hpp_
-#define _fd_hpp_
+#ifndef _fd_h_
+#define _fd_h_
 
 #include <sys/types.h>
 

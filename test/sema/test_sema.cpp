@@ -107,3 +107,27 @@ TEST(Sema, select_where_test) {
 
     delete n.second;
 }
+
+TEST(Sema, select_fail_test) {
+    auto rList = ReadRules("C:\\work\\mimidb\\sql.rule");
+
+    const char* str = "select * from asdf where a;";
+
+    Lexer lexer(str, strlen(str));
+
+    LexToken t;
+    std::vector<LexToken> data;
+    while ((t = lexer.GetLexerToken()) != nullptr) {
+        if (t->tok != Tok::whitespace) {
+            data.push_back(t);
+        }
+    }
+    data.push_back(EndLexToken);
+
+    Parser parser(rList);
+    parser.GenerateParseTable();
+    auto n = parser.Parse(data);
+    EXPECT_FALSE(n.first);
+    Node node = n.second;
+    EXPECT_EQ(node, nullptr);
+}

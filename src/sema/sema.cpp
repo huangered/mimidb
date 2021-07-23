@@ -1,6 +1,9 @@
 #include "sema/sema.hpp"
 #include <string>
 #include <functional>
+extern "C" {
+#include "storage/fd.h"
+}
 
 static bool SemaTokenListLess(const SemaTokenList& left, const SemaTokenList& right);
 static std::string join(const SemaTokenList& v);
@@ -76,7 +79,7 @@ StateCollection::GetState(int stateId) {
 
 // end
 
-Parser::Parser(std::vector<SimpleRule> rules)
+Parser::Parser(const std::vector<SimpleRule>& rules)
     : _maxState{ 0 }
     , _firstSet{ std::make_unique<FirstSet>(rules) }
     , _stateList{ std::make_unique<StateCollection>() } {
@@ -98,6 +101,9 @@ Parser::Parser(std::vector<SimpleRule> rules)
 }
 
 Parser::~Parser() {
+    for (Rule r : _rules) {
+        delete r;
+    }
 }
 
 void
@@ -158,8 +164,16 @@ Parser::Parse(const std::vector<LexToken>& input) {
             break;
         }
     }
-
-    node = token_stack.top();
+    if (acc) {
+        node = token_stack.top();
+    } else {
+        while (!token_stack.empty()) {
+            node = token_stack.top();
+            token_stack.pop();
+            delete node;
+            node = nullptr;
+        }
+    }
 
     return std::make_pair(acc, node);
 }
@@ -217,6 +231,39 @@ Parser::handleState(int stateId) {
         }
     }
 }
+
+void
+t1(File fd, char* buf) {
+    int size = strlen(buf);
+    FileWrite(fd, buf, size);
+}
+
+void
+Parser::GenerateCppCode(const char* path) {
+    File fd = PathNameOpenFile(path);
+
+    //char* buf = new char[256];
+
+    t1(fd, "#include <iostream>\n");
+    t1(fd, "using namespace std;\n");
+    t1(fd, "Node raw_parse(const char* str){\n");
+
+    t1(fd, "  Lexer lexer(str, strlen(str));\n");
+    t1(fd, "  LexToken t;\n");
+    t1(fd, "  std::vector<LexToken> data;\n");
+    t1(fd, "  while ((t = lexer.GetLexerToken()) != nullptr) {\n");
+    t1(fd, "    if (t->tok != Tok::whitespace) {\n");
+    t1(fd, "      data.push_back(t);\n");
+    t1(fd, "    }\n");
+    t1(fd, "  }\n");
+    t1(fd, "  data.push_back(EndLexToken);\n");
+
+    t1(fd, "}\n");
+
+    FileClose(fd);
+}
+
+
 
 void
 Parser::generateTable(void) {
@@ -324,7 +371,8 @@ Parser::expandRules(State state) {
 
 State
 Parser::searchSameState(const RuleList& newStateRules) {
-    for (int i{ 0 }; i < _stateList->Size(); i++) {
+    int max{ _stateList->Size() };
+    for (int i{ 0 }; i < max; i++) {
         State state = _stateList->GetState(i);
         if (state->MatchRule(newStateRules)) {
             return state;
@@ -344,8 +392,8 @@ Parser::reduce(std::stack<int>& states, std::stack<Node>& syms, Record record) {
             states.pop();
         }
 
-        Node left = rule->Format(rule->left, child);
-        syms.push(left);
+        Node node = rule->Format(rule->left, child);
+        syms.push(node);
 
         // find goto table
         int curStateId = states.top();
