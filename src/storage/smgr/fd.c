@@ -1,4 +1,4 @@
-#include "storage/fd.hpp"
+#include "storage/fd.h"
 #include <fcntl.h>
 #ifdef __linux__
 #include <unistd.h>
@@ -43,9 +43,8 @@ FileSync(File fd) {
 
 off_t
 FileSeek(File fd, off_t offset, int whence) {
-
-    lseek(fd, offset, whence);
-    return 0;
+    long num = lseek(fd, offset, whence);
+    return num;
 }
 
 void

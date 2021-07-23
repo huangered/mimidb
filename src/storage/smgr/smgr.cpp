@@ -4,8 +4,6 @@
 #include "util/hashmap.hpp"
 #include "port/port.hpp"
 
-namespace fs = std::filesystem;
-
 Smgr* smgr = new Smgr{};
 
 Smgr::Smgr() {
@@ -35,7 +33,7 @@ Smgr::Open(RelFileNode reln) {
     rel->smgr_target_block = INVALID_BLOCK;
     rel->smgr_fsm_nblocks  = INVALID_BLOCK;
     rel->rd_node           = reln;
-    for (int i{ 0 }; i < INIT_FORKNUM; i++) {
+    for (int i{ 0 }; i < ForkNumber::NUMS_FORKNUM; i++) {
         rel->fd[i] = 0;
     }
 
