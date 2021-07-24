@@ -1,20 +1,20 @@
 #include "storage/fd.h"
 #include <fcntl.h>
-#ifdef __linux__
-#include <unistd.h>
-#else
+#ifdef _WIN32
 #include <io.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#else
+#include <unistd.h>
 #endif
 
 int
 PathNameOpenFile(const char* filename) {
     int fd;
-#ifdef __linux__
-    fd = open(filename, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
-#else
+#ifdef _WIN32
     fd = open(filename, O_CREAT | O_RDWR, S_IREAD | S_IWRITE);
+#else
+    fd = open(filename, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
 #endif
 
     return fd;
@@ -34,10 +34,10 @@ FileWrite(File fd, char* buf, int amount) {
 
 int
 FileSync(File fd) {
-#ifdef __linux__
-    return fsync(fd);
-#else
+#ifdef _WIN32
     return _commit(fd);
+#else
+    return fsync(fd);
 #endif
 }
 
