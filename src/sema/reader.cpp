@@ -38,6 +38,7 @@ ReadRules(const char* path) {
         SemaToken l_token;
         SemaTokenList r_token;
 
+        std::string f_block;
         std::string l_name = lines[0];
 
         if (semaTokens.count(l_name) == 0) {
@@ -47,7 +48,9 @@ ReadRules(const char* path) {
 
         l_token = new SemaTokenData {semaTokens[l_name], true, l_name};
 
-        for (int i{ 2 }; i < lines.size(); i++) {
+        int i{ 2 };
+
+        for (; i < lines.size(); i++) {
 
             if (lines[i].find('{') == 0) {
                 break;
@@ -67,8 +70,18 @@ ReadRules(const char* path) {
 
             r_token.push_back(new SemaTokenData{ semaTokens[name], !terminal, name });
         }
+        // 处理 { } 函数块
+        i++;
+        for (; i < lines.size(); i++) {
+            if (lines[i].find('}') == 0) {
+                break;
+            }
 
-        SimpleRule sRule = make_rule(rule_id, l_token, r_token);
+            f_block += lines[i];
+            f_block += " ";
+        }
+
+        SimpleRule sRule = make_rule(rule_id, l_token, r_token, f_block);
         rList.push_back(sRule);
         rule_id++;
     }
