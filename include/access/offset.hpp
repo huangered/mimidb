@@ -3,8 +3,8 @@
 
 typedef unsigned int OffsetNumber;
 
-#define OffsetNumberPrev(num) (num - 1)
-#define OffsetNumberNext(num) (num + 1)
+#define OffsetNumberPrev(num) ((num) - 1)
+#define OffsetNumberNext(num) ((num) + 1)
 
 #define InvalidOffsetNumber   ((OffsetNumber)0)
 #define FirstOffsetNumber     ((OffsetNumber)1)
