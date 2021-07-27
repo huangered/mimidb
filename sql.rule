@@ -19,40 +19,40 @@
 @token kw_commit
 @token kw_end
 
-Q = StmtBlock {}
+Q = StmtBlock { $$ = $1; }
 
-StmtBlock = StmtList {}
-StmtList = StmtList Stmt {}
-StmtList = Stmt {}
+StmtBlock = StmtList { }
+StmtList = StmtList Stmt { }
+StmtList = Stmt { }
 
-Stmt = SelectStmt {}
-Stmt = TableStmt {}
-Stmt = ViewStmt {}
-Stmt = InsertStmt {}
-Stmt = TxStmt {}
+Stmt = SelectStmt { }
+Stmt = TableStmt { }
+Stmt = ViewStmt { }
+Stmt = InsertStmt { }
+Stmt = TxStmt { }
 
-TableStmt = kw_create kw_table TableName TableRef semicolon {}
-ViewStmt = kw_create kw_view TableName semicolon {}
+TableStmt = kw_create kw_table TableName TableRef semicolon { }
+ViewStmt = kw_create kw_view TableName semicolon { }
 
 
-SelectStmt = kw_select Params kw_from TableName WhereStmt semicolon {}
-SelectStmt = kw_select Params semicolon {}
+SelectStmt = kw_select Params kw_from TableName WhereStmt semicolon { }
+SelectStmt = kw_select Params semicolon { }
 
-InsertStmt = kw_insert kw_into TableName kw_values l_brace Params r_brace semicolon {}
+InsertStmt = kw_insert kw_into TableName kw_values l_brace Params r_brace semicolon { }
 
-TxStmt = kw_begin StmtList kw_end {}
+TxStmt = kw_begin StmtList kw_end { }
 
-Params = Params comma T {}
-Params = T {}
-T = identifier {}
-T = star {}
+Params = Params comma T { }
+Params = T { }
+T = identifier { }
+T = star { }
 
-TableName = identifier {}
+TableName = identifier { }
 
-WhereStmt = kw_where {}
-WhereStmt = {}
+WhereStmt = kw_where { }
+WhereStmt = { }
 
-TableRef = l_brace ColumnRefs r_brace {}      # (int, string,)
-ColumnRefs = ColumnRefs comma ColumnRef {}    # int, string,
-ColumnRefs = ColumnRef {}                     # int, string,
-ColumnRef = identifier identifier {}          # abc int,
+TableRef = l_brace ColumnRefs r_brace { }      # (int, string,)
+ColumnRefs = ColumnRefs comma ColumnRef { }    # int, string,
+ColumnRefs = ColumnRef { }                     # int, string,
+ColumnRef = identifier identifier { }          # abc int,

@@ -8,7 +8,7 @@ main(int argc, char* argv[]) {
 
     Parser parser(rList);
     parser.GenerateParseTable();
-    parser.GenerateCppCode("code.cpp");
+    parser.GenerateCppCode("code.hpp");
 
     return 0;
 }
