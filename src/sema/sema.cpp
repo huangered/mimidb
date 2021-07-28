@@ -248,7 +248,8 @@ Parser::GenerateCppCode(const char* path) {
     t1(fd, "#include <iostream>\n");
     t1(fd, "#include <stack>\n");
     t1(fd, "#include <vector>\n");
-    t1(fd, "#include \"TokenKinds.hpp\"\n");
+    t1(fd, "#include \"lex/TokenKinds.hpp\"\n");
+    t1(fd, "#include \"sema/sema.hpp\"\n");
     t1(fd, "using namespace std;\n");
     t1(fd, "\n");
     t1(fd, "bool eatToken(std::stack<int>& states, std::stack<Node>& syms, std::stack<LexToken>& input, bool* acc);\n");
@@ -306,16 +307,31 @@ Parser::GenerateCppCode(const char* path) {
        "bool\neatToken(std::stack<int> & states, std::stack<Node> & syms, std::stack<LexToken> & input, bool* acc) {\n");
     t1(fd, "  int curStateId = states.top();\n");
     t1(fd, "  LexToken token = input.top();\n");
-    t1(fd, "  Record record  = _actionTable->Find(curStateId, token->tok);\n");
-    t1(fd, "  if (record != nullptr) {\n");
+    t1(fd, "  bool r_acc;\n");
+    t1(fd, "  int r_state;\n");
+    t1(fd, "  int r_id;\n");
+    t1(fd, "  bool r_find{false};\n");
+    for (int i{ 0 }; i < _maxState; i++) {
+        for (int j{ 0 }; j < Tok::NUM_TOKENS; j++) {
+            Record record = _actionTable->Find(i, j);
+            if (record != nullptr) {
+                char* a = new char[256];
+                sprintf(a, "  if( %d == curStateId && %d == token->tok ) { r_acc = %d; r_state = %d; r_id = %d; r_find=true;} \n", i, j, record->acc, record->state, record->id);
+                t1(fd, a);
+                delete[] a;
+            }
+        }
+    }
+
+    t1(fd, "  if (r_find == true) {\n");
     t1(fd, "\n");
-    t1(fd, "    if (record->acc) {\n");
+    t1(fd, "    if (r_acc == true) {\n");
     t1(fd, "      *acc = true;\n");
     t1(fd, "      return true;\n");
     t1(fd, "    }\n");
     t1(fd, "\n");
-    t1(fd, "    if (record->state) {\n");
-    t1(fd, "      states.push(record->id);\n");
+    t1(fd, "    if (r_state == true) {\n");
+    t1(fd, "      states.push(r_id);\n");
     t1(fd, "      syms.push(new NodeData(token));\n");
     t1(fd, "      input.pop();\n");
     t1(fd, "      return true;\n");
@@ -473,7 +489,7 @@ Parser::searchSameState(const RuleList& newStateRules) {
  *使用规则
  */
 bool
-Parser::reduce(std::stack<int>& states, std::stack<Node>& syms, Record record) {
+Parser::reduce(std::stack<int>& states, std::stack<Node>& syms, const Record record) {
     if (!record->state) {
         Rule rule = _rules[record->id];
         std::vector<Node> child;

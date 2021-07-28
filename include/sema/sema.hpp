@@ -126,7 +126,7 @@ private:
     void expandRules(State state);
     State searchSameState(const RuleList& newStateRules);
 
-    bool reduce(std::stack<int>& states, std::stack<Node>& syms, Record curRecord);
+    bool reduce(std::stack<int>& states, std::stack<Node>& syms, const Record curRecord);
     bool eatToken(std::stack<int>& states, std::stack<Node>& syms, std::stack<LexToken>& input, bool* acc);
 };
 
