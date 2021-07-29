@@ -8,6 +8,7 @@ extern "C" {
 static bool SemaTokenListLess(const SemaTokenList& left, const SemaTokenList& right);
 static std::string join(const SemaTokenList& v);
 static std::string join2(const std::vector<Tok>& v);
+static std::string funcReplace(std::string fblock, int size);
 
 std::ostream&
 operator<<(std::ostream& os, const RecordData& dt) {
@@ -245,15 +246,19 @@ Parser::GenerateCppCode(const char* path) {
 
     // char* buf = new char[256];
     // lex part
+    t1(fd, "#ifndef _p_test_hpp_\n");
+    t1(fd, "#define _p_test_hpp_\n");
     t1(fd, "#include <iostream>\n");
     t1(fd, "#include <stack>\n");
     t1(fd, "#include <vector>\n");
+    t1(fd, "#include \"sema/gogo.hpp\"\n");
     t1(fd, "#include \"lex/TokenKinds.hpp\"\n");
     t1(fd, "#include \"sema/sema.hpp\"\n");
     t1(fd, "using namespace std;\n");
     t1(fd, "\n");
-    t1(fd, "bool eatToken(std::stack<int>& states, std::stack<Node>& syms, std::stack<LexToken>& input, bool* acc);\n");
-    t1(fd, "bool reduce(std::stack<int>& states, std::stack<Node>& syms, Record record);\n");
+    t1(fd, "static bool eatToken(std::stack<int>& states, std::stack<Node>& syms, std::stack<LexToken>& input, bool* "
+           "acc);\n");
+    t1(fd, "static bool reduce(std::stack<int>& states, std::stack<Node>& syms, bool r_state, int r_id);\n");
     t1(fd, "Node raw_parse(const char* str);\n");
     t1(fd, "\n");
 
@@ -277,10 +282,11 @@ Parser::GenerateCppCode(const char* path) {
     t1(fd, " \n");
     t1(fd, "  state_stack.push(0);\n");
     t1(fd, " \n");
-    t1(fd, "  for (auto iter = input.rbegin(); iter != input.rend(); iter++) {\n");
+    t1(fd, "  for (auto iter = data.rbegin(); iter != data.rend(); iter++) {\n");
     t1(fd, "    input_stack.push(*iter);\n");
     t1(fd, "  }\n");
     t1(fd, " \n");
+    t1(fd, " bool acc{};\n");
     t1(fd, "  while (!acc) {\n");
     t1(fd, "    bool op = eatToken(state_stack, token_stack, input_stack, &acc);\n");
     t1(fd, " \n");
@@ -299,16 +305,17 @@ Parser::GenerateCppCode(const char* path) {
     t1(fd, "      node = nullptr;\n");
     t1(fd, "    }\n");
     t1(fd, "  }\n");
+    t1(fd, "  return node;\n");
     t1(fd, "}\n");
 
     // eattoken
 
-    t1(fd,
-       "bool\neatToken(std::stack<int> & states, std::stack<Node> & syms, std::stack<LexToken> & input, bool* acc) {\n");
+    t1(fd, "bool\neatToken(std::stack<int> & states, std::stack<Node> & syms, std::stack<LexToken> & input, bool* acc) "
+           "{\n");
     t1(fd, "  int curStateId = states.top();\n");
     t1(fd, "  LexToken token = input.top();\n");
     t1(fd, "  bool r_acc;\n");
-    t1(fd, "  int r_state;\n");
+    t1(fd, "  bool r_state;\n");
     t1(fd, "  int r_id;\n");
     t1(fd, "  bool r_find{false};\n");
     for (int i{ 0 }; i < _maxState; i++) {
@@ -316,7 +323,10 @@ Parser::GenerateCppCode(const char* path) {
             Record record = _actionTable->Find(i, j);
             if (record != nullptr) {
                 char* a = new char[256];
-                sprintf(a, "  if( %d == curStateId && %d == token->tok ) { r_acc = %d; r_state = %d; r_id = %d; r_find=true;} \n", i, j, record->acc, record->state, record->id);
+                sprintf(a,
+                        " if( %d == curStateId && %d == token->tok ) { r_acc = %d; r_state = %s; r_id = %d; "
+                        "r_find=true;} \n",
+                        i, j, record->acc, std::to_string( record->state).c_str(), record->id);
                 t1(fd, a);
                 delete[] a;
             }
@@ -336,7 +346,7 @@ Parser::GenerateCppCode(const char* path) {
     t1(fd, "      input.pop();\n");
     t1(fd, "      return true;\n");
     t1(fd, "    } else {\n");
-    t1(fd, "      return reduce(states, syms, record);\n");
+    t1(fd, "      return reduce(states, syms, r_state, r_id);\n");
     t1(fd, "    }\n");
     t1(fd, "  }\n");
     t1(fd, "  return false;\n");
@@ -344,27 +354,59 @@ Parser::GenerateCppCode(const char* path) {
 
     // reduce
 
-    t1(fd, "bool\nreduce(std::stack<int> & states, std::stack<Node> & syms, Record record) {\n");
-    t1(fd, "  if (!record->state) {\n");
-    t1(fd, "    Rule rule = _rules[record->id];\n");
+    t1(fd, "bool\nreduce(std::stack<int> & states, std::stack<Node> & syms, bool r_state, int r_id) {\n");
+    t1(fd, "  if (!r_state) {\n");
+    t1(fd, "    int child_num{0};\n");
+    t1(fd, "    int rule_left_id{0};\n");
     t1(fd, "    std::vector<Node> child;\n");
-    t1(fd, "    for (int i{ 0 }; i < rule->right.size(); i++) {\n");
-    t1(fd, "      child.push_back(syms.top());\n");
-    t1(fd, "      syms.pop();\n");
-    t1(fd, "      states.pop();\n");
-    t1(fd, "    }\n");
-    t1(fd, "\n");
-    t1(fd, "    Node node = rule->Format(rule->left, child);\n");
-    t1(fd, "    syms.push(node);\n");
+    for (int i1{ 0 }; i1 < _rules.size(); i1++) {
+        char* a = new char[256];
+        sprintf(a, "    if( r_id == %d ) { \n      child_num=%d;\n      rule_left_id=%d;\n", i1,
+                _rules[i1]->right.size(), _rules[i1]->left->id);
+        t1(fd, a);
+
+        t1(fd, "      for (int i{ 0 }; i < child_num; i++) {\n");
+        t1(fd, "        child.push_back(syms.top());\n");
+        t1(fd, "        syms.pop();\n");
+        t1(fd, "        states.pop();\n");
+        t1(fd, "      }\n");
+        t1(fd, "\n");
+        t1(fd, "      Node node = nullptr;\n");
+
+        memset(a, 0, 256);
+        std::string g = funcReplace(_rules[i1]->func_block, _rules[i1]->right.size());
+        sprintf(a, "//block\n      { %s }\n", g.c_str());
+        t1(fd, a);
+
+        t1(fd, "      syms.push(node);\n");
+
+        t1(fd, "    }\n");
+
+        delete[] a;
+    }
+
     t1(fd, "\n");
     t1(fd, "    int curStateId = states.top();\n");
-    t1(fd, "\n");
-    t1(fd, "    int nextStateId = _gotoTable->Find(curStateId, rule->left->id)->id;\n");
+    t1(fd, "    int nextStateId{0};\n");
+    for (int i{ 0 }; i < _maxState; i++) {
+        for (int j{ 0 }; j < _maxState; j++) {
+            Record record = _gotoTable->Find(i, j);
+            if (record != nullptr) {
+                char* a = new char[256];
+                sprintf(a, "    if( %d == curStateId && %d == rule_left_id ) { nextStateId = %d;} \n", i, j,
+                        record->id);
+                t1(fd, a);
+                delete[] a;
+            }
+        }
+    }
+
     t1(fd, "    states.push(nextStateId);\n");
     t1(fd, "    return true;\n");
     t1(fd, "  }\n");
     t1(fd, "  return false;\n");
     t1(fd, "}\n");
+    t1(fd, "#endif\n");
 
     FileClose(fd);
 }
@@ -498,7 +540,7 @@ Parser::reduce(std::stack<int>& states, std::stack<Node>& syms, const Record rec
             syms.pop();
             states.pop();
         }
-        
+
         Node node = rule->Format(rule->left, child);
         syms.push(node);
 
@@ -591,4 +633,22 @@ SemaTokenListLess(const SemaTokenList& left, const SemaTokenList& right) {
     }
 
     return false;
+}
+
+std::string
+funcReplace(std::string fblock, int size) {
+    std::string tmp = fblock;
+    for (int i{ 0 }; i < size; i++) {
+        std::string w = "$" + std::to_string(i);
+        std::string r = "child[" + std::to_string(i);
+        r += "]";
+        std::size_t pos;
+        while ((pos = tmp.find(w)) != std::string::npos)
+            tmp.replace(pos, w.size(), r);
+    }
+    std::size_t pos;
+
+    while ((pos = tmp.find("$$")) != std::string::npos)
+        tmp.replace(pos, 2, "node");
+    return tmp;
 }

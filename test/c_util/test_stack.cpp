@@ -43,3 +43,15 @@ TEST(c_util, cvector) {
 
     vector_free(v);
 }
+
+TEST(a, b) {
+
+    int* arr = new int[100];
+    for (int i{ 0 }; i < 100; i++) {
+        *(arr + i) = i;
+    }
+
+    int* q = arr + 50;
+    int j  = q[-1];
+    int q2 = q[-2];
+}
