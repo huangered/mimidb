@@ -13,7 +13,7 @@ struct SMgrRelationData {
     BlockNumber smgr_target_block; /* 当前插入的block */
     BlockNumber smgr_fsm_nblocks;  /* last known size of fsm fork */
 
-    int fd[INIT_FORKNUM];
+    int fd[ForkNumber::NUMS_FORKNUM];
 };
 
 typedef SMgrRelationData* SMgrRelation;

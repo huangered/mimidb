@@ -1,12 +1,11 @@
-#ifndef _sema_hpp_
+﻿#ifndef _sema_hpp_
 #define _sema_hpp_
 
 #include "lex/lexer.hpp"
-#include "util/generic.hpp"
+#include "sema/FindAll.hpp"
 #include "sema/node.hpp"
 #include "sema/rule.hpp"
 #include "sema/table.hpp"
-#include "util/generic.hpp"
 
 #include <map>
 #include <set>
@@ -113,10 +112,13 @@ private:
     std::unique_ptr<StateCollection> _stateList;
 
 public:
-    Parser(std::vector<SimpleRule> rules);
+    Parser(const std::vector<SimpleRule>& rules);
     ~Parser();
     void GenerateParseTable(void);
     std::pair<bool, Node> Parse(const std::vector<LexToken>& input);
+
+    // 生成 cpp 代码
+    void GenerateCppCode(const char* path);
 
 private:
     void handleState(int stateId);

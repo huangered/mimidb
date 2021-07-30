@@ -6,7 +6,9 @@
 #else
 #include <unistd.h>
 #endif
-#include "storage/fd.hpp"
+extern "C" {
+#include "storage/fd.h"
+}
 
 int
 Md::Nblock(SMgrRelation reln, ForkNumber forknum) {
@@ -63,12 +65,10 @@ int
 Md::Open(SMgrRelation reln, ForkNumber forknum) {
     int fd = reln->fd[forknum];
     if (fd <= 0) {
-        auto path = GetRelPath(reln->rd_node.dbNode, reln->rd_node.relNode, forknum);
+        char* path = GetRelPath(reln->rd_node.dbNode, reln->rd_node.relNode, forknum);
 
-        int fd2 = PathNameOpenFile(path);
-
+        int fd2           = PathNameOpenFile(path);
         delete[] path;
-
         reln->fd[forknum] = fd2;
         fd                = fd2;
     }

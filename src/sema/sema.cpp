@@ -1,6 +1,10 @@
 #include "sema/sema.hpp"
 #include <string>
 #include <functional>
+extern "C" {
+#include "storage/fd.h"
+}
+#include <cstring>
 
 static bool SemaTokenListLess(const SemaTokenList& left, const SemaTokenList& right);
 static std::string join(const SemaTokenList& v);
@@ -76,7 +80,7 @@ StateCollection::GetState(int stateId) {
 
 // end
 
-Parser::Parser(std::vector<SimpleRule> rules)
+Parser::Parser(const std::vector<SimpleRule>& rules)
     : _maxState{ 0 }
     , _firstSet{ std::make_unique<FirstSet>(rules) }
     , _stateList{ std::make_unique<StateCollection>() } {
@@ -84,10 +88,11 @@ Parser::Parser(std::vector<SimpleRule> rules)
     _stateList->Add(new StateData{ 0 });
 
     for (SimpleRule rule : rules) {
-        Rule r   = new RuleData{};
-        r->id    = rule->id;
-        r->left  = rule->left;
-        r->right = rule->right;
+        Rule r        = new RuleData{};
+        r->id         = rule->id;
+        r->left       = rule->left;
+        r->right      = rule->right;
+        r->func_block = rule->funcBlock;
         _rules.push_back(r);
     }
     _rules[0]->root = true;
@@ -98,6 +103,9 @@ Parser::Parser(std::vector<SimpleRule> rules)
 }
 
 Parser::~Parser() {
+    for (Rule r : _rules) {
+        delete r;
+    }
 }
 
 void
@@ -158,8 +166,16 @@ Parser::Parse(const std::vector<LexToken>& input) {
             break;
         }
     }
-
-    node = token_stack.top();
+    if (acc) {
+        node = token_stack.top();
+    } else {
+        while (!token_stack.empty()) {
+            node = token_stack.top();
+            token_stack.pop();
+            delete node;
+            node = nullptr;
+        }
+    }
 
     return std::make_pair(acc, node);
 }
@@ -216,6 +232,126 @@ Parser::handleState(int stateId) {
             }
         }
     }
+}
+
+void
+t1(File fd, char* buf) {
+    int size = strlen(buf);
+    FileWrite(fd, buf, size);
+}
+
+void
+Parser::GenerateCppCode(const char* path) {
+    File fd = PathNameOpenFile(path);
+
+    // char* buf = new char[256];
+    // lex part
+    t1(fd, "#include <iostream>\n");
+    t1(fd, "#include <stack>\n");
+    t1(fd, "#include <vector>\n");
+    t1(fd, "#include \"TokenKinds.hpp\"\n");
+    t1(fd, "using namespace std;\n");
+    t1(fd, "\n");
+    t1(fd, "bool eatToken(std::stack<int>& states, std::stack<Node>& syms, std::stack<LexToken>& input, bool* acc);\n");
+    t1(fd, "bool reduce(std::stack<int>& states, std::stack<Node>& syms, Record record);\n");
+    t1(fd, "Node raw_parse(const char* str);\n");
+    t1(fd, "\n");
+
+    t1(fd, "Node\nraw_parse(const char* str){\n");
+
+    t1(fd, "  Lexer lexer(str, strlen(str));\n");
+    t1(fd, "  LexToken t;\n");
+    t1(fd, "  std::vector<LexToken> data;\n");
+    t1(fd, "  while ((t = lexer.GetLexerToken()) != nullptr) {\n");
+    t1(fd, "    if (t->tok != Tok::whitespace) {\n");
+    t1(fd, "      data.push_back(t);\n");
+    t1(fd, "    }\n");
+    t1(fd, "  }\n");
+    t1(fd, "  data.push_back(EndLexToken);\n");
+    t1(fd, "\n");
+    // sema part
+    t1(fd, "  Node node{ nullptr };\n");
+    t1(fd, "  std::stack<int> state_stack;\n");
+    t1(fd, "  std::stack<Node> token_stack;\n");
+    t1(fd, "  std::stack<LexToken> input_stack;\n");
+    t1(fd, " \n");
+    t1(fd, "  state_stack.push(0);\n");
+    t1(fd, " \n");
+    t1(fd, "  for (auto iter = input.rbegin(); iter != input.rend(); iter++) {\n");
+    t1(fd, "    input_stack.push(*iter);\n");
+    t1(fd, "  }\n");
+    t1(fd, " \n");
+    t1(fd, "  while (!acc) {\n");
+    t1(fd, "    bool op = eatToken(state_stack, token_stack, input_stack, &acc);\n");
+    t1(fd, " \n");
+    t1(fd, "    if (!op) {\n");
+    t1(fd, "      std::cout << \" no action \" << std::endl;\n");
+    t1(fd, "      break;\n");
+    t1(fd, "    }\n");
+    t1(fd, "  }\n");
+    t1(fd, "  if (acc) {\n");
+    t1(fd, "    node = token_stack.top();\n");
+    t1(fd, "  } else {\n");
+    t1(fd, "    while (!token_stack.empty()) {\n");
+    t1(fd, "      node = token_stack.top();\n");
+    t1(fd, "      token_stack.pop();\n");
+    t1(fd, "      delete node;\n");
+    t1(fd, "      node = nullptr;\n");
+    t1(fd, "    }\n");
+    t1(fd, "  }\n");
+    t1(fd, "}\n");
+
+    // eattoken
+
+    t1(fd,
+       "bool\neatToken(std::stack<int> & states, std::stack<Node> & syms, std::stack<LexToken> & input, bool* acc) {\n");
+    t1(fd, "  int curStateId = states.top();\n");
+    t1(fd, "  LexToken token = input.top();\n");
+    t1(fd, "  Record record  = _actionTable->Find(curStateId, token->tok);\n");
+    t1(fd, "  if (record != nullptr) {\n");
+    t1(fd, "\n");
+    t1(fd, "    if (record->acc) {\n");
+    t1(fd, "      *acc = true;\n");
+    t1(fd, "      return true;\n");
+    t1(fd, "    }\n");
+    t1(fd, "\n");
+    t1(fd, "    if (record->state) {\n");
+    t1(fd, "      states.push(record->id);\n");
+    t1(fd, "      syms.push(new NodeData(token));\n");
+    t1(fd, "      input.pop();\n");
+    t1(fd, "      return true;\n");
+    t1(fd, "    } else {\n");
+    t1(fd, "      return reduce(states, syms, record);\n");
+    t1(fd, "    }\n");
+    t1(fd, "  }\n");
+    t1(fd, "  return false;\n");
+    t1(fd, "}\n ");
+
+    // reduce
+
+    t1(fd, "bool\nreduce(std::stack<int> & states, std::stack<Node> & syms, Record record) {\n");
+    t1(fd, "  if (!record->state) {\n");
+    t1(fd, "    Rule rule = _rules[record->id];\n");
+    t1(fd, "    std::vector<Node> child;\n");
+    t1(fd, "    for (int i{ 0 }; i < rule->right.size(); i++) {\n");
+    t1(fd, "      child.push_back(syms.top());\n");
+    t1(fd, "      syms.pop();\n");
+    t1(fd, "      states.pop();\n");
+    t1(fd, "    }\n");
+    t1(fd, "\n");
+    t1(fd, "    Node node = rule->Format(rule->left, child);\n");
+    t1(fd, "    syms.push(node);\n");
+    t1(fd, "\n");
+    t1(fd, "    int curStateId = states.top();\n");
+    t1(fd, "\n");
+    t1(fd, "    int nextStateId = _gotoTable->Find(curStateId, rule->left->id)->id;\n");
+    t1(fd, "    states.push(nextStateId);\n");
+    t1(fd, "    return true;\n");
+    t1(fd, "  }\n");
+    t1(fd, "  return false;\n");
+    t1(fd, "}\n");
+
+    FileClose(fd);
 }
 
 void
@@ -324,7 +460,8 @@ Parser::expandRules(State state) {
 
 State
 Parser::searchSameState(const RuleList& newStateRules) {
-    for (int i{ 0 }; i < _stateList->Size(); i++) {
+    int max{ _stateList->Size() };
+    for (int i{ 0 }; i < max; i++) {
         State state = _stateList->GetState(i);
         if (state->MatchRule(newStateRules)) {
             return state;
@@ -333,6 +470,9 @@ Parser::searchSameState(const RuleList& newStateRules) {
     return nullptr;
 }
 
+/*
+ *使用规则
+ */
 bool
 Parser::reduce(std::stack<int>& states, std::stack<Node>& syms, Record record) {
     if (!record->state) {
@@ -343,9 +483,9 @@ Parser::reduce(std::stack<int>& states, std::stack<Node>& syms, Record record) {
             syms.pop();
             states.pop();
         }
-
-        Node left = rule->Format(rule->left, child);
-        syms.push(left);
+        
+        Node node = rule->Format(rule->left, child);
+        syms.push(node);
 
         // find goto table
         int curStateId = states.top();

@@ -2,8 +2,8 @@
 #include "sema/sema.hpp"
 
 SimpleRule
-make_rule(int id, SemaToken left, SemaTokenList right) {
-    SimpleRule rule = new SimpleRuleData{ id, left, right };
+make_rule(int id, SemaToken left, SemaTokenList right, std::string block) {
+    SimpleRule rule = new SimpleRuleData{ id, left, right , block};
     return rule;
 }
 

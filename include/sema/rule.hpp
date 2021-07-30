@@ -15,11 +15,12 @@ public:
     int id;
     SemaToken left;
     SemaTokenList right;
+    std::string funcBlock;
 };
 
 typedef SimpleRuleData* SimpleRule;
 
-SimpleRule make_rule(int id, SemaToken left, SemaTokenList right);
+SimpleRule make_rule(int id, SemaToken left, SemaTokenList right, std::string block);
 
 class RuleData {
 public:
@@ -35,6 +36,8 @@ public:
     SemaTokenList right;
     // look ahead 检查
     TokList tokens;
+
+    std::string func_block;
 
 public:
     bool IsDotEnd();
