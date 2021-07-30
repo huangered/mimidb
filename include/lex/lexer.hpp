@@ -30,7 +30,7 @@ private:
 
 public:
     Lexer(const char* buf, int size);
-    
+
     LexToken GetLexerToken();
 
 private:

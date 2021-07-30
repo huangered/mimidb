@@ -45,7 +45,7 @@ ReadRules(const char* path) {
             sema_id++;
         }
 
-        l_token = new SemaTokenData {semaTokens[l_name], true, l_name};
+        l_token = new SemaTokenData{ semaTokens[l_name], true, l_name };
 
         for (int i{ 2 }; i < lines.size(); i++) {
 
