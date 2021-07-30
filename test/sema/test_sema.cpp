@@ -56,8 +56,14 @@ TEST(Sema, tok_ne) {
     EXPECT_TRUE(a != b);
 }
 
+#ifdef _WIN32
+const char* path = "C:\\work\\mimidb\\sql.rule";
+#elif __linux__
+const char* path = "./sql.rule";
+#endif
+
 TEST(Sema, select_test) {
-    auto rList = ReadRules("C:\\work\\mimidb\\sql.rule");
+    auto rList = ReadRules(path);
 
     const char* str = "select * from asdf;";
 
@@ -83,7 +89,7 @@ TEST(Sema, select_test) {
 }
 
 TEST(Sema, select_where_test) {
-    auto rList = ReadRules("C:\\work\\mimidb\\sql.rule");
+    auto rList = ReadRules(path);
 
     const char* str = "select * from asdf where;";
 
