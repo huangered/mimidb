@@ -115,7 +115,7 @@ TEST(Sema, select_where_test) {
 }
 
 TEST(Sema, select_fail_test) {
-    auto rList = ReadRules("C:\\work\\mimidb\\sql.rule");
+    auto rList = ReadRules(path);
 
     const char* str = "select * from asdf where a;";
 
