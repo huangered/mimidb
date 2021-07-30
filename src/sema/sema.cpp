@@ -4,6 +4,7 @@
 extern "C" {
 #include "storage/fd.h"
 }
+#include <cstring>
 
 static bool SemaTokenListLess(const SemaTokenList& left, const SemaTokenList& right);
 static std::string join(const SemaTokenList& v);
