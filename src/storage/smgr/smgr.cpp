@@ -4,8 +4,6 @@
 #include "util/hashmap.hpp"
 #include "port/port.hpp"
 
-namespace fs = std::filesystem;
-
 Smgr* smgr = new Smgr{};
 
 Smgr::Smgr() {
