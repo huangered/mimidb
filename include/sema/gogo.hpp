@@ -59,4 +59,17 @@ gogo(Node n0, Node n1, Node n2, Node n3, Node n4, Node n5, Node n6, Node n7) {
     return n;
 }
 
+class SelectStmtNodeData : public NodeData {
+public:
+    using NodeData::NodeData;
+};
+
+typedef SelectStmtNodeData* SelectStmtNode;
+
+inline SelectStmtNode makeSelectStmt(Node params, Node tableName, Node whereStmt, Node orderByStmt){
+    SelectStmtNode node = new SelectStmtNodeData{ "select stmt" };
+    node->AddAll({ params, tableName, whereStmt, orderByStmt });
+    return node;
+}
+
 #endif

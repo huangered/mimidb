@@ -255,7 +255,96 @@ Parser::GenerateCppCode(const char* path) {
     t1(fd, "#include \"lex/TokenKinds.hpp\"\n");
     t1(fd, "#include \"sema/sema.hpp\"\n");
     t1(fd, "using namespace std;\n");
+
     t1(fd, "\n");
+
+    {
+        char* a = new char[256];
+        sprintf(a, "#define MAX_ID 65535\n");
+
+        t1(fd, a);
+        delete[] a;
+    }
+    // init goto table
+    t1(fd, "// init goto table (state id, sema id) -> (state id)\n");
+    {
+        char* a = new char[256];
+        sprintf(a, "const int goto_table[%d][%d]={\n", _stateList->Size(), _maxState);
+        t1(fd, a);
+        delete[] a;
+        // init data
+        for (int i{ 0 }; i < _stateList->Size(); i++) {
+            t1(fd, "{");
+            for (int j{ 0 }; j < _maxState; j++) {
+                Record record = _gotoTable->Find(i, j);
+                if (record != nullptr) {
+                    char* a1 = new char[256];
+                    sprintf(a1, "%d,", record->id);
+                    t1(fd, a1);
+                    delete[] a1;
+                } else {
+                    t1(fd, "MAX_ID,");
+                }
+            }
+            t1(fd, "},\n");
+        }
+        t1(fd, "};\n");
+    }
+
+    // init action table
+    // init goto table
+    t1(fd, "// init action table (state id, token id) -> (acc, state, id)\n");
+    {
+        char* a = new char[256];
+        sprintf(a, "const RecordData action_table[%d][%d]={\n", _stateList->Size(), Tok::NUM_TOKENS);
+        t1(fd, a);
+        delete[] a;
+        // init data
+        for (int i{ 0 }; i < _stateList->Size(); i++) {
+            t1(fd, "{");
+            for (int j{ 0 }; j < Tok::NUM_TOKENS; j++) {
+                Record record = _actionTable->Find(i, j);
+                if (record != nullptr) {
+                    std::string str = "{ ";
+                    str += (record->acc ? "true" : "false");
+                    str += ",";
+                    str += (record->state ? "true" : "false");
+                    str += ",";
+                    str += std::to_string(record->id);
+                    str += "}";
+                    char* a1 = new char[1024];
+                    sprintf(a1, "%s,", str.c_str());
+                    t1(fd, a1);
+                    delete[] a1;
+                } else {
+                    t1(fd, "{false, false, MAX_ID},");
+                }
+            }
+            t1(fd, "},\n");
+        }
+        t1(fd, "};\n");
+    }
+    // init rule right child size array
+    t1(fd, "const int rule_right_children_num_arr[] = {");
+    for (int rId{ 0 }; rId < _rules.size(); rId++) {
+        char* a = new char[256];
+        sprintf(a, "%zd,", _rules[rId]->right.size());
+
+        t1(fd, a);
+        delete[] a;
+    }
+    t1(fd, "};\n");
+    // init rule left id array
+    t1(fd, "const int rule_left_id_arr[] = {");
+    for (int rId{ 0 }; rId < _rules.size(); rId++) {
+        char* a = new char[256];
+        sprintf(a, "%d,", _rules[rId]->left->id);
+
+        t1(fd, a);
+        delete[] a;
+    }
+    t1(fd, "};\n");
+    
     t1(fd, "static bool eatToken(std::stack<int>& states, std::stack<Node>& syms, std::stack<LexToken>& input, bool* "
            "acc);\n");
     t1(fd, "static bool reduce(std::stack<int>& states, std::stack<Node>& syms, bool r_state, int r_id);\n");
@@ -318,21 +407,13 @@ Parser::GenerateCppCode(const char* path) {
     t1(fd, "  bool r_state;\n");
     t1(fd, "  int r_id;\n");
     t1(fd, "  bool r_find{false};\n");
-    for (int i{ 0 }; i < _maxState; i++) {
-        for (int j{ 0 }; j < Tok::NUM_TOKENS; j++) {
-            Record record = _actionTable->Find(i, j);
-            if (record != nullptr) {
-                char* a = new char[256];
-                sprintf(a,
-                        " if( %d == curStateId && %d == token->tok ) { r_acc = %d; r_state = %s; r_id = %d; "
-                        "r_find=true;} \n",
-                        i, j, record->acc, std::to_string( record->state).c_str(), record->id);
-                t1(fd, a);
-                delete[] a;
-            }
-        }
-    }
 
+    t1(fd, "  RecordData rd = action_table[curStateId][token->tok];\n");
+    t1(fd, "  r_acc = rd.acc;\n");
+    t1(fd, "  r_state = rd.state;\n");
+    t1(fd, "  r_id = rd.id;\n");
+    t1(fd, "  r_find = (r_id!=MAX_ID);\n");
+    
     t1(fd, "  if (r_find == true) {\n");
     t1(fd, "\n");
     t1(fd, "    if (r_acc == true) {\n");
@@ -356,51 +437,42 @@ Parser::GenerateCppCode(const char* path) {
 
     t1(fd, "bool\nreduce(std::stack<int> & states, std::stack<Node> & syms, bool r_state, int r_id) {\n");
     t1(fd, "  if (!r_state) {\n");
-    t1(fd, "    int child_num{0};\n");
-    t1(fd, "    int rule_left_id{0};\n");
+    t1(fd, "    int child_num{rule_right_children_num_arr[r_id]};\n");
+    t1(fd, "    int rule_left_id{rule_left_id_arr[r_id]};\n");
     t1(fd, "    std::vector<Node> child;\n");
+    t1(fd, "    Node node = nullptr;\n");
+
+    t1(fd, "      for (int i{ 0 }; i < child_num; i++) {\n");
+    t1(fd, "        child.push_back(syms.top());\n");
+    t1(fd, "        syms.pop();\n");
+    t1(fd, "        states.pop();\n");
+    t1(fd, "      }\n");
+
+    t1(fd, "    switch(r_id) {");
     for (int i1{ 0 }; i1 < _rules.size(); i1++) {
         char* a = new char[256];
-        sprintf(a, "    if( r_id == %d ) { \n      child_num=%d;\n      rule_left_id=%d;\n", i1,
-                _rules[i1]->right.size(), _rules[i1]->left->id);
+        sprintf(a, "    case %d:  \n", i1);
         t1(fd, a);
 
-        t1(fd, "      for (int i{ 0 }; i < child_num; i++) {\n");
-        t1(fd, "        child.push_back(syms.top());\n");
-        t1(fd, "        syms.pop();\n");
-        t1(fd, "        states.pop();\n");
-        t1(fd, "      }\n");
+
         t1(fd, "\n");
-        t1(fd, "      Node node = nullptr;\n");
 
         memset(a, 0, 256);
         std::string g = funcReplace(_rules[i1]->func_block, _rules[i1]->right.size());
         sprintf(a, "//block\n      { %s }\n", g.c_str());
         t1(fd, a);
 
-        t1(fd, "      syms.push(node);\n");
-
-        t1(fd, "    }\n");
+        t1(fd, "      break;\n");
 
         delete[] a;
     }
+    t1(fd, "    }");
+    t1(fd, "    syms.push(node);\n");
 
     t1(fd, "\n");
     t1(fd, "    int curStateId = states.top();\n");
     t1(fd, "    int nextStateId{0};\n");
-    for (int i{ 0 }; i < _maxState; i++) {
-        for (int j{ 0 }; j < _maxState; j++) {
-            Record record = _gotoTable->Find(i, j);
-            if (record != nullptr) {
-                char* a = new char[256];
-                sprintf(a, "    if( %d == curStateId && %d == rule_left_id ) { nextStateId = %d;} \n", i, j,
-                        record->id);
-                t1(fd, a);
-                delete[] a;
-            }
-        }
-    }
-
+    t1(fd, "    nextStateId = goto_table[curStateId][rule_left_id];\n");
     t1(fd, "    states.push(nextStateId);\n");
     t1(fd, "    return true;\n");
     t1(fd, "  }\n");
@@ -442,7 +514,7 @@ Parser::generateTable(void) {
         }
     }
     //_actionTable->Print();
-    //  _gotoTable->Print();
+    //_gotoTable->Print();
 }
 
 void
