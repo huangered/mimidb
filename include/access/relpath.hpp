@@ -8,6 +8,7 @@ typedef enum ForkNumber
     MAIN_FORKNUM = 0,
     FSM_FORKNUM,
     INIT_FORKNUM,
+    NUMS_FORKNUM,
 } ForkNumber;
 
 char* GetRelPath(Oid dbNode, Oid relNode, ForkNumber fn);
