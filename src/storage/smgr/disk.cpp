@@ -63,9 +63,12 @@ int
 Md::Open(SMgrRelation reln, ForkNumber forknum) {
     int fd = reln->fd[forknum];
     if (fd <= 0) {
-        auto path = GetRelPath2(reln->rd_node.dbNode, reln->rd_node.relNode, forknum);
+        auto path = GetRelPath(reln->rd_node.dbNode, reln->rd_node.relNode, forknum);
 
-        int fd2           = PathNameOpenFile(path.string().c_str());
+        int fd2 = PathNameOpenFile(path);
+
+        delete[] path;
+
         reln->fd[forknum] = fd2;
         fd                = fd2;
     }
@@ -92,6 +95,6 @@ Md::Create(SMgrRelation reln, ForkNumber forknum) {
 
 bool
 Md::Exist(SMgrRelation reln, ForkNumber forknum) {
-    auto path = GetRelPath2(reln->rd_node.dbNode, reln->rd_node.relNode, forknum);
-    return std::filesystem::exists(path);
+    char* path = GetRelPath(reln->rd_node.dbNode, reln->rd_node.relNode, forknum);
+    return false;
 }
