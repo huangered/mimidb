@@ -47,7 +47,7 @@ GotoTable::Add(int stateId, int tokenId, int nextStateId) {
         *record = new RecordData{};
     }
 
-    (*record)->id = nextStateId;
+    (*record)->id    = nextStateId;
     (*record)->state = true;
     (*record)->acc   = false;
 }

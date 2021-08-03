@@ -8,7 +8,7 @@ GetTokByName(const std::string& name) {
 
 #define TOK(X)                                                                                                         \
     else if (#X == name) {                                                                                             \
-        return Tok::X;                                                                                                      \
+        return Tok::X;                                                                                                 \
     }
 #include "lex/tok.def"
 
