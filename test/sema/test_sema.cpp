@@ -61,6 +61,7 @@ const char* path = "C:\\work\\mimidb\\sql.rule";
 #elif __linux__
 const char* path = "./sql.rule";
 #endif
+
 TEST(Sema, select_test) {
     auto rList = ReadRules(path);
 

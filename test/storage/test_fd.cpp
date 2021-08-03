@@ -1,8 +1,8 @@
 #include "../g.hpp"
 
-_EXTERN_C
+extern "C" {
 #include "storage/fd.h"
-_END_EXTERN_C
+}
 
 TEST(fd, basic) {
     const char* buf = "tmp_file.txt";
