@@ -256,7 +256,7 @@ Parser::GenerateCppCode(const char* path) {
     t1(fd, "#include \"lex/TokenKinds.hpp\"\n");
     t1(fd, "#include \"sema/sema.hpp\"\n");
     t1(fd, "using namespace std;\n");
-
+    t1(fd, "union Item {Node node;};\n");
     t1(fd, "\n");
 
     {
@@ -346,9 +346,9 @@ Parser::GenerateCppCode(const char* path) {
     }
     t1(fd, "};\n");
     
-    t1(fd, "static bool eatToken(std::stack<int>& states, std::stack<Node>& syms, std::stack<LexToken>& input, bool* "
+    t1(fd, "static bool eatToken(std::stack<int>& states, std::stack<Item>& syms, std::stack<LexToken>& input, bool* "
            "acc);\n");
-    t1(fd, "static bool reduce(std::stack<int>& states, std::stack<Node>& syms, bool r_state, int r_id);\n");
+    t1(fd, "static bool reduce(std::stack<int>& states, std::stack<Item>& syms, bool r_state, int r_id);\n");
     t1(fd, "Node raw_parse(const char* str);\n");
     t1(fd, "\n");
 
@@ -365,9 +365,9 @@ Parser::GenerateCppCode(const char* path) {
     t1(fd, "  data.push_back(EndLexToken);\n");
     t1(fd, "\n");
     // sema part
-    t1(fd, "  Node node{ nullptr };\n");
+    t1(fd, "  Item item{ nullptr };\n");
     t1(fd, "  std::stack<int> state_stack;\n");
-    t1(fd, "  std::stack<Node> token_stack;\n");
+    t1(fd, "  std::stack<Item> token_stack;\n");
     t1(fd, "  std::stack<LexToken> input_stack;\n");
     t1(fd, " \n");
     t1(fd, "  state_stack.push(0);\n");
@@ -386,21 +386,20 @@ Parser::GenerateCppCode(const char* path) {
     t1(fd, "    }\n");
     t1(fd, "  }\n");
     t1(fd, "  if (acc) {\n");
-    t1(fd, "    node = token_stack.top();\n");
+    t1(fd, "    item = token_stack.top();\n");
     t1(fd, "  } else {\n");
     t1(fd, "    while (!token_stack.empty()) {\n");
-    t1(fd, "      node = token_stack.top();\n");
+    t1(fd, "      item = token_stack.top();\n");
     t1(fd, "      token_stack.pop();\n");
-    t1(fd, "      delete node;\n");
-    t1(fd, "      node = nullptr;\n");
+    t1(fd, "      delete item.node;\n");
     t1(fd, "    }\n");
     t1(fd, "  }\n");
-    t1(fd, "  return node;\n");
+    t1(fd, "  return item.node;\n");
     t1(fd, "}\n");
 
     // eattoken
 
-    t1(fd, "bool\neatToken(std::stack<int> & states, std::stack<Node> & syms, std::stack<LexToken> & input, bool* acc) "
+    t1(fd, "bool\neatToken(std::stack<int> & states, std::stack<Item> & syms, std::stack<LexToken> & input, bool* acc) "
            "{\n");
     t1(fd, "  int curStateId = states.top();\n");
     t1(fd, "  LexToken token = input.top();\n");
@@ -424,7 +423,7 @@ Parser::GenerateCppCode(const char* path) {
     t1(fd, "\n");
     t1(fd, "    if (r_state == true) {\n");
     t1(fd, "      states.push(r_id);\n");
-    t1(fd, "      syms.push(new NodeData(token));\n");
+    t1(fd, "      syms.push(Item{new NodeData(token)});\n");
     t1(fd, "      input.pop();\n");
     t1(fd, "      return true;\n");
     t1(fd, "    } else {\n");
@@ -436,12 +435,12 @@ Parser::GenerateCppCode(const char* path) {
 
     // reduce
 
-    t1(fd, "bool\nreduce(std::stack<int> & states, std::stack<Node> & syms, bool r_state, int r_id) {\n");
+    t1(fd, "bool\nreduce(std::stack<int> & states, std::stack<Item> & syms, bool r_state, int r_id) {\n");
     t1(fd, "  if (!r_state) {\n");
     t1(fd, "    int child_num{rule_right_children_num_arr[r_id]};\n");
     t1(fd, "    int rule_left_id{rule_left_id_arr[r_id]};\n");
-    t1(fd, "    std::vector<Node> child;\n");
-    t1(fd, "    Node node = nullptr;\n");
+    t1(fd, "    std::vector<Item> child;\n");
+    t1(fd, "    Item item{ nullptr};\n");
 
     t1(fd, "      for (int i{ 0 }; i < child_num; i++) {\n");
     t1(fd, "        child.push_back(syms.top());\n");
@@ -468,7 +467,7 @@ Parser::GenerateCppCode(const char* path) {
         delete[] a;
     }
     t1(fd, "    }");
-    t1(fd, "    syms.push(node);\n");
+    t1(fd, "    syms.push(item);\n");
 
     t1(fd, "\n");
     t1(fd, "    int curStateId = states.top();\n");
@@ -714,7 +713,7 @@ funcReplace(std::string fblock, int size) {
     for (int i{ 0 }; i < size; i++) {
         std::string w = "$" + std::to_string(i);
         std::string r = "child[" + std::to_string(i);
-        r += "]";
+        r += "].node";
         std::size_t pos;
         while ((pos = tmp.find(w)) != std::string::npos)
             tmp.replace(pos, w.size(), r);
@@ -722,6 +721,6 @@ funcReplace(std::string fblock, int size) {
     std::size_t pos;
 
     while ((pos = tmp.find("$$")) != std::string::npos)
-        tmp.replace(pos, 2, "node");
+        tmp.replace(pos, 2, "item.node");
     return tmp;
 }

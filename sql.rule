@@ -20,7 +20,7 @@
 @token kw_end
 @token kw_orderby
 
-Q = StmtBlock { $$ = $1; }
+Q = StmtBlock { $$ = $0; }
 
 StmtBlock = StmtList { }
 StmtList = StmtList Stmt { }
