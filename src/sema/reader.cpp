@@ -17,7 +17,10 @@ ReadRules(const char* path) {
     std::ifstream file(path);
     std::string myText;
     int rule_id{ 0 };
+    int lineId{ 0 };
     while (getline(file, myText)) {
+        
+        lineId++;
 
         if (myText.find('@') == 0) {
             // handle @token
@@ -82,6 +85,7 @@ ReadRules(const char* path) {
         }
 
         SimpleRule sRule = make_rule(rule_id, l_token, r_token, f_block);
+        sRule->lineId    = lineId;
         rList.push_back(sRule);
         rule_id++;
     }

@@ -862,1134 +862,476 @@ const int goto_table[94][93] = {
     },
 };
 // init action table (state id, token id) -> (acc, state, id)
-const RecordData action_table[94][38] = {
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 10 },      { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 11 },      { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, true, 9 },       { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 12 },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { true, false, 0 },       { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, 1 },      { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 10 },      { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 11 },      { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, true, 9 },       { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 12 },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, 3 },      { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 3 },      { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 3 },      { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, 3 },      { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 3 },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, 4 },      { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 4 },      { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 4 },      { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, 4 },      { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 4 },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, 5 },      { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 5 },      { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 5 },      { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, 5 },      { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 5 },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, 6 },      { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 6 },      { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 6 },      { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, 6 },      { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 6 },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, 7 },      { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 7 },      { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 7 },      { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, 7 },      { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 7 },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, 8 },      { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 8 },      { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 8 },      { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, 8 },      { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 8 },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 14 },
-        { false, true, 15 },      { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, true, 19 },      { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 18 },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 20 },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 29 },      { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 30 },      { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, true, 28 },      { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 31 },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, 2 },      { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 2 },      { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 2 },      { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, 2 },      { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 2 },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 33 },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 35 },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, true, 38 },      { false, true, 36 },      { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, true, 37 },      { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, 18 },     { false, false, 18 },     { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, 18 },     { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, 19 },     { false, false, 19 },     { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, 19 },     { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, 20 },     { false, false, 20 },     { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, 20 },     { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 40 },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 29 },      { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 30 },      { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, true, 28 },      { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 31 },
-        { false, false, MAX_ID }, { false, true, 42 },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 3 },      { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 3 },      { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, 3 },      { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 3 },
-        { false, false, MAX_ID }, { false, false, 3 },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 4 },      { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 4 },      { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, 4 },      { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 4 },
-        { false, false, MAX_ID }, { false, false, 4 },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 5 },      { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 5 },      { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, 5 },      { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 5 },
-        { false, false, MAX_ID }, { false, false, 5 },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 6 },      { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 6 },      { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, 6 },      { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 6 },
-        { false, false, MAX_ID }, { false, false, 6 },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 7 },      { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 7 },      { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, 7 },      { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 7 },
-        { false, false, MAX_ID }, { false, false, 7 },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 8 },      { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 8 },      { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, 8 },      { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 8 },
-        { false, false, MAX_ID }, { false, false, 8 },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 43 },
-        { false, true, 44 },      { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, true, 19 },      { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 18 },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 46 },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 29 },      { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 30 },      { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, true, 28 },      { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 31 },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 49 },      { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 21 },     { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, true, 50 },      { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, 21 },     { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, 14 },     { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 14 },     { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 14 },     { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, 14 },     { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 14 },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 52 },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, true, 19 },      { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 18 },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, true, 54 },      { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, 21 },     { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 2 },      { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 2 },      { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, 2 },      { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 2 },
-        { false, false, MAX_ID }, { false, false, 2 },
-    },
-    {
-        { false, false, 16 },     { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 16 },     { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 16 },     { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, 16 },     { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 16 },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 33 },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 35 },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, true, 38 },      { false, true, 57 },      { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, true, 58 },      { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 40 },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 29 },      { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 30 },      { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, true, 28 },      { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 31 },
-        { false, false, MAX_ID }, { false, true, 60 },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, true, 61 },      { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 62 },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, 10 },     { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 10 },     { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 10 },     { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, 10 },     { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 10 },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, 23 },     { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 67 },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, 21 },     { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 21 },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, 17 },     { false, false, 17 },     { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, 17 },     { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 68 },      { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 49 },      { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, true, 70 },      { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 14 },     { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 14 },     { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, 14 },     { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 14 },
-        { false, false, MAX_ID }, { false, false, 14 },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 52 },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, true, 72 },      { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 16 },     { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 16 },     { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, 16 },     { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 16 },
-        { false, false, MAX_ID }, { false, false, 16 },
-    },
-    {
-        { false, false, 11 },     { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 11 },     { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 11 },     { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, 11 },     { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 11 },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 73 },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, true, 75 },      { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 74 },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, 26 },     { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 26 },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, 12 },     { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 12 },     { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 12 },     { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, 12 },     { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 12 },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, true, 76 },      { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, 22 },     { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, true, 80 },      { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 79 },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, true, 81 },      { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 10 },     { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 10 },     { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, 10 },     { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 10 },
-        { false, false, MAX_ID }, { false, false, 10 },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, 23 },     { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 67 },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 84 },      { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, 27 },     { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 27 },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, 24 },     { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 62 },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, 13 },     { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 13 },     { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 13 },     { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, 13 },     { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 13 },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, true, 87 },      { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 86 },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, 18 },     { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 18 },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, 19 },     { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 19 },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, 20 },     { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 20 },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 11 },     { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 11 },     { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, 11 },     { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 11 },
-        { false, false, MAX_ID }, { false, false, 11 },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 12 },     { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 12 },     { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, 12 },     { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 12 },
-        { false, false, MAX_ID }, { false, false, 12 },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, true, 88 },      { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, true, 80 },      { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 79 },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, 25 },     { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 25 },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, true, 90 },      { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, true, 80 },      { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 79 },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 13 },     { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 13 },     { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, 13 },     { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 13 },
-        { false, false, MAX_ID }, { false, false, 13 },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, true, 87 },      { false, false, MAX_ID }, { false, false, MAX_ID }, { false, true, 92 },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, 15 },     { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 15 },     { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 15 },     { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, 15 },     { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 15 },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, 17 },     { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 17 },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, true, 93 },      { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID },
-    },
-    {
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 15 },     { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 15 },     { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, 15 },     { false, false, MAX_ID }, { false, false, MAX_ID },
-        { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, MAX_ID }, { false, false, 15 },
-        { false, false, MAX_ID }, { false, false, 15 },
+const int action_table[94][38] = {
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 10,     MAX_ID, MAX_ID, MAX_ID,
+        11,     MAX_ID, MAX_ID, 9,      MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 12,     MAX_ID, MAX_ID,
+    },
+    {
+        10000,  MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        -1,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 10,     MAX_ID, MAX_ID, MAX_ID,
+        11,     MAX_ID, MAX_ID, 9,      MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 12,     MAX_ID, MAX_ID,
+    },
+    {
+        -3,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -3,     MAX_ID, MAX_ID, MAX_ID,
+        -3,     MAX_ID, MAX_ID, -3,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -3,     MAX_ID, MAX_ID,
+    },
+    {
+        -4,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -4,     MAX_ID, MAX_ID, MAX_ID,
+        -4,     MAX_ID, MAX_ID, -4,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -4,     MAX_ID, MAX_ID,
+    },
+    {
+        -5,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -5,     MAX_ID, MAX_ID, MAX_ID,
+        -5,     MAX_ID, MAX_ID, -5,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -5,     MAX_ID, MAX_ID,
+    },
+    {
+        -6,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -6,     MAX_ID, MAX_ID, MAX_ID,
+        -6,     MAX_ID, MAX_ID, -6,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -6,     MAX_ID, MAX_ID,
+    },
+    {
+        -7,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -7,     MAX_ID, MAX_ID, MAX_ID,
+        -7,     MAX_ID, MAX_ID, -7,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -7,     MAX_ID, MAX_ID,
+    },
+    {
+        -8,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -8,     MAX_ID, MAX_ID, MAX_ID,
+        -8,     MAX_ID, MAX_ID, -8,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -8,     MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 14,     15,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, 19,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, 18,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, 20,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 29,     MAX_ID, MAX_ID, MAX_ID,
+        30,     MAX_ID, MAX_ID, 28,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 31,     MAX_ID, MAX_ID,
+    },
+    {
+        -2,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -2,     MAX_ID, MAX_ID, MAX_ID,
+        -2,     MAX_ID, MAX_ID, -2,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -2,     MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, 33,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, 35,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 38,     36,     MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 37,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -18,    -18,    MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -18,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -19,    -19,    MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -19,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -20,    -20,    MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -20,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, 40,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 29,     MAX_ID, MAX_ID, MAX_ID,
+        30,     MAX_ID, MAX_ID, 28,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 31,     MAX_ID, 42,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -3,     MAX_ID, MAX_ID, MAX_ID,
+        -3,     MAX_ID, MAX_ID, -3,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -3,     MAX_ID, -3,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -4,     MAX_ID, MAX_ID, MAX_ID,
+        -4,     MAX_ID, MAX_ID, -4,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -4,     MAX_ID, -4,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -5,     MAX_ID, MAX_ID, MAX_ID,
+        -5,     MAX_ID, MAX_ID, -5,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -5,     MAX_ID, -5,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -6,     MAX_ID, MAX_ID, MAX_ID,
+        -6,     MAX_ID, MAX_ID, -6,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -6,     MAX_ID, -6,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -7,     MAX_ID, MAX_ID, MAX_ID,
+        -7,     MAX_ID, MAX_ID, -7,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -7,     MAX_ID, -7,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -8,     MAX_ID, MAX_ID, MAX_ID,
+        -8,     MAX_ID, MAX_ID, -8,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -8,     MAX_ID, -8,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 43,     44,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, 19,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, 18,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, 46,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 29,     MAX_ID, MAX_ID, MAX_ID,
+        30,     MAX_ID, MAX_ID, 28,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 31,     MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 49,     MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -21,    MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 50,     MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -21,    MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        -14,    MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -14,    MAX_ID, MAX_ID, MAX_ID,
+        -14,    MAX_ID, MAX_ID, -14,    MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -14,    MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, 52,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, 19,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, 18,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, 54,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, -21,    MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -2,     MAX_ID, MAX_ID, MAX_ID,
+        -2,     MAX_ID, MAX_ID, -2,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -2,     MAX_ID, -2,
+    },
+    {
+        -16,    MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -16,    MAX_ID, MAX_ID, MAX_ID,
+        -16,    MAX_ID, MAX_ID, -16,    MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -16,    MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, 33,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, 35,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 38,     57,     MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 58,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, 40,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 29,     MAX_ID, MAX_ID, MAX_ID,
+        30,     MAX_ID, MAX_ID, 28,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 31,     MAX_ID, 60,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 61,     MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, 62,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        -10,    MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -10,    MAX_ID, MAX_ID, MAX_ID,
+        -10,    MAX_ID, MAX_ID, -10,    MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -10,    MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -23,    MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 67,     MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -21,    MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -21,    MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -17,    -17,    MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -17,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 68,     MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 49,     MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 70,     MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -14,    MAX_ID, MAX_ID, MAX_ID,
+        -14,    MAX_ID, MAX_ID, -14,    MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -14,    MAX_ID, -14,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, 52,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, 72,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -16,    MAX_ID, MAX_ID, MAX_ID,
+        -16,    MAX_ID, MAX_ID, -16,    MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -16,    MAX_ID, -16,
+    },
+    {
+        -11,    MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -11,    MAX_ID, MAX_ID, MAX_ID,
+        -11,    MAX_ID, MAX_ID, -11,    MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -11,    MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, 73,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 75,     MAX_ID, MAX_ID, 74,     MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -26,    MAX_ID, MAX_ID, -26,    MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        -12,    MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -12,    MAX_ID, MAX_ID, MAX_ID,
+        -12,    MAX_ID, MAX_ID, -12,    MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -12,    MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 76,     MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -22,    MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, 80,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, 79,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 81,     MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -10,    MAX_ID, MAX_ID, MAX_ID,
+        -10,    MAX_ID, MAX_ID, -10,    MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -10,    MAX_ID, -10,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -23,    MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 67,     MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 84,     MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -27,    MAX_ID, MAX_ID, -27,    MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -24,    MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, 62,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        -13,    MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -13,    MAX_ID, MAX_ID, MAX_ID,
+        -13,    MAX_ID, MAX_ID, -13,    MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -13,    MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 87,     MAX_ID, MAX_ID, 86,     MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -18,    MAX_ID, MAX_ID, -18,    MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -19,    MAX_ID, MAX_ID, -19,    MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -20,    MAX_ID, MAX_ID, -20,    MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -11,    MAX_ID, MAX_ID, MAX_ID,
+        -11,    MAX_ID, MAX_ID, -11,    MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -11,    MAX_ID, -11,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -12,    MAX_ID, MAX_ID, MAX_ID,
+        -12,    MAX_ID, MAX_ID, -12,    MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -12,    MAX_ID, -12,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 88,     MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, 80,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, 79,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -25,    MAX_ID, MAX_ID, -25,    MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 90,     MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, 80,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, 79,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -13,    MAX_ID, MAX_ID, MAX_ID,
+        -13,    MAX_ID, MAX_ID, -13,    MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -13,    MAX_ID, -13,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 87,     MAX_ID, MAX_ID, 92,     MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        -15,    MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -15,    MAX_ID, MAX_ID, MAX_ID,
+        -15,    MAX_ID, MAX_ID, -15,    MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -15,    MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -17,    MAX_ID, MAX_ID, -17,    MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 93,     MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -15,    MAX_ID, MAX_ID, MAX_ID,
+        -15,    MAX_ID, MAX_ID, -15,    MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -15,    MAX_ID, -15,
     },
 };
 const int rule_right_children_num_arr[] = {
@@ -1999,7 +1341,7 @@ const int rule_left_id_arr[] = {
     0, 1, 2, 2, 3, 3, 3, 3, 3, 5, 6, 5, 6, 4, 4, 7, 8, 17, 17, 28, 28, 11, 19, 19, 12, 32, 32, 33,
 };
 static bool eatToken(std::stack<int>& states, std::stack<Item>& syms, std::stack<LexToken>& input, bool* acc);
-static bool reduce(std::stack<int>& states, std::stack<Item>& syms, bool r_state, int r_id);
+static bool reduce(std::stack<int>& states, std::stack<Item>& syms, int r_id);
 Node raw_parse(const char* str);
 
 Node
@@ -2053,11 +1395,11 @@ eatToken(std::stack<int>& states, std::stack<Item>& syms, std::stack<LexToken>& 
     bool r_state;
     int r_id;
     bool r_find{ false };
-    RecordData rd = action_table[curStateId][token->tok];
-    r_acc         = rd.acc;
-    r_state       = rd.state;
-    r_id          = rd.id;
-    r_find        = (r_id != MAX_ID);
+    int rd  = action_table[curStateId][token->tok];
+    r_acc   = (rd == 10000);
+    r_state = (rd > 0);
+    r_id    = rd > 0 ? rd : -rd;
+    r_find  = (r_id != MAX_ID);
     if (r_find == true) {
 
         if (r_acc == true) {
@@ -2071,174 +1413,197 @@ eatToken(std::stack<int>& states, std::stack<Item>& syms, std::stack<LexToken>& 
             input.pop();
             return true;
         } else {
-            return reduce(states, syms, r_state, r_id);
+            return reduce(states, syms, r_id);
         }
     }
     return false;
 }
 bool
-reduce(std::stack<int>& states, std::stack<Item>& syms, bool r_state, int r_id) {
-    if (!r_state) {
-        int child_num{ rule_right_children_num_arr[r_id] };
-        int rule_left_id{ rule_left_id_arr[r_id] };
-        std::vector<Item> child;
-        Item item{ nullptr };
-        for (int i{ 0 }; i < child_num; i++) {
-            child.push_back(syms.top());
-            syms.pop();
-            states.pop();
-        }
-        switch (r_id) {
-        case 0:
-
-            // block
-            { item.node = child[0].node; }
-            break;
-        case 1:
-
-            // block
-            {}
-            break;
-        case 2:
-
-            // block
-            {}
-            break;
-        case 3:
-
-            // block
-            {}
-            break;
-        case 4:
-
-            // block
-            {}
-            break;
-        case 5:
-
-            // block
-            {}
-            break;
-        case 6:
-
-            // block
-            {}
-            break;
-        case 7:
-
-            // block
-            {}
-            break;
-        case 8:
-
-            // block
-            {}
-            break;
-        case 9:
-
-            // block
-            {}
-            break;
-        case 10:
-
-            // block
-            {}
-            break;
-        case 11:
-
-            // block
-            { item.node = gogo(child[0].node, child[1].node, child[2].node, child[3].node, child[4].node); }
-            break;
-        case 12:
-
-            // block
-            { item.node = gogo(child[0].node, child[1].node, child[2].node, child[3].node); }
-            break;
-        case 13:
-
-            // block
-            {}
-            break;
-        case 14:
-
-            // block
-            {}
-            break;
-        case 15:
-
-            // block
-            {}
-            break;
-        case 16:
-
-            // block
-            {}
-            break;
-        case 17:
-
-            // block
-            {}
-            break;
-        case 18:
-
-            // block
-            {}
-            break;
-        case 19:
-
-            // block
-            {}
-            break;
-        case 20:
-
-            // block
-            {}
-            break;
-        case 21:
-
-            // block
-            {}
-            break;
-        case 22:
-
-            // block
-            {}
-            break;
-        case 23:
-
-            // block
-            {}
-            break;
-        case 24:
-
-            // block
-            {}
-            break;
-        case 25:
-
-            // block
-            {}
-            break;
-        case 26:
-
-            // block
-            {}
-            break;
-        case 27:
-
-            // block
-            {}
-            break;
-        }
-        syms.push(item);
-
-        int curStateId = states.top();
-        int nextStateId{ 0 };
-        nextStateId = goto_table[curStateId][rule_left_id];
-        states.push(nextStateId);
-        return true;
+reduce(std::stack<int>& states, std::stack<Item>& syms, int r_id) {
+    int child_num{ rule_right_children_num_arr[r_id] };
+    int rule_left_id{ rule_left_id_arr[r_id] };
+    std::vector<Item> child;
+    Item item{  };
+    for (int i{ 0 }; i < child_num; i++) {
+        child.push_back(syms.top());
+        syms.pop();
+        states.pop();
     }
-    return false;
+    switch (r_id) {
+    case 0:
+
+        // line 23
+        // block
+        { item.node = child[0].node; }
+        break;
+    case 1:
+
+        // line 24
+        // block
+        { item.node = child[0].node; }
+        break;
+    case 2:
+
+        // line 25
+        // block
+        { item.node = gogo(child[0].node, child[1].node); }
+        break;
+    case 3:
+
+        // line 26
+        // block
+        { item.node = child[0].node; }
+        break;
+    case 4:
+
+        // line 27
+        // block
+        { item.node = child[0].node; }
+        break;
+    case 5:
+
+        // line 28
+        // block
+        {}
+        break;
+    case 6:
+
+        // line 29
+        // block
+        {}
+        break;
+    case 7:
+
+        // line 30
+        // block
+        {}
+        break;
+    case 8:
+
+        // line 31
+        // block
+        {}
+        break;
+    case 9:
+
+        // line 32
+        // block
+        {}
+        break;
+    case 10:
+
+        // line 33
+        // block
+        {}
+        break;
+    case 11:
+
+        // line 34
+        // block
+        { item.node = gogo(child[0].node, child[1].node, child[2].node, child[3].node, child[4].node); }
+        break;
+    case 12:
+
+        // line 35
+        // block
+        { item.node = gogo(child[0].node, child[1].node, child[2].node, child[3].node); }
+        break;
+    case 13:
+
+        // line 36
+        // block
+        { item.node = gogo(child[1].node, child[3].node, child[4].node); }
+        break;
+    case 14:
+
+        // line 37
+        // block
+        {}
+        break;
+    case 15:
+
+        // line 38
+        // block
+        {}
+        break;
+    case 16:
+
+        // line 39
+        // block
+        {}
+        break;
+    case 17:
+
+        // line 40
+        // block
+        { item.node = gogo(child[0].node, child[2].node); }
+        break;
+    case 18:
+
+        // line 41
+        // block
+        { item.node = gogo(child[0].node); }
+        break;
+    case 19:
+
+        // line 42
+        // block
+        {}
+        break;
+    case 20:
+
+        // line 43
+        // block
+        { item.node = gogo(child[0].node); }
+        break;
+    case 21:
+
+        // line 44
+        // block
+        { item.node = gogo(child[0].node); }
+        break;
+    case 22:
+
+        // line 45
+        // block
+        { item.node = gogo(child[0].node); }
+        break;
+    case 23:
+
+        // line 46
+        // block
+        { item.node = NULL; }
+        break;
+    case 24:
+
+        // line 47
+        // block
+        {}
+        break;
+    case 25:
+
+        // line 48
+        // block
+        {}
+        break;
+    case 26:
+
+        // line 49
+        // block
+        {}
+        break;
+    case 27:
+
+        // line 50
+        // block
+        {}
+        break;
+    }
+    syms.push(item);
+
+    int curStateId = states.top();
+    int nextStateId = goto_table[curStateId][rule_left_id];
+    states.push(nextStateId);
+    return true;
 }
 #endif
-dif

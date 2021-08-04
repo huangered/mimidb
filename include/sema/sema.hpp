@@ -105,6 +105,7 @@ private:
 class Parser {
 private:
     int _maxState;
+    std::vector<SimpleRule> _originRules;
     RuleList _rules;
     std::unique_ptr<GotoTable> _gotoTable;
     std::unique_ptr<ActionTable> _actionTable;

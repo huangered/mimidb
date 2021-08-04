@@ -3,7 +3,7 @@
 
 SimpleRule
 make_rule(int id, SemaToken left, SemaTokenList right, std::string block) {
-    SimpleRule rule = new SimpleRuleData{ id, left, right , block};
+    SimpleRule rule = new SimpleRuleData{ 0, id, left, right , block};
     return rule;
 }
 

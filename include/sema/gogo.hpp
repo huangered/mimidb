@@ -4,7 +4,7 @@
 
 inline Node
 gogo(Node n0) {
-    Node n = new NodeData{"a"};
+    Node n = new NodeData{ "a" };
     n->AddAll({ n0 });
     return n;
 }
@@ -12,28 +12,28 @@ gogo(Node n0) {
 inline Node
 gogo(Node n0, Node n1) {
     Node n = new NodeData{ "a" };
-    n->AddAll({ n0,n1 });
+    n->AddAll({ n0, n1 });
     return n;
 }
 
 inline Node
 gogo(Node n0, Node n1, Node n2) {
     Node n = new NodeData{ "a" };
-    n->AddAll({ n0, n1 , n2});
+    n->AddAll({ n0, n1, n2 });
     return n;
 }
 
 inline Node
 gogo(Node n0, Node n1, Node n2, Node n3) {
     Node n = new NodeData{ "a" };
-    n->AddAll({ n0, n1, n2 ,n3});
+    n->AddAll({ n0, n1, n2, n3 });
     return n;
 }
 
 inline Node
 gogo(Node n0, Node n1, Node n2, Node n3, Node n4) {
     Node n = new NodeData{ "a" };
-    n->AddAll({ n0, n1, n2, n3 , n4});
+    n->AddAll({ n0, n1, n2, n3, n4 });
     return n;
 }
 
@@ -47,15 +47,14 @@ gogo(Node n0, Node n1, Node n2, Node n3, Node n4, Node n5) {
 inline Node
 gogo(Node n0, Node n1, Node n2, Node n3, Node n4, Node n5, Node n6) {
     Node n = new NodeData{ "a" };
-    n->AddAll({ n0, n1, n2, n3, n4, n5 , n6});
+    n->AddAll({ n0, n1, n2, n3, n4, n5, n6 });
     return n;
 }
-
 
 inline Node
 gogo(Node n0, Node n1, Node n2, Node n3, Node n4, Node n5, Node n6, Node n7) {
     Node n = new NodeData{ "a" };
-    n->AddAll({ n0, n1, n2, n3, n4, n5, n6 , n7});
+    n->AddAll({ n0, n1, n2, n3, n4, n5, n6, n7 });
     return n;
 }
 
@@ -66,7 +65,8 @@ public:
 
 typedef SelectStmtNodeData* SelectStmtNode;
 
-inline SelectStmtNode makeSelectStmt(Node params, Node tableName, Node whereStmt, Node orderByStmt){
+inline SelectStmtNode
+makeSelectStmt(Node params, Node tableName, Node whereStmt, Node orderByStmt) {
     SelectStmtNode node = new SelectStmtNodeData{ "select stmt" };
     node->AddAll({ params, tableName, whereStmt, orderByStmt });
     return node;
