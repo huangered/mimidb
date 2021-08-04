@@ -12,6 +12,7 @@ typedef std::vector<SemaToken> SemaTokenList;
 
 class SimpleRuleData {
 public:
+    int lineId;
     int id;
     SemaToken left;
     SemaTokenList right;

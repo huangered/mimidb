@@ -21,40 +21,29 @@
 @token kw_orderby
 
 Q = StmtBlock { $$ = $0; }
-
-StmtBlock = StmtList { }
-StmtList = StmtList Stmt { }
-StmtList = Stmt { }
-
-Stmt = SelectStmt { }
+StmtBlock = StmtList { $$ = $0; }
+StmtList = StmtList Stmt { $$ = gogo($0, $1); }
+StmtList = Stmt { $$ = $0; }
+Stmt = SelectStmt { $$ = $0; }
 Stmt = TableStmt { }
 Stmt = ViewStmt { }
 Stmt = InsertStmt { }
 Stmt = TxStmt { }
-
 TableStmt = kw_create kw_table TableName TableRef semicolon { }
 ViewStmt = kw_create kw_view TableName semicolon { }
-
 TableStmt = kw_create kw_table TableName TableRef semicolon { $$ = gogo( $0 , $1, $2, $3,$4); }
 ViewStmt = kw_create kw_view TableName semicolon  { $$ = gogo( $0 , $1, $2, $3); }
-
-SelectStmt = kw_select Params kw_from TableName WhereStmt semicolon { }
+SelectStmt = kw_select Params kw_from TableName WhereStmt semicolon { $$ = gogo( $1, $3, $4 ); }
 SelectStmt = kw_select Params semicolon { }
-
 InsertStmt = kw_insert kw_into TableName kw_values l_brace Params r_brace semicolon { }
-
 TxStmt = kw_begin StmtList kw_end { }
-
-Params = Params comma T { }
-Params = T { }
+Params = Params comma T { $$ = gogo($0, $2); }
+Params = T { $$ = gogo($0); }
 T = identifier { }
-T = star { }
-
-TableName = identifier { }
-
-WhereStmt = kw_where { }
-WhereStmt = { }
-
+T = star { $$ = gogo($0); }
+TableName = identifier { $$ = gogo($0); }
+WhereStmt = kw_where { $$ = gogo($0); }
+WhereStmt = { $$ = NULL; }
 TableRef = l_brace ColumnRefs r_brace { }      # (int, string,)
 ColumnRefs = ColumnRefs comma ColumnRef { }    # int, string,
 ColumnRefs = ColumnRef { }                     # int, string,
