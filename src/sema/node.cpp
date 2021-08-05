@@ -22,3 +22,13 @@ void
 NodeData::AddAll(const std::vector<Node>& nodes) {
     _nodes.insert(_nodes.begin(), nodes.begin(), nodes.end());
 }
+
+std::string
+NodeData::Name() {
+    return _name;
+}
+
+Node
+NodeData::Get(int index) {
+    return this->_nodes[index];
+}

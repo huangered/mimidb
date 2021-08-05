@@ -9,6 +9,7 @@
 using namespace std;
 union Item {
     Node node;
+    std::vector<Node>* vec;
 };
 
 #define MAX_ID 65535
@@ -1432,169 +1433,175 @@ reduce(std::stack<int>& states, std::stack<Item>& syms, int r_id) {
     switch (r_id) {
     case 0:
 
-        // line 27
+        // line 28
         // block
         { item.node = child[0].node; }
         break;
     case 1:
 
-        // line 28
+        // line 29
         // block
-        { item.node = child[0].node; }
+        { item.node = makeBlock(child[0].vec); }
         break;
     case 2:
 
-        // line 29
+        // line 30
         // block
-        { item.node = gogo(child[0].node, child[1].node); }
+        {
+            child[0].vec->push_back(child[1].node);
+            item.vec = child[0].vec;
+        }
         break;
     case 3:
 
-        // line 30
+        // line 31
         // block
-        { item.node = child[0].node; }
+        {
+            std::vector<Node>* vec = new std::vector<Node>{ child[0].node };
+            item.vec               = vec;
+        }
         break;
     case 4:
 
-        // line 31
+        // line 32
         // block
         { item.node = child[0].node; }
         break;
     case 5:
 
-        // line 32
+        // line 33
         // block
         {}
         break;
     case 6:
 
-        // line 33
+        // line 34
         // block
         {}
         break;
     case 7:
 
-        // line 34
+        // line 35
         // block
         {}
         break;
     case 8:
 
-        // line 35
+        // line 36
         // block
         {}
         break;
     case 9:
 
-        // line 36
+        // line 37
         // block
         {}
         break;
     case 10:
 
-        // line 37
+        // line 38
         // block
         {}
         break;
     case 11:
 
-        // line 38
+        // line 39
         // block
         { item.node = gogo(child[0].node, child[1].node, child[2].node, child[3].node, child[4].node); }
         break;
     case 12:
 
-        // line 39
+        // line 40
         // block
         { item.node = gogo(child[0].node, child[1].node, child[2].node, child[3].node); }
         break;
     case 13:
 
-        // line 40
-        // block
-        { item.node = gogo(child[1].node, child[3].node, child[4].node); }
-        break;
-    case 14:
-
         // line 41
         // block
-        {}
+        { item.node = makeSelectStmt(child[1].node, child[3].node, child[4].node); }
         break;
-    case 15:
+    case 14:
 
         // line 42
         // block
         {}
         break;
-    case 16:
+    case 15:
 
         // line 43
         // block
         {}
         break;
-    case 17:
+    case 16:
 
         // line 44
+        // block
+        {}
+        break;
+    case 17:
+
+        // line 45
         // block
         { item.node = gogo(child[0].node, child[2].node); }
         break;
     case 18:
 
-        // line 45
+        // line 46
         // block
         { item.node = gogo(child[0].node); }
         break;
     case 19:
 
-        // line 46
+        // line 47
         // block
         {}
         break;
     case 20:
 
-        // line 47
+        // line 48
         // block
         { item.node = makeStarStmt(child[0].node); }
         break;
     case 21:
 
-        // line 48
+        // line 49
         // block
         { item.node = gogo(child[0].node); }
         break;
     case 22:
 
-        // line 49
+        // line 50
         // block
         { item.node = gogo(child[0].node); }
         break;
     case 23:
 
-        // line 50
+        // line 51
         // block
         {}
         break;
     case 24:
 
-        // line 51
+        // line 52
         // block
         {}
         break;
     case 25:
 
-        // line 52
+        // line 53
         // block
         {}
         break;
     case 26:
 
-        // line 53
+        // line 54
         // block
         {}
         break;
     case 27:
 
-        // line 54
+        // line 55
         // block
         {}
         break;
