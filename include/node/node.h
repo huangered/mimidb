@@ -3,10 +3,10 @@
 
 #include <stdlib.h>
 
-typedef enum NodeTag
+enum NodeTag
 {
     // ddl
-    NT_InsertStmt,
+    NT_InsertStmt = 0,
     NT_UpdateStmt,
     NT_SelectStmt,
     NT_DeleteStmt,
@@ -26,7 +26,9 @@ typedef enum NodeTag
     // for list
     NT_List,
     NT_IntList,
-} NodeTag;
+};
+
+typedef enum NodeTag NodeTag;
 
 typedef struct Node {
     NodeTag nodetag;
