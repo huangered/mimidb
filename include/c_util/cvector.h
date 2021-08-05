@@ -1,6 +1,8 @@
 #ifndef _c_vector_h_
 #define _c_vector_h_
 
+#include <stddef.h>
+
 typedef struct vectorItem {
     union {
         int int_value;
