@@ -107,6 +107,14 @@ GetLexerToken(const char* buf, int size, int* location) {
     return token;
 }
 
+void
+FreeLexerToken(LexToken token) {
+    if (token->data != NULL) {
+        free(token->data);
+    }
+    free(token);
+}
+
 LexToken
 lexIdentifier(const char* _buf, int* _cur, int _size) {
     int start = *_cur;

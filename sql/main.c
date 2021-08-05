@@ -16,13 +16,11 @@ main(int argc, char* argv[]) {
     LexToken token = NULL;
 
     while ((token = GetLexerToken(str, strlen(str), &location)) != NULL) {
-        printf("token %3d (%3d,%3d) data (%s)\n", token->tok, token->begin, token->end, token->data);
-        //char* p = malloc(256);
-        
-
-    }
-
-    
+        if (token != whitespace) {
+            printf("token %3d (%3d,%3d) data (%s)\n", token->tok, token->begin, token->end, token->data);
+        }
+        FreeLexerToken(token);
+    }    
 
     return 0;
 }
