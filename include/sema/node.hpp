@@ -18,9 +18,13 @@ public:
 
     NodeData(LexToken token);
 
-    ~NodeData();
+    virtual ~NodeData();
 
     void AddAll(const std::vector<Node>& nodes);
+
+    std::string Name();
+
+    Node Get(int index);
 };
 
 #endif
