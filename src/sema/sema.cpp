@@ -235,9 +235,9 @@ Parser::handleState(int stateId) {
 }
 
 void
-t1(File fd, char* buf) {
+t1(File fd, const char* buf) {
     int size = strlen(buf);
-    FileWrite(fd, buf, size);
+    FileWrite(fd, const_cast<char*>(buf), size);
 }
 
 void
