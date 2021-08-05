@@ -3,6 +3,12 @@
 
 #include "sema/rule.hpp"
 
-std::vector<SimpleRule> ReadRules(const char* path);
+class RuleResult {
+public:
+    std::vector<SimpleRule> rules;
+    std::map<std::string, std::string> typeMap;
+};
+
+RuleResult ReadRules(const char* path);
 
 #endif // !_rule_reader_hpp_

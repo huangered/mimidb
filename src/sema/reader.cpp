@@ -8,7 +8,7 @@
 
 static std::vector<std::string> split(std::string line);
 
-std::vector<SimpleRule>
+RuleResult 
 ReadRules(const char* path) {
     int sema_id{ 0 };
     std::vector<SimpleRule> rList;
@@ -17,14 +17,29 @@ ReadRules(const char* path) {
     std::ifstream file(path);
     std::string myText;
     int rule_id{ 0 };
+    int lineId{ 0 };
+    std::map<std::string, std::string> typeMap;
     while (getline(file, myText)) {
+        
+        lineId++;
 
-        if (myText.find('@') == 0) {
+        if (myText.find("@token") == 0) {
             // handle @token
             myText = myText.substr(7);
             Tok t  = GetTokByName(myText);
 
             lexTokens[myText] = t;
+
+            continue;
+        }
+
+        if (myText.find("@type") == 0) {
+            myText = myText.substr(6);
+            std::vector<std::string> lines = split(myText);
+            
+            for (int i{ 1 }; i < lines.size(); i++) {
+                typeMap[lines[i]] = lines[0];
+            }
 
             continue;
         }
@@ -82,10 +97,11 @@ ReadRules(const char* path) {
         }
 
         SimpleRule sRule = make_rule(rule_id, l_token, r_token, f_block);
+        sRule->lineId    = lineId;
         rList.push_back(sRule);
         rule_id++;
     }
-    return rList;
+    return { rList, typeMap };
 }
 
 std::vector<std::string>

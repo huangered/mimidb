@@ -78,7 +78,7 @@ TEST(Sema, select_test) {
     }
     data.push_back(EndLexToken);
 
-    Parser parser(rList);
+    Parser parser(rList.rules);
     parser.GenerateParseTable();
     auto n = parser.Parse(data);
     EXPECT_TRUE(n.first);
@@ -104,7 +104,7 @@ TEST(Sema, select_where_test) {
     }
     data.push_back(EndLexToken);
 
-    Parser parser(rList);
+    Parser parser(rList.rules);
     parser.GenerateParseTable();
     auto n = parser.Parse(data);
     EXPECT_TRUE(n.first);
@@ -130,7 +130,7 @@ TEST(Sema, select_fail_test) {
     }
     data.push_back(EndLexToken);
 
-    Parser parser(rList);
+    Parser parser(rList.rules);
     parser.GenerateParseTable();
     auto n = parser.Parse(data);
     EXPECT_FALSE(n.first);
