@@ -1,10 +1,10 @@
 #include "../g.hpp"
 
-_EXTERN_C
+extern "C" {
 #include "c_util/cstack.h"
 #include "c_util/cstr.h"
 #include "c_util/cvector.h"
-_END_EXTERN_C
+}
 
 
 TEST(c_util, cstack) {
