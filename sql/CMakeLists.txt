@@ -1,1 +1,1 @@
-add_executable(sql a.c)
+add_executable(sql main.c)
