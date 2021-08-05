@@ -105,6 +105,7 @@ private:
 class Parser {
 private:
     int _maxState;
+    std::map<std::string, std::string> _typeMap;
     std::vector<SimpleRule> _originRules;
     RuleList _rules;
     std::unique_ptr<GotoTable> _gotoTable;
@@ -115,6 +116,7 @@ private:
 public:
     Parser(const std::vector<SimpleRule>& rules);
     ~Parser();
+    void SetTypeMap(const std::map<std::string, std::string>& _typeMap);
     void GenerateParseTable(void);
     std::pair<bool, Node> Parse(const std::vector<LexToken>& input);
 
@@ -129,6 +131,9 @@ private:
 
     bool reduce(std::stack<int>& states, std::stack<Node>& syms, const Record curRecord);
     bool eatToken(std::stack<int>& states, std::stack<Node>& syms, std::stack<LexToken>& input, bool* acc);
+
+    // code generate
+    std::string funcReplace(const Rule rule);
 };
 
 #endif

@@ -9,7 +9,6 @@ extern "C" {
 static bool SemaTokenListLess(const SemaTokenList& left, const SemaTokenList& right);
 static std::string join(const SemaTokenList& v);
 static std::string join2(const std::vector<Tok>& v);
-static std::string funcReplace(std::string fblock, int size);
 
 std::ostream&
 operator<<(std::ostream& os, const RecordData& dt) {
@@ -107,6 +106,11 @@ Parser::~Parser() {
     for (Rule r : _rules) {
         delete r;
     }
+}
+
+void
+Parser::SetTypeMap(const std::map<std::string, std::string>& _typeMap) {
+    this->_typeMap = _typeMap;
 }
 
 void
@@ -412,10 +416,10 @@ Parser::GenerateCppCode(const char* path) {
     t1(fd, "  bool r_find{false};\n");
 
     t1(fd, "  int rd = action_table[curStateId][token->tok];\n");
-    t1(fd, "  r_acc = (rd==10000);\n");
-    t1(fd, "  r_state = (rd>0);\n");
-    t1(fd, "  r_id = rd>0?rd:-rd;\n");
-    t1(fd, "  r_find = (r_id!=MAX_ID);\n");
+    t1(fd, "  r_acc = ( rd == 10000 );\n");
+    t1(fd, "  r_state = ( rd > 0 );\n");
+    t1(fd, "  r_id = rd > 0 ? rd : -rd;\n");
+    t1(fd, "  r_find = ( r_id != MAX_ID );\n");
 
     t1(fd, "  if (r_find == true) {\n");
     t1(fd, "\n");
@@ -441,11 +445,11 @@ Parser::GenerateCppCode(const char* path) {
     t1(fd, "bool\nreduce(std::stack<int> & states, std::stack<Item> & syms, int r_id) {\n");
     t1(fd, "    int child_num{rule_right_children_num_arr[r_id]};\n");
     t1(fd, "    int rule_left_id{rule_left_id_arr[r_id]};\n");
-    t1(fd, "    std::vector<Item> child;\n");
+    t1(fd, "    std::vector<Item> child(child_num);\n");
     t1(fd, "    Item item{ nullptr};\n");
 
     t1(fd, "      for (int i{ 0 }; i < child_num; i++) {\n");
-    t1(fd, "        child.push_back(syms.top());\n");
+    t1(fd, "        child.insert(child.begin(), syms.top());\n");
     t1(fd, "        syms.pop();\n");
     t1(fd, "        states.pop();\n");
     t1(fd, "      }\n");
@@ -461,8 +465,8 @@ Parser::GenerateCppCode(const char* path) {
         sprintf(a, "// line %d\n", _originRules[i1]->lineId);
         t1(fd, a); // 写 {} 块
         memset(a, 0, 256);
-        std::string g = funcReplace(_rules[i1]->func_block, _rules[i1]->right.size());
-        sprintf(a, "//block\n      { %s }\n", g.c_str());
+        std::string g = funcReplace(_rules[i1]);
+        sprintf(a, "//block\n      {\n %s \n      }\n", g.c_str());
         t1(fd, a);
 
         t1(fd, "      break;\n");
@@ -474,8 +478,7 @@ Parser::GenerateCppCode(const char* path) {
 
     t1(fd, "\n");
     t1(fd, "    int curStateId = states.top();\n");
-    t1(fd, "    int nextStateId{0};\n");
-    t1(fd, "    nextStateId = goto_table[curStateId][rule_left_id];\n");
+    t1(fd, "    int nextStateId = goto_table[curStateId][rule_left_id];\n");
     t1(fd, "    states.push(nextStateId);\n");
     t1(fd, "    return true;\n");
     t1(fd, "}\n");
@@ -527,7 +530,6 @@ Parser::expandRules(State state) {
         std::set<Rule> copied;
 
         for (Rule r : state->GetRules()) {
-            r->cur_state = state->GetId();
             if (r->IsDotEnd()) {
                 continue;
             }
@@ -709,19 +711,27 @@ SemaTokenListLess(const SemaTokenList& left, const SemaTokenList& right) {
 }
 
 std::string
-funcReplace(std::string fblock, int size) {
-    std::string tmp = fblock;
-    for (int i{ 0 }; i < size; i++) {
-        std::string w = "$" + std::to_string(i);
-        std::string r = "child[" + std::to_string(i);
-        r += "].node";
+Parser::funcReplace(const Rule rule) {
+
+    std::string tmp = rule->func_block;
+    for (int i{ 0 }; i < rule->right.size(); i++) {
+        std::string name = this->_typeMap[rule->right[i]->name];
+        std::string w    = "$" + std::to_string(i);
+        std::string r    = "child[" + std::to_string(i);
+        r += "].";
+        r += name;
         std::size_t pos;
         while ((pos = tmp.find(w)) != std::string::npos)
             tmp.replace(pos, w.size(), r);
     }
     std::size_t pos;
 
-    while ((pos = tmp.find("$$")) != std::string::npos)
-        tmp.replace(pos, 2, "item.node");
+    std::string name = rule->left->name;
+
+    while ((pos = tmp.find("$$")) != std::string::npos) {
+        name = "item." + this->_typeMap[name];
+        tmp.replace(pos, 2, name);
+    }
+
     return tmp;
 }

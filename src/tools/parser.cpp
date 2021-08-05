@@ -6,7 +6,8 @@ main(int argc, char* argv[]) {
 
     auto rList = ReadRules("C:\\work\\mimidb\\sql.rule");
 
-    Parser parser(rList);
+    Parser parser(rList.rules);
+    parser.SetTypeMap(rList.typeMap);
     parser.GenerateParseTable();
     parser.GenerateCppCode("code.hpp");
 

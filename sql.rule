@@ -20,6 +20,10 @@
 @token kw_end
 @token kw_orderby
 
+@type node identifier star semicolon comma l_brace r_brace l_paren r_paren kw_insert kw_into kw_values kw_create kw_table kw_view kw_select kw_from kw_where kw_begin kw_commit kw_end kw_orderby 
+@type node StmtBlock Stmt T SelectStmt TableName TableRef WhereStmt ViewStmt Params Q TableStmt 
+@type node StmtList 
+
 Q = StmtBlock { $$ = $0; }
 StmtBlock = StmtList { $$ = $0; }
 StmtList = StmtList Stmt { $$ = gogo($0, $1); }
@@ -40,10 +44,10 @@ TxStmt = kw_begin StmtList kw_end { }
 Params = Params comma T { $$ = gogo($0, $2); }
 Params = T { $$ = gogo($0); }
 T = identifier { }
-T = star { $$ = gogo($0); }
+T = star { $$ = makeStarStmt($0); }
 TableName = identifier { $$ = gogo($0); }
 WhereStmt = kw_where { $$ = gogo($0); }
-WhereStmt = { $$ = NULL; }
+WhereStmt = { }
 TableRef = l_brace ColumnRefs r_brace { }      # (int, string,)
 ColumnRefs = ColumnRefs comma ColumnRef { }    # int, string,
 ColumnRefs = ColumnRef { }                     # int, string,

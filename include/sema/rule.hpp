@@ -26,11 +26,8 @@ SimpleRule make_rule(int id, SemaToken left, SemaTokenList right, std::string bl
 class RuleData {
 public:
     int id;
-
     int dot;
-    int cur_state;
     int next_state;
-
     bool root;
 
     SemaToken left;

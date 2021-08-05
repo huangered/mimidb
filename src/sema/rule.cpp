@@ -53,7 +53,6 @@ RuleData::Clone() {
     rule->left       = left;
     rule->right      = right;
     rule->dot        = dot;
-    rule->cur_state  = cur_state;
     rule->next_state = next_state;
     rule->root       = root;
     rule->tokens     = tokens;

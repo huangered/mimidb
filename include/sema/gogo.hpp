@@ -72,4 +72,17 @@ makeSelectStmt(Node params, Node tableName, Node whereStmt, Node orderByStmt) {
     return node;
 }
 
+class StarNodeData : public NodeData {
+public:
+    using NodeData::NodeData;
+};
+
+typedef StarNodeData* StarNode;
+
+inline Node
+makeStarStmt(Node n0) {
+    StarNode node = new StarNodeData{ "star" };
+    return node;
+}
+
 #endif
