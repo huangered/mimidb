@@ -1,1 +1,1 @@
-add_executable(sql main.c)
+add_executable(sql main.c lex.c)
