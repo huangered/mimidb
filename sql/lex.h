@@ -14,4 +14,4 @@ typedef struct lexTokenData* LexToken;
 
 LexToken GetLexerToken(const char* buf, int size, int* location);
 
-#endif;
+#endif

@@ -10,7 +10,7 @@ static LexToken lexString(const char* _buf, int* _cur, int _size);
 
 LexToken
 GetLexerToken(const char* buf, int size, int* location) {
-    if (size > *location) {
+    if (*location > size) {
         return NULL;
     }
 
@@ -95,7 +95,7 @@ GetLexerToken(const char* buf, int size, int* location) {
         return lexString(buf, location, size);
     }
 
-    *location++;
+    (*location)++;
     end = *location;
 
     LexToken token = malloc(sizeof(struct lexTokenData));
@@ -111,7 +111,7 @@ LexToken
 lexIdentifier(const char* _buf, int* _cur, int _size) {
     int start = *_cur;
     int count = 0;
-    for (; *_cur < _size; *_cur++) {
+    for (; *_cur < _size; (*_cur)++) {
         char c = _buf[*_cur];
         if (c >= 'a' && c <= 'z') {
             count++;
@@ -138,7 +138,7 @@ LexToken
 lexNumber(const char* _buf, int* _cur, int _size) {
     int start = *_cur;
     int count = 0;
-    for (; *_cur < _size; *_cur++) {
+    for (; *_cur < _size; (*_cur)++) {
         char c = _buf[*_cur];
         if (c >= '0' && c <= '9') {
             count++;
@@ -164,8 +164,8 @@ LexToken
 lexString(const char* _buf, int* _cur, int _size) {
     int start = *_cur;
     int count = 2;
-    *_cur++; // skip first "
-    for (; *_cur < _size; *_cur++) {
+    (*_cur)++; // skip first "
+    for (; *_cur < _size; (*_cur)++) {
         char c = _buf[*_cur];
         if (c != '"') {
             count++;
@@ -173,7 +173,7 @@ lexString(const char* _buf, int* _cur, int _size) {
             break;
         }
     }
-    *_cur++; // skip end "
+    (*_cur)++; // skip end "
 
     char* p = malloc(sizeof(char) * (count + 1));
     strncpy(p, _buf + start, count);
