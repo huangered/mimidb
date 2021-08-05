@@ -5,7 +5,7 @@
 
 int
 main(int argc, char* argv[]) {
-    printf("sql parser %s, %s", argv[0], argv[1]);
+    printf("sql parser %s, %s\n", argv[0], argv[1]);
     char* path   = argv[1];
     char* header = argv[2];
     char* source = argv[3];
@@ -15,9 +15,14 @@ main(int argc, char* argv[]) {
 
     LexToken token = NULL;
 
-    while ((token = GetLexerToken(str, strlen(str), &location) != NULL)) {
-        printf("token %d\n", token->tok);
+    while ((token = GetLexerToken(str, strlen(str), &location)) != NULL) {
+        printf("token %3d (%3d,%3d) data (%s)\n", token->tok, token->begin, token->end, token->data);
+        //char* p = malloc(256);
+        
+
     }
+
+    
 
     return 0;
 }
