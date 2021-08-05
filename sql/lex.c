@@ -10,7 +10,7 @@ static LexToken lexString(const char* _buf, int* _cur, int _size);
 
 LexToken
 GetLexerToken(const char* buf, int size, int* location) {
-    if (*location > size) {
+    if (*location >= size) {
         return NULL;
     }
 
