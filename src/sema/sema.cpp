@@ -260,7 +260,7 @@ Parser::GenerateCppCode(const char* path) {
     t1(fd, "#include \"lex/TokenKinds.hpp\"\n");
     t1(fd, "#include \"sema/sema.hpp\"\n");
     t1(fd, "using namespace std;\n");
-    t1(fd, "union Item {Node node;};\n");
+    t1(fd, "union Item {Node node; std::vector<Node>* vec;};\n");
     t1(fd, "\n");
 
     {
