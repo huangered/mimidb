@@ -11,6 +11,9 @@ class LexTokenData {
 public:
     Tok tok;
     std::string name;
+    char* data;
+    int begin;
+    int end;
 };
 
 typedef LexTokenData* LexToken;

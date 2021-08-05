@@ -1,12 +1,15 @@
 #ifndef _p_test_hpp_
 #define _p_test_hpp_
+
 #include <iostream>
 #include <stack>
 #include <vector>
 #include "sema/gogo.hpp"
 #include "lex/TokenKinds.hpp"
 #include "sema/sema.hpp"
+
 using namespace std;
+
 union Item {
     Node node;
     std::vector<Node>* vec;
@@ -1392,15 +1395,10 @@ bool
 eatToken(std::stack<int>& states, std::stack<Item>& syms, std::stack<LexToken>& input, bool* acc) {
     int curStateId = states.top();
     LexToken token = input.top();
-    bool r_acc;
-    bool r_state;
-    int r_id;
-    bool r_find{ false };
     int rd  = action_table[curStateId][token->tok];
-    r_acc   = (rd == 10000);
-    r_state = (rd > 0);
-    r_id    = rd > 0 ? rd : -rd;
-    r_find  = (r_id != MAX_ID);
+    bool r_acc   = (rd == 10000);
+    int r_id     = abs(rd);
+    bool r_find  = (r_id != MAX_ID);
     if (r_find == true) {
 
         if (r_acc == true) {
@@ -1408,7 +1406,7 @@ eatToken(std::stack<int>& states, std::stack<Item>& syms, std::stack<LexToken>& 
             return true;
         }
 
-        if (r_state == true) {
+        if (rd > 0) {
             states.push(r_id);
             syms.push(Item{ new NodeData(token) });
             input.pop();
@@ -1424,7 +1422,7 @@ reduce(std::stack<int>& states, std::stack<Item>& syms, int r_id) {
     int child_num{ rule_right_children_num_arr[r_id] };
     int rule_left_id{ rule_left_id_arr[r_id] };
     std::vector<Item> child(child_num);
-    Item item{ nullptr };
+    Item item{ };
     for (int i{ 0 }; i < child_num; i++) {
         child.insert(child.begin(), syms.top());
         syms.pop();
