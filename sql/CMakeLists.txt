@@ -1,1 +1,1 @@
-add_executable(sql main.c lex.c)
+add_executable(sql main.c lex.c "sema.h" "sema.c")
