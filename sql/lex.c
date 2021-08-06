@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <assert.h>
 
 static LexToken lexIdentifier(const char* _buf, int* _cur, int size);
 static LexToken lexNumber(const char* _buf, int* _cur, int _size);
@@ -99,19 +100,18 @@ GetLexerToken(const char* buf, int size, int* location) {
     end = *location;
 
     LexToken token = malloc(sizeof(struct lexTokenData));
-    token->tok     = tok;
-    token->data    = NULL;
-    token->begin   = begin;
-    token->end     = end;
+    assert(token);
+    memset(token, 0, sizeof(struct lexTokenData));
+    token->tok   = tok;
+    token->data  = NULL;
+    token->begin = begin;
+    token->end   = end;
 
     return token;
 }
 
 void
 FreeLexerToken(LexToken token) {
-    if (token->data != NULL) {
-        free(token->data);
-    }
     free(token);
 }
 
@@ -156,14 +156,16 @@ lexNumber(const char* _buf, int* _cur, int _size) {
     }
 
     char* p = malloc(sizeof(char) * (count + 1));
+    assert(p);
     strncpy(p, _buf + start, count);
     p[count] = '\0';
 
     LexToken token = malloc(sizeof(struct lexTokenData));
-    token->tok     = number;
-    token->data    = p;
-    token->begin   = start;
-    token->end     = *_cur;
+    assert(p);
+    token->tok   = number;
+    token->data  = p;
+    token->begin = start;
+    token->end   = *_cur;
 
     return token;
 }
@@ -184,14 +186,16 @@ lexString(const char* _buf, int* _cur, int _size) {
     (*_cur)++; // skip end "
 
     char* p = malloc(sizeof(char) * (count + 1));
+    assert(p);
     strncpy(p, _buf + start, count);
     p[count] = '\0';
 
     LexToken token = malloc(sizeof(struct lexTokenData));
-    token->tok     = str;
-    token->data    = p;
-    token->begin   = start;
-    token->end     = *_cur;
+    assert(token);
+    token->tok   = str;
+    token->data  = p;
+    token->begin = start;
+    token->end   = *_cur;
 
     return token;
 }
