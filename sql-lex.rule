@@ -1,0 +1,24 @@
+%code {
+  #include <stdio.h>
+}
+
+@token identifier
+@token semicolon
+@token comma
+@token block
+
+@type <node> Q RuleList Rule ID
+
+Q : RuleList { $$ = $0 ; }
+
+RuleList :
+  RuleList Rule{ $$ = makeBlock($0) ; }
+| Rule {}
+;
+
+Rule:
+  ID semicolon IDList block { $$ = $0 + $1 + $2 ; }
+| ID semicolon IDList { $$ = $0 + $1 ; }
+;
+
+ID: identifier
