@@ -7,8 +7,9 @@
 %code {
 #include <stdio.h>
 
+int yylex();
 void yyerror(YYLTYPE* a, void* b, const char* s);
-
+ void yy_scan_string(const char* str);
 #define YYMALLOC malloc
 #define YYFREE   free
 
