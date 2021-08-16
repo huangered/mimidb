@@ -1,17 +1,22 @@
 #include "reader.h"
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 void
 reader(const char* file) {
     FILE* f = fopen(file, "r");
+    fseek(f, 0L, SEEK_END);
+    long sz    = ftell(f);
+    fseek(f, 0L, SEEK_SET);
+    printf("file size: %ld\n", sz);
+    char* data = malloc(sz);
+    assert(data);
+    memset(data, 0, sz);
 
-    char* buf = malloc(256);
-    memset(buf, 0, 256);
-    buf[255] = '\0';
-    int size = fread(buf, sizeof(char), 255, f);
+    size_t size = fread(data, sizeof(char), sz, f);
 
-    printf("%d:%s", size, buf);
+    printf("%zu:%s", size, data);
 
     fclose(f);
 }

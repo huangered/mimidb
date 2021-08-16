@@ -133,11 +133,12 @@ lexIdentifier(const char* _buf, int* _cur) {
     }
 
     char* p = malloc(sizeof(char) * (count + 1));
-
+    assert(p);
     strncpy(p, _buf + start, count);
     p[count] = '\0';
 
-    LexToken token         = malloc(sizeof(struct lexTokenData));
+    LexToken token = malloc(sizeof(struct lexTokenData));
+    assert(token);
     token->tok             = identifier;
     token->data            = p;
     token->len             = start - *_cur;
