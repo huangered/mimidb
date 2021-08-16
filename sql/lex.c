@@ -11,7 +11,7 @@ static LexToken lexNumber(const char* _buf, int* _cur);
 static LexToken lexString(const char* _buf, int* _cur);
 static LexToken lexBlock(const char* _buf, int* _cur);
 static LexToken lexPiont(const char* _buf, int* _cur);
-static LexToken lexLess(buf, location);
+static LexToken lexLess(const char* buf, int* _cur);
 static bool isCharacter(char);
 
 LexToken
