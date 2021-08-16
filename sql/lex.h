@@ -3,16 +3,21 @@
 
 #include "TokenKinds.h"
 
+typedef struct location {
+    int line;
+    int offset;
+} Location;
+
 struct lexTokenData {
     Tok tok;
     char* data;
-    int begin;
-    int end;
+    int len;
+    Location location;
 };
 
 typedef struct lexTokenData* LexToken;
 
-LexToken GetLexerToken(const char* buf, int size, int* location);
+LexToken GetLexerToken(const char* buf, int* location);
 void FreeLexerToken(LexToken token);
 
 #endif

@@ -1,17 +1,18 @@
-#include "lex.h"
+﻿#include "lex.h"
 #include <stddef.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
 
-static LexToken lexIdentifier(const char* _buf, int* _cur, int size);
-static LexToken lexNumber(const char* _buf, int* _cur, int _size);
-static LexToken lexString(const char* _buf, int* _cur, int _size);
+static LexToken lexIdentifier(const char* _buf, int* _cur);
+static LexToken lexNumber(const char* _buf, int* _cur);
+static LexToken lexString(const char* _buf, int* _cur);
+static LexToken lexBlock(const char* _buf, int* _cur);
 
 LexToken
-GetLexerToken(const char* buf, int size, int* location) {
-    if (*location >= size) {
+GetLexerToken(const char* buf, int* location) {
+    if (*location >= strlen(buf)) {
         return NULL;
     }
 
@@ -31,7 +32,7 @@ GetLexerToken(const char* buf, int size, int* location) {
     case '7':
     case '8':
     case '9':
-        return lexNumber(buf, location, size);
+        return lexNumber(buf, location);
     case 'a':
     case 'b':
     case 'c':
@@ -58,7 +59,7 @@ GetLexerToken(const char* buf, int size, int* location) {
     case 'x':
     case 'y':
     case 'z':
-        return lexIdentifier(buf, location, size);
+        return lexIdentifier(buf, location);
     case '(':
         tok = l_brace;
         break;
@@ -93,7 +94,9 @@ GetLexerToken(const char* buf, int size, int* location) {
         tok = equal;
         break;
     case '"':
-        return lexString(buf, location, size);
+        return lexString(buf, location);
+    case '{':
+        return lexBlock(buf, location);
     }
 
     (*location)++;
@@ -102,10 +105,11 @@ GetLexerToken(const char* buf, int size, int* location) {
     LexToken token = malloc(sizeof(struct lexTokenData));
     assert(token);
     memset(token, 0, sizeof(struct lexTokenData));
-    token->tok   = tok;
-    token->data  = NULL;
-    token->begin = begin;
-    token->end   = end;
+    token->tok             = tok;
+    token->data            = NULL;
+    token->len             = begin - end;
+    token->location.line   = 0;
+    token->location.offset = begin;
 
     return token;
 }
@@ -116,10 +120,10 @@ FreeLexerToken(LexToken token) {
 }
 
 LexToken
-lexIdentifier(const char* _buf, int* _cur, int _size) {
+lexIdentifier(const char* _buf, int* _cur) {
     int start = *_cur;
     int count = 0;
-    for (; *_cur < _size; (*_cur)++) {
+    for (; *_cur < strlen(_buf); (*_cur)++) {
         char c = _buf[*_cur];
         if (c >= 'a' && c <= 'z') {
             count++;
@@ -133,20 +137,21 @@ lexIdentifier(const char* _buf, int* _cur, int _size) {
     strncpy(p, _buf + start, count);
     p[count] = '\0';
 
-    LexToken token = malloc(sizeof(struct lexTokenData));
-    token->tok     = identifier;
-    token->data    = p;
-    token->begin   = start;
-    token->end     = *_cur;
+    LexToken token         = malloc(sizeof(struct lexTokenData));
+    token->tok             = identifier;
+    token->data            = p;
+    token->len             = start - *_cur;
+    token->location.line   = 0;
+    token->location.offset = start;
 
     return token;
 }
 
 LexToken
-lexNumber(const char* _buf, int* _cur, int _size) {
+lexNumber(const char* _buf, int* _cur) {
     int start = *_cur;
     int count = 0;
-    for (; *_cur < _size; (*_cur)++) {
+    for (; *_cur < strlen(_buf); (*_cur)++) {
         char c = _buf[*_cur];
         if (c >= '0' && c <= '9') {
             count++;
@@ -162,20 +167,21 @@ lexNumber(const char* _buf, int* _cur, int _size) {
 
     LexToken token = malloc(sizeof(struct lexTokenData));
     assert(p);
-    token->tok   = number;
-    token->data  = p;
-    token->begin = start;
-    token->end   = *_cur;
+    token->tok             = number;
+    token->data            = p;
+    token->len             = start - *_cur;
+    token->location.line   = 0;
+    token->location.offset = start;
 
     return token;
 }
 
 LexToken
-lexString(const char* _buf, int* _cur, int _size) {
+lexString(const char* _buf, int* _cur) {
     int start = *_cur;
     int count = 2;
     (*_cur)++; // skip first "
-    for (; *_cur < _size; (*_cur)++) {
+    for (; *_cur < strlen(_buf); (*_cur)++) {
         char c = _buf[*_cur];
         if (c != '"') {
             count++;
@@ -192,10 +198,43 @@ lexString(const char* _buf, int* _cur, int _size) {
 
     LexToken token = malloc(sizeof(struct lexTokenData));
     assert(token);
-    token->tok   = str;
-    token->data  = p;
-    token->begin = start;
-    token->end   = *_cur;
+    token->tok             = str;
+    token->data            = p;
+    token->len             = start - *_cur;
+    token->location.line   = 0;
+    token->location.offset = start;
+
+    return token;
+}
+
+// 简化版
+LexToken
+lexBlock(const char* _buf, int* _cur) {
+    int start = *_cur;
+    int count = 2;
+    (*_cur)++; // skip first "
+    for (; *_cur < strlen(_buf); (*_cur)++) {
+        char c = _buf[*_cur];
+        if (c != '}') {
+            count++;
+        } else {
+            break;
+        }
+    }
+    (*_cur)++; // skip end "
+
+    char* p = malloc(sizeof(char) * (count + 1));
+    assert(p);
+    strncpy(p, _buf + start, count);
+    p[count] = '\0';
+
+    LexToken token = malloc(sizeof(struct lexTokenData));
+    assert(token);
+    token->tok             = str;
+    token->data            = p;
+    token->len             = start - *_cur;
+    token->location.line   = 0;
+    token->location.offset = start;
 
     return token;
 }
