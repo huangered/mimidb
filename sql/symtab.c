@@ -18,6 +18,9 @@ symbol_new(const char* name) {
 
     Params.nsyms++;
 
+    // insert into symbol_tbl;
+    hash_put(symbol_tbl, res->name, res);
+    
     return res;
 }
 Symbol*
@@ -29,8 +32,8 @@ symbol_from_uniqstr(const char* name) {
 void
 symbols_new(void) {
   symbol_tbl = hash_init(8, sym_hash, sym_equal);
-    Symbol* accept = symbol_new("$accept");
-    Symbol* end = symbol_new("$end");
+  Symbol* accept = symbol_new("$accept");
+  Symbol* end = symbol_new("$end");
     
 }
 
