@@ -31,7 +31,7 @@ main(int argc, char* argv[]) {
         }
         FreeLexerToken(token);
     }
-
+    // generate symbol table
     // generate lr1
 
     // generate table

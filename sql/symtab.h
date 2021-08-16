@@ -1,7 +1,9 @@
 ﻿#ifndef _sema_h_
 #define _sema_h_
 
-#include "hash.h"
+#include "c_util/chash.h"
+
+extern hash_table* symbol_tbl;
 
 typedef int SymbolNumber;
 
@@ -21,6 +23,6 @@ typedef struct symbol {
 Symbol* symbol_new(const char* name);
 Symbol* symbol_from_uniqstr(const char* name);
 
-hash_table* symbols_new();
+void symbols_new(void);
 
 #endif // !_sema_h_
