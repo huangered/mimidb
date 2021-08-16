@@ -1,10 +1,3 @@
+AUX_SOURCE_DIRECTORY(. DIR_SRCS)
 
-add_executable(sql 
-main.c
-lex.c 
-symtab.c
-reader.c
-"global.c"
-state.c
-bitset.c
-lr1.c)
+add_executable(sql ${DIR_SRCS})

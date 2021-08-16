@@ -2,10 +2,6 @@
 #define TOK(X)
 #endif
 
-#ifndef KEYWORD
-#define KEYWORD(X, Y) TOK(kw_ ## X)
-#endif
-
 TOK(Eof)
 TOK(whitespace)
 TOK(plus)
@@ -26,26 +22,8 @@ TOK(money)
 TOK(unknown)
 TOK(epsilon)
 TOK(str)
-
-// https://www.postgresql.org/docs/8.1/sql-keywords-appendix.html
-KEYWORD(alert, psql)
-KEYWORD(delete, psql)
-KEYWORD(select, psql)
-KEYWORD(where, psql)
-KEYWORD(orderby, psql)
-KEYWORD(from, psql)
-KEYWORD(insert, psql)
-KEYWORD(into, psql)
-KEYWORD(values, psql)
-KEYWORD(create, psql)
-KEYWORD(update, psql)
-KEYWORD(table, psql)
-KEYWORD(view, psql)
-KEYWORD(float, psql)
-KEYWORD(int, psql)
-KEYWORD(begin, psql)
-KEYWORD(commit, psql)
-KEYWORD(end, psql)
+TOK(t_token)
+TOK(t_type)
+TOK(t_type_type)
 
 #undef TOK
-#undef KEYWORD

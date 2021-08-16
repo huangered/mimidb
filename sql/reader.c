@@ -3,6 +3,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+char* data = NULL;
+
 void
 reader(const char* file) {
     FILE* f = fopen(file, "r");
@@ -10,7 +13,7 @@ reader(const char* file) {
     long sz    = ftell(f);
     fseek(f, 0L, SEEK_SET);
     printf("file size: %ld\n", sz);
-    char* data = malloc(sz);
+    data = malloc(sz);
     assert(data);
     memset(data, 0, sz);
 

@@ -17,41 +17,28 @@ main(int argc, char* argv[]) {
     char* source = argv[3];
 
     int location    = 0;
-    const char* str = "select * from abc;";
+
+    ParamsInit();
+
+    reader("C:\\work\\mimidb\\sql-lex.rule");
 
     LexToken token = NULL;
 
-    while ((token = GetLexerToken(str, &location)) != NULL) {
+    while ((token = GetLexerToken(data, &location)) != NULL) {
         if (token->tok != whitespace) {
-            printf("token %3d (%3d,%3d) data (%s)\n", token->tok, token->location.line, token->location.offset, token->data);
+            printf("token %3d (%3d,%3d) data (%s)\n", token->tok, token->location.line, token->location.offset,
+                   token->data);
         }
         FreeLexerToken(token);
     }
 
+    // generate lr1
 
-    char a[26] = "abcdefghijklmn";
+    // generate table
 
-    char* q = memchr(a, 'e', 8);
+    // parse
 
-    printf("%c\n", *q);
-
-    puts("jsklfdk\n");
-
-    ParamsInit();
-
-    reader("C:\\work\\mimidb\\sql.rule");
-
-    int* p = malloc(sizeof(int) * 10);
-    for (int i = 0; i < 10; i++) {
-        *(p+i) = i;
-    }
-
-    p = realloc(p, sizeof(int) * 20);
-    for (int i = 0; i < 20; i++) {
-        printf("%d\n", *p);
-        p++;
-    }
-
+    // output
 
     return 0;
 }
