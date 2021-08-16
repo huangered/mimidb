@@ -4,11 +4,15 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
+#include <stdbool.h>
 
 static LexToken lexIdentifier(const char* _buf, int* _cur);
 static LexToken lexNumber(const char* _buf, int* _cur);
 static LexToken lexString(const char* _buf, int* _cur);
 static LexToken lexBlock(const char* _buf, int* _cur);
+static LexToken lexPiont(const char* _buf, int* _cur);
+static LexToken lexLess(buf, location);
+static bool isCharacter(char);
 
 LexToken
 GetLexerToken(const char* buf, int* location) {
@@ -59,6 +63,32 @@ GetLexerToken(const char* buf, int* location) {
     case 'x':
     case 'y':
     case 'z':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
         return lexIdentifier(buf, location);
     case '(':
         tok = l_brace;
@@ -97,6 +127,10 @@ GetLexerToken(const char* buf, int* location) {
         return lexString(buf, location);
     case '{':
         return lexBlock(buf, location);
+    case '@':
+        return lexPiont(buf, location);
+    case '<':
+        return lexLess(buf, location);
     }
 
     (*location)++;
@@ -125,7 +159,7 @@ lexIdentifier(const char* _buf, int* _cur) {
     int count = 0;
     for (; *_cur < strlen(_buf); (*_cur)++) {
         char c = _buf[*_cur];
-        if (c >= 'a' && c <= 'z') {
+        if (isCharacter(c)) {
             count++;
         } else {
             break;
@@ -238,4 +272,81 @@ lexBlock(const char* _buf, int* _cur) {
     token->location.offset = start;
 
     return token;
+}
+
+LexToken
+lexPiont(const char* _buf, int* _cur) {
+    int start = *_cur;
+    int count = 1;
+    (*_cur)++; // skip first "
+    for (; *_cur < strlen(_buf); (*_cur)++) {
+        char c = _buf[*_cur];
+        if (c != ' ') {
+            count++;
+        } else {
+            break;
+        }
+    }
+
+    char* p = malloc(sizeof(char) * (count));
+    assert(p);
+    strncpy(p, _buf + start, count);
+    p[count] = '\0';
+
+    LexToken token = malloc(sizeof(struct lexTokenData));
+    memset(token, 0, sizeof(*token));
+
+    if (strncmp("@token", p, 6) == 0) {
+        token->tok = t_token;
+    } else if (strncmp("@type", p, 5) == 0) {
+        token->tok = t_type;
+    } else {
+        token->tok = unknown;
+    }
+    return token;
+}
+
+LexToken
+lexLess(const char* _buf, int* _cur) {
+    int start = *_cur;
+    int count = 2;
+    (*_cur)++; // skip first "
+    for (; *_cur < strlen(_buf); (*_cur)++) {
+        char c = _buf[*_cur];
+        if (c != '>') {
+            count++;
+        } else {
+            break;
+        }
+    }
+    (*_cur)++; // skip end "
+
+    char* p = malloc(sizeof(char) * (count + 1));
+    assert(p);
+    strncpy(p, _buf + start, count);
+    p[count] = '\0';
+
+    LexToken token = malloc(sizeof(struct lexTokenData));
+    assert(token);
+    token->tok             = t_type_type;
+    token->data            = p;
+    token->len             = start - *_cur;
+    token->location.line   = 0;
+    token->location.offset = start;
+
+    return token;
+}
+
+static bool
+isCharacter(char c) {
+    if (c >= 'a' && c <= 'z') {
+        return true;
+    }
+    if (c >= 'A' && c <= 'Z') {
+        return true;
+    }
+    if (c == '_') {
+        return true;
+    }
+    return false;
 }
