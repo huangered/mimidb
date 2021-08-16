@@ -21,7 +21,7 @@ typedef struct hash_table {
 } hash_table;
 
 hash_table* hash_init(int num, hash_hasher hasher, hash_comparator cmp); 
-void hash_put(void* key, void* value);
-bool hash_get(void* key, void** value);
+void hash_put(hash_table* tbl, void* key, void* value);
+bool hash_get(hash_table* tbl, void* key, void** value);
 
 #endif
