@@ -10,7 +10,7 @@
 template <class K, class Enable = void> struct hash_to {
     int
     operator()(const K& obj) const {
-      if (std::is_class<K>::value) {
+        if (std::is_class<K>::value) {
             return obj.hash();
         } else {
             return 0;
