@@ -1,4 +1,8 @@
-﻿find_package(BISON)
+﻿if(APPLE)
+  set(BISON_EXECUTABLE /opt/homebrew/opt/bison/bin/bison)
+endif()
+
+find_package(BISON)
 find_package(FLEX)
 
 BISON_TARGET(MyParser parser.y ${CMAKE_CURRENT_BINARY_DIR}/parser.tab.c

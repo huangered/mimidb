@@ -81,9 +81,9 @@ StateCollection::GetState(int stateId) {
 // end
 
 Parser::Parser(const std::vector<SimpleRule>& rules)
-    : _maxState{ 0 }
-    , _firstSet{ std::make_unique<FirstSet>(rules) }
-    , _stateList{ std::make_unique<StateCollection>() } {
+    : _maxState{ 0 } {
+        _firstSet = std::unique_ptr<FirstSet>(new FirstSet(rules));
+        _stateList = std::unique_ptr<StateCollection>(new StateCollection());
     _originRules.insert(_originRules.begin(), rules.begin(), rules.end());
     _stateList->Add(new StateData{ 0 });
 
@@ -489,8 +489,8 @@ Parser::GenerateCppCode(const char* path) {
 
 void
 Parser::generateTable(void) {
-    _gotoTable   = std::make_unique<GotoTable>(_stateList->Size(), _maxState);
-    _actionTable = std::make_unique<ActionTable>(_stateList->Size(), Tok::NUM_TOKENS);
+    _gotoTable   = std::unique_ptr<GotoTable>(new GotoTable(_stateList->Size(), _maxState));
+    _actionTable = std::unique_ptr<ActionTable>(new ActionTable(_stateList->Size(), Tok::NUM_TOKENS));
 
     for (int stateId{}; stateId < _stateList->Size(); stateId++) {
         for (Rule r : _stateList->GetRules(stateId)) {

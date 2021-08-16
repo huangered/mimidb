@@ -58,7 +58,7 @@ TEST(Sema, tok_ne) {
 
 #ifdef _WIN32
 const char* path = "C:\\work\\mimidb\\sql.rule";
-#elif __linux__
+#else
 const char* path = "./sql.rule";
 #endif
 
