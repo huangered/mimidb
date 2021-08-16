@@ -16,10 +16,12 @@ typedef struct hash_table {
   hash_hasher hasher;
   hash_comparator cmp;
   
-  int nbucket;
+  int nbuckets;
   hash_elem* buckets;
 } hash_table;
 
 hash_table* hash_init(int num, hash_hasher hasher, hash_comparator cmp); 
+void hash_put(void* key, void* value);
+bool hash_get(void* key, void** value);
 
 #endif
