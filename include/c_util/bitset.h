@@ -12,7 +12,7 @@
 
 typedef struct bitset {
     int len;
-    unsigned char *arr;
+    unsigned char* arr;
 } bitset;
 
 bitset* bitset_new(int size);
