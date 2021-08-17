@@ -1,4 +1,5 @@
 ﻿#include "lexer.hpp"
+#include <cstring>
 
 static bool
 isCharacter(char c) {
