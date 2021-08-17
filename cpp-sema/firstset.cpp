@@ -1,4 +1,4 @@
-﻿#include "sema/sema.hpp"
+﻿#include "sema.hpp"
 
 FirstSet::FirstSet(const std::vector<SimpleRule>& rules)
     : _rules{ rules } {

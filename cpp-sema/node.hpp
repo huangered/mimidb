@@ -2,7 +2,7 @@
 #define _sema_node_hpp_
 
 #include <vector>
-#include "lex/lexer.hpp"
+#include "lexer.hpp"
 
 class NodeData;
 

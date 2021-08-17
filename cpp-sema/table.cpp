@@ -1,5 +1,5 @@
-#include "sema/table.hpp"
-#include "sema/sema.hpp"
+#include "table.hpp"
+#include "sema.hpp"
 
 GotoTable::GotoTable(int row, int col)
     : _row{ row }

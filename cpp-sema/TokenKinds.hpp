@@ -7,7 +7,7 @@
 enum Tok : unsigned int
 {
 #define TOK(X) X,
-#include "lex/tok.def"
+#include "tok.def"
     NUM_TOKENS,
 };
 

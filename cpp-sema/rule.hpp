@@ -1,8 +1,8 @@
 #ifndef _rule_hpp_
 #define _rule_hpp_
 
-#include "lex/lexer.hpp"
-#include "sema/node.hpp"
+#include "lexer.hpp"
+#include "node.hpp"
 #include <vector>
 #include <set>
 

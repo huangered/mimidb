@@ -1,4 +1,4 @@
-#include "lex/TokenKinds.hpp"
+#include "TokenKinds.hpp"
 
 Tok
 GetTokByName(const std::string& name) {
@@ -10,7 +10,7 @@ GetTokByName(const std::string& name) {
     else if (#X == name) {                                                                                             \
         return Tok::X;                                                                                                 \
     }
-#include "lex/tok.def"
+#include "tok.def"
 
     return Tok::unknown;
 }
