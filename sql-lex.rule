@@ -1,0 +1,35 @@
+@token t_token
+@token t_type
+@token t_type_type
+@token t_union
+@token t_code
+@token t_identifier
+@token t_semicolon
+@token t_block
+
+@type node t_type t_type_type t_union t_code t_identifier t_semicolon t_block 
+@type node Lex RuleList Rule ID Type Token 
+@type list TokenList TypeList RuleList IdList 
+
+Lex = TokenList TypeList RuleList { $$ = makeLex($0, $1, $2); }
+
+TokenList = TokenList Token { $0->push_back($1); $$ = $0; }
+TokenList = Token { std::vector<Node>* vec = new std::vector<Node>(); vec->push_back($0); $$ = vec; }
+
+Token = t_token t_identifier { $$ = makeToken($1); }
+
+TypeList = TypeList Type { $0->push_back($1); $$ = $0; }
+TypeList = Type { std::vector<Node>* vec = new std::vector<Node>(); vec->push_back($0); $$ = vec; }
+
+Type = t_type t_type_type IdList { $$ = makeType($1, $2); }
+
+RuleList = RuleList Rule { $0->push_back($1); $$ = $0; }
+RuleList = Rule { std::vector<Node>* vec = new std::vector<Node>(); vec->push_back($0); $$ = vec; }
+
+Rule = ID t_semicolon IdList t_block { $$ = makeRule($0, $2, $3); }
+Rule = ID t_semicolon IdList { $$ = makeRule($0, $2); }
+
+IdList = IdList ID { $0->push_back($1); $$ = $0; }
+IdList = ID { std::vector<Node>* vec = new std::vector<Node>(); vec->push_back($0); $$ = vec; }
+
+ID = t_identifier {}

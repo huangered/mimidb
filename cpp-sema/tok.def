@@ -1,0 +1,28 @@
+#ifndef TOK
+#define TOK(X)
+#endif
+
+TOK(Eof)
+TOK(whitespace)
+TOK(plus)
+TOK(minus)
+TOK(star)
+TOK(slash)
+TOK(equal)
+TOK(dot)
+TOK(comma)
+TOK(semicolon)
+TOK(l_brace)
+TOK(r_brace)
+TOK(l_paren)
+TOK(r_paren)
+TOK(number)
+TOK(identifier)
+TOK(money)
+TOK(unknown)
+TOK(epsilon)
+TOK(str)
+TOK(block)
+
+#undef TOK
+#undef KEYWORD
