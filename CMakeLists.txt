@@ -17,6 +17,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 include_directories("include")
 
+add_subdirectory(cpp-sema)
 add_subdirectory(sql)
 add_subdirectory(src)
 add_subdirectory("test")
