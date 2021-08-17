@@ -1,4 +1,5 @@
 #include "lexer.hpp"
+#include <cstring>
 
 Lexer::Lexer(const char* buf, int size)
     : _cur{ 0 }
