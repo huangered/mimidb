@@ -1,0 +1,6 @@
+@token a
+
+@type str a
+@type node T
+
+T : a { }

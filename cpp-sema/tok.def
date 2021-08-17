@@ -4,13 +4,16 @@
 
 TOK(Eof)
 TOK(whitespace)
-TOK(comma)
-TOK(semicolon)
-TOK(number)
-TOK(identifier)
+TOK(t_token)
+TOK(t_code)
+TOK(t_colon)
+TOK(t_identifier)
+TOK(t_block)
+TOK(t_union)
+TOK(t_type)
+TOK(t_type_type)
 TOK(unknown)
 TOK(epsilon)
-TOK(str)
-TOK(block)
+TOK(t_sign)
 
 #undef TOK

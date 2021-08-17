@@ -27,4 +27,17 @@ public:
     Node Get(int index);
 };
 
+struct TypeData {
+    std::string typeName;
+    std::vector<std::string> elems;
+};
+
+typedef struct TypeData* TypePtr;
+
+struct TokenData {
+    std::string name;
+};
+
+typedef struct TokenData* TokenPtr;
+
 #endif

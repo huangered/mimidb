@@ -15,7 +15,9 @@ main(int argc, char* argv[]) {
     Output output(&parser);
     output.output("rev1.hpp");
 
-    //Node a = raw_parse("abcd");
+    const char* str = "@token a % @type str a @type node T % T : a { }";
+
+    Node a = raw_parse(str);
        
     return 0;
 }
