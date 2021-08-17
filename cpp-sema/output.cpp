@@ -20,6 +20,7 @@ Output::output(const char* filename) {
     writeFile(fd, "#include <iostream>\n");
     writeFile(fd, "#include <stack>\n");
     writeFile(fd, "#include <vector>\n");
+    writeFile(fd, "#include <cstring>\n");
     writeFile(fd, "#include \"gogo.hpp\"\n");
     writeFile(fd, "#include \"TokenKinds.hpp\"\n");
     writeFile(fd, "#include \"sema.hpp\"\n");

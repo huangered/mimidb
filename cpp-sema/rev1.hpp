@@ -3,6 +3,7 @@
 #include <iostream>
 #include <stack>
 #include <vector>
+#include <cstring>
 #include "gogo.hpp"
 #include "TokenKinds.hpp"
 #include "sema.hpp"
@@ -257,7 +258,7 @@ raw_parse(const char* str) {
         bool op = eatToken(state_stack, token_stack, input_stack, &acc);
 
         if (!op) {
-            printf("no action\n");
+            std::cout << " no action " << std::endl;
             break;
         }
     }
