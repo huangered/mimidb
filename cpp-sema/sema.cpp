@@ -1,9 +1,6 @@
-#include "sema/sema.hpp"
+#include "sema.hpp"
 #include <string>
 #include <functional>
-extern "C" {
-#include "storage/fd.h"
-}
 #include <cstring>
 
 static bool SemaTokenListLess(const SemaTokenList& left, const SemaTokenList& right);
@@ -240,15 +237,15 @@ Parser::handleState(int stateId) {
 }
 
 void
-t1(File fd, const char* buf) {
+t1(int fd, const char* buf) {
     int size = strlen(buf);
-    FileWrite(fd, const_cast<char*>(buf), size);
+    //FileWrite(fd, const_cast<char*>(buf), size);
 }
 
 void
 Parser::GenerateCppCode(const char* path) {
-    File fd = PathNameOpenFile(path);
-
+    //File fd = PathNameOpenFile(path);
+    int fd;
     // char* buf = new char[256];
     // lex part
     t1(fd, "#ifndef _p_test_hpp_\n");
@@ -262,7 +259,7 @@ Parser::GenerateCppCode(const char* path) {
     t1(fd, "using namespace std;\n");
     t1(fd, "\n");
     t1(fd, "\n");
-
+    t1(fd, "union Item {Node node;std::vector<Node>* list;};\n");
     {
         char* a = new char[256];
         sprintf(a, "#define MAX_ID 65535\n");
@@ -372,7 +369,7 @@ Parser::GenerateCppCode(const char* path) {
     t1(fd, "  data.push_back(EndLexToken);\n");
     t1(fd, "\n");
     // sema part
-    t1(fd, "  Item item{ nullptr };\n");
+    t1(fd, "  Item item;\n");
     t1(fd, "  std::stack<int> state_stack;\n");
     t1(fd, "  std::stack<Item> token_stack;\n");
     t1(fd, "  std::stack<LexToken> input_stack;\n");
@@ -430,7 +427,9 @@ Parser::GenerateCppCode(const char* path) {
     t1(fd, "\n");
     t1(fd, "    if (r_state == true) {\n");
     t1(fd, "      states.push(r_id);\n");
-    t1(fd, "      syms.push(Item{new NodeData(token)});\n");
+    t1(fd, "      Item it;\n");
+    t1(fd, "      it.node = new NodeData(token);\n");
+    t1(fd, "      syms.push(it);\n");
     t1(fd, "      input.pop();\n");
     t1(fd, "      return true;\n");
     t1(fd, "    } else {\n");
@@ -446,7 +445,7 @@ Parser::GenerateCppCode(const char* path) {
     t1(fd, "    int child_num{rule_right_children_num_arr[r_id]};\n");
     t1(fd, "    int rule_left_id{rule_left_id_arr[r_id]};\n");
     t1(fd, "    std::vector<Item> child(child_num);\n");
-    t1(fd, "    Item item{ nullptr};\n");
+    t1(fd, "    Item item = syms.top();\n");
 
     t1(fd, "      for (int i{ 0 }; i < child_num; i++) {\n");
     t1(fd, "        child.insert(child.begin(), syms.top());\n");
@@ -484,7 +483,7 @@ Parser::GenerateCppCode(const char* path) {
     t1(fd, "}\n");
     t1(fd, "#endif\n");
 
-    FileClose(fd);
+    //FileClose(fd);
 }
 
 void

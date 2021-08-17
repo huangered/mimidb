@@ -1,24 +1,31 @@
-%code {
-  #include <stdio.h>
-}
-
+@token t_token
+@token t_type
 @token identifier
 @token semicolon
-@token comma
 @token block
 
-@type <node> Q RuleList Rule ID
+@type node Lex RuleList Rule ID
+@type list TokenList TypeList RuleList
 
-Q : RuleList { $$ = $0 ; }
+Lex = TokenList TypeList RuleList {  }
 
-RuleList :
-  RuleList Rule{ $$ = makeBlock($0) ; }
-| Rule {}
-;
+TokenList =  TokenList Token {}
+TokenList = Token {}
 
-Rule:
-  ID semicolon IDList block { $$ = $0 + $1 + $2 ; }
-| ID semicolon IDList { $$ = $0 + $1 ; }
-;
+Token = t_token identifier {}
 
-ID: identifier
+TypeList = TypeList Type {}
+TypeList = Type {}
+
+Type = t_type t_type_type IdList {}
+
+RuleList = RuleList Rule {  }
+RuleList = Rule {}
+
+Rule = ID semicolon IDList block {  }
+Rule = ID semicolon IDList { }
+
+IdList = IdList ID {}
+IdList = ID {}
+
+ID = identifier {}

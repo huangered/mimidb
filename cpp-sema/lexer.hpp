@@ -5,7 +5,7 @@
 #include <string>
 #include <map>
 
-#include "lex/TokenKinds.hpp"
+#include "TokenKinds.hpp"
 
 class LexTokenData {
 public:

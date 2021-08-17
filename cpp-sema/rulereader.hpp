@@ -1,7 +1,7 @@
 #ifndef _rule_reader_hpp_
 #define _rule_reader_hpp_
 
-#include "sema/rule.hpp"
+#include "rule.hpp"
 
 class RuleResult {
 public:

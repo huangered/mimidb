@@ -1,4 +1,4 @@
-#include "sema/sema.hpp"
+#include "sema.hpp"
 #include <algorithm>
 
 StateData::StateData(int id)

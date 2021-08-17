@@ -5,9 +5,6 @@
 #include "lex.h"
 #include "reader.h"
 #include "global.h"
-struct G {
-    int i;
-};
 
 int
 main(int argc, char* argv[]) {
@@ -31,7 +28,9 @@ main(int argc, char* argv[]) {
         }
         FreeLexerToken(token);
     }
+
     // generate symbol table
+    
     // generate lr1
 
     // generate table

@@ -1,12 +1,11 @@
-#include "lex/lexer.hpp"
-#include "c.hpp"
+#include "lexer.hpp"
 
 Lexer::Lexer(const char* buf, int size)
     : _cur{ 0 }
     , _size{ size }
     , _buf{ buf } {
 #define KEYWORD(X, Y) _meta[#X] = Tok::kw_##X;
-#include "lex/tok.def"
+#include "tok.def"
 }
 
 LexToken

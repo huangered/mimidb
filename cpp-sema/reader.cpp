@@ -1,10 +1,10 @@
-﻿#include "sema/rulereader.hpp"
+﻿#include "rulereader.hpp"
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <set>
 #include <map>
-#include "sema/sema.hpp"
+#include "sema.hpp"
 
 static std::vector<std::string> split(std::string line);
 

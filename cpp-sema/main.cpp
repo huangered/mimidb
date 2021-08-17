@@ -1,5 +1,5 @@
-#include "sema/sema.hpp"
-#include "sema/rulereader.hpp"
+#include "sema.hpp"
+#include "rulereader.hpp"
 
 int
 main(int argc, char* argv[]) {

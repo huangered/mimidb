@@ -1,5 +1,5 @@
-#include "sema/rule.hpp"
-#include "sema/sema.hpp"
+#include "rule.hpp"
+#include "sema.hpp"
 
 SimpleRule
 make_rule(int id, SemaToken left, SemaTokenList right, std::string block) {

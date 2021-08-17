@@ -1,4 +1,4 @@
-#include "sema/node.hpp"
+#include "node.hpp"
 
 NodeData::NodeData(std::string name)
     : _token{ nullptr }

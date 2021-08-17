@@ -1,11 +1,11 @@
 ﻿#ifndef _sema_hpp_
 #define _sema_hpp_
 
-#include "lex/lexer.hpp"
-#include "sema/FindAll.hpp"
-#include "sema/node.hpp"
-#include "sema/rule.hpp"
-#include "sema/table.hpp"
+#include "lexer.hpp"
+#include "FindAll.hpp"
+#include "node.hpp"
+#include "rule.hpp"
+#include "table.hpp"
 
 #include <map>
 #include <set>
