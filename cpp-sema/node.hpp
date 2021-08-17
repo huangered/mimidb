@@ -9,35 +9,34 @@ class NodeData;
 typedef NodeData* Node;
 
 class NodeData {
-    std::vector<Node> _nodes;
-    const LexToken _token;
+    LexToken _token;
     std::string _name;
 
 public:
-    NodeData(std::string name);
-
-    NodeData(LexToken token);
+    NodeData();
 
     virtual ~NodeData();
 
-    void AddAll(const std::vector<Node>& nodes);
-
     std::string Name();
-
-    Node Get(int index);
+    void SetToken(LexToken token);
 };
 
-struct TypeData {
-    std::string typeName;
-    std::vector<std::string> elems;
+class TypeData : public NodeData {};
+
+class TokenData : public NodeData {};
+
+class LexNode : public NodeData {
+public:
+    std::vector<Node>* tokens;
+    std::vector<Node>* types;
+    std::vector<Node>* rules;
 };
 
-typedef struct TypeData* TypePtr;
-
-struct TokenData {
-    std::string name;
+class RuleNode : public NodeData {
+public:
+    Node left;
+    std::vector<Node>* right;
+    Node block;
 };
-
-typedef struct TokenData* TokenPtr;
 
 #endif

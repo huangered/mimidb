@@ -365,7 +365,8 @@ Parser::reduce(std::stack<int>& states, std::stack<Node>& syms, const Record rec
             states.pop();
         }
 
-        Node node = rule->Format(rule->left, child);
+        Node node = nullptr;
+        //rule->Format(rule->left, child);
         syms.push(node);
 
         // find goto table
@@ -392,7 +393,9 @@ Parser::eatToken(std::stack<int>& states, std::stack<Node>& syms, std::stack<Lex
 
         if (record->state) {
             states.push(record->id);
-            syms.push(new NodeData(token));
+            Node n = new NodeData();
+            n->SetToken(token);
+            syms.push(n);
             input.pop();
             return true;
         } else {

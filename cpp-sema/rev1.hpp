@@ -647,7 +647,8 @@ eatToken(std::stack<int>& states, std::stack<Item>& syms, std::stack<LexToken>& 
         if (r_state == true) {
             states.push(r_id);
             Item it;
-            it.node = new NodeData(token);
+            it.node = new NodeData();
+            it.node->SetToken(token);
             syms.push(it);
             input.pop();
             return true;
