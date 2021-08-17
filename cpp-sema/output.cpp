@@ -220,7 +220,7 @@ Output::output(const char* filename) {
     writeFile(fd, "        states.pop();\n");
     writeFile(fd, "      }\n");
 
-    writeFile(fd, "    switch(r_id) {");
+    writeFile(fd, "    switch(r_id) {\n");
     for (int i1{ 0 }; i1 < parser->_rules.size(); i1++) {
         char* a = new char[256];
         sprintf(a, "    case %d:  \n", i1);
