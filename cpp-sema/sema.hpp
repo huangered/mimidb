@@ -134,6 +134,8 @@ private:
 
     // code generate
     std::string funcReplace(const Rule rule);
+
+    friend class Output;
 };
 
 #endif
