@@ -56,38 +56,14 @@ Lexer::GetLexerToken() {
     case 'y':
     case 'z':
         return lexIdentifier();
-    case '(':
-        tok = Tok::l_brace;
-        break;
-    case ')':
-        tok = Tok::r_brace;
-        break;
     case ' ':
         tok = Tok::whitespace;
-        break;
-    case '*':
-        tok = Tok::star;
         break;
     case ';':
         tok = Tok::semicolon;
         break;
     case ',':
         tok = Tok::comma;
-        break;
-    case '.':
-        tok = Tok::dot;
-        break;
-    case '/':
-        tok = Tok::slash;
-        break;
-    case '+':
-        tok = Tok::plus;
-        break;
-    case '-':
-        tok = Tok::minus;
-        break;
-    case '=':
-        tok = Tok::equal;
         break;
     case '"':
         return lexString();
