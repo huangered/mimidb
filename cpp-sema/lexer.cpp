@@ -85,6 +85,7 @@ Lexer::GetLexerToken() {
     case 'Y':
     case 'Z':
         return lexIdentifier();
+    case '\n':
     case ' ':
         tok = Tok::whitespace;
         break;
