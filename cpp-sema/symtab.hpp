@@ -6,7 +6,7 @@
 
 enum SymbolClass
 {
-    unknown,
+    none,
     token,
     nterm
 };
@@ -27,13 +27,15 @@ typedef SymbolData* Symbol;
 
 class Symtab {
 private:
-    std::map<std::string, Symbol> _data;
+    static std::map<std::string, Symbol> _data;
+    static int nsym;
 
 public:
     Symtab();
     ~Symtab();
 
-    Symbol SymbolNew(std::string name);
+    static Symbol SymbolNew(std::string name);
+    static Symbol SymbolGet(std::string name);
 };
 
 #endif

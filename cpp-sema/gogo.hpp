@@ -4,6 +4,7 @@
 #include "debug.hpp"
 #include "node.hpp"
 #include <vector>
+#include "symtab.hpp"
 
 inline Node
 makeLex(std::vector<Node>* tokens, std::vector<Node>* types, std::vector<Node>* rules) {
@@ -18,7 +19,8 @@ makeLex(std::vector<Node>* tokens, std::vector<Node>* types, std::vector<Node>* 
 inline Node
 makeToken(Node token) {
     TokenData* node = new TokenData();
-
+    Symbol sym = Symtab::SymbolNew(token->GetToken()->name);
+    sym->clazz      = SymbolClass::token;
     return node;
 }
 
@@ -38,8 +40,10 @@ makeRule(Node n, std::vector<Node>* l) {
 }
 
 inline Node
-makeType(Node n, std::vector<Node>* l) {
-    Node n1 = new TypeData();
+makeType(Node typeNode, std::vector<Node>* nodes) {
+    TypeData* n1 = new TypeData();
+    n1->SetType(typeNode->GetToken()->name);
+    n1->SetChildren(nodes);
     return n1;
 }
 

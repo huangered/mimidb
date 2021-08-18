@@ -22,6 +22,10 @@ main(int argc, char* argv[]) {
     
     Node a = raw_parse(str);
     printf("%s", a->Name().c_str());
+    LexNode* lex = dynamic_cast<LexNode*>(a);
+    std::map<std::string, std::string> typeMap = lex->GetTypeMap();
+    std::vector<SimpleRule> rules              = lex->GetRules();
 
+    printf("type map: {%d}, rules: {%d}", typeMap.size(), rules.size());
     return 0;
 }
