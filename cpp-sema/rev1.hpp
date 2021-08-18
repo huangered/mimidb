@@ -15,216 +15,567 @@ union Item {
 };
 #define MAX_ID 65535
 // init goto table (state id, sema id) -> (state id)
-const int goto_table[25][24] = {
+const int goto_table[29][28] = {
     {
-        MAX_ID, 1,      MAX_ID, MAX_ID, 2,      MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, 1,      2,      MAX_ID, MAX_ID, MAX_ID, 3,      MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
     },
     {
-        MAX_ID, MAX_ID, 4,      MAX_ID, 5,      MAX_ID, MAX_ID, 6,      MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
     },
     {
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 6,      MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
     },
     {
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
     },
     {
-        MAX_ID, MAX_ID, MAX_ID, 9,      MAX_ID, MAX_ID, MAX_ID, 11,     MAX_ID, MAX_ID, MAX_ID, 12,
-        13,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
     },
     {
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, 8,      MAX_ID, MAX_ID, MAX_ID, MAX_ID, 9,      MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
     },
     {
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
     },
     {
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
     },
     {
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 12,     MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
     },
     {
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 15,
-        13,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
     },
     {
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
     },
     {
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 14,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 16,     17,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
     },
     {
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
     },
     {
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 19,     MAX_ID, 20,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
     },
     {
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 17,     MAX_ID,
-        18,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 21,     17,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
     },
     {
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
     },
     {
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 20,     MAX_ID,
-        21,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
     },
     {
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        22,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
     },
     {
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
     },
     {
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 23,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
     },
     {
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        23,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
     },
     {
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
     },
     {
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 25,     MAX_ID, 26,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
     },
     {
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
     },
     {
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 27,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+    },
+    {
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
     },
 };
 // init action table (state id, token id) -> (acc, state, id)
-const int action_table[25][21] = {
+const int action_table[29][13] = {
     {
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 3,      MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        4,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
     },
     {
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 7,      MAX_ID, MAX_ID, MAX_ID,
+        10000,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
     },
     {
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -2,     MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        4,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        5,
     },
     {
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 8,      MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        -3,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        -3,
     },
     {
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 10,     MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        7,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
     },
     {
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -1,     MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        10,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
     },
     {
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -5,     MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        -2,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        -2,
     },
     {
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 14,     MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        -4,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        -4,
     },
     {
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -3,     MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        10,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        11,
     },
     {
-        10000,  MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 10,     MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        -6,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        -6,
     },
     {
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -13,    MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        13,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
     },
     {
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -4,     MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        15,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
     },
     {
-        -8,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -8,     MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        -5,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        -5,
     },
     {
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 16,     MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        18,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
     },
     {
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 10,     MAX_ID, MAX_ID, MAX_ID,
+        -1,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        15,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
     },
     {
-        -7,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -7,     MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        -14,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
     },
     {
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 19,     MAX_ID, MAX_ID, MAX_ID,
+        -9,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        -9,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
     },
     {
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 10,     MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        22,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
     },
     {
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -12,    MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        -14,
+        MAX_ID,
+        MAX_ID,
+        -14,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        -14,
     },
     {
-        -13,    MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -13,    MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        18,
+        MAX_ID,
+        MAX_ID,
+        -7,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        -7,
     },
     {
-        -10,    MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, 19,     MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        -13,
+        MAX_ID,
+        MAX_ID,
+        -13,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        -13,
     },
     {
-        -12,    MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -12,    MAX_ID, MAX_ID, MAX_ID,
+        -8,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        -8,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
     },
     {
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -11,    MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        24,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
     },
     {
-        -11,    MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -11,    MAX_ID, MAX_ID, MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        -12,
+        MAX_ID,
+        MAX_ID,
+        -12,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        -12,
     },
     {
-        -9,     MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID,
-        MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, MAX_ID, -9,     MAX_ID, MAX_ID, MAX_ID,
+        -14,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        -14,
+        -14,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+    },
+    {
+        -11,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        24,
+        28,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+    },
+    {
+        -13,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        -13,
+        -13,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+    },
+    {
+        -12,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        -12,
+        -12,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+    },
+    {
+        -10,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        -10,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
     },
 };
 const int rule_right_children_num_arr[] = {
-    3, 2, 1, 2, 2, 1, 3, 2, 1, 4, 3, 2, 1, 1,
+    1, 5, 2, 1, 2, 2, 1, 3, 2, 1, 4, 3, 2, 1, 1,
 };
 const int rule_left_id_arr[] = {
-    0, 1, 1, 4, 2, 2, 7, 3, 3, 11, 11, 10, 10, 12,
+    0, 1, 2, 2, 6, 4, 4, 9, 5, 5, 12, 12, 11, 11, 13,
 };
 static bool eatToken(std::stack<int>& states, std::stack<Item>& syms, std::stack<LexToken>& input, bool* acc);
 static bool reduce(std::stack<int>& states, std::stack<Item>& syms, int r_id);
@@ -296,7 +647,8 @@ eatToken(std::stack<int>& states, std::stack<Item>& syms, std::stack<LexToken>& 
         if (r_state == true) {
             states.push(r_id);
             Item it;
-            it.node = new NodeData(token);
+            it.node = new NodeData();
+            it.node->SetToken(token);
             syms.push(it);
             input.pop();
             return true;
@@ -320,103 +672,78 @@ reduce(std::stack<int>& states, std::stack<Item>& syms, int r_id) {
     switch (r_id) {
     case 0:
 
-        // line 14
+        // line 15
         // block
-        { item.node = makeLex(child[0].list, child[1].list, child[2].list); }
+        {}
         break;
     case 1:
 
-        // line 16
+        // line 17
+        // block
+        { item.node = makeLex(child[0].list, child[2].list, child[4].list); }
+        break;
+    case 2:
+
+        // line 19
         // block
         {
             child[0].list->push_back(child[1].node);
             item.list = child[0].list;
-        }
-        break;
-    case 2:
-
-        // line 17
-        // block
-        {
-            std::vector<Node>* vec = new std::vector<Node>();
-            vec->push_back(child[0].node);
-            item.list = vec;
         }
         break;
     case 3:
 
-        // line 19
-        // block
-        { item.node = makeToken(child[1].node); }
-        break;
-    case 4:
-
-        // line 21
-        // block
-        {
-            child[0].list->push_back(child[1].node);
-            item.list = child[0].list;
-        }
-        break;
-    case 5:
-
-        // line 22
+        // line 20
         // block
         {
             std::vector<Node>* vec = new std::vector<Node>();
             vec->push_back(child[0].node);
             item.list = vec;
+        }
+        break;
+    case 4:
+
+        // line 22
+        // block
+        { item.node = makeToken(child[1].node); }
+        break;
+    case 5:
+
+        // line 24
+        // block
+        {
+            child[0].list->push_back(child[1].node);
+            item.list = child[0].list;
         }
         break;
     case 6:
 
-        // line 24
-        // block
-        { item.node = makeType(child[1].node, child[2].list); }
-        break;
-    case 7:
-
-        // line 26
-        // block
-        {
-            child[0].list->push_back(child[1].node);
-            item.list = child[0].list;
-        }
-        break;
-    case 8:
-
-        // line 27
+        // line 25
         // block
         {
             std::vector<Node>* vec = new std::vector<Node>();
             vec->push_back(child[0].node);
             item.list = vec;
+        }
+        break;
+    case 7:
+
+        // line 27
+        // block
+        { item.node = makeType(child[1].node, child[2].list); }
+        break;
+    case 8:
+
+        // line 29
+        // block
+        {
+            child[0].list->push_back(child[1].node);
+            item.list = child[0].list;
         }
         break;
     case 9:
 
-        // line 29
-        // block
-        { item.node = makeRule(child[0].node, child[2].list, child[3].node); }
-        break;
-    case 10:
-
         // line 30
-        // block
-        { item.node = makeRule(child[0].node, child[2].list); }
-        break;
-    case 11:
-
-        // line 32
-        // block
-        {
-            child[0].list->push_back(child[1].node);
-            item.list = child[0].list;
-        }
-        break;
-    case 12:
-
-        // line 33
         // block
         {
             std::vector<Node>* vec = new std::vector<Node>();
@@ -424,9 +751,40 @@ reduce(std::stack<int>& states, std::stack<Item>& syms, int r_id) {
             item.list = vec;
         }
         break;
-    case 13:
+    case 10:
+
+        // line 32
+        // block
+        { item.node = makeRule(child[0].node, child[2].list, child[3].node); }
+        break;
+    case 11:
+
+        // line 33
+        // block
+        { item.node = makeRule(child[0].node, child[2].list); }
+        break;
+    case 12:
 
         // line 35
+        // block
+        {
+            child[0].list->push_back(child[1].node);
+            item.list = child[0].list;
+        }
+        break;
+    case 13:
+
+        // line 36
+        // block
+        {
+            std::vector<Node>* vec = new std::vector<Node>();
+            vec->push_back(child[0].node);
+            item.list = vec;
+        }
+        break;
+    case 14:
+
+        // line 38
         // block
         {}
         break;

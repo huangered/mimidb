@@ -1,4 +1,5 @@
 ﻿#include "sema.hpp"
+#include "debug.hpp"
 
 FirstSet::FirstSet(const std::vector<SimpleRule>& rules)
     : _rules{ rules } {
@@ -77,6 +78,7 @@ FirstSet::Gen() {
 
 void
 FirstSet::Print() {
+#ifdef _log_
     for (auto entry = _firstSet.begin(); entry != _firstSet.end(); entry++) {
         std::cout << entry->first << " => ";
         for (Tok i : entry->second) {
@@ -84,4 +86,5 @@ FirstSet::Print() {
         }
         std::cout << std::endl;
     }
+#endif
 }

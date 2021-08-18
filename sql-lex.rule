@@ -4,32 +4,39 @@
 @token t_union
 @token t_code
 @token t_identifier
-@token t_semicolon
+@token t_colon
 @token t_block
+@token t_sign
 
-@type node t_type t_type_type t_union t_code t_identifier t_semicolon t_block 
-@type node Lex RuleList Rule ID Type Token 
+%
+
+@type node t_type t_type_type t_union t_code t_identifier t_colon t_block t_sign 
+@type node Lex RuleList Rule ID Type Token Q
 @type list TokenList TypeList RuleList IdList 
 
-Lex = TokenList TypeList RuleList { $$ = makeLex($0, $1, $2); }
+%
 
-TokenList = TokenList Token { $0->push_back($1); $$ = $0; }
-TokenList = Token { std::vector<Node>* vec = new std::vector<Node>(); vec->push_back($0); $$ = vec; }
+Q : Lex { }
 
-Token = t_token t_identifier { $$ = makeToken($1); }
+Lex : TokenList t_sign TypeList t_sign RuleList { $$ = makeLex($0, $2, $4); }
 
-TypeList = TypeList Type { $0->push_back($1); $$ = $0; }
-TypeList = Type { std::vector<Node>* vec = new std::vector<Node>(); vec->push_back($0); $$ = vec; }
+TokenList : TokenList Token { $0->push_back($1); $$ = $0; }
+TokenList : Token { std::vector<Node>* vec = new std::vector<Node>(); vec->push_back($0); $$ = vec; }
 
-Type = t_type t_type_type IdList { $$ = makeType($1, $2); }
+Token : t_token t_identifier { $$ = makeToken($1); }
 
-RuleList = RuleList Rule { $0->push_back($1); $$ = $0; }
-RuleList = Rule { std::vector<Node>* vec = new std::vector<Node>(); vec->push_back($0); $$ = vec; }
+TypeList : TypeList Type { $0->push_back($1); $$ = $0; }
+TypeList : Type { std::vector<Node>* vec = new std::vector<Node>(); vec->push_back($0); $$ = vec; }
 
-Rule = ID t_semicolon IdList t_block { $$ = makeRule($0, $2, $3); }
-Rule = ID t_semicolon IdList { $$ = makeRule($0, $2); }
+Type : t_type t_identifier IdList { $$ = makeType($1, $2); }
 
-IdList = IdList ID { $0->push_back($1); $$ = $0; }
-IdList = ID { std::vector<Node>* vec = new std::vector<Node>(); vec->push_back($0); $$ = vec; }
+RuleList : RuleList Rule { $0->push_back($1); $$ = $0; }
+RuleList : Rule { std::vector<Node>* vec = new std::vector<Node>(); vec->push_back($0); $$ = vec; }
 
-ID = t_identifier {}
+Rule : ID t_colon IdList t_block { $$ = makeRule($0, $2, $3); }
+Rule : ID t_colon IdList { $$ = makeRule($0, $2); }
+
+IdList : IdList ID { $0->push_back($1); $$ = $0; }
+IdList : ID { std::vector<Node>* vec = new std::vector<Node>(); vec->push_back($0); $$ = vec; }
+
+ID : t_identifier { }

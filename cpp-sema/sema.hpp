@@ -120,9 +120,6 @@ public:
     void GenerateParseTable(void);
     std::pair<bool, Node> Parse(const std::vector<LexToken>& input);
 
-    // 生成 cpp 代码
-    void GenerateCppCode(const char* path);
-
 private:
     void handleState(int stateId);
     void generateTable(void);

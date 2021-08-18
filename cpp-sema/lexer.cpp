@@ -1,5 +1,20 @@
-#include "lexer.hpp"
+﻿#include "lexer.hpp"
 #include <cstring>
+
+static bool
+isCharacter(char c) {
+    if (c >= 'a' && c <= 'z') {
+        return true;
+    }
+    if (c >= 'A' && c <= 'Z') {
+        return true;
+    }
+    if (c == '_') {
+        return true;
+    }
+    return false;
+}
+
 
 Lexer::Lexer(const char* buf, int size)
     : _cur{ 0 }
@@ -18,17 +33,6 @@ Lexer::GetLexerToken() {
     char Char = _buf[_cur];
 
     switch (Char) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-        return lexNumber();
     case 'a':
     case 'b':
     case 'c':
@@ -55,42 +59,47 @@ Lexer::GetLexerToken() {
     case 'x':
     case 'y':
     case 'z':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
         return lexIdentifier();
-    case '(':
-        tok = Tok::l_brace;
-        break;
-    case ')':
-        tok = Tok::r_brace;
-        break;
+    case '\n':
     case ' ':
         tok = Tok::whitespace;
         break;
-    case '*':
-        tok = Tok::star;
+    case ':':
+        tok = Tok::t_colon;
         break;
-    case ';':
-        tok = Tok::semicolon;
+    case '%':
+        tok = Tok::t_sign;
         break;
-    case ',':
-        tok = Tok::comma;
-        break;
-    case '.':
-        tok = Tok::dot;
-        break;
-    case '/':
-        tok = Tok::slash;
-        break;
-    case '+':
-        tok = Tok::plus;
-        break;
-    case '-':
-        tok = Tok::minus;
-        break;
-    case '=':
-        tok = Tok::equal;
-        break;
-    case '"':
-        return lexString();
+    case '{':
+        return lexBlock();
+    case '@':
+        return lexPiont();
     }
 
     _cur++;
@@ -104,7 +113,7 @@ Lexer::lexIdentifier() {
     int count = 0;
     for (; _cur < _size; _cur++) {
         char c = _buf[_cur];
-        if (c >= 'a' && c <= 'z') {
+        if (isCharacter(c)) {
             count++;
         } else {
             break;
@@ -115,7 +124,7 @@ Lexer::lexIdentifier() {
     strncpy(p, _buf + start, count);
     p[count] = '\0';
 
-    LexToken token = new LexTokenData{ Tok::identifier, p };
+    LexToken token = new LexTokenData{ Tok::t_identifier, p };
 
     delete[] p;
 
@@ -126,49 +135,62 @@ Lexer::lexIdentifier() {
     return token;
 }
 
+
+// 简化版
 LexToken
-Lexer::lexNumber() {
-    int start = _cur;
-    int count = 0;
-    for (; _cur < _size; _cur++) {
-        char c = _buf[_cur];
-        if (c >= '0' && c <= '9') {
-            count++;
-        } else {
-            break;
-        }
-    }
-
-    char* p = new char[count + 1];
-    strncpy(p, _buf + start, count);
-    p[count] = '\0';
-
-    LexToken token = new LexTokenData{ Tok::number, p };
-
-    delete[] p;
-    return token;
-}
-
-LexToken
-Lexer::lexString() {
+Lexer::lexBlock() {
     int start = _cur;
     int count = 2;
     _cur++; // skip first "
     for (; _cur < _size; _cur++) {
         char c = _buf[_cur];
-        if (c != '"') {
+        if (c != '}') {
             count++;
         } else {
             break;
         }
     }
     _cur++; // skip end "
+
     char* p = new char[count + 1];
+    
     strncpy(p, _buf + start, count);
     p[count] = '\0';
 
-    LexToken token = new LexTokenData{ Tok::str, p };
-
+    LexToken token = new LexTokenData{ Tok::t_block, p };
     delete[] p;
+
+    return token;
+}
+
+LexToken
+Lexer::lexPiont() {
+    int start = _cur;
+    int count = 1;
+    _cur++; // skip first "
+    for (; _cur < _size; _cur++) {
+        char c = _buf[_cur];
+        if (c != ' ') {
+            count++;
+        } else {
+            break;
+        }
+    }
+
+    char* p = new char[count + 1];
+
+    strncpy(p, _buf + start, count);
+    p[count] = '\0';
+
+    LexToken token = new LexTokenData{ Tok::t_block, p };
+    delete[] p;
+
+    if ("@token" == token->name) {
+        token->tok = Tok::t_token;
+    } else if ("@type" == token->name) {
+        token->tok = Tok::t_type;
+    } else {
+        token->tok = unknown;
+    }
     return token;
 }
