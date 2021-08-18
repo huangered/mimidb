@@ -2,6 +2,7 @@
 #include <string>
 #include <functional>
 #include <cstring>
+#include "debug.hpp"
 
 static bool SemaTokenListLess(const SemaTokenList& left, const SemaTokenList& right);
 static std::string join(const SemaTokenList& v);
@@ -79,8 +80,8 @@ StateCollection::GetState(int stateId) {
 
 Parser::Parser(const std::vector<SimpleRule>& rules)
     : _maxState{ 0 } {
-        _firstSet = std::unique_ptr<FirstSet>(new FirstSet(rules));
-        _stateList = std::unique_ptr<StateCollection>(new StateCollection());
+    _firstSet  = std::unique_ptr<FirstSet>(new FirstSet(rules));
+    _stateList = std::unique_ptr<StateCollection>(new StateCollection());
     _originRules.insert(_originRules.begin(), rules.begin(), rules.end());
     _stateList->Add(new StateData{ 0 });
 
@@ -113,7 +114,7 @@ Parser::SetTypeMap(const std::map<std::string, std::string>& _typeMap) {
 void
 Parser::GenerateParseTable(void) {
     _firstSet->Gen();
-    // _firstSet->Print();
+    _firstSet->Print();
     for (int i{}; i < _stateList->Size(); i++) {
         if (_stateList->IsEmpty(i)) {
             break;
@@ -121,7 +122,8 @@ Parser::GenerateParseTable(void) {
 
         handleState(i);
     }
-    /*
+
+#ifdef _log_
     for (int i{}; i < _stateList->Size(); i++) {
         if (_stateList->IsEmpty(i)) {
             break;
@@ -139,9 +141,8 @@ Parser::GenerateParseTable(void) {
 
             std::cout << std::endl;
         }
-
     }
-    */
+#endif
     generateTable();
 }
 
@@ -266,8 +267,9 @@ Parser::generateTable(void) {
             }
         }
     }
-    //_actionTable->Print();
-    //_gotoTable->Print();
+
+    _actionTable->Print();
+    _gotoTable->Print();
 }
 
 void
@@ -366,7 +368,7 @@ Parser::reduce(std::stack<int>& states, std::stack<Node>& syms, const Record rec
         }
 
         Node node = nullptr;
-        //rule->Format(rule->left, child);
+        // rule->Format(rule->left, child);
         syms.push(node);
 
         // find goto table
