@@ -26,6 +26,14 @@ main(int argc, char* argv[]) {
     std::map<std::string, std::string> typeMap = lex->GetTypeMap();
     std::vector<SimpleRule> rules              = lex->GetRules();
 
-    printf("type map: {%d}, rules: {%d}", typeMap.size(), rules.size());
+    printf("type map: {%zd}, rules: {%zd}", typeMap.size(), rules.size());
+
+    Parser parser2(rules);
+    parser2.SetTypeMap(typeMap);
+    parser2.GenerateParseTable();
+    // parser.GenerateCppCode("code.hpp");
+    Output output2(&parser2);
+    output2.output("rev2.hpp");
+
     return 0;
 }

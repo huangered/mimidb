@@ -32,7 +32,7 @@ LexNode::GetRules() {
         rule->left   = new SemaTokenData{ l_sym->id, true, left->GetToken()->name };
         // right nodes
         for each (Node r_node in* rights) {
-            Symbol r_sym = Symtab::SymbolNew(left->GetToken()->name);
+            Symbol r_sym = Symtab::SymbolNew(r_node->GetToken()->name);
             if (r_sym->clazz == none) {
                 r_sym->clazz = nterm;
             }
