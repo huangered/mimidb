@@ -193,7 +193,8 @@ Output::output(const char* filename) {
     WriteFile(fd, "    if (r_state == true) {\n");
     WriteFile(fd, "      states.push(r_id);\n");
     WriteFile(fd, "      Item it;\n");
-    WriteFile(fd, "      it.node = new NodeData(token);\n");
+    WriteFile(fd, "      it.node = new NodeData();\n");
+    WriteFile(fd, "      it.node->SetToken(token);\n");
     WriteFile(fd, "      syms.push(it);\n");
     WriteFile(fd, "      input.pop();\n");
     WriteFile(fd, "      return true;\n");
