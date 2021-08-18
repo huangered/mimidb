@@ -5,9 +5,9 @@
 std::map<std::string, std::string>
 LexNode::GetTypeMap() {
     std::map<std::string, std::string> _data;
-    for each (Node n in* types) {
+    for (Node n : *types) {
         TypeData* td = dynamic_cast<TypeData*>(n);
-        for each (std::string n in td->_children) {
+        for (std::string n : td->_children) {
             _data[n] = td->_type;
         }
     }
