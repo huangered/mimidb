@@ -78,8 +78,8 @@ RuleData::operator==(const RuleData& other) {
 
 Node
 RuleData::Format(const SemaToken token, const std::vector<Node>& children) {
-    Node n = new NodeData{ token->name };
-
-    n->AddAll(children);
+    Node n = nullptr;
+    // new NodeData{ token->name };
+    
     return n;
 }

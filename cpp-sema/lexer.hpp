@@ -34,9 +34,9 @@ public:
     LexToken GetLexerToken();
 
 private:
-    LexToken lexNumber();
+    LexToken lexPiont();
     LexToken lexIdentifier();
-    LexToken lexString();
+    LexToken lexBlock();
 };
 
 #endif // !_lexer_hpp_

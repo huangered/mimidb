@@ -1,5 +1,6 @@
 #include "table.hpp"
 #include "sema.hpp"
+#include "debug.hpp"
 
 GotoTable::GotoTable(int row, int col)
     : _row{ row }
@@ -64,7 +65,7 @@ GotoTable::Find(int stateId, int tokenId) {
 
 void
 GotoTable::Print() {
-
+#ifdef _log_
     for (int i{ 0 }; i < _col; i++) {
         std::cout << " " << i << "|";
     }
@@ -82,6 +83,7 @@ GotoTable::Print() {
         }
         std::cout << std::endl;
     }
+#endif
 }
 
 ActionTable::ActionTable(int row, int col)
@@ -154,6 +156,7 @@ ActionTable::Add(int stateId, int lexTokenId, int nextStateId) {
 
 void
 ActionTable::Print() {
+#ifdef _log_
     for (int i{ 0 }; i < _col; i++) {
         std::cout << " " << i << "|";
     }
@@ -171,4 +174,5 @@ ActionTable::Print() {
         }
         std::cout << std::endl;
     }
+#endif
 }

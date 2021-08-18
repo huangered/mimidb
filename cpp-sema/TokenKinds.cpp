@@ -2,8 +2,7 @@
 
 Tok
 GetTokByName(const std::string& name) {
-    if (name.empty()) {
-        return Tok::unknown;
+    if (false) {
     }
 
 #define TOK(X)                                                                                                         \

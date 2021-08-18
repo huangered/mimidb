@@ -1,5 +1,5 @@
-#ifndef _generic_hpp_
-#define _generic_hpp_
+#ifndef _find_all_hpp_
+#define _find_all_hpp_
 
 #include <algorithm>
 
@@ -13,4 +13,4 @@ find_all(const Iter& src, Iter& dest, Pr pred) {
     }
 }
 
-#endif // !_generic_hpp_
+#endif // !_find_all_hpp_
