@@ -19,7 +19,7 @@ std::vector<SimpleRule>
 LexNode::GetRules() {
     std::vector<SimpleRule> g;
     int i{ 0 };
-    for each (Node n in* rules) {
+    for (Node n : *rules) {
         RuleNode* rn              = dynamic_cast<RuleNode*>(n);
         Node left                 = rn->left;
         std::vector<Node>* rights = rn->right;
@@ -31,7 +31,7 @@ LexNode::GetRules() {
         l_sym->clazz = SymbolClass::nterm;
         rule->left   = new SemaTokenData{ l_sym->id, true, left->GetToken()->name };
         // right nodes
-        for each (Node r_node in* rights) {
+        for (Node r_node : *rights) {
             Symbol r_sym = Symtab::SymbolNew(r_node->GetToken()->name);
             if (r_sym->clazz == none) {
                 r_sym->clazz = nterm;
