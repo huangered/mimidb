@@ -135,7 +135,7 @@ Parser::GenerateParseTable(void) {
         for (Rule r : _stateList->GetRules(i)) {
             auto r_str = join(r->right);
             auto t_str = join2(r->tokens);
-            printf("%s => %s %s %d ", r->left->name, r_str.c_str(), t_str.c_str(), r->dot);
+            printf("%s => %s %s %d ", r->left->name.c_str(), r_str.c_str(), t_str.c_str(), r->dot);
 
             if (!r->IsDotEnd()) {
                 printf("next %d", r->next_state);

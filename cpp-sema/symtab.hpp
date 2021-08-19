@@ -31,8 +31,8 @@ public:
 
 public:
     static int nsym;
-    static int nnterm;
-    static int ntoken;
+  static int nnterm();
+  static int ntoken();
 
 public:
     Symtab();
