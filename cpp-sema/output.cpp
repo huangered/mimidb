@@ -5,7 +5,16 @@
 #include "reader.hpp"
 
 Output::Output(Parser* _p)
-    : parser { _p } {
+    : parser{ _p } {
+}
+
+void
+Output::SetCode(std::string b) {
+    codeBlock = b;
+}
+void
+Output::SetUnion(std::string b) {
+    unionBlock = b;
 }
 
 void
@@ -14,17 +23,11 @@ Output::output(const char* filename) {
     // lex part
     WriteFile(fd, "#ifndef _p_test_hpp_\n");
     WriteFile(fd, "#define _p_test_hpp_\n");
-    WriteFile(fd, "#include <iostream>\n");
-    WriteFile(fd, "#include <stack>\n");
-    WriteFile(fd, "#include <vector>\n");
-    WriteFile(fd, "#include <cstring>\n");
-    WriteFile(fd, "#include \"gogo.hpp\"\n");
-    WriteFile(fd, "#include \"TokenKinds.hpp\"\n");
-    WriteFile(fd, "#include \"sema.hpp\"\n");
-    WriteFile(fd, "using namespace std;\n");
+    writeHeader(fd);
     WriteFile(fd, "\n");
+
+    writeUnion(fd);
     WriteFile(fd, "\n");
-    WriteFile(fd, "union Item {Node node;std::vector<Node>* list;};\n");
     {
         char* a = new char[256];
         sprintf(a, "#define MAX_ID 65535\n");
@@ -115,8 +118,9 @@ Output::output(const char* filename) {
     }
     WriteFile(fd, "};\n");
 
-    WriteFile(fd, "static bool eatToken(std::stack<int>& states, std::stack<Item>& syms, std::stack<LexToken>& input, bool* "
-           "acc);\n");
+    WriteFile(
+        fd, "static bool eatToken(std::stack<int>& states, std::stack<Item>& syms, std::stack<LexToken>& input, bool* "
+            "acc);\n");
     WriteFile(fd, "static bool reduce(std::stack<int>& states, std::stack<Item>& syms, int r_id);\n");
     WriteFile(fd, "Node raw_parse(const char* str);\n");
     WriteFile(fd, "\n");
@@ -168,8 +172,10 @@ Output::output(const char* filename) {
 
     // eattoken
 
-    WriteFile(fd, "bool\neatToken(std::stack<int> & states, std::stack<Item> & syms, std::stack<LexToken> & input, bool* acc) "
-           "{\n");
+    WriteFile(
+        fd,
+        "bool\neatToken(std::stack<int> & states, std::stack<Item> & syms, std::stack<LexToken> & input, bool* acc) "
+        "{\n");
     WriteFile(fd, "  int curStateId = states.top();\n");
     WriteFile(fd, "  LexToken token = input.top();\n");
     WriteFile(fd, "  bool r_acc;\n");
@@ -252,7 +258,6 @@ Output::output(const char* filename) {
     CloseFile(fd);
 };
 
-
 FILE*
 OpenFile(const char* file, const char* mode) {
     FILE* f = fopen(file, mode);
@@ -261,7 +266,7 @@ OpenFile(const char* file, const char* mode) {
 
 char*
 ReadFile(FILE* f) {
-    int r = fseek(f, 0, SEEK_END);
+    int r   = fseek(f, 0, SEEK_END);
     long sz = ftell(f);
 
     char* buf = new char[sz + 1];
@@ -282,4 +287,24 @@ WriteFile(FILE* f, const char* buf) {
 void
 CloseFile(FILE* f) {
     fclose(f);
+}
+
+void
+Output::writeHeader(FILE* f) {
+    WriteFile(f, codeBlock.c_str());
+}
+void
+Output::writeUnion(FILE* f) {
+    WriteFile(f, "union Item {\n");
+    WriteFile(f, unionBlock.c_str());
+    WriteFile(f, "}\n");
+}
+void
+Output::writeMatrix(FILE* f) {
+}
+void
+Output::writeMethods(FILE* f) {
+}
+void
+Output::writeLeft(FILE* f) {
 }

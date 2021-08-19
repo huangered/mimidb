@@ -2,6 +2,16 @@
 #include "rule.hpp"
 #include "sema.hpp"
 
+std::string
+LexNode::GetCode() {
+    return codeNode->block->GetToken()->name;
+}
+
+std::string
+LexNode::GetUnion() {
+    return unionNode->block->GetToken()->name;
+}
+
 std::map<std::string, std::string>
 LexNode::GetTypeMap() {
     std::map<std::string, std::string> _data;

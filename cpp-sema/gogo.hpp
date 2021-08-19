@@ -7,11 +7,13 @@
 #include "symtab.hpp"
 
 inline Node
-makeLex(std::vector<Node>* tokens, std::vector<Node>* types, std::vector<Node>* rules) {
-    LexNode* n = new LexNode();
-    n->tokens  = tokens;
-    n->types   = types;
-    n->rules   = rules;
+makeLex(Node codeNode, Node unionNode, std::vector<Node>* tokens, std::vector<Node>* types, std::vector<Node>* rules) {
+    LexNode* n   = new LexNode();
+    n->codeNode  = dynamic_cast<CodeNode*>(codeNode);
+    n->unionNode = dynamic_cast<UnionNode*>(unionNode);
+    n->tokens    = tokens;
+    n->types     = types;
+    n->rules     = rules;
 
     return n;
 }
@@ -19,7 +21,7 @@ makeLex(std::vector<Node>* tokens, std::vector<Node>* types, std::vector<Node>* 
 inline Node
 makeToken(Node token) {
     TokenData* node = new TokenData();
-    Symbol sym = Symtab::SymbolNew(token->GetToken()->name);
+    Symbol sym      = Symtab::SymbolNew(token->GetToken()->name);
     sym->clazz      = SymbolClass::token;
     return node;
 }
@@ -45,6 +47,20 @@ makeType(Node typeNode, std::vector<Node>* nodes) {
     n1->SetType(typeNode->GetToken()->name);
     n1->SetChildren(nodes);
     return n1;
+}
+
+inline Node
+makeCode(Node block) {
+    CodeNode* codeN = new CodeNode();
+    codeN->block    = block;
+    return codeN;
+}
+
+inline Node
+makeUnion(Node block) {
+    UnionNode* unionN = new UnionNode();
+    unionN->block     = block;
+    return unionN;
 }
 
 #endif
