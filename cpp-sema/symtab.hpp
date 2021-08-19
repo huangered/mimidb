@@ -39,7 +39,8 @@ public:
     ~Symtab();
     static void Init();
     static Symbol SymbolNew(std::string name);
-    static Symbol SymbolGet(std::string name);
+    static int GetId(std::string name);
+    static std::string GetName(int id);
     static void Print(void);
 };
 
