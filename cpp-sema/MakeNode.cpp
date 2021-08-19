@@ -1,4 +1,4 @@
-#include "rev4.hpp"
+#include "c.tab.hpp"
 #include "rule.hpp"
 #include "sema.hpp"
 #include "symtab.hpp"

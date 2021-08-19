@@ -1,7 +1,7 @@
 #include "sema.hpp"
 #include "reader.hpp"
 #include "output.hpp"
-#include "rev4.hpp"
+#include "c.tab.hpp"
 #include "symtab.hpp"
 
 int
@@ -12,7 +12,7 @@ main(int argc, char* argv[]) {
     const char* str = ReadFile(f);
     CloseFile(f);
     
-    Node a = raw_parse(str);
+    Node a = yyparse(str);
     printf("%s", a->Name().c_str());
     LexNode* lex = dynamic_cast<LexNode*>(a);
     std::map<std::string, std::string> typeMap = lex->GetTypeMap();
@@ -29,7 +29,7 @@ main(int argc, char* argv[]) {
     output2.SetCode(lex->GetCode());
     output2.SetUnion(lex->GetUnion());
     output2.SetOther(lex->other);
-    output2.output("rev4.hpp");
+    output2.OutputFile("rev4.hpp");
 
 
     Symtab::Print();
