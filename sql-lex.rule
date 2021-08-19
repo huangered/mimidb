@@ -1,24 +1,48 @@
+%code {
+    #include <iostream>
+    #include <stack>
+    #include <vector>
+    #include <cstring>
+
+    #include "TokenKinds.hpp"
+    #include "sema.hpp"
+    using namespace std;
+}
+
+%union { 
+    Node node;
+    std::vector<Node>* list;
+}
+
+@token Eof
+@token whitespace
 @token t_token
+@token t_code
+@token t_colon
+@token t_identifier
+@token t_block
+@token t_union
 @token t_type
 @token t_type_type
-@token t_union
-@token t_code
-@token t_identifier
-@token t_colon
-@token t_block
+@token unknown
+@token epsilon
 @token t_sign
 
 %
 
-@type node t_type t_type_type t_union t_code t_identifier t_colon t_block t_sign 
-@type node Lex RuleList Rule ID Type Token Q
-@type list TokenList TypeList RuleList IdList 
+@type node t_type t_type_type t_union t_code t_identifier t_colon t_block t_sign
+@type node Lex RuleList Rule ID Type Token Q Code Union Other
+@type list TokenList TypeList RuleList IdList
 
 %
 
 Q : Lex { }
 
-Lex : TokenList t_sign TypeList t_sign RuleList { $$ = makeLex($0, $2, $4); }
+Lex : Code Union TokenList t_sign TypeList t_sign RuleList t_sign Other { $$ = makeLex($0, $1, $2, $4, $6, $8 ); }
+
+Code : t_code t_block { $$ = makeCode($1); }
+
+Union : t_union t_block { $$ = makeUnion($1); }
 
 TokenList : TokenList Token { $0->push_back($1); $$ = $0; }
 TokenList : Token { std::vector<Node>* vec = new std::vector<Node>(); vec->push_back($0); $$ = vec; }
@@ -40,3 +64,26 @@ IdList : IdList ID { $0->push_back($1); $$ = $0; }
 IdList : ID { std::vector<Node>* vec = new std::vector<Node>(); vec->push_back($0); $$ = vec; }
 
 ID : t_identifier { }
+
+Other: t_block {}
+
+%
+
+{
+
+Node makeLex(Node codeNode, Node unionNode, std::vector<Node>* tokens, std::vector<Node>* types,
+                    std::vector<Node>* rules, Node other);
+
+Node makeToken(Node token);
+
+Node makeRule(Node n, std::vector<Node>* l, Node m);
+
+Node makeRule(Node n, std::vector<Node>* l);
+
+Node makeType(Node typeNode, std::vector<Node>* nodes);
+
+Node makeCode(Node block);
+
+Node makeUnion(Node block);
+
+}

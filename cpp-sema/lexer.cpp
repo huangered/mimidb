@@ -15,13 +15,11 @@ isCharacter(char c) {
     return false;
 }
 
-
 Lexer::Lexer(const char* buf, int size)
     : _cur{ 0 }
     , _size{ size }
     , _buf{ buf } {
-#define KEYWORD(X, Y) _meta[#X] = Tok::kw_##X;
-#include "tok.def"
+
 }
 
 LexToken
@@ -94,8 +92,7 @@ Lexer::GetLexerToken() {
         tok = Tok::t_colon;
         break;
     case '%':
-        tok = Tok::t_sign;
-        break;
+        return lexSign();
     case '{':
         return lexBlock();
     case '@':
@@ -128,19 +125,14 @@ Lexer::lexIdentifier() {
 
     delete[] p;
 
-    if (_meta.count(token->name) > 0) {
-        token->tok = _meta[token->name];
-    }
-
     return token;
 }
-
 
 // 简化版
 LexToken
 Lexer::lexBlock() {
-    int start = _cur;
-    int count = 2;
+    int start = _cur + 1 ;
+    int count = 0;
     _cur++; // skip first "
     for (; _cur < _size; _cur++) {
         char c = _buf[_cur];
@@ -153,7 +145,7 @@ Lexer::lexBlock() {
     _cur++; // skip end "
 
     char* p = new char[count + 1];
-    
+
     strncpy(p, _buf + start, count);
     p[count] = '\0';
 
@@ -185,12 +177,31 @@ Lexer::lexPiont() {
     LexToken token = new LexTokenData{ Tok::t_block, p };
     delete[] p;
 
-    if ("@token" == token->name) {
+    if ("@token" == token->value) {
         token->tok = Tok::t_token;
-    } else if ("@type" == token->name) {
+    } else if ("@type" == token->value) {
         token->tok = Tok::t_type;
     } else {
         token->tok = unknown;
     }
+    return token;
+}
+
+LexToken
+Lexer::lexSign() {
+    Tok tok = Tok::t_sign;
+
+    if (strncmp(_buf + _cur, "%code", 5) == 0) {
+        tok = Tok::t_code;
+        _cur += 5;
+    } else if (strncmp(_buf + _cur, "%union", 6) == 0) {
+        tok = Tok::t_union;
+        _cur += 6;
+    } else {
+        _cur++;
+    }
+
+    LexToken token = new LexTokenData{ tok };
+
     return token;
 }

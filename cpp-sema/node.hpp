@@ -32,6 +32,16 @@ public:
     }
 };
 
+class CodeNode : public NodeData {
+public:
+    Node block;
+};
+
+class UnionNode : public NodeData {
+public:
+    Node block;
+};
+
 class TypeData : public NodeData {
 public:
     std::string _type;
@@ -44,7 +54,7 @@ public:
     }
     void
     SetChildren(std::vector<Node>* nodes) {
-        std::for_each(nodes->begin(), nodes->end(), [&](Node n) { _children.push_back(n->GetToken()->name); });
+        std::for_each(nodes->begin(), nodes->end(), [&](Node n) { _children.push_back(n->GetToken()->value); });
     }
 };
 
@@ -52,11 +62,18 @@ class TokenData : public NodeData {};
 
 class LexNode : public NodeData {
 public:
+    UnionNode* unionNode;
+    CodeNode* codeNode;
     std::vector<Node>* tokens;
     std::vector<Node>* types;
     std::vector<Node>* rules;
+    std::string other;
 
 public:
+    std::string GetCode();
+
+    std::string GetUnion();
+
     std::map<std::string, std::string> GetTypeMap();
 
     std::vector<SimpleRule> GetRules();
@@ -68,5 +85,6 @@ public:
     std::vector<Node>* right;
     Node block;
 };
+
 
 #endif

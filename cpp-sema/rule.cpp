@@ -75,11 +75,3 @@ RuleData::operator==(const RuleData& other) {
 
     return dot == other.dot;
 }
-
-Node
-RuleData::Format(const SemaToken token, const std::vector<Node>& children) {
-    Node n = nullptr;
-    // new NodeData{ token->name };
-    
-    return n;
-}

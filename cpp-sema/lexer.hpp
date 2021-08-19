@@ -10,12 +10,12 @@
 class LexTokenData {
 public:
     Tok tok;
-    std::string name;
+    std::string value;
 };
 
 typedef LexTokenData* LexToken;
 
-#define EndLexToken (new LexTokenData{ Tok::Eof, "eof" })
+#define EndLexToken (new LexTokenData{ Eof, "eof" })
 
 struct LexerOption {
     bool skipWhiteSpace;
@@ -26,7 +26,7 @@ private:
     int _cur;
     int _size;
     const char* _buf;
-    std::map<std::string, Tok> _meta;
+    
 
 public:
     Lexer(const char* buf, int size);
@@ -37,6 +37,7 @@ private:
     LexToken lexPiont();
     LexToken lexIdentifier();
     LexToken lexBlock();
+    LexToken lexSign();
 };
 
 #endif // !_lexer_hpp_

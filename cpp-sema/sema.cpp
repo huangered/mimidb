@@ -3,6 +3,7 @@
 #include <functional>
 #include <cstring>
 #include "debug.hpp"
+#include "symtab.hpp"
 
 static bool SemaTokenListLess(const SemaTokenList& left, const SemaTokenList& right);
 static std::string join(const SemaTokenList& v);
@@ -124,22 +125,23 @@ Parser::GenerateParseTable(void) {
     }
 
 #ifdef _log_
+    printf("state list:\n");
     for (int i{}; i < _stateList->Size(); i++) {
         if (_stateList->IsEmpty(i)) {
             break;
         }
 
-        std::cout << "state " << i << std::endl;
+        printf("state %d", i);
         for (Rule r : _stateList->GetRules(i)) {
-            std::cout << r->left->name << " => " << join(r->right);
-            std::cout << " " << join2(r->tokens);
-            std::cout << " " << r->dot << " ";
+            auto r_str = join(r->right);
+            auto t_str = join2(r->tokens);
+            printf("%s => %s %s %d ", r->left->name, r_str.c_str(), t_str.c_str(), r->dot);
 
             if (!r->IsDotEnd()) {
-                std::cout << "next " << r->next_state;
+                printf("next %d", r->next_state);
             }
 
-            std::cout << std::endl;
+            printf("\n");
         }
     }
 #endif
@@ -239,7 +241,7 @@ Parser::handleState(int stateId) {
 
 void
 Parser::generateTable(void) {
-    _gotoTable   = std::unique_ptr<GotoTable>(new GotoTable(_stateList->Size(), _maxState));
+    _gotoTable   = std::unique_ptr<GotoTable>(new GotoTable(_stateList->Size(), Symtab::nsym));
     _actionTable = std::unique_ptr<ActionTable>(new ActionTable(_stateList->Size(), Tok::NUM_TOKENS));
 
     for (int stateId{}; stateId < _stateList->Size(); stateId++) {
