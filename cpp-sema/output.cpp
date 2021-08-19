@@ -19,6 +19,11 @@ Output::SetUnion(std::string b) {
 }
 
 void
+Output::SetOther(std::string b) {
+    other = b;
+}
+
+void
 Output::output(const char* filename) {
     FILE* fd = OpenFile(filename, "w");
     // lex part
@@ -30,6 +35,8 @@ Output::output(const char* filename) {
     writeUnion(fd);
 
     //writeTokEnum(fd);
+
+    writeOther(fd);
 
     WriteFile(fd, "\n");
     {
@@ -257,6 +264,9 @@ Output::output(const char* filename) {
     WriteFile(fd, "    states.push(nextStateId);\n");
     WriteFile(fd, "    return true;\n");
     WriteFile(fd, "}\n");
+
+    //writeOther(fd);
+
     WriteFile(fd, "#endif\n");
 
     CloseFile(fd);
@@ -326,5 +336,6 @@ void
 Output::writeMethods(FILE* f) {
 }
 void
-Output::writeLeft(FILE* f) {
+Output::writeOther(FILE* f) {
+    WriteFile(f, other.c_str());
 }
