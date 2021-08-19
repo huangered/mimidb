@@ -13,9 +13,9 @@ public:
     GotoTable(int row, int col);
     GotoTable(const GotoTable&);
     ~GotoTable();
-    void Add(int stateId, int tokenId, int nextStateId);
+    void Add(int stateId, int semaId, int nextStateId);
 
-    Record Find(int stateId, int tokenId);
+    Record Find(int stateId, int semaId);
 
     void Print();
 };

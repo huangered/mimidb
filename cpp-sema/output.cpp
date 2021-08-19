@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <cstring>
 #include "reader.hpp"
+#include "symtab.hpp"
 
 Output::Output(Parser* _p)
     : parser{ _p } {
@@ -39,13 +40,13 @@ Output::output(const char* filename) {
     WriteFile(fd, "// init goto table (state id, sema id) -> (state id)\n");
     {
         char* a = new char[256];
-        sprintf(a, "const int goto_table[%d][%d]={\n", parser->_stateList->Size(), parser->_maxState);
+        sprintf(a, "const int goto_table[%d][%d]={\n", parser->_stateList->Size(), Symtab::Nsym());
         WriteFile(fd, a);
         delete[] a;
         // init data
         for (int i{ 0 }; i < parser->_stateList->Size(); i++) {
             WriteFile(fd, "{");
-            for (int j{ 0 }; j < parser->_maxState; j++) {
+            for (int j{ 0 }; j < Symtab::Nsym(); j++) {
                 Record record = parser->_gotoTable->Find(i, j);
                 if (record != nullptr) {
                     char* a1 = new char[256];
@@ -297,7 +298,7 @@ void
 Output::writeUnion(FILE* f) {
     WriteFile(f, "union Item {\n");
     WriteFile(f, unionBlock.c_str());
-    WriteFile(f, "}\n");
+    WriteFile(f, "};\n");
 }
 void
 Output::writeMatrix(FILE* f) {

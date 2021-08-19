@@ -1,7 +1,7 @@
 #include "sema.hpp"
 #include "reader.hpp"
 #include "output.hpp"
-#include "rev3.hpp"
+#include "rev4.hpp"
 
 int
 main(int argc, char* argv[]) {
@@ -27,5 +27,7 @@ main(int argc, char* argv[]) {
     output2.SetUnion(lex->GetUnion());
     output2.output("rev4.hpp");
 
+
+    Symtab::Print();
     return 0;
 }

@@ -1,10 +1,11 @@
 #include "symtab.hpp"
+#include "debug.hpp"
 
 int Symtab::nsym = 0;
+
 std::map<std::string, Symbol> Symtab::_data;
 
-Symtab::Symtab()
-{
+Symtab::Symtab() {
 }
 
 Symtab::~Symtab() {
@@ -17,7 +18,7 @@ Symtab::SymbolNew(std::string name) {
         symbol->name  = name;
         symbol->clazz = none;
         symbol->id    = nsym++;
-        _data[name] = symbol;
+        _data[name]   = symbol;
     }
 
     return _data[name];
@@ -29,4 +30,20 @@ Symtab::SymbolGet(std::string name) {
         return nullptr;
     }
     return _data[name];
+}
+
+void
+Symtab::Print() {
+#ifdef _log_
+    printf("Symtab: %d\n", nsym);
+    for (auto it = _data.begin(); it != _data.end(); it++) {
+        // How do I access each element?
+        printf("  %s -> %d\n", it->first.c_str(), it->second->id);
+    }
+#endif
+}
+
+int
+Symtab::Nsym(void) {
+    return nsym;
 }
