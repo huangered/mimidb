@@ -37,6 +37,7 @@ private:
     LexToken lexPiont();
     LexToken lexIdentifier();
     LexToken lexBlock();
+    LexToken lexSign();
 };
 
 #endif // !_lexer_hpp_

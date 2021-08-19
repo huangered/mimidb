@@ -66,22 +66,24 @@ GotoTable::Find(int stateId, int tokenId) {
 void
 GotoTable::Print() {
 #ifdef _log_
+    printf("Goto table:\n    ");
+
     for (int i{ 0 }; i < _col; i++) {
-        std::cout << " " << i << "|";
+        printf("%3d|", i);
     }
     std::cout << std::endl;
     for (int stateId{ 0 }; stateId != _row; stateId++) {
-        std::cout << stateId << ":";
+        printf("%3d:", stateId);
         for (int i{ 0 }; i < _col; i++) {
             Record record = _data[stateId][i];
             if (record != nullptr) {
-                std::cout << *record;
+                printf("%3d", record->id);
             } else {
-                std::cout << "  ";
+                printf("   ");
             }
-            std::cout << "|";
+            printf("|");
         }
-        std::cout << std::endl;
+        printf("\n");
     }
 #endif
 }
@@ -157,22 +159,23 @@ ActionTable::Add(int stateId, int lexTokenId, int nextStateId) {
 void
 ActionTable::Print() {
 #ifdef _log_
+    printf("Action table:\n     ");
     for (int i{ 0 }; i < _col; i++) {
-        std::cout << " " << i << "|";
+        printf("%4d|", i);
     }
-    std::cout << std::endl;
+    printf("\n");
     for (int stateId = 0; stateId != _row; stateId++) {
-        std::cout << stateId << ":";
+        printf("%4d:", stateId);
         for (int i{ 0 }; i < _col; i++) {
             Record record = _data[stateId][i];
             if (record != nullptr) {
-                std::cout << *record;
+                printf("%4d", record->id);
             } else {
-                std::cout << "  ";
+                printf("    ");
             }
-            std::cout << "|";
+            printf("|");
         }
-        std::cout << std::endl;
+        printf("\n");
     }
 #endif
 }
