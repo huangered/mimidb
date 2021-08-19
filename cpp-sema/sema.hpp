@@ -6,6 +6,7 @@
 #include "node.hpp"
 #include "rule.hpp"
 #include "table.hpp"
+#include "FirstSet.hpp"
 
 #include <map>
 #include <set>
@@ -81,26 +82,6 @@ public:
 std::ostream& operator<<(std::ostream& os, const RecordData& dt);
 
 typedef RecordData* Record;
-
-class FirstSet {
-private:
-    std::vector<SimpleRule> _rules;
-
-    // <sema token id, tok id>
-    std::map<int, std::set<Tok>> _firstSet;
-
-public:
-    FirstSet(const std::vector<SimpleRule>& rules);
-
-    TokList Find(const SemaTokenList& tokens, const TokList& extra);
-
-    void Gen();
-
-    void Print();
-
-private:
-    TokList find(SemaTokenList tokens);
-};
 
 class Parser {
 private:

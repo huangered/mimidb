@@ -13,8 +13,10 @@ Symtab::~Symtab() {
 
 void
 Symtab::Init() {
-    Symbol symbol = SymbolNew("$t_epsilon");
-    symbol->clazz = token;
+    Symbol epsilon = SymbolNew("$t_epsilon");
+    epsilon->clazz = token;
+    Symbol eof     = SymbolNew("%t_eof");
+    eof->clazz     = token;
 }
 
 Symbol
@@ -33,13 +35,21 @@ Symtab::SymbolNew(std::string name) {
     return _data[name];
 }
 
-Symbol
-Symtab::SymbolGet(std::string name) {
-    if (_data.count(name) == 0) {
-        return nullptr;
-    }
-    return _data[name];
+int
+Symtab::GetId(std::string name) {
+    return _data[name]->id;
 }
+
+std::string
+Symtab::GetName(int id) {
+    for (auto it = _data.begin(); it != _data.end(); it++) {
+        if (it->second->id == id) {
+            return it->first;
+        }        
+    }
+    return "";
+}
+
 
 void
 Symtab::Print() {
@@ -50,7 +60,7 @@ Symtab::Print() {
     printf("token tag %d, num(%d)\n", SymbolClass::token, ntoken());
     for (auto it = _data.begin(); it != _data.end(); it++) {
         // How do I access each element?
-        printf("  %s -> %d -> %d\n", it->first.c_str(), it->second->id, it->second->clazz);
+        printf("  %15s -> %3d -> %3d\n", it->first.c_str(), it->second->id, it->second->clazz);
     }
 #endif
 }
