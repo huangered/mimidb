@@ -38,7 +38,7 @@
 
 Q : Lex { }
 
-Lex : Code Union TokenList t_sign TypeList t_sign RuleList t_sign Other { $$ = makeLex($0, $1, $2, $4, $6); }
+Lex : Code Union TokenList t_sign TypeList t_sign RuleList t_sign Other { $$ = makeLex($0, $1, $2, $4, $6, $8 ); }
 
 Code : t_code t_block { $$ = makeCode($1); }
 
@@ -66,3 +66,24 @@ IdList : ID { std::vector<Node>* vec = new std::vector<Node>(); vec->push_back($
 ID : t_identifier { }
 
 Other: t_block {}
+
+%
+
+{
+
+Node makeLex(Node codeNode, Node unionNode, std::vector<Node>* tokens, std::vector<Node>* types,
+                    std::vector<Node>* rules, Node other);
+
+Node makeToken(Node token);
+
+Node makeRule(Node n, std::vector<Node>* l, Node m);
+
+Node makeRule(Node n, std::vector<Node>* l);
+
+Node makeType(Node typeNode, std::vector<Node>* nodes);
+
+Node makeCode(Node block);
+
+Node makeUnion(Node block);
+
+}

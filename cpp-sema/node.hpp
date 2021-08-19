@@ -67,6 +67,7 @@ public:
     std::vector<Node>* tokens;
     std::vector<Node>* types;
     std::vector<Node>* rules;
+    std::string other;
 
 public:
     std::string GetCode();

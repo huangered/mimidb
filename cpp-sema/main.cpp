@@ -28,6 +28,7 @@ main(int argc, char* argv[]) {
     auto j = lex->GetCode();
     output2.SetCode(lex->GetCode());
     output2.SetUnion(lex->GetUnion());
+    output2.SetOther(lex->other);
     output2.output("rev4.hpp");
 
 
