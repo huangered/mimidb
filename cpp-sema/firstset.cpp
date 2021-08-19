@@ -79,12 +79,13 @@ FirstSet::Gen() {
 void
 FirstSet::Print() {
 #ifdef _log_
+    printf("\nfirset: \n");
     for (auto entry = _firstSet.begin(); entry != _firstSet.end(); entry++) {
-        std::cout << entry->first << " => ";
+        printf("  %d =>", entry->first);
         for (Tok i : entry->second) {
-            std::cout << i << ",";
+            printf("%d,", i);
         }
-        std::cout << std::endl;
+        printf("\n");
     }
 #endif
 }

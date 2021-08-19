@@ -1,24 +1,18 @@
 #include "sema.hpp"
 #include "reader.hpp"
 #include "output.hpp"
-#include "rev2.hpp"
+#include "c.tab.hpp"
+#include "symtab.hpp"
 
 int
 main(int argc, char* argv[]) {
-    auto rList = ReadRules("C:\\work\\mimidb\\sql-lex2.rule");
+    Symtab::Init();
 
-    Parser parser(rList.rules);
-    parser.SetTypeMap(rList.typeMap);
-    parser.GenerateParseTable();
-    Output output(&parser);
-    output.output("rev1.hpp");
-
-    //const char* str = "@token a % @type str a @type node T % T : a { }";
     FILE* f         = OpenFile("C:\\work\\mimidb\\sql-lex.rule", "r");
     const char* str = ReadFile(f);
     CloseFile(f);
     
-    Node a = raw_parse(str);
+    Node a = yyparse(str);
     printf("%s", a->Name().c_str());
     LexNode* lex = dynamic_cast<LexNode*>(a);
     std::map<std::string, std::string> typeMap = lex->GetTypeMap();
@@ -31,7 +25,13 @@ main(int argc, char* argv[]) {
     parser2.GenerateParseTable();
     // parser.GenerateCppCode("code.hpp");
     Output output2(&parser2);
-    output2.output("rev2.hpp");
+    auto j = lex->GetCode();
+    output2.SetCode(lex->GetCode());
+    output2.SetUnion(lex->GetUnion());
+    output2.SetOther(lex->other);
+    output2.OutputFile("rev4.hpp");
 
+
+    Symtab::Print();
     return 0;
 }

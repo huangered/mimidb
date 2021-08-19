@@ -3,28 +3,93 @@
 #include <cstdlib>
 #include <cstring>
 #include "reader.hpp"
+#include "symtab.hpp"
 
 Output::Output(Parser* _p)
-    : parser { _p } {
+    : parser{ _p } {
 }
 
 void
-Output::output(const char* filename) {
-    FILE* fd = OpenFile(filename, "w");
-    // lex part
-    WriteFile(fd, "#ifndef _p_test_hpp_\n");
-    WriteFile(fd, "#define _p_test_hpp_\n");
-    WriteFile(fd, "#include <iostream>\n");
-    WriteFile(fd, "#include <stack>\n");
-    WriteFile(fd, "#include <vector>\n");
-    WriteFile(fd, "#include <cstring>\n");
-    WriteFile(fd, "#include \"gogo.hpp\"\n");
-    WriteFile(fd, "#include \"TokenKinds.hpp\"\n");
-    WriteFile(fd, "#include \"sema.hpp\"\n");
-    WriteFile(fd, "using namespace std;\n");
+Output::SetCode(std::string b) {
+    codeBlock = b;
+}
+void
+Output::SetUnion(std::string b) {
+    unionBlock = b;
+}
+
+void
+Output::SetOther(std::string b) {
+    other = b;
+}
+
+void
+Output::OutputFile(const char* filename) {
+    writeHeaderFile();
+    writerCppFile();
+};
+
+FILE*
+OpenFile(const char* file, const char* mode) {
+    FILE* f = fopen(file, mode);
+    return f;
+}
+
+char*
+ReadFile(FILE* f) {
+    int r   = fseek(f, 0, SEEK_END);
+    long sz = ftell(f);
+
+    char* buf = new char[sz + 1];
+    memset(buf, 0, sz + 1);
+    fseek(f, 0, SEEK_SET);
+
+    fread(buf, sizeof(char), sz, f);
+
+    return buf;
+}
+
+void
+WriteFile(FILE* f, const char* buf) {
+    int len = strlen(buf);
+    fprintf(f, buf);
+}
+
+void
+CloseFile(FILE* f) {
+    fclose(f);
+}
+
+void
+Output::writeHeaderFile() {
+    FILE* fd = OpenFile("c.tab.hpp", "w");
+
+    WriteFile(fd, "#ifndef _c_tab_hpp_\n");
+    WriteFile(fd, "#define _c_tab_hpp_\n");
+    
+    writeCode(fd);
+
+    writeUnion(fd);
+   
+    WriteFile(fd, "Node yyparse(const char* str);\n");    
+        
+    writeOther(fd);
+
+    WriteFile(fd, "#endif\n");
+
+    CloseFile(fd);
+}
+
+void
+Output::writerCppFile() {
+    FILE* fd = OpenFile("c.tab.cpp", "w");
+
+    WriteFile(fd, "#include \"c.tab.hpp\"\n");
+    
+    // writeTokEnum(fd);
+
+
     WriteFile(fd, "\n");
-    WriteFile(fd, "\n");
-    WriteFile(fd, "union Item {Node node;std::vector<Node>* list;};\n");
     {
         char* a = new char[256];
         sprintf(a, "#define MAX_ID 65535\n");
@@ -36,13 +101,13 @@ Output::output(const char* filename) {
     WriteFile(fd, "// init goto table (state id, sema id) -> (state id)\n");
     {
         char* a = new char[256];
-        sprintf(a, "const int goto_table[%d][%d]={\n", parser->_stateList->Size(), parser->_maxState);
+        sprintf(a, "const int goto_table[%d][%d]={\n", parser->_stateList->Size(), Symtab::nsym);
         WriteFile(fd, a);
         delete[] a;
         // init data
         for (int i{ 0 }; i < parser->_stateList->Size(); i++) {
             WriteFile(fd, "{");
-            for (int j{ 0 }; j < parser->_maxState; j++) {
+            for (int j{ 0 }; j < Symtab::nsym; j++) {
                 Record record = parser->_gotoTable->Find(i, j);
                 if (record != nullptr) {
                     char* a1 = new char[256];
@@ -115,13 +180,14 @@ Output::output(const char* filename) {
     }
     WriteFile(fd, "};\n");
 
-    WriteFile(fd, "static bool eatToken(std::stack<int>& states, std::stack<Item>& syms, std::stack<LexToken>& input, bool* "
-           "acc);\n");
+    WriteFile(
+        fd, "static bool eatToken(std::stack<int>& states, std::stack<Item>& syms, std::stack<LexToken>& input, bool* "
+            "acc);\n");
     WriteFile(fd, "static bool reduce(std::stack<int>& states, std::stack<Item>& syms, int r_id);\n");
-    WriteFile(fd, "Node raw_parse(const char* str);\n");
+    
     WriteFile(fd, "\n");
 
-    WriteFile(fd, "Node\nraw_parse(const char* str){\n");
+    WriteFile(fd, "Node\nyyparse(const char* str){\n");
 
     WriteFile(fd, "  Lexer lexer(str, strlen(str));\n");
     WriteFile(fd, "  LexToken t;\n");
@@ -168,8 +234,10 @@ Output::output(const char* filename) {
 
     // eattoken
 
-    WriteFile(fd, "bool\neatToken(std::stack<int> & states, std::stack<Item> & syms, std::stack<LexToken> & input, bool* acc) "
-           "{\n");
+    WriteFile(
+        fd,
+        "bool\neatToken(std::stack<int> & states, std::stack<Item> & syms, std::stack<LexToken> & input, bool* acc) "
+        "{\n");
     WriteFile(fd, "  int curStateId = states.top();\n");
     WriteFile(fd, "  LexToken token = input.top();\n");
     WriteFile(fd, "  bool r_acc;\n");
@@ -247,39 +315,42 @@ Output::output(const char* filename) {
     WriteFile(fd, "    states.push(nextStateId);\n");
     WriteFile(fd, "    return true;\n");
     WriteFile(fd, "}\n");
-    WriteFile(fd, "#endif\n");
-
     CloseFile(fd);
-};
-
-
-FILE*
-OpenFile(const char* file, const char* mode) {
-    FILE* f = fopen(file, mode);
-    return f;
-}
-
-char*
-ReadFile(FILE* f) {
-    int r = fseek(f, 0, SEEK_END);
-    long sz = ftell(f);
-
-    char* buf = new char[sz + 1];
-    memset(buf, 0, sz + 1);
-    fseek(f, 0, SEEK_SET);
-
-    fread(buf, sizeof(char), sz, f);
-
-    return buf;
 }
 
 void
-WriteFile(FILE* f, const char* buf) {
-    int len = strlen(buf);
-    fprintf(f, buf);
+Output::writeCode(FILE* f) {
+    WriteFile(f, codeBlock.c_str());
+}
+void
+Output::writeUnion(FILE* f) {
+    WriteFile(f, "union Item {\n");
+    WriteFile(f, unionBlock.c_str());
+    WriteFile(f, "};\n\n");
 }
 
 void
-CloseFile(FILE* f) {
-    fclose(f);
+Output::writeTokEnum(FILE* f) {
+
+    WriteFile(f, "enum yytokentype {\n");
+    for (auto it = Symtab::_data.begin(); it != Symtab::_data.end(); it++) {
+        if (it->second->clazz == token) {
+            char* buf = new char[256];
+            sprintf(buf, "    %s = %d,\n", it->second->name.c_str(), it->second->id);
+            WriteFile(f, buf);
+            delete[] buf;
+        }
+    }
+    WriteFile(f, "    };\n");
+}
+
+void
+Output::writeMatrix(FILE* f) {
+}
+void
+Output::writeMethods(FILE* f) {
+}
+void
+Output::writeOther(FILE* f) {
+    WriteFile(f, other.c_str());
 }
