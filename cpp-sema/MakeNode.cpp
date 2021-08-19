@@ -11,14 +11,14 @@ makeLex(Node codeNode, Node unionNode, std::vector<Node>* tokens, std::vector<No
     n->tokens    = tokens;
     n->types     = types;
     n->rules     = rules;
-    n->other     = other->GetToken()->name;
+    n->other     = other->GetToken()->value;
     return n;
 }
 
 Node
 makeToken(Node token) {
     TokenData* node = new TokenData();
-    Symbol sym      = Symtab::SymbolNew(token->GetToken()->name);
+    Symbol sym      = Symtab::SymbolNew(token->GetToken()->value);
     sym->clazz      = SymbolClass::token;
     return node;
 }
@@ -41,7 +41,7 @@ makeRule(Node n, std::vector<Node>* l) {
 Node
 makeType(Node typeNode, std::vector<Node>* nodes) {
     TypeData* n1 = new TypeData();
-    n1->SetType(typeNode->GetToken()->name);
+    n1->SetType(typeNode->GetToken()->value);
     n1->SetChildren(nodes);
     return n1;
 }

@@ -25,12 +25,12 @@ NodeData::SetToken(LexToken token) {
 
 std::string
 LexNode::GetCode() {
-    return codeNode->block->GetToken()->name;
+    return codeNode->block->GetToken()->value;
 }
 
 std::string
 LexNode::GetUnion() {
-    return unionNode->block->GetToken()->name;
+    return unionNode->block->GetToken()->value;
 }
 
 std::map<std::string, std::string>
@@ -56,19 +56,19 @@ LexNode::GetRules() {
         std::vector<Node>* rights = rn->right;
         SimpleRule rule           = new SimpleRuleData();
         rule->id                  = i++;
-        rule->funcBlock           = rn->block->GetToken()->name;
+        rule->funcBlock           = rn->block->GetToken()->value;
         // left node
-        Symbol l_sym = Symtab::SymbolNew(left->GetToken()->name);
+        Symbol l_sym = Symtab::SymbolNew(left->GetToken()->value);
         l_sym->clazz = SymbolClass::nterm;
-        rule->left   = new SemaTokenData{ l_sym->id, true, left->GetToken()->name };
+        rule->left   = new SemaTokenData{ l_sym->id, true, left->GetToken()->value };
         // right nodes
         for (Node r_node : *rights) {
-            Symbol r_sym = Symtab::SymbolNew(r_node->GetToken()->name);
+            Symbol r_sym = Symtab::SymbolNew(r_node->GetToken()->value);
             if (r_sym->clazz == none) {
                 r_sym->clazz = nterm;
             }
             SemaToken r
-                = new SemaTokenData{ r_sym->id, r_sym->clazz == nterm ? true : false, r_node->GetToken()->name };
+                = new SemaTokenData{ r_sym->id, r_sym->clazz == nterm ? true : false, r_node->GetToken()->value };
             rule->right.push_back(r);
         }
         g.push_back(rule);

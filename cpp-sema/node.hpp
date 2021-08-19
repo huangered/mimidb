@@ -54,7 +54,7 @@ public:
     }
     void
     SetChildren(std::vector<Node>* nodes) {
-        std::for_each(nodes->begin(), nodes->end(), [&](Node n) { _children.push_back(n->GetToken()->name); });
+        std::for_each(nodes->begin(), nodes->end(), [&](Node n) { _children.push_back(n->GetToken()->value); });
     }
 };
 
