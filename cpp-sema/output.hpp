@@ -15,10 +15,13 @@ public:
     void SetCode(std::string b);
     void SetUnion(std::string b);
     void SetOther(std::string other);
-    void output(const char* filename);
+    void OutputFile(const char* filename);
 
 private:
-    void writeHeader(FILE* f);
+    void writeHeaderFile();
+    void writerCppFile();
+
+    void writeCode(FILE* f);
     void writeUnion(FILE* f);
     void writeTokEnum(FILE* f);
     void writeMatrix(FILE* f);

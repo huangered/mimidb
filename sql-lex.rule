@@ -3,7 +3,7 @@
     #include <stack>
     #include <vector>
     #include <cstring>
-    #include "gogo.hpp"
+
     #include "TokenKinds.hpp"
     #include "sema.hpp"
     using namespace std;

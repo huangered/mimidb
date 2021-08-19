@@ -24,19 +24,70 @@ Output::SetOther(std::string b) {
 }
 
 void
-Output::output(const char* filename) {
-    FILE* fd = OpenFile(filename, "w");
-    // lex part
-    WriteFile(fd, "#ifndef _p_test_hpp_\n");
-    WriteFile(fd, "#define _p_test_hpp_\n");
-    writeHeader(fd);
-    WriteFile(fd, "\n");
+Output::OutputFile(const char* filename) {
+    writeHeaderFile();
+    writerCppFile();
+};
+
+FILE*
+OpenFile(const char* file, const char* mode) {
+    FILE* f = fopen(file, mode);
+    return f;
+}
+
+char*
+ReadFile(FILE* f) {
+    int r   = fseek(f, 0, SEEK_END);
+    long sz = ftell(f);
+
+    char* buf = new char[sz + 1];
+    memset(buf, 0, sz + 1);
+    fseek(f, 0, SEEK_SET);
+
+    fread(buf, sizeof(char), sz, f);
+
+    return buf;
+}
+
+void
+WriteFile(FILE* f, const char* buf) {
+    int len = strlen(buf);
+    fprintf(f, buf);
+}
+
+void
+CloseFile(FILE* f) {
+    fclose(f);
+}
+
+void
+Output::writeHeaderFile() {
+    FILE* fd = OpenFile("c.tab.hpp", "w");
+
+    WriteFile(fd, "#ifndef _c_tab_hpp_\n");
+    WriteFile(fd, "#define _c_tab_hpp_\n");
+    
+    writeCode(fd);
 
     writeUnion(fd);
-
-    //writeTokEnum(fd);
-
+   
+    WriteFile(fd, "Node yyparse(const char* str);\n");    
+        
     writeOther(fd);
+
+    WriteFile(fd, "#endif\n");
+
+    CloseFile(fd);
+}
+
+void
+Output::writerCppFile() {
+    FILE* fd = OpenFile("c.tab.cpp", "w");
+
+    WriteFile(fd, "#include \"c.tab.hpp\"\n");
+    
+    // writeTokEnum(fd);
+
 
     WriteFile(fd, "\n");
     {
@@ -133,10 +184,10 @@ Output::output(const char* filename) {
         fd, "static bool eatToken(std::stack<int>& states, std::stack<Item>& syms, std::stack<LexToken>& input, bool* "
             "acc);\n");
     WriteFile(fd, "static bool reduce(std::stack<int>& states, std::stack<Item>& syms, int r_id);\n");
-    WriteFile(fd, "Node raw_parse(const char* str);\n");
+    
     WriteFile(fd, "\n");
 
-    WriteFile(fd, "Node\nraw_parse(const char* str){\n");
+    WriteFile(fd, "Node\nyyparse(const char* str){\n");
 
     WriteFile(fd, "  Lexer lexer(str, strlen(str));\n");
     WriteFile(fd, "  LexToken t;\n");
@@ -264,54 +315,18 @@ Output::output(const char* filename) {
     WriteFile(fd, "    states.push(nextStateId);\n");
     WriteFile(fd, "    return true;\n");
     WriteFile(fd, "}\n");
-
-    //writeOther(fd);
-
-    WriteFile(fd, "#endif\n");
-
     CloseFile(fd);
-};
-
-FILE*
-OpenFile(const char* file, const char* mode) {
-    FILE* f = fopen(file, mode);
-    return f;
-}
-
-char*
-ReadFile(FILE* f) {
-    int r   = fseek(f, 0, SEEK_END);
-    long sz = ftell(f);
-
-    char* buf = new char[sz + 1];
-    memset(buf, 0, sz + 1);
-    fseek(f, 0, SEEK_SET);
-
-    fread(buf, sizeof(char), sz, f);
-
-    return buf;
 }
 
 void
-WriteFile(FILE* f, const char* buf) {
-    int len = strlen(buf);
-    fprintf(f, buf);
-}
-
-void
-CloseFile(FILE* f) {
-    fclose(f);
-}
-
-void
-Output::writeHeader(FILE* f) {
+Output::writeCode(FILE* f) {
     WriteFile(f, codeBlock.c_str());
 }
 void
 Output::writeUnion(FILE* f) {
     WriteFile(f, "union Item {\n");
     WriteFile(f, unionBlock.c_str());
-    WriteFile(f, "};\n");
+    WriteFile(f, "};\n\n");
 }
 
 void
