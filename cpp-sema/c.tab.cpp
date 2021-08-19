@@ -744,7 +744,7 @@ yyparse(const char* str) {
     LexToken t;
     std::vector<LexToken> data;
     while ((t = lexer.GetLexerToken()) != nullptr) {
-        if (t->tok != Tok::whitespace) {
+        if (t->tok != whitespace) {
             data.push_back(t);
         }
     }

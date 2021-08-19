@@ -97,7 +97,7 @@ Parser::Parser(const std::vector<SimpleRule>& rules)
     _rules[0]->root = true;
 
     Rule rule = _rules[0]->Clone();
-    rule->SetToken(Tok::Eof);
+    rule->SetToken(Eof);
     _stateList->Add(0, rule);
 }
 
@@ -242,7 +242,7 @@ Parser::handleState(int stateId) {
 void
 Parser::generateTable(void) {
     _gotoTable   = std::unique_ptr<GotoTable>(new GotoTable(_stateList->Size(), Symtab::nsym));
-    _actionTable = std::unique_ptr<ActionTable>(new ActionTable(_stateList->Size(), Tok::NUM_TOKENS));
+    _actionTable = std::unique_ptr<ActionTable>(new ActionTable(_stateList->Size(), NUM_TOKENS));
 
     for (int stateId{}; stateId < _stateList->Size(); stateId++) {
         for (Rule r : _stateList->GetRules(stateId)) {

@@ -7,9 +7,9 @@ GetTokByName(const std::string& name) {
 
 #define TOK(X)                                                                                                         \
     else if (#X == name) {                                                                                             \
-        return Tok::X;                                                                                                 \
+        return X;                                                                                                 \
     }
 #include "tok.def"
 
-    return Tok::unknown;
+    return unknown;
 }
