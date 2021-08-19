@@ -13,15 +13,18 @@
     Node node;
     std::vector<Node>* list;
 }
-
+@token Eof
+@token whitespace
 @token t_token
+@token t_code
+@token t_colon
+@token t_identifier
+@token t_block
+@token t_union
 @token t_type
 @token t_type_type
-@token t_union
-@token t_code
-@token t_identifier
-@token t_colon
-@token t_block
+@token unknown
+@token epsilon
 @token t_sign
 
 %

@@ -36,6 +36,8 @@ public:
 
     static Symbol SymbolNew(std::string name);
     static Symbol SymbolGet(std::string name);
+    static void Print(void);
+    static int Nsym(void);
 };
 
 #endif
