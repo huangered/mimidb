@@ -19,8 +19,7 @@ Lexer::Lexer(const char* buf, int size)
     : _cur{ 0 }
     , _size{ size }
     , _buf{ buf } {
-#define KEYWORD(X, Y) _meta[#X] = Tok::kw_##X;
-#include "tok.def"
+
 }
 
 LexToken
@@ -125,10 +124,6 @@ Lexer::lexIdentifier() {
     LexToken token = new LexTokenData{ Tok::t_identifier, p };
 
     delete[] p;
-
-    if (_meta.count(token->name) > 0) {
-        token->tok = _meta[token->name];
-    }
 
     return token;
 }

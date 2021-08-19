@@ -13,6 +13,7 @@
     Node node;
     std::vector<Node>* list;
 }
+
 @token Eof
 @token whitespace
 @token t_token
@@ -30,14 +31,14 @@
 %
 
 @type node t_type t_type_type t_union t_code t_identifier t_colon t_block t_sign
-@type node Lex RuleList Rule ID Type Token Q Code Union
+@type node Lex RuleList Rule ID Type Token Q Code Union Other
 @type list TokenList TypeList RuleList IdList
 
 %
 
 Q : Lex { }
 
-Lex : Code Union TokenList t_sign TypeList t_sign RuleList { $$ = makeLex($0, $1, $2, $4, $6); }
+Lex : Code Union TokenList t_sign TypeList t_sign RuleList t_sign Other { $$ = makeLex($0, $1, $2, $4, $6); }
 
 Code : t_code t_block { $$ = makeCode($1); }
 
@@ -63,3 +64,5 @@ IdList : IdList ID { $0->push_back($1); $$ = $0; }
 IdList : ID { std::vector<Node>* vec = new std::vector<Node>(); vec->push_back($0); $$ = vec; }
 
 ID : t_identifier { }
+
+Other: t_block {}

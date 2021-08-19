@@ -241,7 +241,7 @@ Parser::handleState(int stateId) {
 
 void
 Parser::generateTable(void) {
-    _gotoTable   = std::unique_ptr<GotoTable>(new GotoTable(_stateList->Size(), Symtab::Nsym()));
+    _gotoTable   = std::unique_ptr<GotoTable>(new GotoTable(_stateList->Size(), Symtab::nsym));
     _actionTable = std::unique_ptr<ActionTable>(new ActionTable(_stateList->Size(), Tok::NUM_TOKENS));
 
     for (int stateId{}; stateId < _stateList->Size(); stateId++) {

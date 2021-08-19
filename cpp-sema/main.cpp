@@ -2,9 +2,12 @@
 #include "reader.hpp"
 #include "output.hpp"
 #include "rev4.hpp"
+#include "symtab.hpp"
 
 int
 main(int argc, char* argv[]) {
+    Symtab::Init();
+
     FILE* f         = OpenFile("C:\\work\\mimidb\\sql-lex.rule", "r");
     const char* str = ReadFile(f);
     CloseFile(f);

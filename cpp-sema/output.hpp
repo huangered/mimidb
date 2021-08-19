@@ -18,6 +18,7 @@ public:
 private:
     void writeHeader(FILE* f);
     void writeUnion(FILE* f);
+    void writeTokEnum(FILE* f);
     void writeMatrix(FILE* f);
     void writeMethods(FILE* f);
     void writeLeft(FILE* f);

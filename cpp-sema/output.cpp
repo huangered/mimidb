@@ -28,6 +28,9 @@ Output::output(const char* filename) {
     WriteFile(fd, "\n");
 
     writeUnion(fd);
+
+    //writeTokEnum(fd);
+
     WriteFile(fd, "\n");
     {
         char* a = new char[256];
@@ -40,13 +43,13 @@ Output::output(const char* filename) {
     WriteFile(fd, "// init goto table (state id, sema id) -> (state id)\n");
     {
         char* a = new char[256];
-        sprintf(a, "const int goto_table[%d][%d]={\n", parser->_stateList->Size(), Symtab::Nsym());
+        sprintf(a, "const int goto_table[%d][%d]={\n", parser->_stateList->Size(), Symtab::nsym);
         WriteFile(fd, a);
         delete[] a;
         // init data
         for (int i{ 0 }; i < parser->_stateList->Size(); i++) {
             WriteFile(fd, "{");
-            for (int j{ 0 }; j < Symtab::Nsym(); j++) {
+            for (int j{ 0 }; j < Symtab::nsym; j++) {
                 Record record = parser->_gotoTable->Find(i, j);
                 if (record != nullptr) {
                     char* a1 = new char[256];
@@ -300,6 +303,22 @@ Output::writeUnion(FILE* f) {
     WriteFile(f, unionBlock.c_str());
     WriteFile(f, "};\n");
 }
+
+void
+Output::writeTokEnum(FILE* f) {
+
+    WriteFile(f, "enum yytokentype {\n");
+    for (auto it = Symtab::_data.begin(); it != Symtab::_data.end(); it++) {
+        if (it->second->clazz == token) {
+            char* buf = new char[256];
+            sprintf(buf, "    %s = %d,\n", it->second->name.c_str(), it->second->id);
+            WriteFile(f, buf);
+            delete[] buf;
+        }
+    }
+    WriteFile(f, "    };\n");
+}
+
 void
 Output::writeMatrix(FILE* f) {
 }

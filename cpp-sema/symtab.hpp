@@ -26,18 +26,21 @@ struct SymbolData {
 typedef SymbolData* Symbol;
 
 class Symtab {
-private:
+public:
     static std::map<std::string, Symbol> _data;
+
+public:
     static int nsym;
+    static int nnterm;
+    static int ntoken;
 
 public:
     Symtab();
     ~Symtab();
-
+    static void Init();
     static Symbol SymbolNew(std::string name);
     static Symbol SymbolGet(std::string name);
     static void Print(void);
-    static int Nsym(void);
 };
 
 #endif

@@ -11,6 +11,12 @@ Symtab::Symtab() {
 Symtab::~Symtab() {
 }
 
+void
+Symtab::Init() {
+    Symbol symbol = SymbolNew("$t_epsilon");
+    symbol->clazz = token;
+}
+
 Symbol
 Symtab::SymbolNew(std::string name) {
     if (_data.count(name) == 0) {
@@ -36,14 +42,11 @@ void
 Symtab::Print() {
 #ifdef _log_
     printf("Symtab: %d\n", nsym);
+    printf("nterm %d\n", SymbolClass::nterm);
+    printf("token %d\n", SymbolClass::token);
     for (auto it = _data.begin(); it != _data.end(); it++) {
         // How do I access each element?
-        printf("  %s -> %d\n", it->first.c_str(), it->second->id);
+        printf("  %s -> %d -> %d\n", it->first.c_str(), it->second->id, it->second->clazz);
     }
 #endif
-}
-
-int
-Symtab::Nsym(void) {
-    return nsym;
 }
