@@ -10,7 +10,7 @@
 class LexTokenData {
 public:
     Tok tok;
-    std::string name;
+    std::string value;
 };
 
 typedef LexTokenData* LexToken;

@@ -177,9 +177,9 @@ Lexer::lexPiont() {
     LexToken token = new LexTokenData{ Tok::t_block, p };
     delete[] p;
 
-    if ("@token" == token->name) {
+    if ("@token" == token->value) {
         token->tok = Tok::t_token;
-    } else if ("@type" == token->name) {
+    } else if ("@type" == token->value) {
         token->tok = Tok::t_type;
     } else {
         token->tok = unknown;
