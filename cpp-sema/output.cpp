@@ -71,6 +71,8 @@ Output::writeHeaderFile() {
 
     writeUnion(fd);
    
+    writeTokEnum(fd);
+
     WriteFile(fd, "Node yyparse(const char* str);\n");    
         
     writeOther(fd);
@@ -128,13 +130,13 @@ Output::writerCppFile() {
     WriteFile(fd, "// init action table (state id, token id) -> (acc, state, id)\n");
     {
         char* a = new char[256];
-        sprintf(a, "const int action_table[%d][%d]={\n", parser->_stateList->Size(), Tok::NUM_TOKENS);
+        sprintf(a, "const int action_table[%d][%d]={\n", parser->_stateList->Size(), NUM_TOKENS);
         WriteFile(fd, a);
         delete[] a;
         // init data
         for (int i{ 0 }; i < parser->_stateList->Size(); i++) {
             WriteFile(fd, "{");
-            for (int j{ 0 }; j < Tok::NUM_TOKENS; j++) {
+            for (int j{ 0 }; j < NUM_TOKENS; j++) {
                 Record record = parser->_actionTable->Find(i, j);
                 if (record != nullptr) {
 
@@ -193,7 +195,7 @@ Output::writerCppFile() {
     WriteFile(fd, "  LexToken t;\n");
     WriteFile(fd, "  std::vector<LexToken> data;\n");
     WriteFile(fd, "  while ((t = lexer.GetLexerToken()) != nullptr) {\n");
-    WriteFile(fd, "    if (t->tok != Tok::whitespace) {\n");
+    WriteFile(fd, "    if (t->tok != whitespace) {\n");
     WriteFile(fd, "      data.push_back(t);\n");
     WriteFile(fd, "    }\n");
     WriteFile(fd, "  }\n");
@@ -331,16 +333,26 @@ Output::writeUnion(FILE* f) {
 
 void
 Output::writeTokEnum(FILE* f) {
-
+    std::vector<Symbol> d;
     WriteFile(f, "enum yytokentype {\n");
     for (auto it = Symtab::_data.begin(); it != Symtab::_data.end(); it++) {
-        if (it->second->clazz == token) {
-            char* buf = new char[256];
-            sprintf(buf, "    %s = %d,\n", it->second->name.c_str(), it->second->id);
-            WriteFile(f, buf);
-            delete[] buf;
+        if (it->second->clazz == token && it->second->id > 1) {
+            d.push_back(it->second);
         }
+         
     }
+
+    std::sort(d.begin(), d.end(), [](Symbol l, Symbol r) -> bool { return l->id < r->id;
+        });
+
+    for (auto it = d.begin(); it != d.end(); it++) {
+
+        char* buf = new char[256];
+        sprintf(buf, "    %15s = %3d,\n", (*it)->name.c_str(), (*it)->id);
+        WriteFile(f, buf);
+        delete[] buf;
+    }
+
     WriteFile(f, "    };\n");
 }
 
