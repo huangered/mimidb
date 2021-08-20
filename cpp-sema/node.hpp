@@ -11,9 +11,9 @@ class NodeData;
 
 typedef NodeData* Node;
 
-class SimpleRuleData;
+class RuleData;
 
-typedef SimpleRuleData* SimpleRule;
+typedef RuleData* Rule;
 
 class NodeData {
     LexToken _token;
@@ -73,7 +73,7 @@ public:
 
     std::map<std::string, std::string> GetTypeMap();
 
-    std::vector<SimpleRule> GetRules();
+    std::vector<Rule> GetRules();
 };
 
 class RuleNode : public NodeData {

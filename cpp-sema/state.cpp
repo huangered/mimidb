@@ -6,46 +6,45 @@ StateData::StateData(int id)
 }
 
 StateData::~StateData() {
-    for (Rule rule : _rules) {
-        delete rule;
+    for (Item item : _items) {
+        delete item;
     }
 }
 
-RuleList
-StateData::GetRules() {
-    return _rules;
+ItemList
+StateData::GetItems() {
+    return _items;
 }
 
 void
-StateData::ResetRules(RuleList& rules) {
-    _rules.swap(rules);
+StateData::ResetItems(ItemList& items) {
+    _items.swap(items);
 }
 
 void
-StateData::Add(Rule rule) {
-    auto cmp = [rule](Rule r) -> bool { return *r == *rule; };
+StateData::Add(Item item) {
+    auto cmp = [item](Item r) -> bool { return *r == *item; };
 
-    auto iter = std::find_if(_rules.begin(), _rules.end(), cmp);
+    auto iter = std::find_if(_items.begin(), _items.end(), cmp);
 
-    if (iter == _rules.end()) {
-        _rules.push_back(rule);
+    if (iter == _items.end()) {
+        _items.push_back(item);
     }
 }
 
 void
-StateData::Add(std::set<Rule> rules) {
-    for (auto iter = rules.begin(); iter != rules.end(); iter++) {
+StateData::Add(std::set<Item> items) {
+    for (auto iter = items.begin(); iter != items.end(); iter++) {
         Add(*iter);
     }
 }
 
 bool
-StateData::MatchRule(const RuleList& rules1) {
-    for (auto rules = rules1.begin(); rules != rules1.end(); rules++) {
-        Rule r     = *rules;
-        auto match = [&](Rule rule) -> bool { return *rule == *r; };
-        auto iter  = std::find_if(_rules.begin(), _rules.end(), match);
-        if (iter == _rules.end()) {
+StateData::MatchItem(const ItemList& items) {
+    for (auto itemIter = items.begin(); itemIter != items.end(); itemIter++) {
+        auto match = [&](Item item) -> bool { return *item == **itemIter; };
+        auto iter  = std::find_if(_items.begin(), _items.end(), match);
+        if (iter == _items.end()) {
             return false;
         }
     }
@@ -56,7 +55,6 @@ int
 StateData::GetId() {
     return _id;
 }
-
 
 StateCollection::~StateCollection() {
     for (State state : stateList) {
@@ -71,7 +69,7 @@ StateCollection::Size() {
 
 bool
 StateCollection::IsEmpty(int stateId) {
-    return stateList[stateId]->GetRules().size() == 0;
+    return stateList[stateId]->GetItems().size() == 0;
 }
 
 void
@@ -80,13 +78,13 @@ StateCollection::Add(State state) {
 }
 
 void
-StateCollection::Add(int stateId, Rule rule) {
-    stateList[stateId]->Add(rule);
+StateCollection::Add(int stateId, Item item) {
+    stateList[stateId]->Add(item);
 }
 
-RuleList
+ItemList
 StateCollection::GetRules(int stateId) {
-    return stateList[stateId]->GetRules();
+    return stateList[stateId]->GetItems();
 }
 
 State

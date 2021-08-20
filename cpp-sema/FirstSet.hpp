@@ -5,22 +5,22 @@
 
 class FirstSet {
 private:
-    std::vector<SimpleRule> _rules;
+    std::vector<Rule> _rules;
 
     // <sema token id, tok id>
     std::map<int, std::set<int>> _firstSet;
 
 public:
-    FirstSet(const std::vector<SimpleRule>& rules);
+    FirstSet(const std::vector<Rule>& rules);
 
-    TokList Find(const SemaTokenList& tokens, const TokList& extra);
+    std::vector<int> Find(const SemaTokenList& tokens, const std::vector<int>& extra);
 
     void Gen();
 
     void Print();
 
 private:
-    TokList find(SemaTokenList tokens);
+    std::vector<int> find(SemaTokenList tokens);
 };
 
 #endif

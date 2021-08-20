@@ -364,5 +364,6 @@ Output::writeMethods(FILE* f) {
 }
 void
 Output::writeOther(FILE* f) {
+    WriteFile(f, "// code part \n");
     WriteFile(f, other.c_str());
 }

@@ -4,22 +4,23 @@
 #include "rule.hpp"
 
 class StateData {
+private:
     int _id;
-    RuleList _rules;
+    ItemList _items;
 
 public:
     StateData(int id);
     ~StateData();
 
-    RuleList GetRules();
+    ItemList GetItems();
 
-    void ResetRules(RuleList& rules);
+    void ResetItems(ItemList& items);
 
-    void Add(Rule rule);
+    void Add(Item item);
 
-    void Add(std::set<Rule> rules);
+    void Add(std::set<Item> item);
 
-    bool MatchRule(const RuleList& rules);
+    bool MatchItem(const ItemList& items);
 
     int GetId();
 };
@@ -35,8 +36,8 @@ public:
     int Size();
     bool IsEmpty(int stateId);
     void Add(State state);
-    void Add(int stateId, Rule rule);
-    RuleList GetRules(int stateId);
+    void Add(int stateId, Item item);
+    ItemList GetRules(int stateId);
     State GetState(int stateId);
 };
 
