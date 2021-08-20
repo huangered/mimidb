@@ -50,15 +50,15 @@ class Parser {
 private:
     int _maxState;
     std::map<std::string, std::string> _typeMap;
-    std::vector<SimpleRule> _originRules;
-    RuleList _rules;
+    std::vector<Rule> _originRules;
+    ItemList _rules;
     std::unique_ptr<GotoTable> _gotoTable;
     std::unique_ptr<ActionTable> _actionTable;
     std::unique_ptr<FirstSet> _firstSet;
     std::unique_ptr<StateCollection> _stateList;
 
 public:
-    Parser(const std::vector<SimpleRule>& rules);
+    Parser(const std::vector<Rule>& rules);
     ~Parser();
     void SetTypeMap(const std::map<std::string, std::string>& _typeMap);
     void GenerateParseTable(void);
@@ -68,13 +68,13 @@ private:
     void handleState(int stateId);
     void generateTable(void);
     void expandRules(State state);
-    State searchSameState(const RuleList& newStateRules);
+    State searchSameState(const ItemList& newStateRules);
 
     bool reduce(std::stack<int>& states, std::stack<Node>& syms, const Record curRecord);
     bool eatToken(std::stack<int>& states, std::stack<Node>& syms, std::stack<LexToken>& input, bool* acc);
 
     // code generate
-    std::string funcReplace(const Rule rule);
+    std::string funcReplace(const Item rule);
 
     friend class Output;
 };

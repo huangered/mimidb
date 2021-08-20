@@ -10,8 +10,6 @@
 #include "symtab.hpp"
 using namespace std;
 
-typedef std::vector<int> TokList;
-
 #define EndLexToken (new LexTokenData(Symtab::eof->id, "eof"))
 
 union YYSTYPE {
@@ -34,6 +32,7 @@ enum yytokentype
     t_sign       = 11,
     unknown      = 12,
 };
+
 Node yyparse(const char* str);
 
 Node makeLex(Node codeNode, Node unionNode, std::vector<Node>* tokens, std::vector<Node>* types,
