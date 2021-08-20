@@ -23,7 +23,7 @@ main(int argc, char* argv[]) {
     Parser parser2(rules);
     parser2.SetTypeMap(typeMap);
     parser2.GenerateParseTable();
-    // parser.GenerateCppCode("code.hpp");
+
     Output output2(&parser2);
     auto j = lex->GetCode();
     output2.SetCode(lex->GetCode());
