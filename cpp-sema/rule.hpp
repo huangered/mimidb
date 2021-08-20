@@ -44,7 +44,7 @@ public:
 
     SemaTokenList GetStringAfterDot();
 
-    void SetToken(yytokentype token);
+    void SetToken(int token);
 
     void AppendTokens(TokList tokens);
 

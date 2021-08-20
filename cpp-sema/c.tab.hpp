@@ -31,7 +31,7 @@ enum yytokentype
     t_sign       = 12,
 };
 
-typedef std::vector<yytokentype> TokList;
+typedef std::vector<int> TokList;
 
 Node yyparse(const char* str);
 

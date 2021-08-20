@@ -10,7 +10,7 @@ FirstSet::FirstSet(const std::vector<SimpleRule>& rules)
 TokList
 FirstSet::find(SemaTokenList tokens) {
     SemaToken t     = tokens[0];
-    std::set<yytokentype> r = _firstSet[t->id];
+    std::set<int> r = _firstSet[t->id];
 
     if (r.empty()) {
         return {};
@@ -36,7 +36,7 @@ FirstSet::Find(const SemaTokenList& tokens, const TokList& extra) {
     if (c->sema) {
         return find(tokens);
     } else {
-        return { (yytokentype)Symtab::GetId(c->name) };
+        return { Symtab::GetId(c->name) };
     }
 }
 
@@ -47,7 +47,7 @@ FirstSet::Gen() {
         count = 0;
 
         for (SimpleRule rule : _rules) {
-            std::set<yytokentype> tokSet;
+            std::set<int> tokSet;
             SemaToken left = rule->left;
 
             if (_firstSet.count(left->id) == 0) {
@@ -58,7 +58,7 @@ FirstSet::Gen() {
                 tokSet.insert(epsilon);
             } else {
                 if (!rule->right[0]->sema) {
-                    tokSet.insert( (yytokentype)Symtab::GetId(rule->right[0]->name));
+                    tokSet.insert(Symtab::GetId(rule->right[0]->name));
                 } else {
                     SemaToken firstRight = rule->right[0];
                     if (_firstSet.count(firstRight->id) > 0) {
@@ -67,7 +67,7 @@ FirstSet::Gen() {
                     }
                 }
             }
-            for (yytokentype tok : tokSet) {
+            for (int tok : tokSet) {
                 if (_firstSet[left->id].count(tok) == 0) {
                     _firstSet[left->id].insert(tok);
                     count++;
@@ -84,7 +84,7 @@ FirstSet::Print() {
     printf("\nfirset: \n");
     for (auto entry = _firstSet.begin(); entry != _firstSet.end(); entry++) {
         printf("  %d =>", entry->first);
-        for (yytokentype i : entry->second) {
+        for (int i : entry->second) {
             printf("%d,", i);
         }
         printf("\n");
