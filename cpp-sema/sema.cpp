@@ -7,25 +7,7 @@
 
 static bool SemaTokenListLess(const SemaTokenList& left, const SemaTokenList& right);
 static std::string join(const SemaTokenList& v);
-static std::string join2(const std::vector<yytokentype>& v);
-
-std::ostream&
-operator<<(std::ostream& os, const RecordData& dt) {
-    if (dt.id == -1) {
-        os << "  ";
-        return os;
-    }
-    if (dt.acc) {
-        os << "acc";
-        return os;
-    }
-    if (dt.state) {
-        os << "s" << dt.id;
-    } else {
-        os << "r" << dt.id;
-    }
-    return os;
-}
+static std::string join2(const std::vector<int>& v);
 
 bool
 group_key::operator<(const group_key& g1) const {
@@ -252,7 +234,7 @@ Parser::generateTable(void) {
                 for (int ruleId{}; ruleId < _rules.size(); ruleId++) {
                     Rule c = _rules[ruleId];
                     if (c->left->id == r->left->id && SemaTokenListEqual(c->right, r->right)) {
-                        for (yytokentype token : r->GetTokens()) {
+                        for (int token : r->GetTokens()) {
                             _actionTable->AddRule(stateId, token, ruleId, r->root);
                         }
                     }
@@ -427,7 +409,7 @@ join(const SemaTokenList& v) {
 std::string
 join2(const TokList& v) {
     std::string a;
-    for (yytokentype t : v) {
+    for (int t : v) {
         a += t;
         a += ",";
     }
