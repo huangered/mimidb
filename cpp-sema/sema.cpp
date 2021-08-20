@@ -23,41 +23,6 @@ group_key::operator<(const group_key& g1) const {
     return SemaTokenListLess(right, g1.right);
 }
 
-StateCollection::~StateCollection() {
-    for (State state : stateList) {
-        delete state;
-    }
-}
-
-int
-StateCollection::Size() {
-    return stateList.size();
-}
-
-bool
-StateCollection::IsEmpty(int stateId) {
-    return stateList[stateId]->GetRules().size() == 0;
-}
-
-void
-StateCollection::Add(State state) {
-    stateList.push_back(state);
-}
-
-void
-StateCollection::Add(int stateId, Rule rule) {
-    stateList[stateId]->Add(rule);
-}
-
-RuleList
-StateCollection::GetRules(int stateId) {
-    return stateList[stateId]->GetRules();
-}
-
-State
-StateCollection::GetState(int stateId) {
-    return stateList[stateId];
-}
 
 // end
 
@@ -407,7 +372,7 @@ join(const SemaTokenList& v) {
 }
 
 std::string
-join2(const TokList& v) {
+join2(const std::vector<int>& v) {
     std::string a;
     for (int t : v) {
         a += t;

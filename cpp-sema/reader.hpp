@@ -8,5 +8,4 @@ char* ReadFile(FILE* f);
 void WriteFile(FILE* f, const char* buf);
 void CloseFile(FILE* f);
 
-
 #endif // !_rule_reader_hpp_

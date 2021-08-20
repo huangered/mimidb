@@ -7,6 +7,7 @@
 #include "rule.hpp"
 #include "table.hpp"
 #include "FirstSet.hpp"
+#include "state.hpp"
 
 #include <map>
 #include <set>
@@ -35,42 +36,6 @@ struct group_key {
     bool operator<(const group_key& other) const;
 };
 
-class StateData {
-    int _id;
-    RuleList _rules;
-
-public:
-    StateData(int id);
-    ~StateData();
-
-    RuleList GetRules();
-
-    void ResetRules(RuleList& rules);
-
-    void Add(Rule rule);
-
-    void Add(std::set<Rule> rules);
-
-    bool MatchRule(const RuleList& rules);
-
-    int GetId();
-};
-
-typedef StateData* State;
-typedef std::vector<State> StateList;
-
-class StateCollection {
-    StateList stateList;
-
-public:
-    ~StateCollection();
-    int Size();
-    bool IsEmpty(int stateId);
-    void Add(State state);
-    void Add(int stateId, Rule rule);
-    RuleList GetRules(int stateId);
-    State GetState(int stateId);
-};
 
 class RecordData {
 public:
