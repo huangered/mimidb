@@ -1,5 +1,6 @@
 ﻿#include "lexer.hpp"
 #include <cstring>
+#include "c.tab.hpp"
 
 static bool
 isCharacter(char c) {
@@ -19,7 +20,6 @@ Lexer::Lexer(const char* buf, int size)
     : _cur{ 0 }
     , _size{ size }
     , _buf{ buf } {
-
 }
 
 LexToken
@@ -27,7 +27,7 @@ Lexer::GetLexerToken() {
     if (_cur >= _size) {
         return nullptr;
     }
-    Tok tok{ Tok::unknown };
+
     char Char = _buf[_cur];
 
     switch (Char) {
@@ -86,11 +86,11 @@ Lexer::GetLexerToken() {
         return lexIdentifier();
     case '\n':
     case ' ':
-        tok = Tok::whitespace;
-        break;
+        _cur++;
+        return GetLexerToken();
     case ':':
-        tok = Tok::t_colon;
-        break;
+        _cur++;
+        return new LexTokenData(t_colon);
     case '%':
         return lexSign();
     case '{':
@@ -99,9 +99,7 @@ Lexer::GetLexerToken() {
         return lexPiont();
     }
 
-    _cur++;
-    LexToken token = new LexTokenData{ tok };
-    return token;
+    return nullptr;
 }
 
 LexToken
@@ -121,7 +119,7 @@ Lexer::lexIdentifier() {
     strncpy(p, _buf + start, count);
     p[count] = '\0';
 
-    LexToken token = new LexTokenData{ Tok::t_identifier, p };
+    LexToken token = new LexTokenData(t_identifier, p);
 
     delete[] p;
 
@@ -131,7 +129,7 @@ Lexer::lexIdentifier() {
 // 简化版
 LexToken
 Lexer::lexBlock() {
-    int start = _cur + 1 ;
+    int start = _cur + 1;
     int count = 0;
     _cur++; // skip first "
     for (; _cur < _size; _cur++) {
@@ -149,7 +147,7 @@ Lexer::lexBlock() {
     strncpy(p, _buf + start, count);
     p[count] = '\0';
 
-    LexToken token = new LexTokenData{ Tok::t_block, p };
+    LexToken token = new LexTokenData(t_block, p);
     delete[] p;
 
     return token;
@@ -174,13 +172,13 @@ Lexer::lexPiont() {
     strncpy(p, _buf + start, count);
     p[count] = '\0';
 
-    LexToken token = new LexTokenData{ Tok::t_block, p };
+    LexToken token = new LexTokenData(t_block, p);
     delete[] p;
 
     if ("@token" == token->value) {
-        token->tok = Tok::t_token;
+        token->tok = t_token;
     } else if ("@type" == token->value) {
-        token->tok = Tok::t_type;
+        token->tok = t_type;
     } else {
         token->tok = unknown;
     }
@@ -189,19 +187,19 @@ Lexer::lexPiont() {
 
 LexToken
 Lexer::lexSign() {
-    Tok tok = Tok::t_sign;
+    yytokentype tok = t_sign;
 
     if (strncmp(_buf + _cur, "%code", 5) == 0) {
-        tok = Tok::t_code;
+        tok = t_code;
         _cur += 5;
     } else if (strncmp(_buf + _cur, "%union", 6) == 0) {
-        tok = Tok::t_union;
+        tok = t_union;
         _cur += 6;
     } else {
         _cur++;
     }
 
-    LexToken token = new LexTokenData{ tok };
+    LexToken token = new LexTokenData(tok);
 
     return token;
 }

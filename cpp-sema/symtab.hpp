@@ -28,18 +28,21 @@ typedef SymbolData* Symbol;
 class Symtab {
 public:
     static std::map<std::string, Symbol> _data;
+    static Symbol epsilon;
+    static Symbol eof;
 
 public:
     static int nsym;
-    static int nnterm;
-    static int ntoken;
+    static int nnterm();
+    static int ntoken();
 
 public:
     Symtab();
     ~Symtab();
     static void Init();
     static Symbol SymbolNew(std::string name);
-    static Symbol SymbolGet(std::string name);
+    static int GetId(std::string name);
+    static std::string GetName(int id);
     static void Print(void);
 };
 

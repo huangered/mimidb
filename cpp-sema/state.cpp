@@ -1,4 +1,4 @@
-#include "sema.hpp"
+#include "state.hpp"
 #include <algorithm>
 
 StateData::StateData(int id)
@@ -55,4 +55,41 @@ StateData::MatchRule(const RuleList& rules1) {
 int
 StateData::GetId() {
     return _id;
+}
+
+
+StateCollection::~StateCollection() {
+    for (State state : stateList) {
+        delete state;
+    }
+}
+
+int
+StateCollection::Size() {
+    return stateList.size();
+}
+
+bool
+StateCollection::IsEmpty(int stateId) {
+    return stateList[stateId]->GetRules().size() == 0;
+}
+
+void
+StateCollection::Add(State state) {
+    stateList.push_back(state);
+}
+
+void
+StateCollection::Add(int stateId, Rule rule) {
+    stateList[stateId]->Add(rule);
+}
+
+RuleList
+StateCollection::GetRules(int stateId) {
+    return stateList[stateId]->GetRules();
+}
+
+State
+StateCollection::GetState(int stateId) {
+    return stateList[stateId];
 }

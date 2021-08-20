@@ -26,10 +26,7 @@ public:
 
     std::string Name();
     void SetToken(LexToken token);
-    LexToken
-    GetToken() {
-        return _token;
-    }
+    LexToken GetToken();
 };
 
 class CodeNode : public NodeData {
@@ -83,7 +80,7 @@ class RuleNode : public NodeData {
 public:
     Node left;
     std::vector<Node>* right;
-    Node block;
+    std::string block;
 };
 
 

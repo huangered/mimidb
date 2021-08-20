@@ -13,7 +13,7 @@ main(int argc, char* argv[]) {
     CloseFile(f);
     
     Node a = yyparse(str);
-    printf("%s", a->Name().c_str());
+    printf("%s\n", a->Name().c_str());
     LexNode* lex = dynamic_cast<LexNode*>(a);
     std::map<std::string, std::string> typeMap = lex->GetTypeMap();
     std::vector<SimpleRule> rules              = lex->GetRules();
@@ -23,7 +23,7 @@ main(int argc, char* argv[]) {
     Parser parser2(rules);
     parser2.SetTypeMap(typeMap);
     parser2.GenerateParseTable();
-    // parser.GenerateCppCode("code.hpp");
+
     Output output2(&parser2);
     auto j = lex->GetCode();
     output2.SetCode(lex->GetCode());

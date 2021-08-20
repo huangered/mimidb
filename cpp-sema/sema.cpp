@@ -7,25 +7,7 @@
 
 static bool SemaTokenListLess(const SemaTokenList& left, const SemaTokenList& right);
 static std::string join(const SemaTokenList& v);
-static std::string join2(const std::vector<Tok>& v);
-
-std::ostream&
-operator<<(std::ostream& os, const RecordData& dt) {
-    if (dt.id == -1) {
-        os << "  ";
-        return os;
-    }
-    if (dt.acc) {
-        os << "acc";
-        return os;
-    }
-    if (dt.state) {
-        os << "s" << dt.id;
-    } else {
-        os << "r" << dt.id;
-    }
-    return os;
-}
+static std::string join2(const std::vector<int>& v);
 
 bool
 group_key::operator<(const group_key& g1) const {
@@ -41,41 +23,6 @@ group_key::operator<(const group_key& g1) const {
     return SemaTokenListLess(right, g1.right);
 }
 
-StateCollection::~StateCollection() {
-    for (State state : stateList) {
-        delete state;
-    }
-}
-
-int
-StateCollection::Size() {
-    return stateList.size();
-}
-
-bool
-StateCollection::IsEmpty(int stateId) {
-    return stateList[stateId]->GetRules().size() == 0;
-}
-
-void
-StateCollection::Add(State state) {
-    stateList.push_back(state);
-}
-
-void
-StateCollection::Add(int stateId, Rule rule) {
-    stateList[stateId]->Add(rule);
-}
-
-RuleList
-StateCollection::GetRules(int stateId) {
-    return stateList[stateId]->GetRules();
-}
-
-State
-StateCollection::GetState(int stateId) {
-    return stateList[stateId];
-}
 
 // end
 
@@ -97,7 +44,7 @@ Parser::Parser(const std::vector<SimpleRule>& rules)
     _rules[0]->root = true;
 
     Rule rule = _rules[0]->Clone();
-    rule->SetToken(Tok::Eof);
+    rule->SetToken(Symtab::eof->id);
     _stateList->Add(0, rule);
 }
 
@@ -135,7 +82,7 @@ Parser::GenerateParseTable(void) {
         for (Rule r : _stateList->GetRules(i)) {
             auto r_str = join(r->right);
             auto t_str = join2(r->tokens);
-            printf("%s => %s %s %d ", r->left->name, r_str.c_str(), t_str.c_str(), r->dot);
+            printf("%s => %s %s %d ", r->left->name.c_str(), r_str.c_str(), t_str.c_str(), r->dot);
 
             if (!r->IsDotEnd()) {
                 printf("next %d", r->next_state);
@@ -242,7 +189,7 @@ Parser::handleState(int stateId) {
 void
 Parser::generateTable(void) {
     _gotoTable   = std::unique_ptr<GotoTable>(new GotoTable(_stateList->Size(), Symtab::nsym));
-    _actionTable = std::unique_ptr<ActionTable>(new ActionTable(_stateList->Size(), Tok::NUM_TOKENS));
+    _actionTable = std::unique_ptr<ActionTable>(new ActionTable(_stateList->Size(), Symtab::ntoken()));
 
     for (int stateId{}; stateId < _stateList->Size(); stateId++) {
         for (Rule r : _stateList->GetRules(stateId)) {
@@ -252,7 +199,7 @@ Parser::generateTable(void) {
                 for (int ruleId{}; ruleId < _rules.size(); ruleId++) {
                     Rule c = _rules[ruleId];
                     if (c->left->id == r->left->id && SemaTokenListEqual(c->right, r->right)) {
-                        for (Tok token : r->GetTokens()) {
+                        for (int token : r->GetTokens()) {
                             _actionTable->AddRule(stateId, token, ruleId, r->root);
                         }
                     }
@@ -264,7 +211,7 @@ Parser::generateTable(void) {
                     _gotoTable->Add(stateId, token->id, r->next_state);
                 } else {
                     // update action
-                    _actionTable->Add(stateId, GetTokByName(token->name), r->next_state);
+                    _actionTable->Add(stateId, Symtab::GetId(token->name), r->next_state);
                 }
             }
         }
@@ -417,7 +364,7 @@ join(const SemaTokenList& v) {
             a += t->name;
             a += ",";
         } else {
-            a += GetTokByName(t->name);
+            a += Symtab::GetId(t->name);
             a += ",";
         }
     }
@@ -425,9 +372,9 @@ join(const SemaTokenList& v) {
 }
 
 std::string
-join2(const TokList& v) {
+join2(const std::vector<int>& v) {
     std::string a;
-    for (Tok t : v) {
+    for (int t : v) {
         a += t;
         a += ",";
     }

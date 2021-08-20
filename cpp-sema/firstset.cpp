@@ -1,5 +1,7 @@
-﻿#include "sema.hpp"
+﻿#include "FirstSet.hpp"
+#include "sema.hpp"
 #include "debug.hpp"
+#include "symtab.hpp"
 
 FirstSet::FirstSet(const std::vector<SimpleRule>& rules)
     : _rules{ rules } {
@@ -8,19 +10,19 @@ FirstSet::FirstSet(const std::vector<SimpleRule>& rules)
 TokList
 FirstSet::find(SemaTokenList tokens) {
     SemaToken t     = tokens[0];
-    std::set<Tok> r = _firstSet[t->id];
+    std::set<int> r = _firstSet[t->id];
 
     if (r.empty()) {
         return {};
     }
 
-    if (r.count(Tok::epsilon) > 0) {
+    if (r.count(Symtab::epsilon->id) > 0) {
         tokens.erase(tokens.begin());
         TokList q = Find(tokens, {});
         r.insert(q.begin(), q.end());
     }
 
-    r.erase(Tok::epsilon);
+    r.erase(Symtab::epsilon->id);
 
     return { r.begin(), r.end() };
 }
@@ -34,7 +36,7 @@ FirstSet::Find(const SemaTokenList& tokens, const TokList& extra) {
     if (c->sema) {
         return find(tokens);
     } else {
-        return { GetTokByName(c->name) };
+        return { Symtab::GetId(c->name) };
     }
 }
 
@@ -45,7 +47,7 @@ FirstSet::Gen() {
         count = 0;
 
         for (SimpleRule rule : _rules) {
-            std::set<Tok> tokSet;
+            std::set<int> tokSet;
             SemaToken left = rule->left;
 
             if (_firstSet.count(left->id) == 0) {
@@ -53,10 +55,10 @@ FirstSet::Gen() {
             }
 
             if (rule->right.empty()) {
-                tokSet.insert(Tok::epsilon);
+                tokSet.insert(Symtab::epsilon->id);
             } else {
                 if (!rule->right[0]->sema) {
-                    tokSet.insert(GetTokByName(rule->right[0]->name));
+                    tokSet.insert(Symtab::GetId(rule->right[0]->name));
                 } else {
                     SemaToken firstRight = rule->right[0];
                     if (_firstSet.count(firstRight->id) > 0) {
@@ -65,7 +67,7 @@ FirstSet::Gen() {
                     }
                 }
             }
-            for (Tok tok : tokSet) {
+            for (int tok : tokSet) {
                 if (_firstSet[left->id].count(tok) == 0) {
                     _firstSet[left->id].insert(tok);
                     count++;
@@ -82,7 +84,7 @@ FirstSet::Print() {
     printf("\nfirset: \n");
     for (auto entry = _firstSet.begin(); entry != _firstSet.end(); entry++) {
         printf("  %d =>", entry->first);
-        for (Tok i : entry->second) {
+        for (int i : entry->second) {
             printf("%d,", i);
         }
         printf("\n");

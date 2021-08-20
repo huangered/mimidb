@@ -5,17 +5,22 @@
 #include <string>
 #include <map>
 
-#include "TokenKinds.hpp"
-
 class LexTokenData {
 public:
-    Tok tok;
+    int tok;
     std::string value;
+
+    LexTokenData(int t) {
+        tok   = t;
+    }
+
+    LexTokenData(int t, std::string v) {
+        tok = t;
+        value = v;
+    }
 };
 
 typedef LexTokenData* LexToken;
-
-#define EndLexToken (new LexTokenData{ Eof, "eof" })
 
 struct LexerOption {
     bool skipWhiteSpace;

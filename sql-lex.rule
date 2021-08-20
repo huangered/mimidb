@@ -3,10 +3,15 @@
     #include <stack>
     #include <vector>
     #include <cstring>
-
-    #include "TokenKinds.hpp"
-    #include "sema.hpp"
+    
+    #include "node.hpp"
+    #include "symtab.hpp"
     using namespace std;
+
+    typedef std::vector<int> TokList;
+    
+    #define EndLexToken (new LexTokenData( Symtab::eof->id, "eof" ))
+
 }
 
 %union { 
@@ -14,8 +19,6 @@
     std::vector<Node>* list;
 }
 
-@token Eof
-@token whitespace
 @token t_token
 @token t_code
 @token t_colon
@@ -24,8 +27,6 @@
 @token t_union
 @token t_type
 @token t_type_type
-@token unknown
-@token epsilon
 @token t_sign
 
 %
@@ -58,14 +59,16 @@ RuleList : RuleList Rule { $0->push_back($1); $$ = $0; }
 RuleList : Rule { std::vector<Node>* vec = new std::vector<Node>(); vec->push_back($0); $$ = vec; }
 
 Rule : ID t_colon IdList t_block { $$ = makeRule($0, $2, $3); }
-Rule : ID t_colon IdList { $$ = makeRule($0, $2); }
+Rule : ID t_colon IdList         { $$ = makeRule($0, $2, nullptr); }
+Rule : ID t_colon                { $$ = makeRule($0, nullptr, nullptr); }
+Rule : ID t_colon t_block        { $$ = makeRule($0, nullptr, $2); }
 
 IdList : IdList ID { $0->push_back($1); $$ = $0; }
 IdList : ID { std::vector<Node>* vec = new std::vector<Node>(); vec->push_back($0); $$ = vec; }
 
 ID : t_identifier { }
 
-Other: t_block {}
+Other : t_block { }
 
 %
 
@@ -77,8 +80,6 @@ Node makeLex(Node codeNode, Node unionNode, std::vector<Node>* tokens, std::vect
 Node makeToken(Node token);
 
 Node makeRule(Node n, std::vector<Node>* l, Node m);
-
-Node makeRule(Node n, std::vector<Node>* l);
 
 Node makeType(Node typeNode, std::vector<Node>* nodes);
 

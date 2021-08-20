@@ -71,6 +71,8 @@ Output::writeHeaderFile() {
 
     writeUnion(fd);
    
+    writeTokEnum(fd);
+
     WriteFile(fd, "Node yyparse(const char* str);\n");    
         
     writeOther(fd);
@@ -128,13 +130,13 @@ Output::writerCppFile() {
     WriteFile(fd, "// init action table (state id, token id) -> (acc, state, id)\n");
     {
         char* a = new char[256];
-        sprintf(a, "const int action_table[%d][%d]={\n", parser->_stateList->Size(), Tok::NUM_TOKENS);
+        sprintf(a, "const int action_table[%d][%d]={\n", parser->_stateList->Size(), Symtab::ntoken());
         WriteFile(fd, a);
         delete[] a;
         // init data
         for (int i{ 0 }; i < parser->_stateList->Size(); i++) {
             WriteFile(fd, "{");
-            for (int j{ 0 }; j < Tok::NUM_TOKENS; j++) {
+            for (int j{ 0 }; j < Symtab::ntoken(); j++) {
                 Record record = parser->_actionTable->Find(i, j);
                 if (record != nullptr) {
 
@@ -181,9 +183,9 @@ Output::writerCppFile() {
     WriteFile(fd, "};\n");
 
     WriteFile(
-        fd, "static bool eatToken(std::stack<int>& states, std::stack<Item>& syms, std::stack<LexToken>& input, bool* "
+        fd, "static bool eatToken(std::stack<int>& states, std::stack<YYSTYPE>& syms, std::stack<LexToken>& input, bool* "
             "acc);\n");
-    WriteFile(fd, "static bool reduce(std::stack<int>& states, std::stack<Item>& syms, int r_id);\n");
+    WriteFile(fd, "static bool reduce(std::stack<int>& states, std::stack<YYSTYPE>& syms, int r_id);\n");
     
     WriteFile(fd, "\n");
 
@@ -193,16 +195,16 @@ Output::writerCppFile() {
     WriteFile(fd, "  LexToken t;\n");
     WriteFile(fd, "  std::vector<LexToken> data;\n");
     WriteFile(fd, "  while ((t = lexer.GetLexerToken()) != nullptr) {\n");
-    WriteFile(fd, "    if (t->tok != Tok::whitespace) {\n");
+    WriteFile(fd, "    if (t->tok != whitespace) {\n");
     WriteFile(fd, "      data.push_back(t);\n");
     WriteFile(fd, "    }\n");
     WriteFile(fd, "  }\n");
     WriteFile(fd, "  data.push_back(EndLexToken);\n");
     WriteFile(fd, "\n");
     // sema part
-    WriteFile(fd, "  Item item;\n");
+    WriteFile(fd, "  YYSTYPE item;\n");
     WriteFile(fd, "  std::stack<int> state_stack;\n");
-    WriteFile(fd, "  std::stack<Item> token_stack;\n");
+    WriteFile(fd, "  std::stack<YYSTYPE> token_stack;\n");
     WriteFile(fd, "  std::stack<LexToken> input_stack;\n");
     WriteFile(fd, " \n");
     WriteFile(fd, "  state_stack.push(0);\n");
@@ -236,7 +238,7 @@ Output::writerCppFile() {
 
     WriteFile(
         fd,
-        "bool\neatToken(std::stack<int> & states, std::stack<Item> & syms, std::stack<LexToken> & input, bool* acc) "
+        "bool\neatToken(std::stack<int> & states, std::stack<YYSTYPE> & syms, std::stack<LexToken> & input, bool* acc) "
         "{\n");
     WriteFile(fd, "  int curStateId = states.top();\n");
     WriteFile(fd, "  LexToken token = input.top();\n");
@@ -260,7 +262,7 @@ Output::writerCppFile() {
     WriteFile(fd, "\n");
     WriteFile(fd, "    if (r_state == true) {\n");
     WriteFile(fd, "      states.push(r_id);\n");
-    WriteFile(fd, "      Item it;\n");
+    WriteFile(fd, "      YYSTYPE it;\n");
     WriteFile(fd, "      it.node = new NodeData();\n");
     WriteFile(fd, "      it.node->SetToken(token);\n");
     WriteFile(fd, "      syms.push(it);\n");
@@ -275,11 +277,11 @@ Output::writerCppFile() {
 
     // reduce
 
-    WriteFile(fd, "bool\nreduce(std::stack<int> & states, std::stack<Item> & syms, int r_id) {\n");
+    WriteFile(fd, "bool\nreduce(std::stack<int> & states, std::stack<YYSTYPE> & syms, int r_id) {\n");
     WriteFile(fd, "    int child_num{rule_right_children_num_arr[r_id]};\n");
     WriteFile(fd, "    int rule_left_id{rule_left_id_arr[r_id]};\n");
-    WriteFile(fd, "    std::vector<Item> child(child_num);\n");
-    WriteFile(fd, "    Item item = syms.top();\n");
+    WriteFile(fd, "    std::vector<YYSTYPE> child(child_num);\n");
+    WriteFile(fd, "    YYSTYPE item = syms.top();\n");
 
     WriteFile(fd, "      for (int i{ 0 }; i < child_num; i++) {\n");
     WriteFile(fd, "        child.insert(child.begin(), syms.top());\n");
@@ -324,23 +326,33 @@ Output::writeCode(FILE* f) {
 }
 void
 Output::writeUnion(FILE* f) {
-    WriteFile(f, "union Item {\n");
+    WriteFile(f, "union YYSTYPE {\n");
     WriteFile(f, unionBlock.c_str());
     WriteFile(f, "};\n\n");
 }
 
 void
 Output::writeTokEnum(FILE* f) {
-
+    std::vector<Symbol> d;
     WriteFile(f, "enum yytokentype {\n");
     for (auto it = Symtab::_data.begin(); it != Symtab::_data.end(); it++) {
-        if (it->second->clazz == token) {
-            char* buf = new char[256];
-            sprintf(buf, "    %s = %d,\n", it->second->name.c_str(), it->second->id);
-            WriteFile(f, buf);
-            delete[] buf;
+        if (it->second->clazz == token && it->second->id > 1) {
+            d.push_back(it->second);
         }
+         
     }
+
+    std::sort(d.begin(), d.end(), [](Symbol l, Symbol r) -> bool { return l->id < r->id;
+        });
+
+    for (auto it = d.begin(); it != d.end(); it++) {
+
+        char* buf = new char[256];
+        sprintf(buf, "    %15s = %3d,\n", (*it)->name.c_str(), (*it)->id);
+        WriteFile(f, buf);
+        delete[] buf;
+    }
+
     WriteFile(f, "    };\n");
 }
 
