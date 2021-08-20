@@ -80,7 +80,7 @@ class RuleNode : public NodeData {
 public:
     Node left;
     std::vector<Node>* right;
-    Node block;
+    std::string block;
 };
 
 

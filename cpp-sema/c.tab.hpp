@@ -7,29 +7,28 @@
 #include <cstring>
 
 #include "node.hpp"
-
 using namespace std;
-union Item {
+union YYSTYPE {
 
     Node node;
     std::vector<Node>* list;
 };
 
-enum yytokentype : int
+enum yytokentype
 {
-    Eof          ,
-    whitespace   ,
-    t_token      ,
-    t_code       ,
-    t_colon      ,
-    t_identifier ,
-    t_block      ,
-    t_union      ,
-    t_type       ,
-    t_type_type  ,
-    unknown      ,
-    epsilon      ,
-    t_sign       ,
+    Eof          = 0,
+    whitespace   = 1,
+    t_token      = 2,
+    t_code       = 3,
+    t_colon      = 4,
+    t_identifier = 5,
+    t_block      = 6,
+    t_union      = 7,
+    t_type       = 8,
+    t_type_type  = 9,
+    unknown      = 10,
+    epsilon      = 11,
+    t_sign       = 12,
 };
 
 typedef std::vector<yytokentype> TokList;
@@ -42,8 +41,6 @@ Node makeLex(Node codeNode, Node unionNode, std::vector<Node>* tokens, std::vect
 Node makeToken(Node token);
 
 Node makeRule(Node n, std::vector<Node>* l, Node m);
-
-Node makeRule(Node n, std::vector<Node>* l);
 
 Node makeType(Node typeNode, std::vector<Node>* nodes);
 
