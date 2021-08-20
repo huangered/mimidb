@@ -79,7 +79,7 @@ Parser::Parser(const std::vector<SimpleRule>& rules)
     _rules[0]->root = true;
 
     Rule rule = _rules[0]->Clone();
-    rule->SetToken(Eof);
+    rule->SetToken(Symtab::eof->id);
     _stateList->Add(0, rule);
 }
 

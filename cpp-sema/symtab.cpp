@@ -4,6 +4,9 @@
 int Symtab::nsym = 0;
 
 std::map<std::string, Symbol> Symtab::_data;
+Symbol Symtab::epsilon;
+Symbol Symtab::eof;
+
 
 Symtab::Symtab() {
 }
@@ -13,16 +16,20 @@ Symtab::~Symtab() {
 
 void
 Symtab::Init() {
-    /*
-    Symbol epsilon = SymbolNew("$t_epsilon");
+    epsilon = SymbolNew("$t_epsilon");
     epsilon->clazz = token;
-    Symbol eof     = SymbolNew("%t_eof");
+    eof     = SymbolNew("$t_eof");
     eof->clazz     = token;
-    */
 }
 
 Symbol
 Symtab::SymbolNew(std::string name) {
+    if (name == "epsilon") {
+        return epsilon;
+    }
+    if (name == "Eof") {
+        return eof;
+    }
     if (_data.count(name) == 0) {
         Symbol symbol = new SymbolData{};
         symbol->name  = name;

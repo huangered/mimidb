@@ -28,6 +28,8 @@ typedef SymbolData* Symbol;
 class Symtab {
 public:
     static std::map<std::string, Symbol> _data;
+    static Symbol epsilon;
+    static Symbol eof;
 
 public:
     static int nsym;
