@@ -336,7 +336,7 @@ Output::writeTokEnum(FILE* f) {
     std::vector<Symbol> d;
     WriteFile(f, "enum yytokentype {\n");
     for (auto it = Symtab::_data.begin(); it != Symtab::_data.end(); it++) {
-        if (it->second->clazz == token /*&& it->second->id > 1*/) {
+        if (it->second->clazz == token && it->second->id > 1) {
             d.push_back(it->second);
         }
          

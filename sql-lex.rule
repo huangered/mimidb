@@ -5,6 +5,7 @@
     #include <cstring>
     
     #include "node.hpp"
+    #include "symtab.hpp"
     using namespace std;
 
     typedef std::vector<int> TokList;
@@ -18,7 +19,6 @@
     std::vector<Node>* list;
 }
 
-
 @token whitespace
 @token t_token
 @token t_code
@@ -28,9 +28,8 @@
 @token t_union
 @token t_type
 @token t_type_type
-@token unknown
-
 @token t_sign
+@token unknown
 
 %
 

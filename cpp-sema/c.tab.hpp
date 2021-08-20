@@ -7,11 +7,12 @@
 #include <cstring>
 
 #include "node.hpp"
+#include "symtab.hpp"
 using namespace std;
 
 typedef std::vector<int> TokList;
 
-#define EndLexToken (new LexTokenData(Eof, "eof"))
+#define EndLexToken (new LexTokenData(Symtab::eof->id, "eof"))
 
 union YYSTYPE {
 
@@ -21,19 +22,17 @@ union YYSTYPE {
 
 enum yytokentype
 {
-    Eof          = 0,
-    whitespace   = 1,
-    t_token      = 2,
-    t_code       = 3,
-    t_colon      = 4,
-    t_identifier = 5,
-    t_block      = 6,
-    t_union      = 7,
-    t_type       = 8,
-    t_type_type  = 9,
-    unknown      = 10,
-    epsilon      = 11,
-    t_sign       = 12,
+    whitespace   = 2,
+    t_token      = 3,
+    t_code       = 4,
+    t_colon      = 5,
+    t_identifier = 6,
+    t_block      = 7,
+    t_union      = 8,
+    t_type       = 9,
+    t_type_type  = 10,
+    t_sign       = 11,
+    unknown      = 12,
 };
 Node yyparse(const char* str);
 
