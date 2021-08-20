@@ -24,11 +24,19 @@ makeToken(Node token) {
 }
 
 Node
-makeRule(Node n, std::vector<Node>* l, Node m) {
+makeRule(Node leftNode, std::vector<Node>* rightList, Node blockNode) {
     RuleNode* n1 = new RuleNode();
-    n1->left     = n;
-    n1->right    = l;
-    n1->block    = m;
+    n1->left     = leftNode;
+    if (rightList == nullptr) {
+        n1->right = new std::vector<Node>();
+    } else {
+        n1->right = rightList;
+    }
+    if (blockNode == nullptr) {
+        n1->block = "";
+    } else {
+        n1->block = blockNode->GetToken()->value;
+    }
     return n1;
 }
 

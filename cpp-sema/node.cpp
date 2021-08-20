@@ -22,6 +22,11 @@ NodeData::SetToken(LexToken token) {
     _token = token;
 }
 
+LexToken
+NodeData::GetToken() {
+    return _token;
+}
+
 
 std::string
 LexNode::GetCode() {
@@ -56,7 +61,7 @@ LexNode::GetRules() {
         std::vector<Node>* rights = rn->right;
         SimpleRule rule           = new SimpleRuleData();
         rule->id                  = i++;
-        rule->funcBlock           = rn->block->GetToken()->value;
+        rule->funcBlock           = rn->block;
         // left node
         Symbol l_sym = Symtab::SymbolNew(left->GetToken()->value);
         l_sym->clazz = SymbolClass::nterm;
