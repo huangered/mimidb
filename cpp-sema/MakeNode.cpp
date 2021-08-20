@@ -6,8 +6,8 @@
 Node
 makeLex(Node codeNode, Node unionNode, std::vector<Node>* tokens, std::vector<Node>* types, std::vector<Node>* rules, Node other) {
     LexNode* n   = new LexNode();
-    n->codeNode  = dynamic_cast<CodeNode*>(codeNode);
-    n->unionNode = dynamic_cast<UnionNode*>(unionNode);
+    n->codeNode  = dynamic_cast<CodeNode*>(codeNode)->block->GetToken()->value;
+    n->unionNode = dynamic_cast<UnionNode*>(unionNode)->block->GetToken()->value;
     n->tokens    = tokens;
     n->types     = types;
     n->rules     = rules;
@@ -37,12 +37,6 @@ makeRule(Node leftNode, std::vector<Node>* rightList, Node blockNode) {
     } else {
         n1->block = blockNode->GetToken()->value;
     }
-    return n1;
-}
-
-Node
-makeRule(Node n, std::vector<Node>* l) {
-    Node n1 = new RuleNode();
     return n1;
 }
 

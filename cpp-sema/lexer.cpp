@@ -179,9 +179,7 @@ Lexer::lexPiont() {
         token->tok = t_token;
     } else if ("@type" == token->value) {
         token->tok = t_type;
-    } else {
-        token->tok = unknown;
-    }
+    } 
     return token;
 }
 

@@ -5,16 +5,13 @@
     #include <cstring>
     
     #include "node.hpp"
-    #include "symtab.hpp"
     using namespace std;
-  
-    #define EndLexToken (new LexTokenData( Symtab::eof->id, "eof" ))
-
 }
 
 %union { 
     Node node;
     std::vector<Node>* list;
+    char* str;
 }
 
 @token t_token
@@ -26,6 +23,8 @@
 @token t_type
 @token t_type_type
 @token t_sign
+@token t_less
+@token t_greater
 
 %
 
