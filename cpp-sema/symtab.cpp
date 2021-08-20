@@ -13,10 +13,12 @@ Symtab::~Symtab() {
 
 void
 Symtab::Init() {
+    /*
     Symbol epsilon = SymbolNew("$t_epsilon");
     epsilon->clazz = token;
     Symbol eof     = SymbolNew("%t_eof");
     eof->clazz     = token;
+    */
 }
 
 Symbol

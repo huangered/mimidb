@@ -8,7 +8,7 @@ private:
     std::vector<SimpleRule> _rules;
 
     // <sema token id, tok id>
-    std::map<int, std::set<Tok>> _firstSet;
+    std::map<int, std::set<yytokentype>> _firstSet;
 
 public:
     FirstSet(const std::vector<SimpleRule>& rules);

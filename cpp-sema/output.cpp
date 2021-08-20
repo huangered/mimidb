@@ -130,13 +130,13 @@ Output::writerCppFile() {
     WriteFile(fd, "// init action table (state id, token id) -> (acc, state, id)\n");
     {
         char* a = new char[256];
-        sprintf(a, "const int action_table[%d][%d]={\n", parser->_stateList->Size(), NUM_TOKENS);
+        sprintf(a, "const int action_table[%d][%d]={\n", parser->_stateList->Size(), Symtab::ntoken());
         WriteFile(fd, a);
         delete[] a;
         // init data
         for (int i{ 0 }; i < parser->_stateList->Size(); i++) {
             WriteFile(fd, "{");
-            for (int j{ 0 }; j < NUM_TOKENS; j++) {
+            for (int j{ 0 }; j < Symtab::ntoken(); j++) {
                 Record record = parser->_actionTable->Find(i, j);
                 if (record != nullptr) {
 
@@ -336,7 +336,7 @@ Output::writeTokEnum(FILE* f) {
     std::vector<Symbol> d;
     WriteFile(f, "enum yytokentype {\n");
     for (auto it = Symtab::_data.begin(); it != Symtab::_data.end(); it++) {
-        if (it->second->clazz == token && it->second->id > 1) {
+        if (it->second->clazz == token /*&& it->second->id > 1*/) {
             d.push_back(it->second);
         }
          

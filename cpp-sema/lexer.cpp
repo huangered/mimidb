@@ -1,5 +1,6 @@
 ﻿#include "lexer.hpp"
 #include <cstring>
+#include "c.tab.hpp"
 
 static bool
 isCharacter(char c) {
@@ -27,7 +28,7 @@ Lexer::GetLexerToken() {
     if (_cur >= _size) {
         return nullptr;
     }
-    Tok tok{ unknown };
+    yytokentype tok{ unknown };
     char Char = _buf[_cur];
 
     switch (Char) {
@@ -189,7 +190,7 @@ Lexer::lexPiont() {
 
 LexToken
 Lexer::lexSign() {
-    Tok tok = t_sign;
+    yytokentype tok = t_sign;
 
     if (strncmp(_buf + _cur, "%code", 5) == 0) {
         tok = t_code;
