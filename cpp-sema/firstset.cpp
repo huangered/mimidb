@@ -16,13 +16,13 @@ FirstSet::find(SemaTokenList tokens) {
         return {};
     }
 
-    if (r.count(epsilon) > 0) {
+    if (r.count(Symtab::epsilon->id) > 0) {
         tokens.erase(tokens.begin());
         TokList q = Find(tokens, {});
         r.insert(q.begin(), q.end());
     }
 
-    r.erase(epsilon);
+    r.erase(Symtab::epsilon->id);
 
     return { r.begin(), r.end() };
 }
@@ -55,7 +55,7 @@ FirstSet::Gen() {
             }
 
             if (rule->right.empty()) {
-                tokSet.insert(epsilon);
+                tokSet.insert(Symtab::epsilon->id);
             } else {
                 if (!rule->right[0]->sema) {
                     tokSet.insert(Symtab::GetId(rule->right[0]->name));

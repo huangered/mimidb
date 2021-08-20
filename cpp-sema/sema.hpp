@@ -79,8 +79,6 @@ public:
     int id;
 };
 
-std::ostream& operator<<(std::ostream& os, const RecordData& dt);
-
 typedef RecordData* Record;
 
 class Parser {

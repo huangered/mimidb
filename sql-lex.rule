@@ -9,7 +9,7 @@
 
     typedef std::vector<int> TokList;
     
-    #define EndLexToken (new LexTokenData( Eof, "eof" ))
+    #define EndLexToken (new LexTokenData( Symtab::eof->id, "eof" ))
 
 }
 
@@ -18,7 +18,7 @@
     std::vector<Node>* list;
 }
 
-@token Eof
+
 @token whitespace
 @token t_token
 @token t_code
@@ -29,7 +29,7 @@
 @token t_type
 @token t_type_type
 @token unknown
-@token epsilon
+
 @token t_sign
 
 %
