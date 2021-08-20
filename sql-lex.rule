@@ -19,7 +19,6 @@
     std::vector<Node>* list;
 }
 
-@token whitespace
 @token t_token
 @token t_code
 @token t_colon
@@ -29,7 +28,6 @@
 @token t_type
 @token t_type_type
 @token t_sign
-@token unknown
 
 %
 
