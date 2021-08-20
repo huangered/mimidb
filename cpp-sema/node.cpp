@@ -4,6 +4,7 @@
 #include "sema.hpp"
 
 NodeData::NodeData() {
+    _token = nullptr;
 }
 
 NodeData::~NodeData() {
@@ -30,12 +31,12 @@ NodeData::GetToken() {
 
 std::string
 LexNode::GetCode() {
-    return codeNode->block->GetToken()->value;
+    return codeNode;
 }
 
 std::string
 LexNode::GetUnion() {
-    return unionNode->block->GetToken()->value;
+    return unionNode;
 }
 
 std::map<std::string, std::string>
@@ -51,15 +52,15 @@ LexNode::GetTypeMap() {
     return _data;
 }
 
-std::vector<SimpleRule>
+std::vector<Rule>
 LexNode::GetRules() {
-    std::vector<SimpleRule> g;
+    std::vector<Rule> g;
     int i{ 0 };
     for (Node n : *rules) {
         RuleNode* rn              = dynamic_cast<RuleNode*>(n);
         Node left                 = rn->left;
         std::vector<Node>* rights = rn->right;
-        SimpleRule rule           = new SimpleRuleData();
+        Rule rule           = new RuleData();
         rule->id                  = i++;
         rule->funcBlock           = rn->block;
         // left node

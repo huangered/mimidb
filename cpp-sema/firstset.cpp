@@ -3,11 +3,11 @@
 #include "debug.hpp"
 #include "symtab.hpp"
 
-FirstSet::FirstSet(const std::vector<SimpleRule>& rules)
+FirstSet::FirstSet(const RuleList& rules)
     : _rules{ rules } {
 }
 
-TokList
+std::vector<int>
 FirstSet::find(SemaTokenList tokens) {
     SemaToken t     = tokens[0];
     std::set<int> r = _firstSet[t->id];
@@ -18,7 +18,7 @@ FirstSet::find(SemaTokenList tokens) {
 
     if (r.count(Symtab::epsilon->id) > 0) {
         tokens.erase(tokens.begin());
-        TokList q = Find(tokens, {});
+        std::vector<int> q = Find(tokens, {});
         r.insert(q.begin(), q.end());
     }
 
@@ -27,8 +27,8 @@ FirstSet::find(SemaTokenList tokens) {
     return { r.begin(), r.end() };
 }
 
-TokList
-FirstSet::Find(const SemaTokenList& tokens, const TokList& extra) {
+std::vector<int>
+FirstSet::Find(const SemaTokenList& tokens, const std::vector<int>& extra) {
     if (tokens.empty()) {
         return extra;
     }
@@ -46,7 +46,7 @@ FirstSet::Gen() {
     do {
         count = 0;
 
-        for (SimpleRule rule : _rules) {
+        for (Rule rule : _rules) {
             std::set<int> tokSet;
             SemaToken left = rule->left;
 

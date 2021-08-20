@@ -1,7 +1,6 @@
 #ifndef _rule_hpp_
 #define _rule_hpp_
 
-#include "c.tab.hpp"
 #include "node.hpp"
 #include <vector>
 #include <set>
@@ -10,7 +9,7 @@ class SemaTokenData;
 typedef SemaTokenData* SemaToken;
 typedef std::vector<SemaToken> SemaTokenList;
 
-class SimpleRuleData {
+class RuleData {
 public:
     int lineId;
     int id;
@@ -19,11 +18,11 @@ public:
     std::string funcBlock;
 };
 
-typedef SimpleRuleData* SimpleRule;
+typedef RuleData* Rule;
 
-SimpleRule make_rule(int id, SemaToken left, SemaTokenList right, std::string block);
+typedef std::vector<Rule> RuleList;
 
-class RuleData {
+class ItemData {
 public:
     int id;
     int dot;
@@ -33,7 +32,7 @@ public:
     SemaToken left;
     SemaTokenList right;
     // look ahead 检查
-    TokList tokens;
+    std::vector<int> tokens;
 
     std::string func_block;
 
@@ -46,18 +45,18 @@ public:
 
     void SetToken(int token);
 
-    void AppendTokens(TokList tokens);
+    void AppendTokens(std::vector<int> tokens);
 
-    RuleData* Clone();
+    ItemData* Clone();
 
-    TokList GetTokens();
+    std::vector<int> GetTokens();
 
-    void SetTokens(TokList tokens);
+    void SetTokens(std::vector<int> tokens);
 
-     bool operator==(const RuleData& other);
+    bool operator==(const ItemData& other);
 };
 
-typedef RuleData* Rule;
-typedef std::vector<Rule> RuleList;
+typedef ItemData* Item;
+typedef std::vector<Item> ItemList;
 
 #endif // !_rule_hpp_
