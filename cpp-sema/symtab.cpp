@@ -1,11 +1,11 @@
-#include "symtab.hpp"
+﻿#include "symtab.hpp"
 #include "debug.hpp"
 
 int Symtab::nsym = 0;
 
 std::map<std::string, Symbol> Symtab::_data;
-Symbol Symtab::epsilon;
-Symbol Symtab::eof;
+Symbol Symtab::epsilon = nullptr;
+Symbol Symtab::eof = nullptr;
 
 
 Symtab::Symtab() {
@@ -16,6 +16,7 @@ Symtab::~Symtab() {
 
 void
 Symtab::Init() {
+    // 系统内部保留符号
     epsilon = SymbolNew("$t_epsilon");
     epsilon->clazz = token;
     eof     = SymbolNew("$t_eof");
@@ -24,12 +25,6 @@ Symtab::Init() {
 
 Symbol
 Symtab::SymbolNew(std::string name) {
-    if (name == "epsilon") {
-        return epsilon;
-    }
-    if (name == "Eof") {
-        return eof;
-    }
     if (_data.count(name) == 0) {
         Symbol symbol = new SymbolData{};
         symbol->name  = name;
