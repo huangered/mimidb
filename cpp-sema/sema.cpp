@@ -23,7 +23,6 @@ group_key::operator<(const group_key& g1) const {
     return SemaTokenListLess(right, g1.right);
 }
 
-
 // end
 
 Parser::Parser(const std::vector<SimpleRule>& rules)
@@ -78,11 +77,11 @@ Parser::GenerateParseTable(void) {
             break;
         }
 
-        printf("state %d", i);
+        printf("state (%3d)\n", i);
         for (Rule r : _stateList->GetRules(i)) {
             auto r_str = join(r->right);
             auto t_str = join2(r->tokens);
-            printf("%s => %s %s %d ", r->left->name.c_str(), r_str.c_str(), t_str.c_str(), r->dot);
+            printf("     %s => %s [ %s ] (%d) ", r->left->name.c_str(), r_str.c_str(), t_str.c_str(), r->dot);
 
             if (!r->IsDotEnd()) {
                 printf("next %d", r->next_state);
@@ -364,7 +363,7 @@ join(const SemaTokenList& v) {
             a += t->name;
             a += ",";
         } else {
-            a += Symtab::GetId(t->name);
+            a += std::to_string(Symtab::GetId(t->name));
             a += ",";
         }
     }
@@ -375,7 +374,7 @@ std::string
 join2(const std::vector<int>& v) {
     std::string a;
     for (int t : v) {
-        a += t;
+        a += std::to_string(t);
         a += ",";
     }
     return a;
