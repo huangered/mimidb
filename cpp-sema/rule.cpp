@@ -1,54 +1,48 @@
 #include "rule.hpp"
 #include "sema.hpp"
 
-SimpleRule
-make_rule(int id, SemaToken left, SemaTokenList right, std::string block) {
-    SimpleRule rule = new SimpleRuleData{ 0, id, left, right , block};
-    return rule;
-}
-
 bool
-RuleData::IsDotEnd() {
+ItemData::IsDotEnd() {
     return dot == right.size();
 }
 
 SemaToken
-RuleData::GetTokenAfterDot() {
+ItemData::GetTokenAfterDot() {
     return right[dot];
 }
 
 SemaTokenList
-RuleData::GetStringAfterDot() {
+ItemData::GetStringAfterDot() {
     SemaTokenList t{ right.begin() + dot + 1, right.end() };
     return t;
 }
 
 void
-RuleData::SetToken(int token) {
+ItemData::SetToken(int token) {
     tokens.push_back(token);
     std::sort(tokens.begin(), tokens.end(), std::less<int>());
 }
 
 void
-RuleData::AppendTokens(TokList tokenList) {
+ItemData::AppendTokens(std::vector<int> tokenList) {
     tokens.insert(tokens.end(), tokenList.begin(), tokenList.end());
     std::sort(tokens.begin(), tokens.end(), std::less<int>());
 }
 
-TokList
-RuleData::GetTokens() {
+std::vector<int>
+ItemData::GetTokens() {
     return tokens;
 }
 
 void
-RuleData::SetTokens(TokList tokenList) {
+ItemData::SetTokens(std::vector<int> tokenList) {
     tokens.swap(tokenList);
     std::sort(tokens.begin(), tokens.end(), std::less<int>());
 }
 
-RuleData*
-RuleData::Clone() {
-    RuleData* rule   = new RuleData{};
+ItemData*
+ItemData::Clone() {
+    ItemData* rule   = new ItemData{};
     rule->id         = id;
     rule->left       = left;
     rule->right      = right;
@@ -60,7 +54,7 @@ RuleData::Clone() {
 }
 
 bool
-RuleData::operator==(const RuleData& other) {
+ItemData::operator==(const ItemData& other) {
     if (left->id != other.left->id) {
         return false;
     }

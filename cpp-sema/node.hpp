@@ -7,24 +7,26 @@
 #include <algorithm>
 #include "lexer.hpp"
 
+using std::string;
+
 class NodeData;
 
 typedef NodeData* Node;
 
-class SimpleRuleData;
+class RuleData;
 
-typedef SimpleRuleData* SimpleRule;
+typedef RuleData* Rule;
 
 class NodeData {
     LexToken _token;
-    std::string _name;
+    string _name;
 
 public:
     NodeData();
 
     virtual ~NodeData();
 
-    std::string Name();
+    string Name();
     void SetToken(LexToken token);
     LexToken GetToken();
 };
@@ -41,12 +43,12 @@ public:
 
 class TypeData : public NodeData {
 public:
-    std::string _type;
-    std::vector<std::string> _children;
+    string _type;
+    std::vector<string> _children;
 
 public:
     void
-    SetType(std::string type) {
+    SetType(string type) {
         _type = type;
     }
     void
@@ -59,28 +61,28 @@ class TokenData : public NodeData {};
 
 class LexNode : public NodeData {
 public:
-    UnionNode* unionNode;
-    CodeNode* codeNode;
+    string unionNode;
+    string codeNode;
     std::vector<Node>* tokens;
     std::vector<Node>* types;
     std::vector<Node>* rules;
-    std::string other;
+    string other;
 
 public:
-    std::string GetCode();
+    string GetCode();
 
-    std::string GetUnion();
+    string GetUnion();
 
-    std::map<std::string, std::string> GetTypeMap();
+    std::map<string, string> GetTypeMap();
 
-    std::vector<SimpleRule> GetRules();
+    std::vector<Rule> GetRules();
 };
 
 class RuleNode : public NodeData {
 public:
     Node left;
     std::vector<Node>* right;
-    std::string block;
+    string block;
 };
 
 

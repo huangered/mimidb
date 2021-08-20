@@ -199,7 +199,15 @@ Output::writerCppFile() {
     WriteFile(fd, "      data.push_back(t);\n");
     WriteFile(fd, "    }\n");
     WriteFile(fd, "  }\n");
-    WriteFile(fd, "  data.push_back(EndLexToken);\n");
+
+    {
+        char* a = new char[256];
+        sprintf(a, "LexToken end = new LexTokenData(%d);\n", Symtab::eof->id);
+
+        WriteFile(fd, a);
+        delete[] a;
+    }
+    WriteFile(fd, "  data.push_back(end);\n");
     WriteFile(fd, "\n");
     // sema part
     WriteFile(fd, "  YYSTYPE item;\n");
@@ -364,5 +372,6 @@ Output::writeMethods(FILE* f) {
 }
 void
 Output::writeOther(FILE* f) {
+    WriteFile(f, "// code part \n");
     WriteFile(f, other.c_str());
 }
