@@ -24,15 +24,15 @@ RuleData::GetStringAfterDot() {
 }
 
 void
-RuleData::SetToken(Tok token) {
+RuleData::SetToken(yytokentype token) {
     tokens.push_back(token);
-    std::sort(tokens.begin(), tokens.end(), std::less<Tok>());
+    std::sort(tokens.begin(), tokens.end(), std::less<yytokentype>());
 }
 
 void
 RuleData::AppendTokens(TokList tokenList) {
     tokens.insert(tokens.end(), tokenList.begin(), tokenList.end());
-    std::sort(tokens.begin(), tokens.end(), std::less<Tok>());
+    std::sort(tokens.begin(), tokens.end(), std::less<yytokentype>());
 }
 
 TokList
@@ -43,7 +43,7 @@ RuleData::GetTokens() {
 void
 RuleData::SetTokens(TokList tokenList) {
     tokens.swap(tokenList);
-    std::sort(tokens.begin(), tokens.end(), std::less<Tok>());
+    std::sort(tokens.begin(), tokens.end(), std::less<yytokentype>());
 }
 
 RuleData*

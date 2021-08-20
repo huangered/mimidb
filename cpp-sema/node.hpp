@@ -26,10 +26,7 @@ public:
 
     std::string Name();
     void SetToken(LexToken token);
-    LexToken
-    GetToken() {
-        return _token;
-    }
+    LexToken GetToken();
 };
 
 class CodeNode : public NodeData {

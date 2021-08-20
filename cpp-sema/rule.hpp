@@ -1,7 +1,7 @@
 #ifndef _rule_hpp_
 #define _rule_hpp_
 
-#include "lexer.hpp"
+#include "c.tab.hpp"
 #include "node.hpp"
 #include <vector>
 #include <set>
@@ -44,7 +44,7 @@ public:
 
     SemaTokenList GetStringAfterDot();
 
-    void SetToken(Tok token);
+    void SetToken(yytokentype token);
 
     void AppendTokens(TokList tokens);
 

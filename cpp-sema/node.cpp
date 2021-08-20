@@ -22,6 +22,11 @@ NodeData::SetToken(LexToken token) {
     _token = token;
 }
 
+LexToken
+NodeData::GetToken() {
+    return _token;
+}
+
 
 std::string
 LexNode::GetCode() {

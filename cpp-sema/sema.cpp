@@ -7,7 +7,7 @@
 
 static bool SemaTokenListLess(const SemaTokenList& left, const SemaTokenList& right);
 static std::string join(const SemaTokenList& v);
-static std::string join2(const std::vector<Tok>& v);
+static std::string join2(const std::vector<yytokentype>& v);
 
 std::ostream&
 operator<<(std::ostream& os, const RecordData& dt) {
@@ -242,7 +242,7 @@ Parser::handleState(int stateId) {
 void
 Parser::generateTable(void) {
     _gotoTable   = std::unique_ptr<GotoTable>(new GotoTable(_stateList->Size(), Symtab::nsym));
-    _actionTable = std::unique_ptr<ActionTable>(new ActionTable(_stateList->Size(), NUM_TOKENS));
+    _actionTable = std::unique_ptr<ActionTable>(new ActionTable(_stateList->Size(), Symtab::ntoken()));
 
     for (int stateId{}; stateId < _stateList->Size(); stateId++) {
         for (Rule r : _stateList->GetRules(stateId)) {
@@ -252,7 +252,7 @@ Parser::generateTable(void) {
                 for (int ruleId{}; ruleId < _rules.size(); ruleId++) {
                     Rule c = _rules[ruleId];
                     if (c->left->id == r->left->id && SemaTokenListEqual(c->right, r->right)) {
-                        for (Tok token : r->GetTokens()) {
+                        for (yytokentype token : r->GetTokens()) {
                             _actionTable->AddRule(stateId, token, ruleId, r->root);
                         }
                     }
@@ -264,7 +264,7 @@ Parser::generateTable(void) {
                     _gotoTable->Add(stateId, token->id, r->next_state);
                 } else {
                     // update action
-                    _actionTable->Add(stateId, GetTokByName(token->name), r->next_state);
+                    _actionTable->Add(stateId, Symtab::GetId(token->name), r->next_state);
                 }
             }
         }
@@ -417,7 +417,7 @@ join(const SemaTokenList& v) {
             a += t->name;
             a += ",";
         } else {
-            a += GetTokByName(t->name);
+            a += Symtab::GetId(t->name);
             a += ",";
         }
     }
@@ -427,7 +427,7 @@ join(const SemaTokenList& v) {
 std::string
 join2(const TokList& v) {
     std::string a;
-    for (Tok t : v) {
+    for (yytokentype t : v) {
         a += t;
         a += ",";
     }
