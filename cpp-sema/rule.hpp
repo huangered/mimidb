@@ -22,8 +22,6 @@ typedef RuleData* Rule;
 
 typedef std::vector<Rule> RuleList;
 
-Rule make_rule(int id, SemaToken left, SemaTokenList right, std::string block);
-
 class ItemData {
 public:
     int id;

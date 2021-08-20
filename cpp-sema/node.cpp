@@ -4,6 +4,7 @@
 #include "sema.hpp"
 
 NodeData::NodeData() {
+    _token = nullptr;
 }
 
 NodeData::~NodeData() {
@@ -30,12 +31,12 @@ NodeData::GetToken() {
 
 std::string
 LexNode::GetCode() {
-    return codeNode->block->GetToken()->value;
+    return codeNode;
 }
 
 std::string
 LexNode::GetUnion() {
-    return unionNode->block->GetToken()->value;
+    return unionNode;
 }
 
 std::map<std::string, std::string>

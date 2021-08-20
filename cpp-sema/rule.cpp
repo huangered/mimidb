@@ -1,12 +1,6 @@
 #include "rule.hpp"
 #include "sema.hpp"
 
-Rule
-make_rule(int id, SemaToken left, SemaTokenList right, std::string block) {
-    Rule rule = new RuleData{ 0, id, left, right , block};
-    return rule;
-}
-
 bool
 ItemData::IsDotEnd() {
     return dot == right.size();
