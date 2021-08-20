@@ -9,6 +9,15 @@ class LexTokenData {
 public:
     int tok;
     std::string value;
+
+    LexTokenData(int t) {
+        tok   = t;
+    }
+
+    LexTokenData(int t, std::string v) {
+        tok = t;
+        value = v;
+    }
 };
 
 typedef LexTokenData* LexToken;

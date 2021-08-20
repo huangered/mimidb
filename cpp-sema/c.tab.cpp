@@ -767,7 +767,7 @@ yyparse(const char* str) {
             data.push_back(t);
         }
     }
-    data.push_back(new LexTokenData{ Eof, "eof" });
+    data.push_back(EndLexToken);
 
     YYSTYPE item;
     std::stack<int> state_stack;

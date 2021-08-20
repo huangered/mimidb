@@ -6,6 +6,11 @@
     
     #include "node.hpp"
     using namespace std;
+
+    typedef std::vector<int> TokList;
+    
+    #define EndLexToken (new LexTokenData( Eof, "eof" ))
+
 }
 
 %union { 

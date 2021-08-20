@@ -8,6 +8,11 @@
 
 #include "node.hpp"
 using namespace std;
+
+typedef std::vector<int> TokList;
+
+#define EndLexToken (new LexTokenData(Eof, "eof"))
+
 union YYSTYPE {
 
     Node node;
@@ -30,9 +35,6 @@ enum yytokentype
     epsilon      = 11,
     t_sign       = 12,
 };
-
-typedef std::vector<int> TokList;
-
 Node yyparse(const char* str);
 
 Node makeLex(Node codeNode, Node unionNode, std::vector<Node>* tokens, std::vector<Node>* types,
