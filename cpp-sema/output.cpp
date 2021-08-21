@@ -102,7 +102,7 @@ Output::writerCppFile() {
     WriteFile(fd, "// init goto table (state id, sema id) -> (state id)\n");
     {
         char* a = new char[256];
-        sprintf(a, "const int goto_table[%d][%d]={\n", parser->_stateList->Size(), Symtab::nsym);
+        sprintf(a, "const int goto_table[%d][%d]={\n", parser->_stateList->Size(), Symtab::nsym - Symtab::ntoken());
         WriteFile(fd, a);
         delete[] a;
         // init data
@@ -319,7 +319,12 @@ Output::writerCppFile() {
 
     WriteFile(fd, "\n");
     WriteFile(fd, "    int curStateId = states.top();\n");
-    WriteFile(fd, "    int nextStateId = goto_table[curStateId][rule_left_id];\n");
+    {
+      char* a = new char[256];
+      sprintf(a, "    int nextStateId = goto_table[curStateId][rule_left_id - %d];\n", Symtab::ntoken());
+      WriteFile(fd, a);
+      delete[] a;
+    }
     WriteFile(fd, "    states.push(nextStateId);\n");
     WriteFile(fd, "    return true;\n");
     WriteFile(fd, "}\n");
