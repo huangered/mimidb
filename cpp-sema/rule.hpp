@@ -1,20 +1,17 @@
 #ifndef _rule_hpp_
 #define _rule_hpp_
 
-#include "node.hpp"
 #include <vector>
 #include <set>
-
-class SemaTokenData;
-typedef SemaTokenData* SemaToken;
-typedef std::vector<SemaToken> SemaTokenList;
+#include <string>
+#include "symtab.hpp"
 
 class RuleData {
 public:
     int lineId;
     int id;
-    SemaToken left;
-    SemaTokenList right;
+    int left;
+    SymbolList right;
     std::string funcBlock;
 };
 
@@ -29,8 +26,8 @@ public:
     int next_state;
     bool root;
 
-    SemaToken left;
-    SemaTokenList right;
+    int left;
+    SymbolList right;
     // look ahead 检查
     std::vector<int> tokens;
 
@@ -39,9 +36,9 @@ public:
 public:
     bool IsDotEnd();
 
-    SemaToken GetTokenAfterDot();
+    Symbol GetTokenAfterDot();
 
-    SemaTokenList GetStringAfterDot();
+    SymbolList GetStringAfterDot();
 
     void SetToken(int token);
 

@@ -52,7 +52,7 @@ ReadFile(FILE* f) {
 void
 WriteFile(FILE* f, const char* buf) {
     int len = strlen(buf);
-    fprintf(f, buf);
+    fprintf(f, "%s", buf);
 }
 
 void
@@ -66,15 +66,15 @@ Output::writeHeaderFile() {
 
     WriteFile(fd, "#ifndef _c_tab_hpp_\n");
     WriteFile(fd, "#define _c_tab_hpp_\n");
-    
+
     writeCode(fd);
 
     writeUnion(fd);
-   
+
     writeTokEnum(fd);
 
-    WriteFile(fd, "Node yyparse(const char* str);\n");    
-        
+    WriteFile(fd, "Node yyparse(const char* str);\n");
+
     writeOther(fd);
 
     WriteFile(fd, "#endif\n");
@@ -87,9 +87,8 @@ Output::writerCppFile() {
     FILE* fd = OpenFile("c.tab.cpp", "w");
 
     WriteFile(fd, "#include \"c.tab.hpp\"\n");
-    
-    // writeTokEnum(fd);
 
+    // writeTokEnum(fd);
 
     WriteFile(fd, "\n");
     {
@@ -103,13 +102,13 @@ Output::writerCppFile() {
     WriteFile(fd, "// init goto table (state id, sema id) -> (state id)\n");
     {
         char* a = new char[256];
-        sprintf(a, "const int goto_table[%d][%d]={\n", parser->_stateList->Size(), Symtab::nsym);
+        sprintf(a, "const int goto_table[%d][%d]={\n", parser->_stateList->Size(), Symtab::nsym - Symtab::ntoken());
         WriteFile(fd, a);
         delete[] a;
         // init data
         for (int i{ 0 }; i < parser->_stateList->Size(); i++) {
             WriteFile(fd, "{");
-            for (int j{ 0 }; j < Symtab::nsym; j++) {
+            for (int j{ 0 }; j < Symtab::nsym - Symtab::ntoken(); j++) {
                 Record record = parser->_gotoTable->Find(i, j);
                 if (record != nullptr) {
                     char* a1 = new char[256];
@@ -175,7 +174,7 @@ Output::writerCppFile() {
     WriteFile(fd, "const int rule_left_id_arr[] = {");
     for (int rId{ 0 }; rId < parser->_rules.size(); rId++) {
         char* a = new char[256];
-        sprintf(a, "%d,", parser->_rules[rId]->left->id);
+        sprintf(a, "%d,", parser->_rules[rId]->left);
 
         WriteFile(fd, a);
         delete[] a;
@@ -183,10 +182,11 @@ Output::writerCppFile() {
     WriteFile(fd, "};\n");
 
     WriteFile(
-        fd, "static bool eatToken(std::stack<int>& states, std::stack<YYSTYPE>& syms, std::stack<LexToken>& input, bool* "
-            "acc);\n");
+        fd,
+        "static bool eatToken(std::stack<int>& states, std::stack<YYSTYPE>& syms, std::stack<LexToken>& input, bool* "
+        "acc);\n");
     WriteFile(fd, "static bool reduce(std::stack<int>& states, std::stack<YYSTYPE>& syms, int r_id);\n");
-    
+
     WriteFile(fd, "\n");
 
     WriteFile(fd, "Node\nyyparse(const char* str){\n");
@@ -195,9 +195,7 @@ Output::writerCppFile() {
     WriteFile(fd, "  LexToken t;\n");
     WriteFile(fd, "  std::vector<LexToken> data;\n");
     WriteFile(fd, "  while ((t = lexer.GetLexerToken()) != nullptr) {\n");
-    WriteFile(fd, "    if (t->tok != whitespace) {\n");
-    WriteFile(fd, "      data.push_back(t);\n");
-    WriteFile(fd, "    }\n");
+    WriteFile(fd, "    data.push_back(t);\n");
     WriteFile(fd, "  }\n");
 
     {
@@ -210,7 +208,7 @@ Output::writerCppFile() {
     WriteFile(fd, "  data.push_back(end);\n");
     WriteFile(fd, "\n");
     // sema part
-    WriteFile(fd, "  YYSTYPE item;\n");
+    WriteFile(fd, "  YYSTYPE item{};\n");
     WriteFile(fd, "  std::stack<int> state_stack;\n");
     WriteFile(fd, "  std::stack<YYSTYPE> token_stack;\n");
     WriteFile(fd, "  std::stack<LexToken> input_stack;\n");
@@ -321,7 +319,12 @@ Output::writerCppFile() {
 
     WriteFile(fd, "\n");
     WriteFile(fd, "    int curStateId = states.top();\n");
-    WriteFile(fd, "    int nextStateId = goto_table[curStateId][rule_left_id];\n");
+    {
+      char* a = new char[256];
+      sprintf(a, "    int nextStateId = goto_table[curStateId][rule_left_id - %d];\n", Symtab::ntoken());
+      WriteFile(fd, a);
+      delete[] a;
+    }
     WriteFile(fd, "    states.push(nextStateId);\n");
     WriteFile(fd, "    return true;\n");
     WriteFile(fd, "}\n");
@@ -347,11 +350,9 @@ Output::writeTokEnum(FILE* f) {
         if (it->second->clazz == token && it->second->id > 1) {
             d.push_back(it->second);
         }
-         
     }
 
-    std::sort(d.begin(), d.end(), [](Symbol l, Symbol r) -> bool { return l->id < r->id;
-        });
+    std::sort(d.begin(), d.end(), [](Symbol l, Symbol r) -> bool { return l->id < r->id; });
 
     for (auto it = d.begin(); it != d.end(); it++) {
 

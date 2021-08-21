@@ -6,14 +6,14 @@ ItemData::IsDotEnd() {
     return dot == right.size();
 }
 
-SemaToken
+Symbol
 ItemData::GetTokenAfterDot() {
     return right[dot];
 }
 
-SemaTokenList
+SymbolList
 ItemData::GetStringAfterDot() {
-    SemaTokenList t{ right.begin() + dot + 1, right.end() };
+    SymbolList t{ right.begin() + dot + 1, right.end() };
     return t;
 }
 
@@ -55,11 +55,11 @@ ItemData::Clone() {
 
 bool
 ItemData::operator==(const ItemData& other) {
-    if (left->id != other.left->id) {
+    if (left != other.left) {
         return false;
     }
 
-    if (!SemaTokenListEqual(right, other.right)) {
+    if (!SymbolListEqual(right, other.right)) {
         return false;
     }
 
