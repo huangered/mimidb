@@ -14,6 +14,8 @@
     char* str;
 }
 
+@param Node
+
 @token t_token
 @token t_code
 @token t_colon
@@ -25,18 +27,20 @@
 @token t_sign
 @token t_less
 @token t_greater
-
+@token t_param
 %
 
-@type node t_type t_type_type t_union t_code t_identifier t_colon t_block t_sign
-@type node Lex RuleList Rule ID Type Token Q Code Union Other
-@type list TokenList TypeList RuleList IdList
+@type <node> t_type t_type_type t_union t_code t_identifier t_colon t_block t_sign t_param
+@type <node> Lex RuleList Rule ID Type Token Q Code Union Other Param
+@type <list> TokenList TypeList RuleList IdList
 
 %
 
 Q : Lex { }
 
-Lex : Code Union TokenList t_sign TypeList t_sign RuleList t_sign Other { $$ = makeLex($0, $1, $2, $4, $6, $8 ); }
+Lex : Code Union Param TokenList t_sign TypeList t_sign RuleList t_sign Other { $$ = makeLex($0, $1, $2, $3, $5, $7, $9 ); }
+
+Param : t_param t_identifier { $$ = makeParam($1); }
 
 Code : t_code t_block { $$ = makeCode($1); }
 
@@ -50,7 +54,7 @@ Token : t_token t_identifier { $$ = makeToken($1); }
 TypeList : TypeList Type { $0->push_back($1); $$ = $0; }
 TypeList : Type { std::vector<Node>* vec = new std::vector<Node>(); vec->push_back($0); $$ = vec; }
 
-Type : t_type t_identifier IdList { $$ = makeType($1, $2); }
+Type : t_type t_less t_identifier t_greater IdList { $$ = makeType($2, $4); }
 
 RuleList : RuleList Rule { $0->push_back($1); $$ = $0; }
 RuleList : Rule { std::vector<Node>* vec = new std::vector<Node>(); vec->push_back($0); $$ = vec; }
@@ -71,7 +75,7 @@ Other : t_block { }
 
 {
 
-Node makeLex(Node codeNode, Node unionNode, std::vector<Node>* tokens, std::vector<Node>* types,
+Node makeLex(Node codeNode, Node unionNode, Node paramNode, std::vector<Node>* tokens, std::vector<Node>* types,
                     std::vector<Node>* rules, Node other);
 
 Node makeToken(Node token);
@@ -84,4 +88,5 @@ Node makeCode(Node block);
 
 Node makeUnion(Node block);
 
+Node makeParam(Node param);
 }

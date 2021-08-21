@@ -7,13 +7,12 @@
 #include <cstring>
 
 #include "node.hpp"
-
 using namespace std;
-
 union YYSTYPE {
 
     Node node;
     std::vector<Node>* list;
+    char* str;
 };
 
 enum yytokentype
@@ -27,11 +26,14 @@ enum yytokentype
     t_type       = 8,
     t_type_type  = 9,
     t_sign       = 10,
+    t_less       = 11,
+    t_greater    = 12,
+    t_param      = 13,
 };
 Node yyparse(const char* str);
 // code part
 
-Node makeLex(Node codeNode, Node unionNode, std::vector<Node>* tokens, std::vector<Node>* types,
+Node makeLex(Node codeNode, Node unionNode, Node paramNode, std::vector<Node>* tokens, std::vector<Node>* types,
              std::vector<Node>* rules, Node other);
 
 Node makeToken(Node token);
@@ -44,4 +46,5 @@ Node makeCode(Node block);
 
 Node makeUnion(Node block);
 
+Node makeParam(Node param);
 #endif
