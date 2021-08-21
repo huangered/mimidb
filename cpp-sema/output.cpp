@@ -66,15 +66,15 @@ Output::writeHeaderFile() {
 
     WriteFile(fd, "#ifndef _c_tab_hpp_\n");
     WriteFile(fd, "#define _c_tab_hpp_\n");
-    
+
     writeCode(fd);
 
     writeUnion(fd);
-   
+
     writeTokEnum(fd);
 
-    WriteFile(fd, "Node yyparse(const char* str);\n");    
-        
+    WriteFile(fd, "Node yyparse(const char* str);\n");
+
     writeOther(fd);
 
     WriteFile(fd, "#endif\n");
@@ -87,9 +87,8 @@ Output::writerCppFile() {
     FILE* fd = OpenFile("c.tab.cpp", "w");
 
     WriteFile(fd, "#include \"c.tab.hpp\"\n");
-    
-    // writeTokEnum(fd);
 
+    // writeTokEnum(fd);
 
     WriteFile(fd, "\n");
     {
@@ -175,7 +174,7 @@ Output::writerCppFile() {
     WriteFile(fd, "const int rule_left_id_arr[] = {");
     for (int rId{ 0 }; rId < parser->_rules.size(); rId++) {
         char* a = new char[256];
-        sprintf(a, "%d,", parser->_rules[rId]->left->id);
+        sprintf(a, "%d,", parser->_rules[rId]->left);
 
         WriteFile(fd, a);
         delete[] a;
@@ -183,10 +182,11 @@ Output::writerCppFile() {
     WriteFile(fd, "};\n");
 
     WriteFile(
-        fd, "static bool eatToken(std::stack<int>& states, std::stack<YYSTYPE>& syms, std::stack<LexToken>& input, bool* "
-            "acc);\n");
+        fd,
+        "static bool eatToken(std::stack<int>& states, std::stack<YYSTYPE>& syms, std::stack<LexToken>& input, bool* "
+        "acc);\n");
     WriteFile(fd, "static bool reduce(std::stack<int>& states, std::stack<YYSTYPE>& syms, int r_id);\n");
-    
+
     WriteFile(fd, "\n");
 
     WriteFile(fd, "Node\nyyparse(const char* str){\n");
@@ -345,11 +345,9 @@ Output::writeTokEnum(FILE* f) {
         if (it->second->clazz == token && it->second->id > 1) {
             d.push_back(it->second);
         }
-         
     }
 
-    std::sort(d.begin(), d.end(), [](Symbol l, Symbol r) -> bool { return l->id < r->id;
-        });
+    std::sort(d.begin(), d.end(), [](Symbol l, Symbol r) -> bool { return l->id < r->id; });
 
     for (auto it = d.begin(); it != d.end(); it++) {
 

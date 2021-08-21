@@ -5,8 +5,8 @@
 #include "debug.hpp"
 #include "symtab.hpp"
 
-static bool SemaTokenListLess(const SemaTokenList& left, const SemaTokenList& right);
-static std::string join(const SemaTokenList& v);
+static bool SymbolListLess(const SymbolList& left, const SymbolList& right);
+static std::string join(const SymbolList& v);
 static std::string join2(const std::vector<int>& v);
 
 bool
@@ -20,7 +20,7 @@ group_key::operator<(const group_key& g1) const {
         return i < 0 ? true : false;
     }
 
-    return SemaTokenListLess(right, g1.right);
+    return SymbolListLess(right, g1.right);
 }
 
 // end
@@ -80,7 +80,7 @@ Parser::GenerateParseTable(void) {
         for (Item r : _stateList->GetRules(i)) {
             auto r_str = join(r->right);
             auto t_str = join2(r->tokens);
-            printf("     %s => %s [ %s ] (%d) ", r->left->name.c_str(), r_str.c_str(), t_str.c_str(), r->dot);
+            printf("     %d => %s [ %s ] (%d) ", r->left, r_str.c_str(), t_str.c_str(), r->dot);
 
             if (!r->IsDotEnd()) {
                 printf("next %d", r->next_state);
@@ -137,16 +137,16 @@ Parser::handleState(int stateId) {
     // 1. 扩展规则
     expandRules(state);
     // 2. 构建新状态
-    std::map<int, SemaToken> tokens;
+    std::map<int, Symbol> tokens;
     for (Item rule : state->GetItems()) {
         if (!rule->IsDotEnd()) {
-            SemaToken token   = rule->GetTokenAfterDot();
+            Symbol token      = rule->GetTokenAfterDot();
             tokens[token->id] = token;
         }
     }
 
     for (auto iter = tokens.begin(); iter != tokens.end(); iter++) {
-        SemaToken token = iter->second;
+        Symbol token = iter->second;
 
         ItemList movedRules;
         ItemList newStateRules;
@@ -196,20 +196,20 @@ Parser::generateTable(void) {
                 // add r1 in action
                 for (int ruleId{}; ruleId < _rules.size(); ruleId++) {
                     Item c = _rules[ruleId];
-                    if (c->left->id == r->left->id && SemaTokenListEqual(c->right, r->right)) {
+                    if (c->left == r->left && SymbolListEqual(c->right, r->right)) {
                         for (int token : r->GetTokens()) {
                             _actionTable->AddRule(stateId, token, ruleId, r->root);
                         }
                     }
                 }
             } else {
-                SemaToken token = r->right[r->dot];
-                if (token->sema) {
+                Symbol token = r->right[r->dot];
+                if (token->clazz == nterm) {
                     // update goto
                     _gotoTable->Add(stateId, token->id, r->next_state);
                 } else {
                     // update action
-                    _actionTable->Add(stateId, Symtab::GetId(token->name), r->next_state);
+                    _actionTable->Add(stateId, token->id, r->next_state);
                 }
             }
         }
@@ -231,15 +231,15 @@ Parser::expandRules(State state) {
             if (r->IsDotEnd()) {
                 continue;
             }
-            SemaToken word = r->GetTokenAfterDot();
-            if (word->sema) {
+            Symbol word = r->GetTokenAfterDot();
+            if (word->clazz == nterm) {
                 // non terminals
                 // update state list
-                auto rule_left_id_eq = [word](Item rule) -> bool { return rule->left->id == word->id; };
+                auto rule_left_id_eq = [word](Item rule) -> bool { return rule->left == word->id; };
                 ItemList match;
                 find_all(_rules, match, rule_left_id_eq);
                 for (Item rule : match) {
-                    SemaTokenList tokenList = r->GetStringAfterDot();
+                    SymbolList tokenList    = r->GetStringAfterDot();
                     std::vector<int> tokens = _firstSet->Find(tokenList, r->GetTokens());
                     // todo: 这里可以优化这个lazy clone
                     Item copy = rule->Clone();
@@ -273,7 +273,7 @@ Parser::expandRules(State state) {
     // 合并 state 里的 rules
     for (Item rule : state->GetItems()) {
         auto check_exist = [rule](Item r) -> bool {
-            return r->dot == rule->dot && r->left->id == rule->left->id && SemaTokenListEqual(r->right, rule->right);
+            return r->dot == rule->dot && r->left == rule->left && SymbolListEqual(r->right, rule->right);
         };
 
         auto iter = std::find_if(tmp.begin(), tmp.end(), check_exist);
@@ -321,7 +321,7 @@ Parser::reduce(std::stack<int>& states, std::stack<Node>& syms, const Record rec
         // find goto table
         int curStateId = states.top();
 
-        int nextStateId = _gotoTable->Find(curStateId, rule->left->id)->id;
+        int nextStateId = _gotoTable->Find(curStateId, rule->left)->id;
         states.push(nextStateId);
         return true;
     }
@@ -355,10 +355,10 @@ Parser::eatToken(std::stack<int>& states, std::stack<Node>& syms, std::stack<Lex
 }
 
 std::string
-join(const SemaTokenList& v) {
+join(const SymbolList& v) {
     std::string a;
-    for (SemaToken t : v) {
-        if (t->sema) {
+    for (Symbol t : v) {
+        if (t->clazz == nterm) {
             a += t->name;
             a += ",";
         } else {
@@ -380,7 +380,7 @@ join2(const std::vector<int>& v) {
 }
 
 bool
-SemaTokenListEqual(const SemaTokenList& left, const SemaTokenList& right) {
+SymbolListEqual(const SymbolList& left, const SymbolList& right) {
     if (left.size() != right.size()) {
         return false;
     }
@@ -395,7 +395,7 @@ SemaTokenListEqual(const SemaTokenList& left, const SemaTokenList& right) {
 }
 
 bool
-SemaTokenListLess(const SemaTokenList& left, const SemaTokenList& right) {
+SymbolListLess(const SymbolList& left, const SymbolList& right) {
     int i{ 0 };
 
     if ((i = left.size() - right.size()) != 0) {
@@ -427,7 +427,7 @@ Parser::funcReplace(const Item rule) {
     }
     std::size_t pos;
 
-    std::string name = rule->left->name;
+    std::string name = Symtab::GetName(rule->left);
 
     while ((pos = tmp.find("$$")) != std::string::npos) {
         name = "item." + this->_typeMap[name];

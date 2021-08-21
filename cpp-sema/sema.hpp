@@ -16,26 +16,15 @@
 #include <iostream>
 #include <memory>
 
-class SemaTokenData {
-public:
-    int id;
-    bool sema;
-    std::string name;
-};
-
-typedef SemaTokenData* SemaToken;
-typedef std::vector<SemaToken> SemaTokenList;
-
-bool SemaTokenListEqual(const SemaTokenList& left, const SemaTokenList& right);
+// bool SemaTokenListEqual(const SemaTokenList& left, const SemaTokenList& right);
 
 struct group_key {
     int dot;
-    SemaToken left;
-    SemaTokenList right;
+    Symbol left;
+    SymbolList right;
 
     bool operator<(const group_key& other) const;
 };
-
 
 class RecordData {
 public:
