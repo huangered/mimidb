@@ -28,11 +28,12 @@ enum yytokentype
     t_sign       = 10,
     t_less       = 11,
     t_greater    = 12,
+    t_param      = 13,
 };
 Node yyparse(const char* str);
 // code part
 
-Node makeLex(Node codeNode, Node unionNode, std::vector<Node>* tokens, std::vector<Node>* types,
+Node makeLex(Node codeNode, Node unionNode, Node paramNode, std::vector<Node>* tokens, std::vector<Node>* types,
              std::vector<Node>* rules, Node other);
 
 Node makeToken(Node token);
@@ -45,4 +46,5 @@ Node makeCode(Node block);
 
 Node makeUnion(Node block);
 
+Node makeParam(Node param);
 #endif

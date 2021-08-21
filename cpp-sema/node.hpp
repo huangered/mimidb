@@ -41,6 +41,11 @@ public:
     Node block;
 };
 
+class ParamNode : public NodeData {
+public:
+    std::string param;
+};
+
 class TypeData : public NodeData {
 public:
     string _type;
@@ -63,6 +68,7 @@ class LexNode : public NodeData {
 public:
     string unionNode;
     string codeNode;
+    string param;
     std::vector<Node>* tokens;
     std::vector<Node>* types;
     std::vector<Node>* rules;
@@ -84,6 +90,5 @@ public:
     std::vector<Node>* right;
     string block;
 };
-
 
 #endif
