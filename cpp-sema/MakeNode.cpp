@@ -1,18 +1,29 @@
 #include "c.tab.hpp"
-#include "rule.hpp"
-#include "sema.hpp"
 #include "symtab.hpp"
+#include "debug.hpp"
 
 Node
-makeLex(Node codeNode, Node unionNode, std::vector<Node>* tokens, std::vector<Node>* types, std::vector<Node>* rules, Node other) {
+makeLex(Node codeNode, Node unionNode, Node paramNode, std::vector<Node>* tokens, std::vector<Node>* types,
+        std::vector<Node>* rules, Node other) {
     LexNode* n   = new LexNode();
     n->codeNode  = dynamic_cast<CodeNode*>(codeNode)->block->GetToken()->value;
     n->unionNode = dynamic_cast<UnionNode*>(unionNode)->block->GetToken()->value;
     n->tokens    = tokens;
     n->types     = types;
+    n->param     = dynamic_cast<ParamNode*>(paramNode)->param;
     n->rules     = rules;
     n->other     = other->GetToken()->value;
     return n;
+}
+
+Node
+makeParam(Node param) {
+#ifdef _log_
+    printf("make param\n");
+#endif
+    ParamNode* node = new ParamNode();
+    node->param     = param->GetToken()->value;
+    return node;
 }
 
 Node
