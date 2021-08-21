@@ -108,7 +108,7 @@ Output::writerCppFile() {
         // init data
         for (int i{ 0 }; i < parser->_stateList->Size(); i++) {
             WriteFile(fd, "{");
-            for (int j{ 0 }; j < Symtab::nsym; j++) {
+            for (int j{ 0 }; j < Symtab::nsym - Symtab::ntoken(); j++) {
                 Record record = parser->_gotoTable->Find(i, j);
                 if (record != nullptr) {
                     char* a1 = new char[256];

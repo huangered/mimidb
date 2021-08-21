@@ -51,16 +51,12 @@ public:
     ~Parser();
     void SetTypeMap(const std::map<std::string, std::string>& _typeMap);
     void GenerateParseTable(void);
-    std::pair<bool, Node> Parse(const std::vector<LexToken>& input);
 
 private:
     void handleState(int stateId);
     void generateTable(void);
     void expandRules(State state);
     State searchSameState(const ItemList& newStateRules);
-
-    bool reduce(std::stack<int>& states, std::stack<Node>& syms, const Record curRecord);
-    bool eatToken(std::stack<int>& states, std::stack<Node>& syms, std::stack<LexToken>& input, bool* acc);
 
     // code generate
     std::string funcReplace(const Item rule);
