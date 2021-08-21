@@ -76,7 +76,7 @@ Parser::GenerateParseTable(void) {
         if (_stateList->IsEmpty(i)) {
             break;
         }
-        printf("state %d", i);
+        printf("state %d\n", i);
         for (Item r : _stateList->GetRules(i)) {
             auto r_str = join(r->right);
             auto t_str = join2(r->tokens);
@@ -91,43 +91,6 @@ Parser::GenerateParseTable(void) {
     }
 #endif
     generateTable();
-}
-
-std::pair<bool, Node>
-Parser::Parse(const std::vector<LexToken>& input) {
-    bool acc{ false };
-    Node node{ nullptr };
-    // init stack
-    std::stack<int> state_stack;
-    std::stack<Node> token_stack;
-    std::stack<LexToken> input_stack;
-
-    state_stack.push(0);
-
-    for (auto iter = input.rbegin(); iter != input.rend(); iter++) {
-        input_stack.push(*iter);
-    }
-
-    while (!acc) {
-        bool op = eatToken(state_stack, token_stack, input_stack, &acc);
-
-        if (!op) {
-            std::cout << "no action" << std::endl;
-            break;
-        }
-    }
-    if (acc) {
-        node = token_stack.top();
-    } else {
-        while (!token_stack.empty()) {
-            node = token_stack.top();
-            token_stack.pop();
-            delete node;
-            node = nullptr;
-        }
-    }
-
-    return std::make_pair(acc, node);
 }
 
 // === private part ===
@@ -186,7 +149,7 @@ Parser::handleState(int stateId) {
 
 void
 Parser::generateTable(void) {
-    _gotoTable   = std::unique_ptr<GotoTable>(new GotoTable(_stateList->Size(), Symtab::nsym));
+    _gotoTable   = std::unique_ptr<GotoTable>(new GotoTable(_stateList->Size(), Symtab::nsym - Symtab::ntoken()));
     _actionTable = std::unique_ptr<ActionTable>(new ActionTable(_stateList->Size(), Symtab::ntoken()));
 
     for (int stateId{}; stateId < _stateList->Size(); stateId++) {
@@ -206,7 +169,7 @@ Parser::generateTable(void) {
                 Symbol token = r->right[r->dot];
                 if (token->clazz == nterm) {
                     // update goto
-                    _gotoTable->Add(stateId, token->id, r->next_state);
+                    _gotoTable->Add(stateId, token->id - Symtab::ntoken(), r->next_state);
                 } else {
                     // update action
                     _actionTable->Add(stateId, token->id, r->next_state);
@@ -298,60 +261,6 @@ Parser::searchSameState(const ItemList& newStateRules) {
         }
     }
     return nullptr;
-}
-
-/*
- *使用规则
- */
-bool
-Parser::reduce(std::stack<int>& states, std::stack<Node>& syms, const Record record) {
-    if (!record->state) {
-        Item rule = _rules[record->id];
-        std::vector<Node> child;
-        for (int i{ 0 }; i < rule->right.size(); i++) {
-            child.push_back(syms.top());
-            syms.pop();
-            states.pop();
-        }
-
-        Node node = nullptr;
-        // rule->Format(rule->left, child);
-        syms.push(node);
-
-        // find goto table
-        int curStateId = states.top();
-
-        int nextStateId = _gotoTable->Find(curStateId, rule->left)->id;
-        states.push(nextStateId);
-        return true;
-    }
-    return false;
-}
-
-bool
-Parser::eatToken(std::stack<int>& states, std::stack<Node>& syms, std::stack<LexToken>& input, bool* acc) {
-    int curStateId = states.top();
-    LexToken token = input.top();
-    Record record  = _actionTable->Find(curStateId, token->tok);
-    if (record != nullptr) {
-
-        if (record->acc) {
-            *acc = true;
-            return true;
-        }
-
-        if (record->state) {
-            states.push(record->id);
-            Node n = new NodeData();
-            n->SetToken(token);
-            syms.push(n);
-            input.pop();
-            return true;
-        } else {
-            return reduce(states, syms, record);
-        }
-    }
-    return false;
 }
 
 std::string
