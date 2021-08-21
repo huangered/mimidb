@@ -97,6 +97,12 @@ Lexer::GetLexerToken() {
         return lexBlock();
     case '@':
         return lexPiont();
+    case '<':
+        _cur++;
+        return new LexTokenData(t_less);
+    case '>':
+        _cur++;
+        return new LexTokenData(t_greater);
     }
 
     return nullptr;
@@ -179,7 +185,7 @@ Lexer::lexPiont() {
         token->tok = t_token;
     } else if ("@type" == token->value) {
         token->tok = t_type;
-    } 
+    }
     return token;
 }
 
