@@ -52,7 +52,7 @@ ReadFile(FILE* f) {
 void
 WriteFile(FILE* f, const char* buf) {
     int len = strlen(buf);
-    fprintf(f, buf);
+    fprintf(f, "%s", buf);
 }
 
 void
@@ -195,9 +195,7 @@ Output::writerCppFile() {
     WriteFile(fd, "  LexToken t;\n");
     WriteFile(fd, "  std::vector<LexToken> data;\n");
     WriteFile(fd, "  while ((t = lexer.GetLexerToken()) != nullptr) {\n");
-    WriteFile(fd, "    if (t->tok != whitespace) {\n");
-    WriteFile(fd, "      data.push_back(t);\n");
-    WriteFile(fd, "    }\n");
+    WriteFile(fd, "    data.push_back(t);\n");
     WriteFile(fd, "  }\n");
 
     {
@@ -210,7 +208,7 @@ Output::writerCppFile() {
     WriteFile(fd, "  data.push_back(end);\n");
     WriteFile(fd, "\n");
     // sema part
-    WriteFile(fd, "  YYSTYPE item;\n");
+    WriteFile(fd, "  YYSTYPE item{};\n");
     WriteFile(fd, "  std::stack<int> state_stack;\n");
     WriteFile(fd, "  std::stack<YYSTYPE> token_stack;\n");
     WriteFile(fd, "  std::stack<LexToken> input_stack;\n");
