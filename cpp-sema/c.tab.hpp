@@ -7,13 +7,12 @@
 #include <cstring>
 
 #include "node.hpp"
-
 using namespace std;
-
 union YYSTYPE {
 
     Node node;
     std::vector<Node>* list;
+    char* str;
 };
 
 enum yytokentype
@@ -27,6 +26,8 @@ enum yytokentype
     t_type       = 8,
     t_type_type  = 9,
     t_sign       = 10,
+    t_less       = 11,
+    t_greater    = 12,
 };
 Node yyparse(const char* str);
 // code part
