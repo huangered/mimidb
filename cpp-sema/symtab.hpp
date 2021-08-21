@@ -3,6 +3,7 @@
 
 #include <string>
 #include <map>
+#include <vector>
 
 enum SymbolClass
 {
@@ -24,6 +25,10 @@ struct SymbolData {
 };
 
 typedef SymbolData* Symbol;
+
+typedef std::vector<Symbol> SymbolList;
+
+bool SymbolListEqual(const SymbolList& l, const SymbolList& r);
 
 class Symtab {
 public:

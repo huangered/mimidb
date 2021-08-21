@@ -169,7 +169,7 @@ ActionTable::Print() {
         for (int i{ 0 }; i < _col; i++) {
             Record record = _data[stateId][i];
             if (record != nullptr) {
-	      printf("%4d", record->state ? record->id: -record->id);
+                printf("%4d", record->state ? record->id : -record->id);
             } else {
                 printf("    ");
             }

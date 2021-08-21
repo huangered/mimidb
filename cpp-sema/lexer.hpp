@@ -11,11 +11,11 @@ public:
     std::string value;
 
     LexTokenData(int t) {
-        tok   = t;
+        tok = t;
     }
 
     LexTokenData(int t, std::string v) {
-        tok = t;
+        tok   = t;
         value = v;
     }
 };
@@ -31,7 +31,6 @@ private:
     int _cur;
     int _size;
     const char* _buf;
-    
 
 public:
     Lexer(const char* buf, int size);

@@ -2,6 +2,8 @@
 #define _firstset_hpp_
 
 #include "rule.hpp"
+#include "symtab.hpp"
+#include <map>
 
 class FirstSet {
 private:
@@ -13,14 +15,14 @@ private:
 public:
     FirstSet(const std::vector<Rule>& rules);
 
-    std::vector<int> Find(const SemaTokenList& tokens, const std::vector<int>& extra);
+    std::vector<int> Find(const SymbolList& tokens, const std::vector<int>& extra);
 
     void Gen();
 
     void Print();
 
 private:
-    std::vector<int> find(SemaTokenList tokens);
+    std::vector<int> find(SymbolList tokens);
 };
 
 #endif

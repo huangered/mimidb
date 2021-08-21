@@ -2,14 +2,15 @@
 #include "sema.hpp"
 #include "debug.hpp"
 #include "symtab.hpp"
+#include <map>
 
 FirstSet::FirstSet(const RuleList& rules)
     : _rules{ rules } {
 }
 
 std::vector<int>
-FirstSet::find(SemaTokenList tokens) {
-    SemaToken t     = tokens[0];
+FirstSet::find(SymbolList tokens) {
+    Symbol t        = tokens[0];
     std::set<int> r = _firstSet[t->id];
 
     if (r.empty()) {
@@ -28,12 +29,12 @@ FirstSet::find(SemaTokenList tokens) {
 }
 
 std::vector<int>
-FirstSet::Find(const SemaTokenList& tokens, const std::vector<int>& extra) {
+FirstSet::Find(const SymbolList& tokens, const std::vector<int>& extra) {
     if (tokens.empty()) {
         return extra;
     }
-    SemaToken c = tokens[0];
-    if (c->sema) {
+    Symbol c = tokens[0];
+    if (c->clazz == nterm) {
         return find(tokens);
     } else {
         return { Symtab::GetId(c->name) };
@@ -48,19 +49,19 @@ FirstSet::Gen() {
 
         for (Rule rule : _rules) {
             std::set<int> tokSet;
-            SemaToken left = rule->left;
+            int left_id = rule->left;
 
-            if (_firstSet.count(left->id) == 0) {
-                _firstSet[left->id] = {};
+            if (_firstSet.count(left_id) == 0) {
+                _firstSet[left_id] = {};
             }
 
             if (rule->right.empty()) {
                 tokSet.insert(Symtab::epsilon->id);
             } else {
-                if (!rule->right[0]->sema) {
-                    tokSet.insert(Symtab::GetId(rule->right[0]->name));
+                if (rule->right[0]->clazz == token) {
+                    tokSet.insert(rule->right[0]->id);
                 } else {
-                    SemaToken firstRight = rule->right[0];
+                    Symbol firstRight = rule->right[0];
                     if (_firstSet.count(firstRight->id) > 0) {
                         auto tokens = _firstSet[firstRight->id];
                         tokSet.insert(tokens.begin(), tokens.end());
@@ -68,8 +69,8 @@ FirstSet::Gen() {
                 }
             }
             for (int tok : tokSet) {
-                if (_firstSet[left->id].count(tok) == 0) {
-                    _firstSet[left->id].insert(tok);
+                if (_firstSet[left_id].count(tok) == 0) {
+                    _firstSet[left_id].insert(tok);
                     count++;
                 }
             }
