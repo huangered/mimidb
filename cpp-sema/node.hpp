@@ -88,6 +88,11 @@ class RuleNode : public NodeData {
 public:
     Node left;
     std::vector<Node>* right;
+};
+
+class RuleRightNode : public NodeData {
+public:
+    std::vector<Node>* right;
     string block;
 };
 
