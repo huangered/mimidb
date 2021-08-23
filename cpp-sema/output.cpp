@@ -1,4 +1,5 @@
 ﻿#include "output.hpp"
+#include <cassert>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -32,6 +33,7 @@ Output::OutputFile(const char* filename) {
 FILE*
 OpenFile(const char* file, const char* mode) {
     FILE* f = fopen(file, mode);
+    assert(f);
     return f;
 }
 
@@ -183,9 +185,9 @@ Output::writerCppFile() {
 
     WriteFile(
         fd,
-        "static bool eatToken(std::stack<int>& states, std::stack<YYSTYPE>& syms, std::stack<LexToken>& input, bool* "
+        "static bool yyshift(std::stack<int>& states, std::stack<YYSTYPE>& syms, std::stack<LexToken>& input, bool* "
         "acc);\n");
-    WriteFile(fd, "static bool reduce(std::stack<int>& states, std::stack<YYSTYPE>& syms, int r_id);\n");
+    WriteFile(fd, "static bool yyreduce(std::stack<int>& states, std::stack<YYSTYPE>& syms, int r_id);\n");
 
     WriteFile(fd, "\n");
 
@@ -221,7 +223,7 @@ Output::writerCppFile() {
     WriteFile(fd, " \n");
     WriteFile(fd, " bool acc{};\n");
     WriteFile(fd, "  while (!acc) {\n");
-    WriteFile(fd, "    bool op = eatToken(state_stack, token_stack, input_stack, &acc);\n");
+    WriteFile(fd, "    bool op = yyshift(state_stack, token_stack, input_stack, &acc);\n");
     WriteFile(fd, " \n");
     WriteFile(fd, "    if (!op) {\n");
     WriteFile(fd, "      std::cout << \" no action \" << std::endl;\n");
@@ -240,11 +242,11 @@ Output::writerCppFile() {
     WriteFile(fd, "  return item.node;\n");
     WriteFile(fd, "}\n");
 
-    // eattoken
+    // yyshift
 
     WriteFile(
         fd,
-        "bool\neatToken(std::stack<int> & states, std::stack<YYSTYPE> & syms, std::stack<LexToken> & input, bool* acc) "
+        "bool\nyyshift(std::stack<int> & states, std::stack<YYSTYPE> & syms, std::stack<LexToken> & input, bool* acc) "
         "{\n");
     WriteFile(fd, "  int curStateId = states.top();\n");
     WriteFile(fd, "  LexToken token = input.top();\n");
@@ -275,15 +277,15 @@ Output::writerCppFile() {
     WriteFile(fd, "      input.pop();\n");
     WriteFile(fd, "      return true;\n");
     WriteFile(fd, "    } else {\n");
-    WriteFile(fd, "      return reduce(states, syms, r_id);\n");
+    WriteFile(fd, "      return yyreduce(states, syms, r_id);\n");
     WriteFile(fd, "    }\n");
     WriteFile(fd, "  }\n");
     WriteFile(fd, "  return false;\n");
     WriteFile(fd, "}\n ");
 
-    // reduce
+    // yyreduce
 
-    WriteFile(fd, "bool\nreduce(std::stack<int> & states, std::stack<YYSTYPE> & syms, int r_id) {\n");
+    WriteFile(fd, "bool\nyyreduce(std::stack<int> & states, std::stack<YYSTYPE> & syms, int r_id) {\n");
     WriteFile(fd, "    int child_num{rule_right_children_num_arr[r_id]};\n");
     WriteFile(fd, "    int rule_left_id{rule_left_id_arr[r_id]};\n");
     WriteFile(fd, "    std::vector<YYSTYPE> child(child_num);\n");

@@ -5,9 +5,16 @@
 #include "debug.hpp"
 #include "symtab.hpp"
 
-static bool SymbolListLess(const SymbolList& left, const SymbolList& right);
 static std::string join(const SymbolList& v);
 static std::string join2(const std::vector<int>& v);
+
+struct group_key {
+    int dot;
+    Symbol left;
+    SymbolList right;
+
+    bool operator<(const group_key& other) const;
+};
 
 bool
 group_key::operator<(const group_key& g1) const {
@@ -286,38 +293,6 @@ join2(const std::vector<int>& v) {
         a += ",";
     }
     return a;
-}
-
-bool
-SymbolListEqual(const SymbolList& left, const SymbolList& right) {
-    if (left.size() != right.size()) {
-        return false;
-    }
-
-    for (int i{ 0 }; i < left.size(); i++) {
-        if (left[i]->id != right[i]->id) {
-            return false;
-        }
-    }
-
-    return true;
-}
-
-bool
-SymbolListLess(const SymbolList& left, const SymbolList& right) {
-    int i{ 0 };
-
-    if ((i = left.size() - right.size()) != 0) {
-        return i < 0 ? true : false;
-    }
-
-    for (int j{ 0 }; j < left.size(); j++) {
-        if ((i = left[j]->id - right[j]->id) != 0) {
-            return i < 0 ? true : false;
-        }
-    }
-
-    return false;
 }
 
 std::string
