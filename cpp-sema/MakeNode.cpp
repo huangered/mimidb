@@ -6,8 +6,8 @@ Node
 makeLex(Node codeNode, Node unionNode, Node paramNode, std::vector<Node>* tokens, std::vector<Node>* types,
         std::vector<Node>* rules, Node other) {
     LexNode* n   = new LexNode();
-    n->codeNode  = dynamic_cast<CodeNode*>(codeNode)->block->GetToken()->value;
-    n->unionNode = dynamic_cast<UnionNode*>(unionNode)->block->GetToken()->value;
+    n->codeNode  = dynamic_cast<CodeNode*>(codeNode)->block;
+    n->unionNode = dynamic_cast<UnionNode*>(unionNode)->block;
     n->tokens    = tokens;
     n->types     = types;
     n->param     = dynamic_cast<ParamNode*>(paramNode)->param;
@@ -24,6 +24,7 @@ Node
 makeParam(Node param) {
     ParamNode* node = new ParamNode();
     node->param     = param->GetToken()->value;
+    delete param;
     return node;
 }
 
@@ -32,6 +33,7 @@ makeToken(Node token) {
     TokenData* node = new TokenData();
     Symbol sym      = Symtab::SymbolNew(token->GetToken()->value);
     sym->clazz      = SymbolClass::token;
+    delete token;
     return node;
 }
 
@@ -78,13 +80,15 @@ makeType(Node typeNode, std::vector<Node>* nodes) {
 Node
 makeCode(Node block) {
     CodeNode* codeN = new CodeNode();
-    codeN->block    = block;
+    codeN->block    = block->GetToken()->value;
+    delete block;
     return codeN;
 }
 
 Node
 makeUnion(Node block) {
     UnionNode* unionN = new UnionNode();
-    unionN->block     = block;
+    unionN->block     = block->GetToken()->value;
+    delete block;
     return unionN;
 }
