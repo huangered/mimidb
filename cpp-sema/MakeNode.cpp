@@ -13,6 +13,10 @@ makeLex(Node codeNode, Node unionNode, Node paramNode, std::vector<Node>* tokens
     n->param     = dynamic_cast<ParamNode*>(paramNode)->param;
     n->rules     = rules;
     n->other     = other->GetToken()->value;
+    delete codeNode;
+    delete unionNode;
+    delete paramNode;
+    delete other;
     return n;
 }
 
@@ -58,6 +62,7 @@ makeRuleRight(std::vector<Node>* rightList, Node blockNode) {
     } else {
         n1->block = blockNode->GetToken()->value;
     }
+    delete blockNode;
     return n1;
 }
 
@@ -66,6 +71,7 @@ makeType(Node typeNode, std::vector<Node>* nodes) {
     TypeData* n1 = new TypeData();
     n1->SetType(typeNode->GetToken()->value);
     n1->SetChildren(nodes);
+    delete typeNode;
     return n1;
 }
 

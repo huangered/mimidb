@@ -25,6 +25,11 @@ Output::SetOther(std::string b) {
 }
 
 void
+Output::SetParam(std::string p) {
+    param = p;
+}
+
+void
 Output::OutputFile(const char* filename) {
     writeHeaderFile();
     writerCppFile();
@@ -235,7 +240,13 @@ Output::writerCppFile() {
     WriteFile(fd, "  } else {\n");
     WriteFile(fd, "    return nullptr;\n");
     WriteFile(fd, "    }\n");
-    WriteFile(fd, "  Node* ptr = reinterpret_cast<Node*>(&item);\n");
+    {
+        char* a = new char[256];
+        sprintf(a, "  %s* ptr = reinterpret_cast<%s*>(&item);\n", this->param.c_str(), this->param.c_str());
+        WriteFile(fd, a);
+        delete[] a;
+    }
+
     WriteFile(fd, "  return *ptr;\n");
     WriteFile(fd, "}\n");
 
@@ -319,10 +330,10 @@ Output::writerCppFile() {
     WriteFile(fd, "\n");
     WriteFile(fd, "    int curStateId = states.top();\n");
     {
-      char* a = new char[256];
-      sprintf(a, "    int nextStateId = goto_table[curStateId][rule_left_id - %d];\n", Symtab::ntoken());
-      WriteFile(fd, a);
-      delete[] a;
+        char* a = new char[256];
+        sprintf(a, "    int nextStateId = goto_table[curStateId][rule_left_id - %d];\n", Symtab::ntoken());
+        WriteFile(fd, a);
+        delete[] a;
     }
     WriteFile(fd, "    states.push(nextStateId);\n");
     WriteFile(fd, "    return true;\n");
