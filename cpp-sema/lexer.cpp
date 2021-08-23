@@ -103,6 +103,12 @@ Lexer::GetLexerToken() {
     case '>':
         _cur++;
         return new LexTokenData(t_greater);
+    case '|':
+        _cur++;
+        return new LexTokenData(t_maybe);
+    case ';':
+        _cur++;
+        return new LexTokenData(t_semicolon);
     }
 
     return nullptr;

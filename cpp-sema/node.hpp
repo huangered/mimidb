@@ -33,12 +33,12 @@ public:
 
 class CodeNode : public NodeData {
 public:
-    Node block;
+    std::string block;
 };
 
 class UnionNode : public NodeData {
 public:
-    Node block;
+    std::string block;
 };
 
 class ParamNode : public NodeData {
@@ -87,6 +87,11 @@ public:
 class RuleNode : public NodeData {
 public:
     Node left;
+    std::vector<Node>* right;
+};
+
+class RuleRightNode : public NodeData {
+public:
     std::vector<Node>* right;
     string block;
 };

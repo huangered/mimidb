@@ -9,12 +9,14 @@ private:
     std::string codeBlock;
     std::string unionBlock;
     std::string other;
+    std::string param;
 
 public:
     Output(Parser* _p);
     void SetCode(std::string b);
     void SetUnion(std::string b);
     void SetOther(std::string other);
+    void SetParam(std::string param);
     void OutputFile(const char* filename);
 
 private:

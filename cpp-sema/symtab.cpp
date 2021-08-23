@@ -88,3 +88,35 @@ Symtab::ntoken() {
     }
     return i;
 }
+
+bool
+SymbolListLess(const SymbolList& left, const SymbolList& right) {
+    int i{ 0 };
+
+    if ((i = left.size() - right.size()) != 0) {
+        return i < 0 ? true : false;
+    }
+
+    for (int j{ 0 }; j < left.size(); j++) {
+        if ((i = left[j]->id - right[j]->id) != 0) {
+            return i < 0 ? true : false;
+        }
+    }
+
+    return false;
+}
+
+bool
+SymbolListEqual(const SymbolList& left, const SymbolList& right) {
+    if (left.size() != right.size()) {
+        return false;
+    }
+
+    for (int i{ 0 }; i < left.size(); i++) {
+        if (left[i]->id != right[i]->id) {
+            return false;
+        }
+    }
+
+    return true;
+}

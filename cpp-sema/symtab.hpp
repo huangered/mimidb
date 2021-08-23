@@ -29,6 +29,7 @@ typedef SymbolData* Symbol;
 typedef std::vector<Symbol> SymbolList;
 
 bool SymbolListEqual(const SymbolList& l, const SymbolList& r);
+bool SymbolListLess(const SymbolList& left, const SymbolList& right);
 
 class Symtab {
 public:

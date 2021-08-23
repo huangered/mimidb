@@ -59,24 +59,27 @@ LexNode::GetRules() {
         RuleNode* rn              = dynamic_cast<RuleNode*>(n);
         Node left                 = rn->left;
         std::vector<Node>* rights = rn->right;
-        Rule rule                 = new RuleData();
-        rule->id                  = i++;
-        rule->funcBlock           = rn->block;
-        // left node
-        Symbol l_sym = Symtab::SymbolNew(left->GetToken()->value);
-        l_sym->clazz = SymbolClass::nterm;
+        for (Node right : *rights) {
+            RuleRightNode* r = dynamic_cast<RuleRightNode*>(right);
+            Rule rule       = new RuleData();
+            rule->id        = i++;
+            rule->funcBlock  = r->block;
+            // left node
+            Symbol l_sym = Symtab::SymbolNew(left->GetToken()->value);
+            l_sym->clazz = SymbolClass::nterm;
 
-        rule->left = l_sym->id;
-        // right nodes
-        for (Node r_node : *rights) {
-            Symbol r_sym = Symtab::SymbolNew(r_node->GetToken()->value);
-            if (r_sym->clazz == none) {
-                r_sym->clazz = nterm;
+            rule->left = l_sym->id;
+            // right nodes
+            for (Node r_node : *r->right) {
+                Symbol r_sym = Symtab::SymbolNew(r_node->GetToken()->value);
+                if (r_sym->clazz == none) {
+                    r_sym->clazz = nterm;
+                }
+
+                rule->right.push_back(r_sym);
             }
-
-            rule->right.push_back(r_sym);
+            g.push_back(rule);
         }
-        g.push_back(rule);
     }
     return g;
 }
