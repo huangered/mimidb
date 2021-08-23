@@ -18,9 +18,6 @@ makeLex(Node codeNode, Node unionNode, Node paramNode, std::vector<Node>* tokens
 
 Node
 makeParam(Node param) {
-#ifdef _log_
-    printf("make param\n");
-#endif
     ParamNode* node = new ParamNode();
     node->param     = param->GetToken()->value;
     return node;
@@ -35,9 +32,22 @@ makeToken(Node token) {
 }
 
 Node
-makeRule(Node leftNode, std::vector<Node>* rightList, Node blockNode) {
+makeRule(Node leftNode, std::vector<Node>* rightList) {
     RuleNode* n1 = new RuleNode();
     n1->left     = leftNode;
+    if (rightList == nullptr) {
+        n1->right = new std::vector<Node>();
+    } else {
+        n1->right = rightList;
+    }
+    return n1;
+}
+
+
+Node
+makeRuleRight(std::vector<Node>* rightList, Node blockNode) {
+    RuleRightNode* n1 = new RuleRightNode();
+
     if (rightList == nullptr) {
         n1->right = new std::vector<Node>();
     } else {
