@@ -58,7 +58,6 @@ LexNode::GetRules() {
     for (Node n : *rules) {
         RuleNode* rn              = dynamic_cast<RuleNode*>(n);
         Node left                 = rn->left;
-        printf("%s", left->GetToken()->value.c_str());
         std::vector<Node>* rights = rn->right;
         for (Node right : *rights) {
             RuleRightNode* r = dynamic_cast<RuleRightNode*>(right);
