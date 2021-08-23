@@ -33,12 +33,12 @@ public:
 
 class CodeNode : public NodeData {
 public:
-    Node block;
+    std::string block;
 };
 
 class UnionNode : public NodeData {
 public:
-    Node block;
+    std::string block;
 };
 
 class ParamNode : public NodeData {
