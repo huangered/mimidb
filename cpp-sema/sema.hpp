@@ -18,13 +18,6 @@
 
 // bool SemaTokenListEqual(const SemaTokenList& left, const SemaTokenList& right);
 
-struct group_key {
-    int dot;
-    Symbol left;
-    SymbolList right;
-
-    bool operator<(const group_key& other) const;
-};
 
 class RecordData {
 public:
