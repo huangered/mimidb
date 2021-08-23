@@ -71,7 +71,7 @@ RuleList :
 Rule : ID t_colon RuleRightList t_semicolon { $$ = makeRule($0, $2); } ;
 
 RuleRightList :
-  RuleRightList t_maybe RuleRight { $0->push_back($1); $$ = $0; }
+  RuleRightList t_maybe RuleRight { $0->push_back($2); $$ = $0; }
 | RuleRight  { std::vector<Node>* vec = new std::vector<Node>(); vec->push_back($0); $$ = vec; }
 ;
 
