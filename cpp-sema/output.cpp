@@ -233,13 +233,10 @@ Output::writerCppFile() {
     WriteFile(fd, "  if (acc) {\n");
     WriteFile(fd, "    item = token_stack.top();\n");
     WriteFile(fd, "  } else {\n");
-    WriteFile(fd, "    while (!token_stack.empty()) {\n");
-    WriteFile(fd, "      item = token_stack.top();\n");
-    WriteFile(fd, "      token_stack.pop();\n");
-    WriteFile(fd, "      delete item.node;\n");
+    WriteFile(fd, "    return nullptr;\n");
     WriteFile(fd, "    }\n");
-    WriteFile(fd, "  }\n");
-    WriteFile(fd, "  return item.node;\n");
+    WriteFile(fd, "  Node* ptr = reinterpret_cast<Node*>(&item);\n");
+    WriteFile(fd, "  return *ptr;\n");
     WriteFile(fd, "}\n");
 
     // yyshift
