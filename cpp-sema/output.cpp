@@ -1,4 +1,5 @@
 ﻿#include "output.hpp"
+#include <cassert>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -24,6 +25,11 @@ Output::SetOther(std::string b) {
 }
 
 void
+Output::SetParam(std::string p) {
+    param = p;
+}
+
+void
 Output::OutputFile(const char* filename) {
     writeHeaderFile();
     writerCppFile();
@@ -32,6 +38,7 @@ Output::OutputFile(const char* filename) {
 FILE*
 OpenFile(const char* file, const char* mode) {
     FILE* f = fopen(file, mode);
+    assert(f);
     return f;
 }
 
@@ -183,9 +190,9 @@ Output::writerCppFile() {
 
     WriteFile(
         fd,
-        "static bool eatToken(std::stack<int>& states, std::stack<YYSTYPE>& syms, std::stack<LexToken>& input, bool* "
+        "static bool yyshift(std::stack<int>& states, std::stack<YYSTYPE>& syms, std::stack<LexToken>& input, bool* "
         "acc);\n");
-    WriteFile(fd, "static bool reduce(std::stack<int>& states, std::stack<YYSTYPE>& syms, int r_id);\n");
+    WriteFile(fd, "static bool yyreduce(std::stack<int>& states, std::stack<YYSTYPE>& syms, int r_id);\n");
 
     WriteFile(fd, "\n");
 
@@ -221,7 +228,7 @@ Output::writerCppFile() {
     WriteFile(fd, " \n");
     WriteFile(fd, " bool acc{};\n");
     WriteFile(fd, "  while (!acc) {\n");
-    WriteFile(fd, "    bool op = eatToken(state_stack, token_stack, input_stack, &acc);\n");
+    WriteFile(fd, "    bool op = yyshift(state_stack, token_stack, input_stack, &acc);\n");
     WriteFile(fd, " \n");
     WriteFile(fd, "    if (!op) {\n");
     WriteFile(fd, "      std::cout << \" no action \" << std::endl;\n");
@@ -231,20 +238,23 @@ Output::writerCppFile() {
     WriteFile(fd, "  if (acc) {\n");
     WriteFile(fd, "    item = token_stack.top();\n");
     WriteFile(fd, "  } else {\n");
-    WriteFile(fd, "    while (!token_stack.empty()) {\n");
-    WriteFile(fd, "      item = token_stack.top();\n");
-    WriteFile(fd, "      token_stack.pop();\n");
-    WriteFile(fd, "      delete item.node;\n");
+    WriteFile(fd, "    return nullptr;\n");
     WriteFile(fd, "    }\n");
-    WriteFile(fd, "  }\n");
-    WriteFile(fd, "  return item.node;\n");
+    {
+        char* a = new char[256];
+        sprintf(a, "  %s* ptr = reinterpret_cast<%s*>(&item);\n", this->param.c_str(), this->param.c_str());
+        WriteFile(fd, a);
+        delete[] a;
+    }
+
+    WriteFile(fd, "  return *ptr;\n");
     WriteFile(fd, "}\n");
 
-    // eattoken
+    // yyshift
 
     WriteFile(
         fd,
-        "bool\neatToken(std::stack<int> & states, std::stack<YYSTYPE> & syms, std::stack<LexToken> & input, bool* acc) "
+        "bool\nyyshift(std::stack<int> & states, std::stack<YYSTYPE> & syms, std::stack<LexToken> & input, bool* acc) "
         "{\n");
     WriteFile(fd, "  int curStateId = states.top();\n");
     WriteFile(fd, "  LexToken token = input.top();\n");
@@ -275,15 +285,15 @@ Output::writerCppFile() {
     WriteFile(fd, "      input.pop();\n");
     WriteFile(fd, "      return true;\n");
     WriteFile(fd, "    } else {\n");
-    WriteFile(fd, "      return reduce(states, syms, r_id);\n");
+    WriteFile(fd, "      return yyreduce(states, syms, r_id);\n");
     WriteFile(fd, "    }\n");
     WriteFile(fd, "  }\n");
     WriteFile(fd, "  return false;\n");
     WriteFile(fd, "}\n ");
 
-    // reduce
+    // yyreduce
 
-    WriteFile(fd, "bool\nreduce(std::stack<int> & states, std::stack<YYSTYPE> & syms, int r_id) {\n");
+    WriteFile(fd, "bool\nyyreduce(std::stack<int> & states, std::stack<YYSTYPE> & syms, int r_id) {\n");
     WriteFile(fd, "    int child_num{rule_right_children_num_arr[r_id]};\n");
     WriteFile(fd, "    int rule_left_id{rule_left_id_arr[r_id]};\n");
     WriteFile(fd, "    std::vector<YYSTYPE> child(child_num);\n");
@@ -320,10 +330,10 @@ Output::writerCppFile() {
     WriteFile(fd, "\n");
     WriteFile(fd, "    int curStateId = states.top();\n");
     {
-      char* a = new char[256];
-      sprintf(a, "    int nextStateId = goto_table[curStateId][rule_left_id - %d];\n", Symtab::ntoken());
-      WriteFile(fd, a);
-      delete[] a;
+        char* a = new char[256];
+        sprintf(a, "    int nextStateId = goto_table[curStateId][rule_left_id - %d];\n", Symtab::ntoken());
+        WriteFile(fd, a);
+        delete[] a;
     }
     WriteFile(fd, "    states.push(nextStateId);\n");
     WriteFile(fd, "    return true;\n");
