@@ -15,7 +15,7 @@ main(int argc, char* argv[]) {
     CloseFile(f);
 
     Node a = yyparse(str);
-    printf("%s\n", a->Name().c_str());
+    printf("%s\n", a->_value.c_str());
     LexNode* lex                     = dynamic_cast<LexNode*>(a);
     std::map<string, string> typeMap = lex->GetTypeMap();
     std::vector<Rule> rules          = lex->GetRules();

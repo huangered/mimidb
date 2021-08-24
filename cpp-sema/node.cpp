@@ -4,28 +4,9 @@
 #include "sema.hpp"
 
 NodeData::NodeData() {
-    _token = nullptr;
 }
 
 NodeData::~NodeData() {
-    if (_token != nullptr) {
-        delete _token;
-    }
-}
-
-std::string
-NodeData::Name() {
-    return _name;
-}
-
-void
-NodeData::SetToken(LexToken token) {
-    _token = token;
-}
-
-LexToken
-NodeData::GetToken() {
-    return _token;
 }
 
 std::string
@@ -65,13 +46,13 @@ LexNode::GetRules() {
             rule->id        = i++;
             rule->funcBlock  = r->block;
             // left node
-            Symbol l_sym = Symtab::SymbolNew(left->GetToken()->value);
+            Symbol l_sym = Symtab::SymbolNew(left->_value);
             l_sym->clazz = SymbolClass::nterm;
 
             rule->left = l_sym->id;
             // right nodes
             for (Node r_node : *r->right) {
-                Symbol r_sym = Symtab::SymbolNew(r_node->GetToken()->value);
+                Symbol r_sym = Symtab::SymbolNew(r_node->_value);
                 if (r_sym->clazz == none) {
                     r_sym->clazz = nterm;
                 }

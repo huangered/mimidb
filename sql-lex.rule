@@ -17,10 +17,10 @@
 @param Node
 
 @token t_token
-@token t_code
+@token <str> t_code
 @token t_colon
-@token t_identifier
-@token t_block
+@token <str> t_identifier
+@token <str> t_block
 @token t_union
 @token t_type
 @token t_type_type
@@ -54,7 +54,10 @@ TokenList :
 | Token { std::vector<Node>* vec = new std::vector<Node>(); vec->push_back($0); $$ = vec; }
 ;
 
-Token : t_token t_identifier { $$ = makeToken($1); } ;
+Token :
+  t_token t_identifier { $$ = makeToken($1); }
+| t_token t_less t_identifier t_greater t_identifier { $$ = makeToken($2, $4); }
+;
 
 TypeList :
   TypeList Type { $0->push_back($1); $$ = $0; } 
@@ -99,6 +102,8 @@ Node makeLex(Node codeNode, Node unionNode, Node paramNode, std::vector<Node>* t
                     std::vector<Node>* rules, Node other);
 
 Node makeToken(Node token);
+
+Node makeToken(Node typeNode, Node token);
 
 Node makeRule(Node n, std::vector<Node>* l);
 

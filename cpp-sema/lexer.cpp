@@ -114,6 +114,97 @@ Lexer::GetLexerToken() {
     return nullptr;
 }
 
+int Lexer::Yylex() {
+    if (_cur >= _size) {
+        return -1;
+    }
+
+    char Char = _buf[_cur];
+
+    switch (Char) {
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'u':
+    case 'v':
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+        return lexIdentifier()->tok;
+    case '\n':
+    case ' ':
+        _cur++;
+        return GetLexerToken()->tok;
+    case ':':
+        _cur++;
+        return t_colon;
+    case '%':
+        return lexSign()->tok;
+    case '{':
+        return lexBlock()->tok;
+    case '@':
+        return lexPiont()->tok;
+    case '<':
+        _cur++;
+        return t_less;
+    case '>':
+        _cur++;
+        return t_greater;
+    case '|':
+        _cur++;
+        return t_maybe;
+    case ';':
+        _cur++;
+        return t_semicolon;
+    }
+
+    return -1;
+}
+
 LexToken
 Lexer::lexIdentifier() {
     int start = _cur;
@@ -132,6 +223,10 @@ Lexer::lexIdentifier() {
     p[count] = '\0';
 
     LexToken token = new LexTokenData(t_identifier, p);
+
+    yylval.node         = new NodeData{};
+    yylval.node->_value = token->value;
+    
 
     delete[] p;
 
@@ -162,6 +257,10 @@ Lexer::lexBlock() {
     LexToken token = new LexTokenData(t_block, p);
     delete[] p;
 
+    
+    yylval.node         = new NodeData{};
+    yylval.node->_value = token->value;
+
     return token;
 }
 
@@ -185,6 +284,11 @@ Lexer::lexPiont() {
     p[count] = '\0';
 
     LexToken token = new LexTokenData(t_block, p);
+
+    
+    yylval.node         = new NodeData{};
+    yylval.node->_value = token->value;
+
     delete[] p;
 
     if ("@token" == token->value) {
