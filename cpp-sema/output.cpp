@@ -95,9 +95,12 @@ Output::writerCppFile() {
 
     WriteFile(fd, "#include \"c.tab.hpp\"\n");
 
-    // writeTokEnum(fd);
+    WriteFile(fd, "");
 
-    WriteFile(fd, "\n");
+    WriteFile(fd, "union YYSTYPE yylval\n");
+
+    WriteFile(fd, "struct InputToken{int tok;YYSTYPE item;};\n");
+
     {
         char* a = new char[256];
         sprintf(a, "#define MAX_ID 65535\n");
@@ -190,7 +193,7 @@ Output::writerCppFile() {
 
     WriteFile(
         fd,
-        "static bool yyshift(std::stack<int>& states, std::stack<YYSTYPE>& syms, std::stack<LexToken>& input, bool* "
+        "static bool yyshift(std::stack<int>& states, std::stack<YYSTYPE>& syms, std::stack<InputToken*>& input, bool* "
         "acc);\n");
     WriteFile(fd, "static bool yyreduce(std::stack<int>& states, std::stack<YYSTYPE>& syms, int r_id);\n");
 
@@ -199,15 +202,16 @@ Output::writerCppFile() {
     WriteFile(fd, "Node\nyyparse(const char* str){\n");
 
     WriteFile(fd, "  Lexer lexer(str, strlen(str));\n");
-    WriteFile(fd, "  LexToken t;\n");
-    WriteFile(fd, "  std::vector<LexToken> data;\n");
-    WriteFile(fd, "  while ((t = lexer.GetLexerToken()) != nullptr) {\n");
-    WriteFile(fd, "    data.push_back(t);\n");
+    WriteFile(fd, "  int t;\n");
+    WriteFile(fd, "  std::vector<InputToken*> data;\n");
+    WriteFile(fd, "  while ((t = lexer.Yylex()) != -1) {\n");
+    WriteFile(fd, "     data.push_back(new InputToken{ t, yylval });\n");
+    WriteFile(fd, "     memset(&yylval, 0 , sizeof(YYSTYPE));\n");
     WriteFile(fd, "  }\n");
 
     {
         char* a = new char[256];
-        sprintf(a, "LexToken end = new LexTokenData(%d);\n", Symtab::eof->id);
+        sprintf(a, "InputToken* end = new InputToken{};end->tok = %d;\n", Symtab::eof->id);
 
         WriteFile(fd, a);
         delete[] a;
@@ -218,7 +222,7 @@ Output::writerCppFile() {
     WriteFile(fd, "  YYSTYPE item{};\n");
     WriteFile(fd, "  std::stack<int> state_stack;\n");
     WriteFile(fd, "  std::stack<YYSTYPE> token_stack;\n");
-    WriteFile(fd, "  std::stack<LexToken> input_stack;\n");
+    WriteFile(fd, "  std::stack<InputToken*> input_stack;\n");
     WriteFile(fd, " \n");
     WriteFile(fd, "  state_stack.push(0);\n");
     WriteFile(fd, " \n");
@@ -254,7 +258,7 @@ Output::writerCppFile() {
 
     WriteFile(
         fd,
-        "bool\nyyshift(std::stack<int> & states, std::stack<YYSTYPE> & syms, std::stack<LexToken> & input, bool* acc) "
+        "bool\nyyshift(std::stack<int> & states, std::stack<YYSTYPE> & syms, std::stack<InputToken*> & input, bool* acc) "
         "{\n");
     WriteFile(fd, "  int curStateId = states.top();\n");
     WriteFile(fd, "  LexToken token = input.top();\n");
@@ -278,9 +282,7 @@ Output::writerCppFile() {
     WriteFile(fd, "\n");
     WriteFile(fd, "    if (r_state == true) {\n");
     WriteFile(fd, "      states.push(r_id);\n");
-    WriteFile(fd, "      YYSTYPE it;\n");
-    WriteFile(fd, "      it.node = new NodeData();\n");
-    WriteFile(fd, "      it.node->SetToken(token);\n");
+    WriteFile(fd, "      YYSTYPE it = token->item;\n");
     WriteFile(fd, "      syms.push(it);\n");
     WriteFile(fd, "      input.pop();\n");
     WriteFile(fd, "      return true;\n");
@@ -350,6 +352,7 @@ Output::writeUnion(FILE* f) {
     WriteFile(f, "union YYSTYPE {\n");
     WriteFile(f, unionBlock.c_str());
     WriteFile(f, "};\n\n");
+    WriteFile(f, "extern union YYSTYPE yylval;\n");
 }
 
 void
