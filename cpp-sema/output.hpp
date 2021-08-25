@@ -18,7 +18,6 @@ public:
     void SetOther(std::string other);
     void SetParam(std::string param);
     void OutputFile(const char* filename);
-
 private:
     void writeHeaderFile();
     void writerCppFile();
@@ -29,6 +28,7 @@ private:
     void writeMatrix(FILE* f);
     void writeMethods(FILE* f);
     void writeOther(FILE* f);
+    void writeM4();
 };
 
 #endif // !_output_hpp_

@@ -33,6 +33,7 @@ void
 Output::OutputFile(const char* filename) {
     writeHeaderFile();
     writerCppFile();
+    writeM4();
 };
 
 FILE*
@@ -65,6 +66,19 @@ WriteFile(FILE* f, const char* buf) {
 void
 CloseFile(FILE* f) {
     fclose(f);
+}
+
+void
+Output::writeM4() {
+  FILE* fd = OpenFile("value.m4", "w");
+
+  writeCode(fd);
+
+  writeUnion(fd);
+
+  writeTokEnum(fd);
+  
+  CloseFile(fd);
 }
 
 void
