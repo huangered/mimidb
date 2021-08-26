@@ -22,7 +22,7 @@ struct InputToken {
 
 class Parser {
 public:
-  union YYSTYPE yylval;
+  static union YYSTYPE yylval;
   
 public:
   Parser();

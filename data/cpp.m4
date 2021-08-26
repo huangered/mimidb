@@ -17,7 +17,7 @@ Parser::Parser(){
 YYSTYPE Parser::yylval;
 
 DATA_RETURN
-Parser::parser(const char* str) {
+Parser::parse(const char* str) {
     Lexer lexer(str, strlen(str));
     int t;
     std::vector<InputToken*> data;
