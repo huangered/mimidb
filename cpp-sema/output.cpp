@@ -31,8 +31,8 @@ Output::SetParam(std::string p) {
 
 void
 Output::OutputFile(const char* filename) {
-    writeHeaderFile();
-    writerCppFile();
+    //    writeHeaderFile();
+    //    writerCppFile();
     writeM4();
 };
 
