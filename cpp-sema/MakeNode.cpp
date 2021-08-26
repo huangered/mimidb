@@ -12,7 +12,7 @@ makeLex(Node codeNode, Node unionNode, Node paramNode, std::vector<Node>* tokens
     n->types     = types;
     n->param     = dynamic_cast<ParamNode*>(paramNode)->param;
     n->rules     = rules;
-    n->other     = other->GetToken()->value;
+    n->other     = other->_value;
     delete codeNode;
     delete unionNode;
     delete paramNode;
@@ -23,7 +23,7 @@ makeLex(Node codeNode, Node unionNode, Node paramNode, std::vector<Node>* tokens
 Node
 makeParam(Node param) {
     ParamNode* node = new ParamNode();
-    node->param     = param->GetToken()->value;
+    node->param     = param->_value;
     delete param;
     return node;
 }
@@ -31,9 +31,20 @@ makeParam(Node param) {
 Node
 makeToken(Node token) {
     TokenData* node = new TokenData();
-    Symbol sym      = Symtab::SymbolNew(token->GetToken()->value);
+    Symbol sym      = Symtab::SymbolNew(token->_value);
     sym->clazz      = SymbolClass::token;
     delete token;
+    return node;
+}
+
+Node
+makeToken(Node typeNode, Node token) {
+    TokenData* node = new TokenData();
+    node->_type     = typeNode->_value;
+    Symbol sym      = Symtab::SymbolNew(token->_value);
+    sym->clazz      = SymbolClass::token;
+    delete token;
+    delete typeNode;
     return node;
 }
 
@@ -49,7 +60,6 @@ makeRule(Node leftNode, std::vector<Node>* rightList) {
     return n1;
 }
 
-
 Node
 makeRuleRight(std::vector<Node>* rightList, Node blockNode) {
     RuleRightNode* n1 = new RuleRightNode();
@@ -62,7 +72,7 @@ makeRuleRight(std::vector<Node>* rightList, Node blockNode) {
     if (blockNode == nullptr) {
         n1->block = "";
     } else {
-        n1->block = blockNode->GetToken()->value;
+        n1->block = blockNode->_value;
     }
     delete blockNode;
     return n1;
@@ -71,7 +81,7 @@ makeRuleRight(std::vector<Node>* rightList, Node blockNode) {
 Node
 makeType(Node typeNode, std::vector<Node>* nodes) {
     TypeData* n1 = new TypeData();
-    n1->SetType(typeNode->GetToken()->value);
+    n1->SetType(typeNode->_value);
     n1->SetChildren(nodes);
     delete typeNode;
     return n1;
@@ -80,7 +90,7 @@ makeType(Node typeNode, std::vector<Node>* nodes) {
 Node
 makeCode(Node block) {
     CodeNode* codeN = new CodeNode();
-    codeN->block    = block->GetToken()->value;
+    codeN->block    = block->_value;
     delete block;
     return codeN;
 }
@@ -88,7 +98,7 @@ makeCode(Node block) {
 Node
 makeUnion(Node block) {
     UnionNode* unionN = new UnionNode();
-    unionN->block     = block->GetToken()->value;
+    unionN->block     = block->_value;
     delete block;
     return unionN;
 }

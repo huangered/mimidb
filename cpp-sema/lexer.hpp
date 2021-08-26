@@ -36,6 +36,7 @@ public:
     Lexer(const char* buf, int size);
 
     LexToken GetLexerToken();
+    int Yylex();
 
 private:
     LexToken lexPiont();

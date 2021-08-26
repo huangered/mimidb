@@ -32,7 +32,7 @@ group_key::operator<(const group_key& g1) const {
 
 // end
 
-Parser::Parser(const std::vector<Rule>& rules)
+SemaParser::SemaParser(const std::vector<Rule>& rules)
     : _maxState{ 0 } {
     _firstSet  = std::unique_ptr<FirstSet>(new FirstSet(rules));
     _stateList = std::unique_ptr<StateCollection>(new StateCollection());
@@ -54,19 +54,19 @@ Parser::Parser(const std::vector<Rule>& rules)
     _stateList->Add(0, rule);
 }
 
-Parser::~Parser() {
+SemaParser::~SemaParser() {
     for (Item r : _rules) {
         delete r;
     }
 }
 
 void
-Parser::SetTypeMap(const std::map<std::string, std::string>& _typeMap) {
+SemaParser::SetTypeMap(const std::map<std::string, std::string>& _typeMap) {
     this->_typeMap = _typeMap;
 }
 
 void
-Parser::GenerateParseTable(void) {
+SemaParser::GenerateParseTable(void) {
     _firstSet->Gen();
     _firstSet->Print();
     for (int i{}; i < _stateList->Size(); i++) {
@@ -102,7 +102,7 @@ Parser::GenerateParseTable(void) {
 
 // === private part ===
 void
-Parser::handleState(int stateId) {
+SemaParser::handleState(int stateId) {
     State state = _stateList->GetState(stateId);
     // 1. 扩展规则
     expandRules(state);
@@ -155,7 +155,7 @@ Parser::handleState(int stateId) {
 }
 
 void
-Parser::generateTable(void) {
+SemaParser::generateTable(void) {
     _gotoTable   = std::unique_ptr<GotoTable>(new GotoTable(_stateList->Size(), Symtab::nsym - Symtab::ntoken()));
     _actionTable = std::unique_ptr<ActionTable>(new ActionTable(_stateList->Size(), Symtab::ntoken()));
 
@@ -190,7 +190,7 @@ Parser::generateTable(void) {
 }
 
 void
-Parser::expandRules(State state) {
+SemaParser::expandRules(State state) {
     int count = 0;
 
     for (;;) {
@@ -259,7 +259,7 @@ Parser::expandRules(State state) {
 }
 
 State
-Parser::searchSameState(const ItemList& newStateRules) {
+SemaParser::searchSameState(const ItemList& newStateRules) {
     int max{ _stateList->Size() };
     for (int i{ 0 }; i < max; i++) {
         State state = _stateList->GetState(i);
@@ -296,7 +296,7 @@ join2(const std::vector<int>& v) {
 }
 
 std::string
-Parser::funcReplace(const Item rule) {
+SemaParser::funcReplace(const Item rule) {
 
     std::string tmp = rule->func_block;
     for (int i{ 0 }; i < rule->right.size(); i++) {
