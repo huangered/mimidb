@@ -21,12 +21,12 @@ struct InputToken {
 };
 
 class Parser {
-private:
+public:
   union YYSTYPE yylval;
   
 public:
   Parser();
-  RETURN parse(const char* str);
+  DATA_RETURN parse(const char* str);
 
 private:
   bool yyshift(std::stack<int>& states, std::stack<YYSTYPE>& syms, std::stack<InputToken*>& input, bool* acc);

@@ -42,8 +42,8 @@ LexNode::GetRules() {
         std::vector<Node>* rights = rn->right;
         for (Node right : *rights) {
             RuleRightNode* r = dynamic_cast<RuleRightNode*>(right);
-            Rule rule       = new RuleData();
-            rule->id        = i++;
+            Rule rule        = new RuleData();
+            rule->id         = i++;
             rule->funcBlock  = r->block;
             // left node
             Symbol l_sym = Symtab::SymbolNew(left->_value);

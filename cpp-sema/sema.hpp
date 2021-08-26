@@ -18,7 +18,6 @@
 
 // bool SemaTokenListEqual(const SemaTokenList& left, const SemaTokenList& right);
 
-
 class RecordData {
 public:
     bool acc;
@@ -28,7 +27,7 @@ public:
 
 typedef RecordData* Record;
 
-class Parser {
+class SemaParser {
 private:
     int _maxState;
     std::map<std::string, std::string> _typeMap;
@@ -40,8 +39,8 @@ private:
     std::unique_ptr<StateCollection> _stateList;
 
 public:
-    Parser(const std::vector<Rule>& rules);
-    ~Parser();
+    SemaParser(const std::vector<Rule>& rules);
+    ~SemaParser();
     void SetTypeMap(const std::map<std::string, std::string>& _typeMap);
     void GenerateParseTable(void);
 

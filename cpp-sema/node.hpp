@@ -25,7 +25,6 @@ public:
     NodeData();
 
     virtual ~NodeData();
-
 };
 
 class CodeNode : public NodeData {
