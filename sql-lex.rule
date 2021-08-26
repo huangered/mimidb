@@ -1,11 +1,6 @@
 %code {
-    #include <iostream>
-    #include <stack>
-    #include <vector>
-    #include <cstring>
-    
-    #include "node.hpp"
-    using namespace std;
+#include <vector>
+#include "node.hpp"
 }
 
 %union { 
