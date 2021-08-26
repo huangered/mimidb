@@ -60,7 +60,6 @@ makeRule(Node leftNode, std::vector<Node>* rightList) {
     return n1;
 }
 
-
 Node
 makeRuleRight(std::vector<Node>* rightList, Node blockNode) {
     RuleRightNode* n1 = new RuleRightNode();

@@ -114,7 +114,8 @@ Lexer::GetLexerToken() {
     return nullptr;
 }
 
-int Lexer::Yylex() {
+int
+Lexer::Yylex() {
     if (_cur >= _size) {
         return -1;
     }
@@ -224,9 +225,8 @@ Lexer::lexIdentifier() {
 
     LexToken token = new LexTokenData(t_identifier, p);
 
-    yylval.node         = new NodeData{};
-    yylval.node->_value = token->value;
-    
+    Parser::yylval.node         = new NodeData{};
+    Parser::yylval.node->_value = token->value;
 
     delete[] p;
 
@@ -257,9 +257,8 @@ Lexer::lexBlock() {
     LexToken token = new LexTokenData(t_block, p);
     delete[] p;
 
-    
-    yylval.node         = new NodeData{};
-    yylval.node->_value = token->value;
+    Parser::yylval.node         = new NodeData{};
+    Parser::yylval.node->_value = token->value;
 
     return token;
 }
@@ -285,9 +284,8 @@ Lexer::lexPiont() {
 
     LexToken token = new LexTokenData(t_block, p);
 
-    
-    yylval.node         = new NodeData{};
-    yylval.node->_value = token->value;
+    Parser::yylval.node         = new NodeData{};
+    Parser::yylval.node->_value = token->value;
 
     delete[] p;
 

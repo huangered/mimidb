@@ -1,6 +1,8 @@
 include(`value.m4')
 
 #include "c.tab.hpp"
+#include "lexer.hpp"
+#include <cstring>
 
 #define MAX_ID 65536
 
@@ -12,7 +14,9 @@ const int rule_left_id_arr[] = { DATA_LEFT_ID };
 Parser::Parser(){
 }
 
-RETURN
+YYSTYPE Parser::yylval;
+
+DATA_RETURN
 Parser::parser(const char* str) {
     Lexer lexer(str, strlen(str));
     int t;
@@ -42,7 +46,7 @@ Parser::parser(const char* str) {
         bool op = yyshift(state_stack, token_stack, input_stack, &acc);
 
         if (!op) {
-            std::cout << " no action " << std::endl;
+            printf("no action\n");
             break;
         }
     }
@@ -51,7 +55,7 @@ Parser::parser(const char* str) {
     } else {
         return nullptr;
     }
-    DATA_RETURN* ptr = reinterpret_cast<DATA_RETURN>(&item);
+    DATA_RETURN* ptr = reinterpret_cast<DATA_RETURN*>(&item);
     return *ptr;
 }
 
