@@ -9,8 +9,11 @@ using std::string;
 int
 main(int argc, char* argv[]) {
     Symtab::Init();
-
-    FILE* f         = OpenFile("../sql-lex.rule", "r");
+#ifdef _WIN32
+    FILE* f         = OpenFile("C:\\work\\mimidb\\sql-lex.rule", "r");
+#else
+    FILE* f         = OpenFile("/Users/peter/Desktop/mimidb/sql-lex.rule", "r");
+#endif
     const char* str = ReadFile(f);
     CloseFile(f);
     Parser p;
