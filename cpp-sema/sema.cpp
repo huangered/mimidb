@@ -299,7 +299,7 @@ std::string
 SemaParser::funcReplace(const Item rule) {
 
     std::string tmp = rule->func_block;
-    for (int i{ 0 }; i < rule->right.size(); i++) {
+    for (int i = rule->right.size() - 1; i >= 0; i--) {
         std::string name = this->_typeMap[rule->right[i]->name];
         std::string w    = "$" + std::to_string(i);
         std::string r    = "child[" + std::to_string(i);

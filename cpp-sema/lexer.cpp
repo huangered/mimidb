@@ -295,6 +295,8 @@ Lexer::lexPiont() {
         token->tok = t_type;
     } else if ("@param" == token->value) {
         token->tok = t_param;
+    } else if ("@start" == token->value) {
+        token->tok = t_start_rule;
     }
     return token;
 }
