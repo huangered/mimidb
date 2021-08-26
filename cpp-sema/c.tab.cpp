@@ -1925,10 +1925,10 @@ const int rule_left_id_arr[] = {
     16, 17, 20, 18, 19, 21, 21, 25, 25, 22, 22, 26, 23, 23, 28, 30, 30, 31, 31, 31, 31, 27, 27, 29, 24,
 };
 
-union YYSTYPE Parser::yylval;
-
 Parser::Parser() {
 }
+
+YYSTYPE Parser::yylval;
 
 Node
 Parser::parse(const char* str) {
@@ -1960,7 +1960,7 @@ Parser::parse(const char* str) {
         bool op = yyshift(state_stack, token_stack, input_stack, &acc);
 
         if (!op) {
-            //            std::cout << " no action " << std::endl;
+            printf("no action\n");
             break;
         }
     }
