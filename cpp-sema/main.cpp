@@ -12,20 +12,20 @@ main(int argc, char* argv[]) {
 #ifdef _WIN32
     FILE* f         = OpenFile("C:\\work\\mimidb\\sql-lex.rule", "r");
 #else
-    FILE* f         = OpenFile("/Users/peter/Desktop/mimidb/sql-lex.rule", "r");
+    FILE* f         = OpenFile("../sql-lex.rule", "r");
 #endif
     const char* str = ReadFile(f);
     CloseFile(f);
-
-    Node a = yyparse(str);
-    printf("%s\n", a->Name().c_str());
+    Parser p;
+    Node a = p.parse(str);
+    printf("%s\n", a->_value.c_str());
     LexNode* lex                     = dynamic_cast<LexNode*>(a);
     std::map<string, string> typeMap = lex->GetTypeMap();
     std::vector<Rule> rules          = lex->GetRules();
 
     printf("type map: {%zd}, rules: {%zd}\n", typeMap.size(), rules.size());
 
-    Parser parser2(rules);
+    SemaParser parser2(rules);
     parser2.SetTypeMap(typeMap);
     parser2.GenerateParseTable();
 

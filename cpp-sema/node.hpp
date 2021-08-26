@@ -5,7 +5,6 @@
 #include <string>
 #include <map>
 #include <algorithm>
-#include "lexer.hpp"
 
 using std::string;
 
@@ -18,17 +17,14 @@ class RuleData;
 typedef RuleData* Rule;
 
 class NodeData {
-    LexToken _token;
-    string _name;
+public:
+    int _token;
+    string _value;
 
 public:
     NodeData();
 
     virtual ~NodeData();
-
-    string Name();
-    void SetToken(LexToken token);
-    LexToken GetToken();
 };
 
 class CodeNode : public NodeData {
@@ -58,11 +54,14 @@ public:
     }
     void
     SetChildren(std::vector<Node>* nodes) {
-        std::for_each(nodes->begin(), nodes->end(), [&](Node n) { _children.push_back(n->GetToken()->value); });
+        std::for_each(nodes->begin(), nodes->end(), [&](Node n) { _children.push_back(n->_value); });
     }
 };
 
-class TokenData : public NodeData {};
+class TokenData : public NodeData {
+public:
+    string _type;
+};
 
 class LexNode : public NodeData {
 public:
