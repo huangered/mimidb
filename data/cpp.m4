@@ -2,10 +2,12 @@ include(`value.m4')
 
 #include "c.tab.hpp"
 
-const int goto_table[ ][ ] = {};
-const int action_table[][] = {};
-const int rule_right_children_num_arr[] = {};
-const int rule_left_id_arr[] = {};
+#define MAX_ID 65536
+
+const int goto_table[ NUMSTATE ][ NUMNTERM ] = { DATA_GOTO };
+const int action_table[ NUMSTATE ][ NUMTOKEN ] = { DATA_ACTION };
+const int rule_right_children_num_arr[] = { DATA_RIGHT_NUM };
+const int rule_left_id_arr[] = { DATA_LEFT_ID };
 
 Parser::Parser(){
 }
@@ -21,7 +23,7 @@ Parser::parser(const char* str) {
     }
 
     InputToken* end = new InputToken{};
-    end->tok        = 1;
+    end->tok        = DATA_EOF_ID;
     data.push_back(end);
 
     YYSTYPE item{};
@@ -49,7 +51,7 @@ Parser::parser(const char* str) {
     } else {
         return nullptr;
     }
-    RETURN* ptr = reinterpret_cast<RETURN>(&item);
+    DATA_RETURN* ptr = reinterpret_cast<DATA_RETURN>(&item);
     return *ptr;
 }
 
@@ -106,7 +108,7 @@ include(`rules.m4')
     syms.push(item);
 
     int curStateId  = states.top();
-    int nextStateId = goto_table[curStateId][rule_left_id - 16];
+    int nextStateId = goto_table[curStateId][rule_left_id - NUMTOKEN];
     states.push(nextStateId);
     return true;
 }

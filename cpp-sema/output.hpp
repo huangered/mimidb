@@ -29,6 +29,8 @@ private:
     void writeMethods(FILE* f);
     void writeOther(FILE* f);
     void writeM4();
+    void writeRule(FILE* f);
+    void writeConst(FILE* f);
 };
 
 #endif // !_output_hpp_
