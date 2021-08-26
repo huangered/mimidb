@@ -20,14 +20,9 @@ public:
     void OutputFile(const char* filename);
 
 private:
-    void writeHeaderFile();
-    void writerCppFile();
-
     void writeCode(FILE* f);
     void writeUnion(FILE* f);
     void writeTokEnum(FILE* f);
-    void writeMatrix(FILE* f);
-    void writeMethods(FILE* f);
     void writeOther(FILE* f);
     void writeM4();
     void writeRule(FILE* f);
