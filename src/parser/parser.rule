@@ -1,21 +1,20 @@
 %code {
-#include "node/parsenode.h"
+
 }
 
 %union {
     Node *node;
-    char* str;
-    int integer;
-    List* list;
 }
 
 @param { Node }
 
 @token CREATE
-
+@token TABLE
+@token SELECT
+@token FROM
+@token semicolon
 %
 
-@type <node> CREATE
 @type <node> Q stmt
 
 %

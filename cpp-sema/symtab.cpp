@@ -1,6 +1,8 @@
 ﻿#include "symtab.hpp"
 #include "debug.hpp"
 
+static char* sym_name[3] = {"none", "token", "nterm"};
+
 int Symtab::nsym = 0;
 
 std::map<std::string, Symbol> Symtab::_data;
@@ -62,7 +64,7 @@ Symtab::Print() {
     printf("token tag %d, num(%d)\n", SymbolClass::token, ntoken());
     for (auto it = _data.begin(); it != _data.end(); it++) {
         // How do I access each element?
-        printf("  %15s -> %3d -> %3d\n", it->first.c_str(), it->second->id, it->second->clazz);
+        printf("  %15s -> %3d -> %s\n", it->first.c_str(), it->second->id, sym_name[it->second->clazz]);
     }
 #endif
 }
