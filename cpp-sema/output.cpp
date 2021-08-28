@@ -5,6 +5,7 @@
 #include <cstring>
 #include "reader.hpp"
 #include "symtab.hpp"
+#include "debug.hpp"
 
 Output::Output(SemaParser* _p)
     : parser{ _p } {
@@ -30,8 +31,8 @@ Output::SetParam(std::string p) {
 }
 
 void
-Output::OutputFile() {
-    writeM4();
+Output::OutputFile(const char* fout) {
+    writeM4(fout);
 };
 
 FILE*
@@ -67,8 +68,15 @@ CloseFile(FILE* f) {
 }
 
 void
-Output::writeM4() {
-    FILE* fd = OpenFile("value.m4", "w");
+Output::writeM4(const char* fout) {
+    char* f = new char[256];
+    memset(f, 0, 256);
+    memcpy(f, fout, strlen(fout));
+    memcpy(f + strlen(fout), "value.m4", 8);
+#ifdef _log_
+    printf("value.m4 path, %s\n", f);
+#endif
+    FILE* fd = OpenFile(f, "w");
 
     writeCode(fd);
 
@@ -82,8 +90,17 @@ Output::writeM4() {
 
     CloseFile(fd);
 
-    fd = OpenFile("rules.m4", "w");
+    memcpy(f + strlen(fout), "rules.m4", 8);
 
+#ifdef _log_
+    printf("rules.m4 path, %s\n", f);
+#endif
+
+    
+    fd = OpenFile(f, "w");
+
+    delete[] f;
+    
     writeRule(fd);
 
     CloseFile(fd);

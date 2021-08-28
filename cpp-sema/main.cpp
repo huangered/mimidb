@@ -9,6 +9,8 @@ using std::string;
 int
 main(int argc, char* argv[]) {
     const char* fpath = argv[1];
+    const char* foutput = argv[2];
+    
     Symtab::Init();
     FILE* f         = OpenFile(fpath, "r");
     const char* str = ReadFile(f);
@@ -32,7 +34,7 @@ main(int argc, char* argv[]) {
     output2.SetUnion(lex->GetUnion());
     output2.SetOther(lex->other);
     output2.SetParam(lex->param);
-    output2.OutputFile();
+    output2.OutputFile(foutput);
 
     Symtab::Print();
     return 0;
