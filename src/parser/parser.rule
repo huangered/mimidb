@@ -1,0 +1,33 @@
+%code {
+#include "node/parsenode.h"
+}
+
+%union {
+    Node *node;
+    char* str;
+    int integer;
+    List* list;
+}
+
+@param { Node }
+
+@token CREATE
+
+%
+
+@type <node> CREATE
+@type <node> Q stmt
+
+%
+
+Q : stmt { } ;
+
+stmt: CREATE { $$ = $1; } ;
+
+@start Q
+
+%
+
+{
+abd;
+}
