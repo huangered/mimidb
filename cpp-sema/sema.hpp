@@ -13,10 +13,7 @@
 #include <set>
 #include <stack>
 #include <string>
-#include <iostream>
 #include <memory>
-
-// bool SemaTokenListEqual(const SemaTokenList& left, const SemaTokenList& right);
 
 class RecordData {
 public:

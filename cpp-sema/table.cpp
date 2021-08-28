@@ -71,7 +71,7 @@ GotoTable::Print() {
     for (int i{ 0 }; i < _col; i++) {
         printf("%3d|", i);
     }
-    std::cout << std::endl;
+
     for (int stateId{ 0 }; stateId != _row; stateId++) {
         printf("%3d:", stateId);
         for (int i{ 0 }; i < _col; i++) {
