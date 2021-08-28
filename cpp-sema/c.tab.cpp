@@ -239,7 +239,7 @@ Parser::yyreduce(std::stack<int>& states, std::stack<YYSTYPE>& syms, int r_id) {
         {  }
         break;
     case 1:
-        { item.node = makeLex(child[0].node, child[1].node, child[2].node, child[3].list, child[5].list, child[7].list, child[8].node, child[10].node );  }
+        { item.node = makeLex(child[0].node, child[1].node, child[2].node, child[3].list, child[5].list, child[7].list, child[8].str, child[10].node );  }
         break;
     case 2:
         { item.node = makeParam(child[1].node);  }
@@ -311,7 +311,7 @@ Parser::yyreduce(std::stack<int>& states, std::stack<YYSTYPE>& syms, int r_id) {
         {  }
         break;
     case 25:
-        { item.node = makeStartRule(child[1].node);  }
+        { item.str = makeStartRule(child[1].node);  }
         break;
     case 26:
         {  }
