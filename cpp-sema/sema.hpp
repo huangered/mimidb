@@ -39,7 +39,7 @@ private:
     std::unique_ptr<StateCollection> _stateList;
 
 public:
-    SemaParser(const std::vector<Rule>& rules);
+    SemaParser(const std::vector<Rule>& rules, std::string startSym);
     ~SemaParser();
     void SetTypeMap(const std::map<std::string, std::string>& _typeMap);
     void GenerateParseTable(void);
