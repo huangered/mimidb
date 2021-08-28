@@ -1,7 +1,7 @@
 #include "c.tab.hpp"
 #include "symtab.hpp"
 #include "debug.hpp"
-
+#include <cstring>
 Node
 makeLex(Node codeNode, Node unionNode, Node paramNode, std::vector<Node>* tokens, std::vector<Node>* types,
         std::vector<Node>* rules, char* startRule, Node other) {
