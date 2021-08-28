@@ -1,6 +1,9 @@
 %code {
 #include <vector>
 #include "node.hpp"
+
+int yylex();
+
 }
 
 %union { 
@@ -12,10 +15,10 @@
 @param Node
 
 @token t_token
-@token <str> t_code
+@token t_code
 @token t_colon
-@token <str> t_identifier
-@token <str> t_block
+@token t_identifier
+@token t_block
 @token t_union
 @token t_type
 @token t_type_type
@@ -29,8 +32,9 @@
 
 %
 
+@type <str> StartRule
 @type <node> t_type t_type_type t_union t_code t_identifier t_colon t_block t_sign t_param t_start_rule
-@type <node> Lex RuleList Rule ID Type Token Q Code Union Other Param RuleRight StartRule
+@type <node> Lex RuleList Rule ID Type Token Q Code Union Other Param RuleRight
 @type <list> TokenList TypeList RuleList IdList RuleRightList
 
 %
@@ -101,7 +105,7 @@ StartRule:
 {
 
 Node makeLex(Node codeNode, Node unionNode, Node paramNode, std::vector<Node>* tokens, std::vector<Node>* types,
-                    std::vector<Node>* rules, Node startRule, Node other);
+                    std::vector<Node>* rules, char* startRule, Node other);
 
 Node makeToken(Node token);
 
@@ -119,6 +123,6 @@ Node makeUnion(Node block);
 
 Node makeParam(Node param);
 
-Node makeStartRule(Node startRule);
+char* makeStartRule(Node startRule);
 
 }

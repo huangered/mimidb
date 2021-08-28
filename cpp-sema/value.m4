@@ -1,6 +1,9 @@
 define(CodeBody, `
 #include <vector>
 #include "node.hpp"
+
+int yylex();
+
 ')
 define(UnionBody,` 
     Node node;
@@ -26,7 +29,7 @@ define(TokenBody, `            t_token =   2,
 define(CodeBody2,`
 
 Node makeLex(Node codeNode, Node unionNode, Node paramNode, std::vector<Node>* tokens, std::vector<Node>* types,
-                    std::vector<Node>* rules, Node startRule, Node other);
+                    std::vector<Node>* rules, char* startRule, Node other);
 
 Node makeToken(Node token);
 
@@ -44,7 +47,7 @@ Node makeUnion(Node block);
 
 Node makeParam(Node param);
 
-Node makeStartRule(Node startRule);
+char* makeStartRule(Node startRule);
 
 ')
 define(NUMNTERM, `17')

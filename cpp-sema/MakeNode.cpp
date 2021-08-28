@@ -4,7 +4,7 @@
 
 Node
 makeLex(Node codeNode, Node unionNode, Node paramNode, std::vector<Node>* tokens, std::vector<Node>* types,
-        std::vector<Node>* rules, Node startRule, Node other) {
+        std::vector<Node>* rules, char* startRule, Node other) {
     LexNode* n   = new LexNode();
     n->codeNode  = dynamic_cast<CodeNode*>(codeNode)->block;
     n->unionNode = dynamic_cast<UnionNode*>(unionNode)->block;
@@ -103,7 +103,7 @@ makeUnion(Node block) {
     return unionN;
 }
 
-Node
+char*
 makeStartRule(Node rule) {
-    return rule;
+  return new char[4];
 }
