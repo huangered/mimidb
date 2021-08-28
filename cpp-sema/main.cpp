@@ -25,7 +25,7 @@ main(int argc, char* argv[]) {
 
     printf("type map: {%zd}, rules: {%zd}\n", typeMap.size(), rules.size());
 
-    SemaParser parser2(rules);
+    SemaParser parser2(rules, lex->startRule);
     parser2.SetTypeMap(typeMap);
     parser2.GenerateParseTable();
 

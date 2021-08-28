@@ -13,6 +13,10 @@ makeLex(Node codeNode, Node unionNode, Node paramNode, std::vector<Node>* tokens
     n->param     = dynamic_cast<ParamNode*>(paramNode)->param;
     n->rules     = rules;
     n->other     = other->_value;
+#ifdef _log_
+    printf("(%s, %d)\n", startRule, strlen(startRule));
+#endif
+    n->startRule.assign(startRule, startRule + strlen(startRule));
     delete codeNode;
     delete unionNode;
     delete paramNode;
@@ -105,5 +109,8 @@ makeUnion(Node block) {
 
 char*
 makeStartRule(Node rule) {
-  return new char[4];
+  int len = rule->_value.size();
+  char* data = new char[len];
+  strcpy(data, rule->_value.c_str());
+  return data;
 }
