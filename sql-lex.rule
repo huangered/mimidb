@@ -12,7 +12,7 @@ int yylex();
     char* str;
 }
 
-@param Node
+@param { Node }
 
 @token t_token
 @token t_code
@@ -43,7 +43,7 @@ Q : Lex { } ;
 
 Lex : Code Union Param TokenList t_sign TypeList t_sign RuleList StartRule t_sign Other { $$ = makeLex($0, $1, $2, $3, $5, $7, $8, $10 ); } ;
 
-Param : t_param t_identifier { $$ = makeParam($1); } ;
+Param : t_param t_block { $$ = makeParam($1); } ;
 
 Code : t_code t_block { $$ = makeCode($1); } ;
 

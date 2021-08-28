@@ -86,7 +86,7 @@ const int action_table[ 56 ][ 17 ] = {
 {MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,7,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,},
 {MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,8,MAX_ID,MAX_ID,MAX_ID,},
 {MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,-4,MAX_ID,MAX_ID,MAX_ID,},
-{MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,10,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,},
+{MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,10,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,},
 {MAX_ID,MAX_ID,11,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,},
 {MAX_ID,MAX_ID,-2,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,},
 {MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,14,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,15,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,},
@@ -143,7 +143,7 @@ Parser::Parser(){
 
 YYSTYPE Parser::yylval;
 
-Node
+ Node 
 Parser::parse(const char* str) {
     Lexer lexer(str, strlen(str));
     int t;
@@ -182,7 +182,7 @@ Parser::parse(const char* str) {
     } else {
         return nullptr;
     }
-    Node* ptr = reinterpret_cast<Node*>(&item);
+     Node * ptr = reinterpret_cast< Node *>(&item);
     return *ptr;
 }
 
