@@ -64,7 +64,7 @@ public:
   
 public:
   Parser();
-  Node parse(const char* str);
+   Node  parse(const char* str);
 
 private:
   bool yyshift(std::stack<int>& states, std::stack<YYSTYPE>& syms, std::stack<InputToken*>& input, bool* acc);
