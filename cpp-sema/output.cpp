@@ -148,6 +148,7 @@ Output::writeRule(FILE* f) {
     /*
     include(`foreach.m4')
     define(`_case', `    case $1:
+// line $3
             {
               $2
             }
@@ -165,10 +166,11 @@ Output::writeRule(FILE* f) {
     */
     WriteFile(f, "include(`foreach.m4')\n");
     WriteFile(f, "define(`_case', `    case $1:\n");
+    WriteFile(f, "        // line $3\n");
     WriteFile(f, "        { $2 }\n");
     WriteFile(f, "        break;\n");
     WriteFile(f, "')dnl\n");
-    WriteFile(f, "define(`_cat', `$1$2')dnl\n");
+    WriteFile(f, "define(`_cat', `$1$2$3')dnl\n");
 
     WriteFile(f, "foreach(`x',\n");
     WriteFile(f, "`(\n");
@@ -178,7 +180,7 @@ Output::writeRule(FILE* f) {
 
         char* buf = new char[256];
         memset(buf, 0, 256);
-        sprintf(buf, "`(`%d',`%s')',\n", i, g.c_str());
+        sprintf(buf, "`(`%d',`%s', `%d')',\n", i, g.c_str(), i * 20);
 
         WriteFile(f, buf);
 

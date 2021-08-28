@@ -236,84 +236,111 @@ Parser::yyreduce(std::stack<int>& states, std::stack<YYSTYPE>& syms, int r_id) {
     switch (r_id) {
 
     case 0:
+        // line 0
         {  }
         break;
     case 1:
+        // line 20
         { item.node = makeLex(child[0].node, child[1].node, child[2].node, child[3].list, child[5].list, child[7].list, child[8].str, child[10].node );  }
         break;
     case 2:
+        // line 40
         { item.node = makeParam(child[1].node);  }
         break;
     case 3:
+        // line 60
         { item.node = makeCode(child[1].node);  }
         break;
     case 4:
+        // line 80
         { item.node = makeUnion(child[1].node);  }
         break;
     case 5:
+        // line 100
         { child[0].list->push_back(child[1].node); item.list = child[0].list;  }
         break;
     case 6:
+        // line 120
         { std::vector<Node>* vec = new std::vector<Node>(); vec->push_back(child[0].node); item.list = vec;  }
         break;
     case 7:
+        // line 140
         { item.node = makeToken(child[1].node);  }
         break;
     case 8:
+        // line 160
         { item.node = makeToken(child[2].node, child[4].node);  }
         break;
     case 9:
+        // line 180
         { child[0].list->push_back(child[1].node); item.list = child[0].list;  }
         break;
     case 10:
+        // line 200
         { std::vector<Node>* vec = new std::vector<Node>(); vec->push_back(child[0].node); item.list = vec;  }
         break;
     case 11:
+        // line 220
         { item.node = makeType(child[2].node, child[4].list);  }
         break;
     case 12:
+        // line 240
         { child[0].list->push_back(child[1].node); item.list = child[0].list;  }
         break;
     case 13:
+        // line 260
         { std::vector<Node>* vec = new std::vector<Node>(); vec->push_back(child[0].node); item.list = vec;  }
         break;
     case 14:
+        // line 280
         { item.node = makeRule(child[0].node, child[2].list);  }
         break;
     case 15:
+        // line 300
         { child[0].list->push_back(child[2].node); item.list = child[0].list;  }
         break;
     case 16:
+        // line 320
         { std::vector<Node>* vec = new std::vector<Node>(); vec->push_back(child[0].node); item.list = vec;  }
         break;
     case 17:
+        // line 340
         { item.node = makeRuleRight(child[0].list, child[1].node);  }
         break;
     case 18:
+        // line 360
         { item.node = makeRuleRight(child[0].list, nullptr);  }
         break;
     case 19:
+        // line 380
         { item.node = makeRuleRight(nullptr, child[0].node);  }
         break;
     case 20:
+        // line 400
         { item.node = makeRuleRight(nullptr, nullptr);  }
         break;
     case 21:
+        // line 420
         { child[0].list->push_back(child[1].node); item.list = child[0].list;  }
         break;
     case 22:
+        // line 440
         { std::vector<Node>* vec = new std::vector<Node>(); vec->push_back(child[0].node); item.list = vec;  }
         break;
     case 23:
+        // line 460
         {  }
         break;
     case 24:
+        // line 480
         {  }
         break;
     case 25:
+        // line 500
         { item.str = makeStartRule(child[1].node);  }
         break;
     case 26:
+        // line 520
         {  }
         break;
 
