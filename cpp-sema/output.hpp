@@ -17,7 +17,7 @@ public:
     void SetUnion(std::string b);
     void SetOther(std::string other);
     void SetParam(std::string param);
-    void OutputFile(const char* filename);
+    void OutputFile();
 
 private:
     void writeCode(FILE* f);
