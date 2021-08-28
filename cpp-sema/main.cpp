@@ -35,7 +35,7 @@ main(int argc, char* argv[]) {
     output2.SetUnion(lex->GetUnion());
     output2.SetOther(lex->other);
     output2.SetParam(lex->param);
-    output2.OutputFile("rev4.hpp");
+    output2.OutputFile();
 
     Symtab::Print();
     return 0;
