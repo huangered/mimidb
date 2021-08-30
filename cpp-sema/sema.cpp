@@ -304,9 +304,10 @@ SemaParser::funcReplace(const Item rule) {
     for (int i = rule->right.size() - 1; i >= 0; i--) {
         std::string name = this->_typeMap[rule->right[i]->name];
         std::string w    = "$" + std::to_string(i);
-        std::string r    = "child[" + std::to_string(i);
+        std::string r    = "(child[" + std::to_string(i);
         r += "].";
         r += name;
+	r += ")";
         std::size_t pos;
         while ((pos = tmp.find(w)) != std::string::npos)
             tmp.replace(pos, w.size(), r);
@@ -316,7 +317,7 @@ SemaParser::funcReplace(const Item rule) {
     std::string name = Symtab::GetName(rule->left);
 
     while ((pos = tmp.find("$$")) != std::string::npos) {
-        name = "item." + this->_typeMap[name];
+        name = "(item." + this->_typeMap[name] + ")";
         tmp.replace(pos, 2, name);
     }
 
