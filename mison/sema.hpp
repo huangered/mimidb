@@ -28,7 +28,7 @@ class SemaParser {
 private:
     int _maxState;
     std::map<std::string, std::string> _typeMap;
-    std::vector<Rule> _originRules;
+
     ItemList _rules;
     std::unique_ptr<GotoTable> _gotoTable;
     std::unique_ptr<ActionTable> _actionTable;
@@ -36,7 +36,7 @@ private:
     std::unique_ptr<StateCollection> _stateList;
 
 public:
-    SemaParser(const std::vector<Rule>& rules, std::string startSym);
+    SemaParser(std::string startSym);
     ~SemaParser();
     void SetTypeMap(const std::map<std::string, std::string>& _typeMap);
     void GenerateParseTable(void);

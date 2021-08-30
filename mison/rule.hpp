@@ -19,6 +19,8 @@ typedef RuleData* Rule;
 
 typedef std::vector<Rule> RuleList;
 
+extern RuleList Rules;
+
 class ItemData {
 public:
     int id;
