@@ -1,6 +1,8 @@
 #include "rule.hpp"
 #include "sema.hpp"
 
+RuleList Rules;
+
 bool
 ItemData::IsDotEnd() {
     return dot == right.size();
