@@ -8,12 +8,11 @@ using std::string;
 
 int
 main(int argc, char* argv[]) {
+    const char* fpath = argv[1];
+    const char* foutput = argv[2];
+    
     Symtab::Init();
-#ifdef _WIN32
-    FILE* f         = OpenFile("C:\\work\\mimidb\\sql-lex.rule", "r");
-#else
-    FILE* f         = OpenFile("../sql-lex.rule", "r");
-#endif
+    FILE* f         = OpenFile(fpath, "r");
     const char* str = ReadFile(f);
     CloseFile(f);
     Parser p;
@@ -25,7 +24,7 @@ main(int argc, char* argv[]) {
 
     printf("type map: {%zd}, rules: {%zd}\n", typeMap.size(), rules.size());
 
-    SemaParser parser2(rules);
+    SemaParser parser2(rules, lex->startRule);
     parser2.SetTypeMap(typeMap);
     parser2.GenerateParseTable();
 
@@ -35,7 +34,7 @@ main(int argc, char* argv[]) {
     output2.SetUnion(lex->GetUnion());
     output2.SetOther(lex->other);
     output2.SetParam(lex->param);
-    output2.OutputFile("rev4.hpp");
+    output2.OutputFile(foutput);
 
     Symtab::Print();
     return 0;

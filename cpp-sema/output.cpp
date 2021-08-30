@@ -5,6 +5,7 @@
 #include <cstring>
 #include "reader.hpp"
 #include "symtab.hpp"
+#include "debug.hpp"
 
 Output::Output(SemaParser* _p)
     : parser{ _p } {
@@ -30,10 +31,8 @@ Output::SetParam(std::string p) {
 }
 
 void
-Output::OutputFile(const char* filename) {
-    //    writeHeaderFile();
-    //    writerCppFile();
-    writeM4();
+Output::OutputFile(const char* fout) {
+    writeM4(fout);
 };
 
 FILE*
@@ -69,8 +68,15 @@ CloseFile(FILE* f) {
 }
 
 void
-Output::writeM4() {
-    FILE* fd = OpenFile("value.m4", "w");
+Output::writeM4(const char* fout) {
+    char* f = new char[256];
+    memset(f, 0, 256);
+    memcpy(f, fout, strlen(fout));
+    memcpy(f + strlen(fout), "value.m4", 8);
+#ifdef _log_
+    printf("value.m4 path, %s\n", f);
+#endif
+    FILE* fd = OpenFile(f, "w");
 
     writeCode(fd);
 
@@ -84,8 +90,17 @@ Output::writeM4() {
 
     CloseFile(fd);
 
-    fd = OpenFile("rules.m4", "w");
+    memcpy(f + strlen(fout), "rules.m4", 8);
 
+#ifdef _log_
+    printf("rules.m4 path, %s\n", f);
+#endif
+
+    
+    fd = OpenFile(f, "w");
+
+    delete[] f;
+    
     writeRule(fd);
 
     CloseFile(fd);
@@ -148,6 +163,7 @@ Output::writeRule(FILE* f) {
     /*
     include(`foreach.m4')
     define(`_case', `    case $1:
+// line $3
             {
               $2
             }
@@ -165,10 +181,11 @@ Output::writeRule(FILE* f) {
     */
     WriteFile(f, "include(`foreach.m4')\n");
     WriteFile(f, "define(`_case', `    case $1:\n");
+    WriteFile(f, "        // line $3\n");
     WriteFile(f, "        { $2 }\n");
     WriteFile(f, "        break;\n");
     WriteFile(f, "')dnl\n");
-    WriteFile(f, "define(`_cat', `$1$2')dnl\n");
+    WriteFile(f, "define(`_cat', `$1$2$3')dnl\n");
 
     WriteFile(f, "foreach(`x',\n");
     WriteFile(f, "`(\n");
@@ -178,7 +195,7 @@ Output::writeRule(FILE* f) {
 
         char* buf = new char[256];
         memset(buf, 0, 256);
-        sprintf(buf, "`(`%d',`%s')',\n", i, g.c_str());
+        sprintf(buf, "`(`%d',`%s', `%d')',\n", i, g.c_str(), i * 20);
 
         WriteFile(f, buf);
 

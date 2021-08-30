@@ -1,6 +1,9 @@
 %code {
 #include <vector>
 #include "node.hpp"
+
+int yylex();
+
 }
 
 %union { 
@@ -9,13 +12,13 @@
     char* str;
 }
 
-@param Node
+@param { Node }
 
 @token t_token
-@token <str> t_code
+@token t_code
 @token t_colon
-@token <str> t_identifier
-@token <str> t_block
+@token t_identifier
+@token t_block
 @token t_union
 @token t_type
 @token t_type_type
@@ -25,10 +28,12 @@
 @token t_param
 @token t_maybe
 @token t_semicolon
+@token t_start_rule
 
 %
 
-@type <node> t_type t_type_type t_union t_code t_identifier t_colon t_block t_sign t_param
+@type <str> StartRule
+@type <node> t_type t_type_type t_union t_code t_identifier t_colon t_block t_sign t_param t_start_rule
 @type <node> Lex RuleList Rule ID Type Token Q Code Union Other Param RuleRight
 @type <list> TokenList TypeList RuleList IdList RuleRightList
 
@@ -36,9 +41,9 @@
 
 Q : Lex { } ;
 
-Lex : Code Union Param TokenList t_sign TypeList t_sign RuleList t_sign Other { $$ = makeLex($0, $1, $2, $3, $5, $7, $9 ); } ;
+Lex : Code Union Param TokenList t_sign TypeList t_sign RuleList StartRule t_sign Other { $$ = makeLex($0, $1, $2, $3, $5, $7, $8, $10 ); } ;
 
-Param : t_param t_identifier { $$ = makeParam($1); } ;
+Param : t_param t_block { $$ = makeParam($1); } ;
 
 Code : t_code t_block { $$ = makeCode($1); } ;
 
@@ -89,12 +94,18 @@ ID : t_identifier { } ;
 
 Other : t_block { } ;
 
+StartRule:
+  t_start_rule t_identifier { $$ = makeStartRule($1); }
+| ;
+
+@start Q
+
 %
 
 {
 
 Node makeLex(Node codeNode, Node unionNode, Node paramNode, std::vector<Node>* tokens, std::vector<Node>* types,
-                    std::vector<Node>* rules, Node other);
+                    std::vector<Node>* rules, char* startRule, Node other);
 
 Node makeToken(Node token);
 
@@ -111,5 +122,7 @@ Node makeCode(Node block);
 Node makeUnion(Node block);
 
 Node makeParam(Node param);
+
+char* makeStartRule(Node startRule);
 
 }
