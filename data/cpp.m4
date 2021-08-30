@@ -1,7 +1,6 @@
 include(`value.m4')
 
 #include "c.tab.hpp"
-#include "lexer.hpp"
 #include <cstring>
 
 #define MAX_ID 65536
@@ -11,17 +10,22 @@ const int action_table[ NUMSTATE ][ NUMTOKEN ] = { DATA_ACTION };
 const int rule_right_children_num_arr[] = { DATA_RIGHT_NUM };
 const int rule_left_id_arr[] = { DATA_LEFT_ID };
 
-Parser::Parser(){
+Parser::Parser(yylexer* lexer){
+    this->lexer = lexer;
+}
+
+Parser::~Parser() {
+    delete lexer;
 }
 
 YYSTYPE Parser::yylval;
 
 DATA_RETURN
 Parser::parse(const char* str) {
-    Lexer lexer(str, strlen(str));
+
     int t;
     std::vector<InputToken*> data;
-    while ((t = lexer.Yylex()) != -1) {
+    while ((t = lexer->yylex()) != -1) {
         data.push_back(new InputToken{ t, yylval });
         memset(&yylval, 0, sizeof(YYSTYPE));
     }
