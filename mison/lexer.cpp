@@ -22,6 +22,9 @@ Lexer::Lexer(const char* buf, int size)
     , _buf{ buf } {
 }
 
+Lexer::~Lexer() {
+}
+
 int
 Lexer::yylex() {
     if (_cur >= _size) {
@@ -171,10 +174,10 @@ Lexer::lexBlock() {
 int
 Lexer::lexPiont() {
     yytokentype tok = t_block;
-    //int start = _cur;
-    //int count = 1;
+    // int start = _cur;
+    // int count = 1;
     //_cur++; // skip first "
-    //for (; _cur < _size; _cur++) {
+    // for (; _cur < _size; _cur++) {
     //    char c = _buf[_cur];
     //    if (c != ' ') {
     //        count++;

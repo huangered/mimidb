@@ -2,6 +2,7 @@
 
 #include "c.tab.hpp"
 #include <cstring>
+#include <cstdlib>
 
 #define MAX_ID 65536
 
