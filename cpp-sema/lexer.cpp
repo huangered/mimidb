@@ -23,7 +23,7 @@ Lexer::Lexer(const char* buf, int size)
 }
 
 int
-Lexer::Yylex() {
+Lexer::yylex() {
     if (_cur >= _size) {
         return -1;
     }
@@ -87,7 +87,7 @@ Lexer::Yylex() {
     case '\n':
     case ' ':
         _cur++;
-        return Yylex();
+        return yylex();
     case ':':
         _cur++;
         return t_colon;
@@ -192,9 +192,9 @@ Lexer::lexPiont() {
     } else if (strncmp(_buf + _cur, "@param", 6) == 0) {
         tok = t_param;
         _cur += 6;
-    } else if (strncmp(_buf + _cur, "@start", 7) == 0) {
+    } else if (strncmp(_buf + _cur, "@start", 6) == 0) {
         tok = t_start_rule;
-        _cur += 7;
+        _cur += 6;
     }
 
     return tok;

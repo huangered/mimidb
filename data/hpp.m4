@@ -20,12 +20,19 @@ struct InputToken {
     YYSTYPE item;
 };
 
+class yylexer {
+public:
+  virtual int yylex() = 0;
+};
+
+
 class Parser {
 public:
   static union YYSTYPE yylval;
-  
+  yylexer* lexer;  
 public:
-  Parser();
+  Parser(yylexer* lexer);
+  ~Parser();
   DATA_RETURN parse(const char* str);
 
 private:

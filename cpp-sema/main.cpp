@@ -3,7 +3,7 @@
 #include "output.hpp"
 #include "c.tab.hpp"
 #include "symtab.hpp"
-
+#include <cstring>
 using std::string;
 
 int
@@ -15,7 +15,7 @@ main(int argc, char* argv[]) {
     FILE* f         = OpenFile(fpath, "r");
     const char* str = ReadFile(f);
     CloseFile(f);
-    Parser p;
+    Parser p(new Lexer(str, strlen(str)));
     Node a = p.parse(str);
     printf("%s\n", a->_value.c_str());
     LexNode* lex                     = dynamic_cast<LexNode*>(a);

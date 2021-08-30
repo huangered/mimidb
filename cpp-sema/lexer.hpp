@@ -1,7 +1,9 @@
 #ifndef _lexer_hpp_
 #define _lexer_hpp_
 
-class Lexer {
+#include "c.tab.hpp"
+
+class Lexer : public yylexer {
 private:
     int _cur;
     int _size;
@@ -10,7 +12,7 @@ private:
 public:
     Lexer(const char* buf, int size);
 
-    int Yylex();
+    int yylex();
 
 private:
     int lexPiont();
