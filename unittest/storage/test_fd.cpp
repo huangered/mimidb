@@ -11,7 +11,7 @@ TEST(fd, basic) {
     char* buf3{ nullptr };
     EXPECT_GT(fd, 0);
 
-    char* buf2 = "abcdefghijklmnopqrstuvwxyz";
+    const char* buf2 = "abcdefghijklmnopqrstuvwxyz";
 
     FileSeek(fd, 0, SEEK_END);
 
