@@ -72,6 +72,7 @@ public:
     std::vector<Node>* types;
     std::vector<Node>* rules;
     string other;
+    string startRule;
 
 public:
     string GetCode();

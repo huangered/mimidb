@@ -17,14 +17,14 @@ public:
     void SetUnion(std::string b);
     void SetOther(std::string other);
     void SetParam(std::string param);
-    void OutputFile(const char* filename);
+    void OutputFile(const char* fout);
 
 private:
     void writeCode(FILE* f);
     void writeUnion(FILE* f);
     void writeTokEnum(FILE* f);
     void writeOther(FILE* f);
-    void writeM4();
+    void writeM4(const char* fout);
     void writeRule(FILE* f);
     void writeConst(FILE* f);
 };

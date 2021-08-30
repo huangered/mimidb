@@ -1,0 +1,32 @@
+%code {
+
+}
+
+%union {
+    Node *node;
+}
+
+@param { Node }
+
+@token CREATE
+@token TABLE
+@token SELECT
+@token FROM
+@token semicolon
+%
+
+@type <node> Q stmt
+
+%
+
+Q : stmt { } ;
+
+stmt: CREATE { $$ = $1; } ;
+
+@start Q
+
+%
+
+{
+abd;
+}

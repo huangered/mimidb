@@ -8,6 +8,8 @@
 #include <vector>
 #include "node.hpp"
 
+int yylex();
+
 union YYSTYPE {
 
     Node node;
@@ -31,6 +33,7 @@ enum yytokentype
     t_param      = 13,
     t_maybe      = 14,
     t_semicolon  = 15,
+    t_start_rule = 16,
 };
 
 struct InputToken {
@@ -52,7 +55,7 @@ private:
 };
 
 Node makeLex(Node codeNode, Node unionNode, Node paramNode, std::vector<Node>* tokens, std::vector<Node>* types,
-             std::vector<Node>* rules, Node other);
+             std::vector<Node>* rules, char* startRule, Node other);
 
 Node makeToken(Node token);
 
@@ -69,5 +72,7 @@ Node makeCode(Node block);
 Node makeUnion(Node block);
 
 Node makeParam(Node param);
+
+char* makeStartRule(Node startRule);
 
 #endif
