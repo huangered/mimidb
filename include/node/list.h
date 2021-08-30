@@ -1,7 +1,7 @@
 #ifndef _list_hpp_
 #define _list_hpp_
 
-#include "node/node.h"
+#include "node/node.hpp"
 
 typedef struct ListCell {
     union {

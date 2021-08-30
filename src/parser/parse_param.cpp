@@ -1,4 +1,4 @@
-#include "node/parsenode.h"
+#include "node/parsenode.hpp"
 
 Node*
 makeParam(char* param1, char* param2) {
