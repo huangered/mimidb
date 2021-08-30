@@ -170,36 +170,32 @@ Lexer::lexBlock() {
 
 int
 Lexer::lexPiont() {
-    yytokentype tok;
-    int start = _cur;
-    int count = 1;
-    _cur++; // skip first "
-    for (; _cur < _size; _cur++) {
-        char c = _buf[_cur];
-        if (c != ' ') {
-            count++;
-        } else {
-            break;
-        }
-    }
+    yytokentype tok = t_block;
+    //int start = _cur;
+    //int count = 1;
+    //_cur++; // skip first "
+    //for (; _cur < _size; _cur++) {
+    //    char c = _buf[_cur];
+    //    if (c != ' ') {
+    //        count++;
+    //    } else {
+    //        break;
+    //    }
+    //}
 
-    char* p = new char[count + 1];
-
-    strncpy(p, _buf + start, count);
-    p[count] = '\0';
-
-    tok = t_block;
-
-    if (strcmp("@token", p) == 0) {
+    if (strncmp(_buf + _cur, "@token", 6) == 0) {
         tok = t_token;
-    } else if (strcmp("@type", p) == 0) {
+        _cur += 6;
+    } else if (strncmp(_buf + _cur, "@type", 5) == 0) {
         tok = t_type;
-    } else if (strcmp("@param", p) == 0) {
+        _cur += 5;
+    } else if (strncmp(_buf + _cur, "@param", 6) == 0) {
         tok = t_param;
-    } else if (strcmp("@start", p) == 0) {
+        _cur += 6;
+    } else if (strncmp(_buf + _cur, "@start", 7) == 0) {
         tok = t_start_rule;
+        _cur += 7;
     }
-    delete[] p;
 
     return tok;
 }
