@@ -33,7 +33,7 @@ public:
 public:
   Parser(yylexer* lexer);
   ~Parser();
-  DATA_RETURN parse(const char* str);
+  DATA_RETURN parse();
 
 private:
   bool yyshift(std::stack<int>& states, std::stack<YYSTYPE>& syms, std::stack<InputToken*>& input, bool* acc);

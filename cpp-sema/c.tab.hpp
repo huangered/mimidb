@@ -1,55 +1,38 @@
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 #ifndef _parser_hpp_
 #define _parser_hpp_
 
 #include <stack>
-
 
 #include <vector>
 #include "node.hpp"
 
 int yylex();
 
-
-
 union YYSTYPE {
-   
+
     Node node;
     std::vector<Node>* list;
     char* str;
-
 };
 
 enum yytokentype {
-              t_token =   2,
-             t_code =   3,
-            t_colon =   4,
-       t_identifier =   5,
-            t_block =   6,
-            t_union =   7,
-             t_type =   8,
-        t_type_type =   9,
-             t_sign =  10,
-             t_less =  11,
-          t_greater =  12,
-            t_param =  13,
-            t_maybe =  14,
-        t_semicolon =  15,
-       t_start_rule =  16,
+    t_token      = 2,
+    t_code       = 3,
+    t_colon      = 4,
+    t_identifier = 5,
+    t_block      = 6,
+    t_union      = 7,
+    t_type       = 8,
+    t_type_type  = 9,
+    t_sign       = 10,
+    t_less       = 11,
+    t_greater    = 12,
+    t_param      = 13,
+    t_maybe      = 14,
+    t_semicolon  = 15,
+    t_start_rule = 16,
 
 };
 
@@ -60,28 +43,26 @@ struct InputToken {
 
 class yylexer {
 public:
-  virtual int yylex() = 0;
+    virtual int yylex() = 0;
 };
-
 
 class Parser {
 public:
-  static union YYSTYPE yylval;
-  yylexer* lexer;  
+    static union YYSTYPE yylval;
+    yylexer* lexer;
+
 public:
-  Parser(yylexer* lexer);
-  ~Parser();
-   Node  parse(const char* str);
+    Parser(yylexer* lexer);
+    ~Parser();
+    Node parse();
 
 private:
-  bool yyshift(std::stack<int>& states, std::stack<YYSTYPE>& syms, std::stack<InputToken*>& input, bool* acc);
-  bool yyreduce(std::stack<int>& states, std::stack<YYSTYPE>& syms, int r_id);
+    bool yyshift(std::stack<int>& states, std::stack<YYSTYPE>& syms, std::stack<InputToken*>& input, bool* acc);
+    bool yyreduce(std::stack<int>& states, std::stack<YYSTYPE>& syms, int r_id);
 };
 
-
-
 Node makeLex(Node codeNode, Node unionNode, Node paramNode, std::vector<Node>* tokens, std::vector<Node>* types,
-                    std::vector<Node>* rules, char* startRule, Node other);
+             std::vector<Node>* rules, char* startRule, Node other);
 
 Node makeToken(Node token);
 
@@ -100,8 +81,5 @@ Node makeUnion(Node block);
 Node makeParam(Node param);
 
 char* makeStartRule(Node startRule);
-
-
-
 
 #endif
