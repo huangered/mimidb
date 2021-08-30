@@ -4,6 +4,7 @@
 #include "c.tab.hpp"
 #include "symtab.hpp"
 #include <cstring>
+#include <cassert>
 using std::string;
 
 int
@@ -16,7 +17,8 @@ main(int argc, char* argv[]) {
     const char* str = ReadFile(f);
     CloseFile(f);
     Parser p(new Lexer(str, strlen(str)));
-    Node a = p.parse(str);
+    Node a = p.parse();
+    assert(a);
     printf("%s\n", a->_value.c_str());
     LexNode* lex                     = dynamic_cast<LexNode*>(a);
     std::map<string, string> typeMap = lex->GetTypeMap();
