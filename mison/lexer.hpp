@@ -11,7 +11,7 @@ private:
 
 public:
     Lexer(const char* buf, int size);
-
+    ~Lexer();
     int yylex();
 
 private:
