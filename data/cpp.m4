@@ -68,23 +68,18 @@ bool
 Parser::yyshift(std::stack<int>& states, std::stack<YYSTYPE>& syms, std::stack<InputToken*>& input, bool* acc) {
     int curStateId    = states.top();
     InputToken* token = input.top();
-    bool r_acc;
-    bool r_state;
-    int r_id;
-    bool r_find{ false };
     int rd  = action_table[curStateId][token->tok];
-    r_acc   = (rd == 10000);
-    r_state = (rd > 0);
-    r_id    = rd > 0 ? rd : -rd;
-    r_find  = (r_id != MAX_ID);
-    if (r_find == true) {
+    *acc   = (rd == 10000);
+    bool r_state = (rd > 0);
+    int r_id    = abs( rd );
+    bool r_find  = (r_id != MAX_ID);
+    if (r_find) {
 
-        if (r_acc == true) {
-            *acc = true;
+        if (*acc) {
             return true;
         }
 
-        if (r_state == true) {
+        if (r_state) {
             states.push(r_id);
             YYSTYPE it = token->item;
             syms.push(it);
