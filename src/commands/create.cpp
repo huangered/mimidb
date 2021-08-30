@@ -7,6 +7,7 @@
 #include "catalog/index.hpp"
 #include "commands/indexcmds.hpp"
 #include "util/mctx.hpp"
+#include "node/list.h"
 
 static TupleDesc formTupleDesc(List* columns);
 static void formAttr(FormData_mimi_attribute* attr, ColumnDef* def);
@@ -20,8 +21,8 @@ DefineRelation(CreateTableStmt* stmt) {
     // 创建堆表
     const char* name  = stmt->relname;
     Oid id            = GetNewOid();
-    TupleDesc tupdesc = formTupleDesc(stmt->columns);
-    heap_rel          = heap_create_with_catalog(name, id, tupdesc);
+    //    TupleDesc tupdesc = formTupleDesc(stmt->columns);
+    //    heap_rel          = heap_create_with_catalog(name, id, tupdesc);
 
     // 创建索引
 }

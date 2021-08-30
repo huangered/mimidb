@@ -1,15 +1,19 @@
 %code {
-
+#include "node/node.hpp"
+#include "node/parsenode.hpp"
+#include  <list>
+#include <cstdlib>
+#include <cstdio>
 }
 
 %union {
     Node *node;
     int num;
     char* str;
-    List* list;
+    std::list<Node*>* list;
 }
 
-@param { Node }
+@param { Node* }
 
 @token CREATE
 @token TABLE
@@ -58,10 +62,10 @@ stmt:
 ;
 
 create_stmt :
-  CREATE TABLE t_text table_params semicolon { $$ = makeCreateStmt($2); } ;
+  CREATE TABLE t_text table_params semicolon { } ;
 
 select_stmt :
- SELECT params FROM t_text where_stmt order_stmt semicolon { $$ = makeSelectStmt($1, $3); } ;
+ SELECT params FROM t_text where_stmt order_stmt semicolon {  } ;
 
 update_stmt :
   UPDATE t_text SET where_stmt { };
@@ -107,6 +111,5 @@ order_params: order_params comma order_param {}
 %
 
 {
-Node makeCreateStmt(char* name);
-Node makeSelectStmt(List* params, char* name);
+
 }

@@ -9,6 +9,7 @@ extern "C" {
 */
 void
 ProcessUtility(Node* pstmt) {
+  /*
     switch (pstmt->nodetag) {
     case NT_CreateTableStmt: {
         List* stmts = nullptr;
@@ -25,4 +26,5 @@ ProcessUtility(Node* pstmt) {
         // todo:
     } break;
     }
+  */
 }
