@@ -1,7 +1,7 @@
 ﻿
 add_custom_target(
   build_parser ALL
-  COMMAND cppsema ${PROJECT_SOURCE_DIR}/src/parser/parser.rule ${PROJECT_SOURCE_DIR}/src/parser/
+  COMMAND mison ${PROJECT_SOURCE_DIR}/src/parser/parser.rule ${PROJECT_SOURCE_DIR}/src/parser/
 
   COMMENT "build sql parser header and cpp"
 )
