@@ -28,7 +28,7 @@ FileRead(File fd, char* buf, int amount) {
 }
 
 int
-FileWrite(File fd, char* buf, int amount) {
+FileWrite(File fd, const char* buf, int amount) {
     int num = write(fd, buf, amount);
     return num;
 }
