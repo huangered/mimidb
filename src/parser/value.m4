@@ -3,14 +3,18 @@ define(CodeBody, `
 ')
 define(UnionBody,`
     Node *node;
+<<<<<<< HEAD
     int num;
     char* str;
     List* list;
+=======
+>>>>>>> master
 ')
 define(TokenBody, `             CREATE =   2,
               TABLE =   3,
              SELECT =   4,
                FROM =   5,
+<<<<<<< HEAD
              UPDATE =   6,
                INTO =   7,
              INSERT =   8,
@@ -146,5 +150,27 @@ define(DATA_GOTO, `
 ')
 define(DATA_RIGHT_NUM, `1,2,1,1,1,1,1,1,5,7,4,2,2,3,3,1,2,3,1,1,0,2,2,1,2,3,1,')
 define(DATA_LEFT_ID, `23,25,25,24,24,24,24,24,26,27,28,29,30,31,35,35,36,32,32,37,33,33,38,38,34,40,40,')
+=======
+          semicolon =   6,
+')
+define(CodeBody2,`
+abd;
+')
+define(NUMNTERM, `2')
+define(NUMTOKEN, `7')
+define(NUMSTATE, `3')
+define(DATA_ACTION, `
+{MAX_ID,MAX_ID,1,MAX_ID,MAX_ID,MAX_ID,MAX_ID,},
+{MAX_ID,-1,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,},
+{MAX_ID,10000,MAX_ID,MAX_ID,MAX_ID,MAX_ID,MAX_ID,},
+')
+define(DATA_GOTO, `
+{MAX_ID,2,},
+{MAX_ID,MAX_ID,},
+{MAX_ID,MAX_ID,},
+')
+define(DATA_RIGHT_NUM, `1,1,')
+define(DATA_LEFT_ID, `7,8,')
+>>>>>>> master
 define(DATA_EOF_ID, `1')
 define(DATA_RETURN, ` Node ')
