@@ -2,16 +2,16 @@
 
 Node*
 makeParam(char* param1, char* param2) {
-    ParamStmt* node = (ParamStmt*)malloc(sizeof(ParamStmt));
+    ParamStmt* node = new ParamStmt();
     node->nodetag   = NT_ParamStmt;
     node->key       = param1;
     node->type      = param2;
-    return (Node*)node;
+    return node;
 }
 
 Node*
 makeCreateTableParam(char* col_name, char* type, int primary) {
-    CreateTableParam* node = (CreateTableParam*)malloc(sizeof(CreateTableParam));
+    CreateTableParam* node = new CreateTableParam();
     node->nodetag          = NT_CreateTableParam;
     node->colname          = col_name;
     node->type             = type;
@@ -21,14 +21,14 @@ makeCreateTableParam(char* col_name, char* type, int primary) {
 
 Node*
 makeTypeName(char* type_name) {
-    TypeName* name = (TypeName*)malloc(sizeof(TypeName));
+    TypeName* name = new TypeName();
     name->name     = type_name;
     return (Node*)name;
 }
 
 Node*
 makeColumnDef(char* col_name, TypeName* type_name, int primary) {
-    ColumnDef* def = (ColumnDef*)malloc(sizeof(ColumnDef));
+    ColumnDef* def = new ColumnDef();
     def->colname   = col_name;
     def->typeName  = type_name;
     return (Node*)def;

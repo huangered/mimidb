@@ -2,7 +2,7 @@
 #include "top/utility.hpp"
 extern "C" {
 #include "parser/parse_utilitycmd.h"
-#include "node/list.h"
+
 }
 /*
 处理create table sql

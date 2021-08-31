@@ -7,10 +7,9 @@
 #include "catalog/index.hpp"
 #include "commands/indexcmds.hpp"
 #include "util/mctx.hpp"
-#include "node/list.h"
 
-static TupleDesc formTupleDesc(List* columns);
-static void formAttr(FormData_mimi_attribute* attr, ColumnDef* def);
+//static TupleDesc formTupleDesc(List* columns);
+//static void formAttr(FormData_mimi_attribute* attr, ColumnDef* def);
 
 /*
 创建表
@@ -28,6 +27,7 @@ DefineRelation(CreateTableStmt* stmt) {
 }
 
 // 从 column def 创建 attribute对象
+/*
 TupleDesc
 formTupleDesc(List* columns) {
     ListCell* cell;
@@ -50,3 +50,4 @@ formAttr(FormData_mimi_attribute* attr, ColumnDef* def) {
     attr->att_len = 255;
     // memcpy(attr->attname, def->colname, attr->attlen);
 }
+*/

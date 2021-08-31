@@ -14,19 +14,19 @@ public:
 class SelectStmt : public Node {
 public:
     char* relname;
-    vector<Node*> columns;
+    vector<Node*>* columns;
 };
 
 class InsertStmt : public Node {
 public:
     char* relname;
-    vector<Node*> columns;
+    vector<Node*>* columns;
 };
 
 class UpdateStmt : public Node {
 public:
     char* relname;
-    vector<Node*> columns;
+    vector<Node*>* columns;
     Node* where_cause;
 };
 
@@ -39,7 +39,7 @@ public:
 class CreateTableStmt : public Node {
 public:
     char* relname;
-    vector<Node*> columns;
+    vector<Node*>* columns;
 };
 
 class CreateTableParam : public Node {
@@ -64,15 +64,18 @@ public:
     char* type;
 };
 
-class WhereStmt {
+class WhereStmt : public Node {
+public:
     vector<Node*>* columns;
 };
 
-class IntValue {
+class IntValue : public Node {
+public:
     int number;
 };
 
-class StrValue {
+class StrValue : public Node {
+public:
     char* str;
 };
 
