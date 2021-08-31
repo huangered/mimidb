@@ -23,12 +23,14 @@ struct InputToken {
 class yylexer {
 public:
   virtual int yylex() = 0;
+  virtual ~yylexer() {};
 };
 
 
 class Parser {
 public:
   static union YYSTYPE yylval;
+private:
   yylexer* lexer;  
 public:
   Parser(yylexer* lexer);

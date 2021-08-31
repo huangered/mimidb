@@ -7,13 +7,11 @@
 
 class FirstSet {
 private:
-    std::vector<Rule> _rules;
-
     // <sema token id, tok id>
     std::map<int, std::set<int>> _firstSet;
 
 public:
-    FirstSet(const std::vector<Rule>& rules);
+    FirstSet();
 
     std::vector<int> Find(const SymbolList& tokens, const std::vector<int>& extra);
 
