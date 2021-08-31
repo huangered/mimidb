@@ -31,6 +31,9 @@ SqlLexer::yylex() {
     char Char = _buf[_cur];
 
     switch (Char) {
+    case '0':
+    case '1':
+      return lexNumber();
     case 'a':
     case 'b':
     case 'c':
@@ -88,27 +91,12 @@ SqlLexer::yylex() {
     case ' ':
         _cur++;
         return yylex();
-    case ':':
-        _cur++;
-        return t_colon;
-    case '%':
-        return lexSign();
-    case '{':
-        return lexBlock();
-    case '@':
-        return lexPiont();
-    case '<':
-        _cur++;
-        return t_less;
-    case '>':
-        _cur++;
-        return t_greater;
-    case '|':
-        _cur++;
-        return t_maybe;
     case ';':
         _cur++;
-        return t_semicolon;
+        return semicolon;
+    case '*':
+      _cur++;
+      return star;
     }
 
     return -1;
@@ -130,78 +118,35 @@ SqlLexer::lexIdentifier() {
     char* p = new char[count + 1];
     strncpy(p, _buf + start, count);
     p[count] = '\0';
+    // check identifier table
 
-    Parser::yylval.node         = new NodeData{};
-    Parser::yylval.node->_value = p;
+    // default text
+    Parser::yylval.str = p;
 
-    delete[] p;
-
-    return t_identifier;
+    return t_text;
 }
 
 int
-SqlLexer::lexBlock() {
-    int start = _cur + 1;
+SqlLexer::lexNumber() {
+  int start = _cur;
     int count = 0;
-    _cur++; // skip first "
     for (; _cur < _size; _cur++) {
         char c = _buf[_cur];
-        if (c != '}') {
+        if (c >= '0' && c <= '9') {
             count++;
         } else {
             break;
         }
     }
-    _cur++; // skip end "
 
     char* p = new char[count + 1];
-
     strncpy(p, _buf + start, count);
     p[count] = '\0';
 
-    Parser::yylval.node         = new Node{};
-    Parser::yylval.node->_value = p;
+    Parser::yylval.num = atoi(p);
 
     delete[] p;
 
-    return t_block;
+    return t_number;
+
 }
-
-int
-SqlLexer::lexPiont() {
-    yytokentype tok = t_block;
-
-    if (strncmp(_buf + _cur, "@token", 6) == 0) {
-        tok = t_token;
-        _cur += 6;
-    } else if (strncmp(_buf + _cur, "@type", 5) == 0) {
-        tok = t_type;
-        _cur += 5;
-    } else if (strncmp(_buf + _cur, "@param", 6) == 0) {
-        tok = t_param;
-        _cur += 6;
-    } else if (strncmp(_buf + _cur, "@start", 6) == 0) {
-        tok = t_start_rule;
-        _cur += 6;
-    }
-
-    return tok;
-}
-
-int
-SqlLexer::lexSign() {
-    yytokentype tok = t_sign;
-
-    if (strncmp(_buf + _cur, "%code", 5) == 0) {
-        tok = t_code;
-        _cur += 5;
-    } else if (strncmp(_buf + _cur, "%union", 6) == 0) {
-        tok = t_union;
-        _cur += 6;
-    } else {
-        _cur++;
-    }
-
-    return tok;
-}
-
