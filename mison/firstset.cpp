@@ -4,8 +4,7 @@
 #include "symtab.hpp"
 #include <map>
 
-FirstSet::FirstSet(const RuleList& rules)
-    : _rules{ rules } {
+FirstSet::FirstSet() {
 }
 
 std::vector<int>
@@ -47,7 +46,7 @@ FirstSet::Gen() {
     do {
         count = 0;
 
-        for (Rule rule : _rules) {
+        for (Rule rule : Rules) {
             std::set<int> tokSet;
             int left_id = rule->left;
 

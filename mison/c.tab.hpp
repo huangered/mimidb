@@ -17,7 +17,8 @@ union YYSTYPE {
     char* str;
 };
 
-enum yytokentype {
+enum yytokentype
+{
     t_token      = 2,
     t_code       = 3,
     t_colon      = 4,
@@ -33,7 +34,6 @@ enum yytokentype {
     t_maybe      = 14,
     t_semicolon  = 15,
     t_start_rule = 16,
-
 };
 
 struct InputToken {
@@ -44,11 +44,14 @@ struct InputToken {
 class yylexer {
 public:
     virtual int yylex() = 0;
+    virtual ~yylexer(){};
 };
 
 class Parser {
 public:
     static union YYSTYPE yylval;
+
+private:
     yylexer* lexer;
 
 public:
