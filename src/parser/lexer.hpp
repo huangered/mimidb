@@ -15,10 +15,9 @@ public:
   int yylex();
 
 private:
-  int lexPiont();
+
   int lexIdentifier();
-  int lexBlock();
-  int lexSign();
+  int lexNumber();
 };
 
 
