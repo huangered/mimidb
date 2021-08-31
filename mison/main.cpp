@@ -22,11 +22,11 @@ main(int argc, char* argv[]) {
     printf("%s\n", a->_value.c_str());
     LexNode* lex                     = dynamic_cast<LexNode*>(a);
     std::map<string, string> typeMap = lex->GetTypeMap();
-    std::vector<Rule> rules          = lex->GetRules();
+    Rules          = lex->GetRules();
 
-    printf("type map: {%zd}, rules: {%zd}\n", typeMap.size(), rules.size());
+    printf("type map: {%zd}, rules: {%zd}\n", typeMap.size(), Rules.size());
 
-    SemaParser parser2(rules, lex->startRule);
+    SemaParser parser2(lex->startRule);
     parser2.SetTypeMap(typeMap);
     parser2.GenerateParseTable();
 
