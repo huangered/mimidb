@@ -1,16 +1,16 @@
 %code {
 #include "node/node.hpp"
 #include "node/parsenode.hpp"
-#include  <list>
+#include  <vector>
 #include <cstdlib>
 #include <cstdio>
 }
 
 %union {
-    Node *node;
+    Node* node;
     int num;
     char* str;
-    std::list<Node*>* list;
+    std::vector<Node*>* list;
 }
 
 @param { Node* }
@@ -46,7 +46,7 @@
 
 %
 
-Q : stmt { } ;
+Q : stmt { $$ = $0 ; } ;
 
 stmts :
   stmts stmt { }
@@ -75,7 +75,7 @@ insert_stmt : INSERT where_stmt { };
 delete_stmt : DELETE where_stmt { };
 
 table_params :
-  l_paran column_params r_paran { } ;
+  l_paran column_params r_paran { $$ = $1;} ;
 
 column_params :
   column_params comma column_param { }
@@ -87,7 +87,7 @@ column_param :
 
 params:
   params comma param { }
-| param { }
+| param { $$ = new std::vector<Node*>(); $$.push_back($1); }
 ;
 
 param : t_text { } ;

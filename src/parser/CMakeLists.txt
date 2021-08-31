@@ -12,5 +12,3 @@ add_library(parser  "c.tab.cpp"
   "parse_expr.cpp"
   "parse_stmt.cpp"
   )
-
-#xcadd_dependencies(parser asdf)
