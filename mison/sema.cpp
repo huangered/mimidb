@@ -32,14 +32,13 @@ group_key::operator<(const group_key& g1) const {
 
 // end
 
-SemaParser::SemaParser(const std::vector<Rule>& rules, std::string startSym)
+SemaParser::SemaParser(std::string startSym)
     : _maxState{ 0 } {
-    _firstSet  = std::unique_ptr<FirstSet>(new FirstSet(rules));
+    _firstSet  = std::unique_ptr<FirstSet>(new FirstSet());
     _stateList = std::unique_ptr<StateCollection>(new StateCollection());
-    _originRules.insert(_originRules.begin(), rules.begin(), rules.end());
     _stateList->Add(new StateData{ 0 });
     int startSymId = Symtab::GetId(startSym);
-    for (Rule rule : rules) {
+    for (Rule rule : Rules) {
         Item r        = new ItemData{};
         r->id         = rule->id;
         r->left       = rule->left;
