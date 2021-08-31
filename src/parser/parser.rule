@@ -112,4 +112,6 @@ order_params: order_params comma order_param {}
 
 {
 
+Node* mison_parse(const char* str);
+
 }

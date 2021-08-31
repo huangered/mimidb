@@ -63,3 +63,8 @@ makeWhereStmt(vector<Node*>* cols) {
 
     return (Node*)stmt;
 }
+
+Node*
+mison_parse(const char* str) {
+  return nullptr;
+}
