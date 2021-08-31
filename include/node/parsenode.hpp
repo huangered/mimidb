@@ -6,31 +6,31 @@
 
 using std::vector;
 
-class ExprStmt :public Node{
+class ExprStmt : public Node {
 public:
     char* key;
 };
 
-class SelectStmt :public Node{
-public:
-  char* relname;
-  vector<Node*> columns;
-};
-
-class InsertStmt :public Node {
-public:
-  char* relname;
-  vector<Node*> columns;
-};
-
-class UpdateStmt :public Node {
+class SelectStmt : public Node {
 public:
     char* relname;
-  vector<Node*> columns;
+    vector<Node*> columns;
+};
+
+class InsertStmt : public Node {
+public:
+    char* relname;
+    vector<Node*> columns;
+};
+
+class UpdateStmt : public Node {
+public:
+    char* relname;
+    vector<Node*> columns;
     Node* where_cause;
 };
 
-class AssignStmt :public Node {
+class AssignStmt : public Node {
 public:
     char* col_name;
     Node* value;
@@ -38,11 +38,11 @@ public:
 
 class CreateTableStmt : public Node {
 public:
-  char* relname;
-  vector<Node*> columns;
+    char* relname;
+    vector<Node*> columns;
 };
 
-class CreateTableParam :public Node  {
+class CreateTableParam : public Node {
 public:
     char* colname;
     char* type;
@@ -52,20 +52,20 @@ public:
 /*
 index 描述
 */
-class CreateIndexStmt :public Node  {
+class CreateIndexStmt : public Node {
 public:
-  char* relname;
-  vector<Node*>* columns;
+    char* relname;
+    vector<Node*>* columns;
 };
 
-class ParamStmt :public Node {
+class ParamStmt : public Node {
 public:
     char* key;
     char* type;
 };
 
 class WhereStmt {
-  vector<Node*>* columns;
+    vector<Node*>* columns;
 };
 
 class IntValue {
@@ -78,8 +78,8 @@ class StrValue {
 
 class TypeName : public Node {
 public:
-  char* name;
-  long typeOid;
+    char* name;
+    long typeOid;
 };
 
 class ColumnDef : public Node {
