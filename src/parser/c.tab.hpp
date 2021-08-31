@@ -28,7 +28,7 @@
 
 union YYSTYPE {
   
-    Node *node;
+    Node* node;
     int num;
     char* str;
     std::list<Node*>* list;
@@ -88,6 +88,8 @@ private:
 };
 
 
+
+Node* mison_parse(const char* str);
 
 
 

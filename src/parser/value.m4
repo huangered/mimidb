@@ -6,7 +6,7 @@ define(CodeBody, `
 #include <cstdio>
 ')
 define(UnionBody,`
-    Node *node;
+    Node* node;
     int num;
     char* str;
     std::list<Node*>* list;
@@ -34,6 +34,8 @@ define(TokenBody, `             CREATE =   2,
                star =  22,
 ')
 define(CodeBody2,`
+
+Node* mison_parse(const char* str);
 
 ')
 define(NUMNTERM, `19')
