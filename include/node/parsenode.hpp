@@ -106,4 +106,6 @@ Node* makeWhereStmt(vector<Node*>* cols);
 Node* makeTypeName(char* type_name);
 Node* makeColumnDef(char* col_name, TypeName* type_name, int primary);
 
+extern Node* mison_parse(const char* str);
+
 #endif
