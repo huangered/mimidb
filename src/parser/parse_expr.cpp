@@ -1,8 +1,8 @@
-#include "node/parsenode.h"
+#include "node/parsenode.hpp"
 
 Node*
 makeExpr(char* param) {
-    ExprStmt* node = (ExprStmt*)malloc(sizeof(ExprStmt));
+    ExprStmt* node = new ExprStmt();
     node->nodetag  = NT_ExprStmt;
     node->key      = param;
     return (Node*)node;
@@ -10,7 +10,7 @@ makeExpr(char* param) {
 
 Node*
 makeIntValue(int i) {
-    IntValue* v = (IntValue*)malloc(sizeof(IntValue));
+    IntValue* v = new IntValue();
     v->nodetag  = NT_IntValue;
     v->number   = i;
     return (Node*)v;
@@ -18,7 +18,7 @@ makeIntValue(int i) {
 
 Node*
 makeStrValue(char* str) {
-    StrValue* v = (StrValue*)malloc(sizeof(StrValue));
+    StrValue* v = new StrValue();
     v->nodetag  = NT_StrValue;
     v->str      = str;
     return (Node*)v;

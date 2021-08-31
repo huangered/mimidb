@@ -29,6 +29,7 @@ enum NodeTag
 typedef enum NodeTag NodeTag;
 
 class Node {
+public:
     NodeTag nodetag;
 };
 
