@@ -1,4 +1,7 @@
 ﻿#include "node/parsenode.hpp"
+#include "c.tab.hpp"
+#include "lexer.hpp"
+#include <cstring>
 /*
  * 解析create table sql
  */
@@ -65,6 +68,16 @@ makeWhereStmt(vector<Node*>* cols) {
 }
 
 Node*
+makeOrderbyStmt(vector<Node*>* cols) {
+  OrderbyStmt* stmt = new OrderbyStmt();
+
+  return stmt;
+}
+
+Node*
 mison_parse(const char* str) {
-  return nullptr;
+  Parser p(new SqlLexer(str, strlen(str)));
+  Node* node = p.parse();
+
+  return node;
 }

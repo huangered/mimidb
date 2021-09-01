@@ -79,8 +79,8 @@ table_params :
   l_paran column_params r_paran { $$ = $1;} ;
 
 column_params :
-  column_params comma column_param { }
-| column_param { }
+  column_params comma column_param { $0->push_back($2); $$ = $0;  }
+| column_param { std::vector<Node*>* vec = new std::vector<Node*>(); vec->push_back($0); $$ = vec; }
 ;
 
 column_param :
@@ -91,21 +91,23 @@ params:
 | param { std::vector<Node*>* vec = new std::vector<Node*>(); vec->push_back($0); $$ = vec; }
 ;
 
-param : t_text { } ;
+param : t_text { $$ = makeStrValue($0); } ;
 
 where_stmt :
-|  WHERE where_params { }
+|  WHERE where_params { $$ = makeWhereStmt($1); }
 ;
 
-where_params : where_params where_param { }
-| where_param
+where_params : where_params where_param { $0->push_back($1); $$ = $0; }
+| where_param {  std::vector<Node*>* vec = new std::vector<Node*>(); vec->push_back($0); $$ = vec;  }
 ;
 
-order_stmt : ORDERBY order_params {} ;
+order_stmt :
+| ORDERBY order_params { $$ = makeOrderbyStmt($1); }
+;
 
 order_params:
-  order_params comma order_param {}
-| order_param {}
+  order_params comma order_param { $0->push_back($2); $$ = $0; }
+| order_param { std::vector<Node*>* vec = new std::vector<Node*>(); vec->push_back($0); $$ = vec;  }
 ;
 
 @start Q
