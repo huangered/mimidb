@@ -97,7 +97,7 @@ Node* makeStrValue(char* str);
 Node* makeExpr(char* key);
 Node* makeParam(char* param1, char* param2);
 Node* makeAssignStmt(char* col_name, Node* value);
-Node* makeSelectStmt(char* tbl_name, vector<Node*>* cols);
+Node* makeSelectStmt(char* tbl_name, vector<Node*>* cols, Node* whereStmt, Node* orderByStmt);
 Node* makeInsertStmt(char* tbl_name, vector<Node*>* cols);
 Node* makeUpdateStmt(char* tbl_name, vector<Node*>* cols, Node* where_cause);
 Node* makeCreateTableStmt(char* tbl_name, vector<Node*>* cols);

@@ -22,6 +22,7 @@
 @token UPDATE
 @token INTO
 @token INSERT
+@token VALUES
 @token DELETE
 @token SET
 @token WHERE
@@ -40,7 +41,7 @@
 %
 
 @type <str> t_text
-@type <list> stmts params column_params where_params order_params
+@type <list> stmts params column_params where_params order_params table_params
 @type <node> param column_param order_param where_param
 @type <node> Q stmt create_stmt select_stmt update_stmt insert_stmt delete_stmt where_stmt order_stmt
 
@@ -62,15 +63,15 @@ stmt:
 ;
 
 create_stmt :
-  CREATE TABLE t_text table_params semicolon { } ;
+  CREATE TABLE t_text table_params semicolon { $$ = makeCreateTableStmt($2, $3); } ;
 
 select_stmt :
- SELECT params FROM t_text where_stmt order_stmt semicolon {  } ;
+ SELECT params FROM t_text where_stmt order_stmt semicolon { $$ = makeSelectStmt($3, $1, $4, $5); } ;
 
 update_stmt :
   UPDATE t_text SET where_stmt { };
 
-insert_stmt : INSERT where_stmt { };
+insert_stmt : INSERT INTO t_text VALUES where_stmt { };
 
 delete_stmt : DELETE where_stmt { };
 
@@ -86,8 +87,8 @@ column_param :
   t_text t_text { };
 
 params:
-  params comma param { }
-| param { $$ = new std::vector<Node*>(); $$.push_back($1); }
+  params comma param { $0->push_back($2); $$ = $0; }
+| param { std::vector<Node*>* vec = new std::vector<Node*>(); vec->push_back($0); $$ = vec; }
 ;
 
 param : t_text { } ;
@@ -102,7 +103,8 @@ where_params : where_params where_param { }
 
 order_stmt : ORDERBY order_params {} ;
 
-order_params: order_params comma order_param {}
+order_params:
+  order_params comma order_param {}
 | order_param {}
 ;
 

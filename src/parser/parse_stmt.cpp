@@ -13,7 +13,7 @@ makeCreateTableStmt(char* tbl_name, vector<Node*>* cols) {
 }
 
 Node*
-makeSelectStmt(char* tbl_name, vector<Node*>* cols) {
+makeSelectStmt(char* tbl_name, vector<Node*>* cols, Node* whereStmt, Node* orderByStmt) {
   SelectStmt* stmt = new SelectStmt();
     stmt->nodetag    = NT_SelectStmt;
     stmt->relname    = tbl_name;
