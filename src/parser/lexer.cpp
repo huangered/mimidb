@@ -33,7 +33,7 @@ SqlLexer::yylex() {
     switch (Char) {
     case '0':
     case '1':
-      return lexNumber();
+        return lexNumber();
     case 'a':
     case 'b':
     case 'c':
@@ -95,8 +95,17 @@ SqlLexer::yylex() {
         _cur++;
         return semicolon;
     case '*':
-      _cur++;
-      return star;
+        _cur++;
+        return star;
+    case '(':
+        _cur++;
+        return l_paran;
+    case ')':
+        _cur++;
+        return r_paran;
+    case ',':
+        _cur++;
+        return comma;
     }
 
     return -1;
@@ -104,8 +113,9 @@ SqlLexer::yylex() {
 
 int
 SqlLexer::lexIdentifier() {
-    int start = _cur;
-    int count = 0;
+    yytokentype token = t_text;
+    int start         = _cur;
+    int count         = 0;
     for (; _cur < _size; _cur++) {
         char c = _buf[_cur];
         if (isCharacter(c)) {
@@ -119,16 +129,49 @@ SqlLexer::lexIdentifier() {
     strncpy(p, _buf + start, count);
     p[count] = '\0';
     // check identifier table
+    if (strcmp(p, "create") == 0) {
+        token = CREATE;
+    } else if (strcmp(p, "table") == 0) {
+        token = TABLE;
+    } else if (strcmp(p, "select") == 0) {
+        token = SELECT;
+    } else if (strcmp(p, "from") == 0) {
+        token = FROM;
+    } else if (strcmp(p, "update") == 0) {
+        token = UPDATE;
+    } else if (strcmp(p, "into") == 0) {
+        token = INTO;
+    } else if (strcmp(p, "insert") == 0) {
+        token = INSERT;
+    } else if (strcmp(p, "values") == 0) {
+        token = VALUES;
+    } else if (strcmp(p, "delete") == 0) {
+        token = DELETE;
+    } else if (strcmp(p, "set") == 0) {
+        token = SET;
+    } else if (strcmp(p, "where") == 0) {
+        token = WHERE;
+    } else if (strcmp(p, "orderby") == 0) {
+        token = ORDERBY;
+    } else if (strcmp(p, "begin") == 0) {
+        token = BEGIN;
+    } else if (strcmp(p, "commit") == 0) {
+        token = COMMIT;
+    }
 
     // default text
+    if (token == t_text){
     Parser::yylval.str = p;
+    }else {
+      delete[] p;
+    }
 
-    return t_text;
+    return token;
 }
 
 int
 SqlLexer::lexNumber() {
-  int start = _cur;
+    int start = _cur;
     int count = 0;
     for (; _cur < _size; _cur++) {
         char c = _buf[_cur];
@@ -148,5 +191,4 @@ SqlLexer::lexNumber() {
     delete[] p;
 
     return t_number;
-
 }

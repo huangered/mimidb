@@ -14,7 +14,7 @@ TEST(parser, basic) {
     EXPECT_EQ(3, raw->columns->size());
 }
 
-
+/*
 TEST(parser, basic_insert) {
     InsertStmt* raw = (InsertStmt*)mison_parse("insert into s values ( 123,'a','jkl' );");
     EXPECT_TRUE(raw != NULL);
@@ -53,3 +53,4 @@ TEST(parser, update_row_where) {
     EXPECT_EQ(3, raw->columns->size());
     EXPECT_TRUE(raw->where_cause != NULL);
 }
+*/

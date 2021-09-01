@@ -69,6 +69,11 @@ public:
     vector<Node*>* columns;
 };
 
+class OrderbyStmt : public Node {
+public:
+  vector<Node*>* columns;
+};
+
 class IntValue : public Node {
 public:
     int number;
@@ -105,6 +110,7 @@ Node* makeCreateTableParam(char* col_name, char* type, int primary);
 Node* makeWhereStmt(vector<Node*>* cols);
 Node* makeTypeName(char* type_name);
 Node* makeColumnDef(char* col_name, TypeName* type_name, int primary);
+Node* makeOrderbyStmt(vector<Node*>* cols);
 
 extern Node* mison_parse(const char* str);
 
