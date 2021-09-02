@@ -14,3 +14,6 @@ add_custom_target(
   COMMENT "build header and cpp"
 )
 
+INSTALL(TARGETS mison
+  RUNTIME DESTINATION bin
+)

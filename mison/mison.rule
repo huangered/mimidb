@@ -39,7 +39,7 @@ int yylex();
 
 %
 
-Q : Lex { } ;
+Q : Lex { $$ = $0; } ;
 
 Lex : Code Union Param TokenList t_sign TypeList t_sign RuleList StartRule t_sign Other { $$ = makeLex($0, $1, $2, $3, $5, $7, $8, $10 ); } ;
 
@@ -90,9 +90,9 @@ IdList :
 | ID { std::vector<Node>* vec = new std::vector<Node>(); vec->push_back($0); $$ = vec; }
 ;
 
-ID : t_identifier { } ;
+ID : t_identifier { $$ = $0 ; } ;
 
-Other : t_block { } ;
+Other : t_block { $$ = $0; } ;
 
 StartRule:
   t_start_rule t_identifier { $$ = makeStartRule($1); }

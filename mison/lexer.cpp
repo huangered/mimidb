@@ -112,6 +112,9 @@ Lexer::yylex() {
     case ';':
         _cur++;
         return t_semicolon;
+    case '#':
+        lexPound();
+        return yylex();
     }
 
     return -1;
@@ -218,4 +221,20 @@ Lexer::lexSign() {
     }
 
     return tok;
+}
+
+/*
+skip line #
+ */
+void
+Lexer::lexPound() {
+    int start = _cur + 1;
+    _cur++; // skip first "
+    for (; _cur < _size; _cur++) {
+        char c = _buf[_cur];
+        if (c == '\n') {
+            break;
+        }
+    }
+    _cur++; // skip end '\n'
 }

@@ -1,32 +1,15 @@
-﻿
-add_custom_target(
-  build_parser ALL
-  COMMAND mison ${PROJECT_SOURCE_DIR}/src/parser/parser.rule ${PROJECT_SOURCE_DIR}/src/parser/
-
-  COMMENT "build sql parser header and cpp"
+﻿add_custom_command (
+  OUTPUT "c.tab.cpp" "c.tab.hpp"
+  COMMAND ${PROJECT_SOURCE_DIR}/bin/mison ${PROJECT_SOURCE_DIR}/src/parser/parser.rule ${PROJECT_SOURCE_DIR}/src/parser/
+  COMMAND m4 -I ${PROJECT_SOURCE_DIR}/data -I ${PROJECT_SOURCE_DIR}/src/parser ${PROJECT_SOURCE_DIR}/data/hpp.m4 > c.tab.hpp
+  COMMAND m4 -I ${PROJECT_SOURCE_DIR}/data -I ${PROJECT_SOURCE_DIR}/src/parser ${PROJECT_SOURCE_DIR}/data/cpp.m4 > c.tab.cpp
+  DEPENDS  ${CMAKE_CURRENT_SOURCE_DIR}/parser.rule
+  COMMENT "build header & cpp"
 )
 
-
-if(APPLE)
-  set(BISON_EXECUTABLE /opt/homebrew/opt/bison/bin/bison)
-endif()
-
-find_package(BISON)
-find_package(FLEX)
-
-BISON_TARGET(MyParser parser.y ${CMAKE_CURRENT_BINARY_DIR}/parser.tab.c
-             DEFINES_FILE ${CMAKE_CURRENT_BINARY_DIR}/parser.tab.h)
-
-FLEX_TARGET(MyScanner flex.l  ${CMAKE_CURRENT_BINARY_DIR}/lexer.c COMPILE_FLAGS "--nounistd")
-#FLEX_TARGET(MyScanner flex.l  ${CMAKE_CURRENT_BINARY_DIR}/lexer.c COMPILE_FLAGS "--nounistd")
-
-ADD_FLEX_BISON_DEPENDENCY(MyScanner MyParser)
-
-
-add_library(parser ${BISON_MyParser_OUTPUTS}
-                   ${FLEX_MyScanner_OUTPUTS}
-                   "parse_param.c" 
-                   "parse_expr.c"
-                   "parse_stmt.c"
-                   "list.c")
-target_link_libraries(parser)
+add_library(parser  "c.tab.cpp"
+  "lexer.cpp"
+  "parse_param.cpp" 
+  "parse_expr.cpp"
+  "parse_stmt.cpp"
+  )

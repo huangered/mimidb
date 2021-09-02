@@ -19,6 +19,8 @@ private:
     int lexIdentifier();
     int lexBlock();
     int lexSign();
+    // handle #
+    void lexPound();
 };
 
 #endif // !_lexer_hpp_
