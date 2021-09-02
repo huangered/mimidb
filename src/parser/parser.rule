@@ -29,6 +29,17 @@
 @token ORDERBY
 @token BEGIN
 @token COMMIT
+@token PRIMARY
+@token KEY
+@token FOREIGN
+@token REFERENCES
+@token NOT
+@token T_NULL
+@token DROP
+@token ALTER
+@token AND
+@token OR
+@token JOIN
 @token semicolon
 @token comma
 @token t_text
