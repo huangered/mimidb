@@ -225,7 +225,7 @@ Parser::yyreduce(std::stack<int>& states, std::stack<YYSTYPE>& syms, int r_id) {
     int child_num{ rule_right_children_num_arr[r_id] };
     int rule_left_id{ rule_left_id_arr[r_id] };
     std::vector<YYSTYPE> child(child_num);
-    YYSTYPE item = syms.top();
+    YYSTYPE item{};
     for (int i{ 0 }; i < child_num; i++) {
         child.insert(child.begin(), syms.top());
         syms.pop();
@@ -247,23 +247,23 @@ Parser::yyreduce(std::stack<int>& states, std::stack<YYSTYPE>& syms, int r_id) {
         break;
     case 3:
         // line 60
-        {  }
+        { (item.node) = (child[0].node);  }
         break;
     case 4:
         // line 80
-        {  }
+        { (item.node) = (child[0].node);  }
         break;
     case 5:
         // line 100
-        {  }
+        { (item.node) = (child[0].node);  }
         break;
     case 6:
         // line 120
-        {  }
+        { (item.node) = (child[0].node);  }
         break;
     case 7:
         // line 140
-        {  }
+        { (item.node) = (child[0].node);  }
         break;
     case 8:
         // line 160
