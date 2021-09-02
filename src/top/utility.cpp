@@ -2,13 +2,14 @@
 #include "top/utility.hpp"
 extern "C" {
 #include "parser/parse_utilitycmd.h"
-#include "node/list.h"
+
 }
 /*
 处理create table sql
 */
 void
 ProcessUtility(Node* pstmt) {
+  /*
     switch (pstmt->nodetag) {
     case NT_CreateTableStmt: {
         List* stmts = nullptr;
@@ -25,4 +26,5 @@ ProcessUtility(Node* pstmt) {
         // todo:
     } break;
     }
+  */
 }

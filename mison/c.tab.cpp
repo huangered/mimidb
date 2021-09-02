@@ -2202,23 +2202,18 @@ bool
 Parser::yyshift(std::stack<int>& states, std::stack<YYSTYPE>& syms, std::stack<InputToken*>& input, bool* acc) {
     int curStateId    = states.top();
     InputToken* token = input.top();
-    bool r_acc;
-    bool r_state;
-    int r_id;
-    bool r_find{ false };
-    int rd  = action_table[curStateId][token->tok];
-    r_acc   = (rd == 10000);
-    r_state = (rd > 0);
-    r_id    = rd > 0 ? rd : -rd;
-    r_find  = (r_id != MAX_ID);
-    if (r_find == true) {
+    int rd            = action_table[curStateId][token->tok];
+    *acc              = (rd == 10000);
+    bool r_state      = (rd > 0);
+    int r_id          = abs(rd);
+    bool r_find       = (r_id != MAX_ID);
+    if (r_find) {
 
-        if (r_acc == true) {
-            *acc = true;
+        if (*acc) {
             return true;
         }
 
-        if (r_state == true) {
+        if (r_state) {
             states.push(r_id);
             YYSTYPE it = token->item;
             syms.push(it);
@@ -2236,7 +2231,7 @@ Parser::yyreduce(std::stack<int>& states, std::stack<YYSTYPE>& syms, int r_id) {
     int child_num{ rule_right_children_num_arr[r_id] };
     int rule_left_id{ rule_left_id_arr[r_id] };
     std::vector<YYSTYPE> child(child_num);
-    YYSTYPE item = syms.top();
+    YYSTYPE item{};
     for (int i{ 0 }; i < child_num; i++) {
         child.insert(child.begin(), syms.top());
         syms.pop();
@@ -2246,7 +2241,7 @@ Parser::yyreduce(std::stack<int>& states, std::stack<YYSTYPE>& syms, int r_id) {
 
     case 0:
         // line 0
-        {}
+        { (item.node) = (child[0].node); }
         break;
     case 1:
         // line 20
@@ -2376,11 +2371,11 @@ Parser::yyreduce(std::stack<int>& states, std::stack<YYSTYPE>& syms, int r_id) {
         break;
     case 23:
         // line 460
-        {}
+        { (item.node) = (child[0].node); }
         break;
     case 24:
         // line 480
-        {}
+        { (item.node) = (child[0].node); }
         break;
     case 25:
         // line 500

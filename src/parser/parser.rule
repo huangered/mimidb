@@ -1,32 +1,132 @@
 %code {
-
+#include "node/node.hpp"
+#include "node/parsenode.hpp"
+#include  <vector>
+#include <cstdlib>
+#include <cstdio>
 }
 
 %union {
-    Node *node;
+  Node* node;
+  int num;
+  char* str;
+  std::vector<Node*>* list;
 }
 
-@param { Node }
+@param { Node* }
 
 @token CREATE
 @token TABLE
 @token SELECT
 @token FROM
+@token UPDATE
+@token INTO
+@token INSERT
+@token VALUES
+@token DELETE
+@token SET
+@token WHERE
+@token ORDERBY
+@token BEGIN
+@token COMMIT
+@token PRIMARY
+@token KEY
+@token FOREIGN
+@token REFERENCES
+@token NOT
+@token T_NULL
+@token DROP
+@token ALTER
+@token AND
+@token OR
+@token JOIN
 @token semicolon
+@token comma
+@token t_text
+@token t_number
+@token t_block
+@token l_paran
+@token r_paran
+@token star
+
 %
 
-@type <node> Q stmt
+@type <str> t_text
+@type <list> stmts params column_params where_params order_params table_params
+@type <node> param column_param order_param where_param
+@type <node> Q stmt create_stmt select_stmt update_stmt insert_stmt delete_stmt where_stmt order_stmt
 
 %
 
-Q : stmt { } ;
+Q : stmt { $$ = $0 ; } ;
 
-stmt: CREATE { $$ = $1; } ;
+stmts :
+  stmts stmt { }
+| stmt { }
+;
+
+stmt:
+  create_stmt { $$ = $0; }
+| select_stmt { $$ = $0; }
+| update_stmt { $$ = $0; }
+| insert_stmt { $$ = $0; }
+| delete_stmt { $$ = $0; }
+;
+
+create_stmt :
+  CREATE TABLE t_text table_params semicolon { $$ = makeCreateTableStmt($2, $3); } ;
+
+select_stmt :
+ SELECT params FROM t_text where_stmt order_stmt semicolon { $$ = makeSelectStmt($3, $1, $4, $5); } ;
+
+update_stmt :
+  UPDATE t_text SET where_stmt { };
+
+insert_stmt : INSERT INTO t_text VALUES where_stmt { };
+
+delete_stmt : DELETE where_stmt { };
+
+table_params :
+  l_paran column_params r_paran { $$ = $1;} ;
+
+column_params :
+  column_params comma column_param { $0->push_back($2); $$ = $0;  }
+| column_param { std::vector<Node*>* vec = new std::vector<Node*>(); vec->push_back($0); $$ = vec; }
+;
+
+column_param :
+  t_text t_text { };
+
+params:
+  params comma param { $0->push_back($2); $$ = $0; }
+| param { std::vector<Node*>* vec = new std::vector<Node*>(); vec->push_back($0); $$ = vec; }
+;
+
+param : t_text { $$ = makeStrValue($0); } ;
+
+where_stmt :
+|  WHERE where_params { $$ = makeWhereStmt($1); }
+;
+
+where_params : where_params where_param { $0->push_back($1); $$ = $0; }
+| where_param {  std::vector<Node*>* vec = new std::vector<Node*>(); vec->push_back($0); $$ = vec;  }
+;
+
+order_stmt :
+| ORDERBY order_params { $$ = makeOrderbyStmt($1); }
+;
+
+order_params:
+  order_params comma order_param { $0->push_back($2); $$ = $0; }
+| order_param { std::vector<Node*>* vec = new std::vector<Node*>(); vec->push_back($0); $$ = vec;  }
+;
 
 @start Q
 
 %
 
 {
-abd;
+
+Node* mison_parse(const char* str);
+
 }

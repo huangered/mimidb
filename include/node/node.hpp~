@@ -1,8 +1,6 @@
 #ifndef _node_hpp_
 #define _node_hpp_
 
-#include <stdlib.h>
-
 enum NodeTag
 {
     // ddl
@@ -30,9 +28,9 @@ enum NodeTag
 
 typedef enum NodeTag NodeTag;
 
-typedef struct Node {
+class NodeData {
     NodeTag nodetag;
-} Node;
+};
 
 typedef enum Op
 {
