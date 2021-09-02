@@ -12,7 +12,7 @@ makeCreateTableStmt(char* tbl_name, vector<Node*>* cols) {
     stmt->relname         = tbl_name;
     stmt->columns         = cols;
 
-    return (Node*)stmt;
+    return stmt;
 }
 
 Node*
@@ -21,7 +21,10 @@ makeSelectStmt(char* tbl_name, vector<Node*>* cols, Node* whereStmt, Node* order
     stmt->nodetag    = NT_SelectStmt;
     stmt->relname    = tbl_name;
     stmt->columns    = cols;
-    return (Node*)stmt;
+    if (whereStmt == nullptr){
+      printf("where stmt is nullptr\n");
+    }
+    return stmt;
 }
 
 Node*
@@ -30,7 +33,7 @@ makeInsertStmt(char* tbl_name, vector<Node*>* cols) {
     stmt->nodetag    = NT_InsertStmt;
     stmt->relname    = tbl_name;
     stmt->columns    = cols;
-    return (Node*)stmt;
+    return stmt;
 }
 
 Node*
@@ -40,7 +43,7 @@ makeUpdateStmt(char* tbl_name, vector<Node*>* cols, Node* where_cause) {
     stmt->relname     = tbl_name;
     stmt->columns     = cols;
     stmt->where_cause = where_cause;
-    return (Node*)stmt;
+    return stmt;
 }
 
 /*
@@ -52,7 +55,7 @@ makeAssignStmt(char* col_name, Node* value) {
     stmt->nodetag    = NT_AssignStmt;
     stmt->col_name   = col_name;
     stmt->value      = value;
-    return (Node*)stmt;
+    return stmt;
 }
 
 /*
@@ -64,7 +67,7 @@ makeWhereStmt(vector<Node*>* cols) {
     stmt->nodetag   = NT_WhereStmt;
     stmt->columns   = cols;
 
-    return (Node*)stmt;
+    return stmt;
 }
 
 Node*

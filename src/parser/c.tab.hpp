@@ -28,10 +28,10 @@
 
 union YYSTYPE {
   
-    Node* node;
-    int num;
-    char* str;
-    std::vector<Node*>* list;
+  Node* node;
+  int num;
+  char* str;
+  std::vector<Node*>* list;
 
 };
 

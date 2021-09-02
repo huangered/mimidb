@@ -6,10 +6,10 @@ define(CodeBody, `
 #include <cstdio>
 ')
 define(UnionBody,`
-    Node* node;
-    int num;
-    char* str;
-    std::vector<Node*>* list;
+  Node* node;
+  int num;
+  char* str;
+  std::vector<Node*>* list;
 ')
 define(TokenBody, `             CREATE =   2,
               TABLE =   3,

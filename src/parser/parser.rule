@@ -7,10 +7,10 @@
 }
 
 %union {
-    Node* node;
-    int num;
-    char* str;
-    std::vector<Node*>* list;
+  Node* node;
+  int num;
+  char* str;
+  std::vector<Node*>* list;
 }
 
 @param { Node* }
@@ -55,11 +55,11 @@ stmts :
 ;
 
 stmt:
-  create_stmt
-| select_stmt
-| update_stmt
-| insert_stmt
-| delete_stmt
+  create_stmt { $$ = $0; }
+| select_stmt { $$ = $0; }
+| update_stmt { $$ = $0; }
+| insert_stmt { $$ = $0; }
+| delete_stmt { $$ = $0; }
 ;
 
 create_stmt :
