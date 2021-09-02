@@ -39,7 +39,7 @@ int yylex();
 
 %
 
-Q : Lex { $$ = $0; } ;
+Q : Lex { $$ = $0; };
 
 Lex : Code Union Param TokenList t_sign TypeList t_sign RuleList StartRule t_sign Other { $$ = makeLex($0, $1, $2, $3, $5, $7, $8, $10 ); } ;
 

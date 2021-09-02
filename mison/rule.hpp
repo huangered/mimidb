@@ -8,6 +8,7 @@
 
 class RuleData {
 public:
+    bool root;
     int lineId;
     int id;
     int left;

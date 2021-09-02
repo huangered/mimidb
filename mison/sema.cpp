@@ -32,24 +32,22 @@ group_key::operator<(const group_key& g1) const {
 
 // end
 
-SemaParser::SemaParser(std::string startSym)
+SemaParser::SemaParser()
     : _maxState{ 0 } {
     _firstSet  = std::unique_ptr<FirstSet>(new FirstSet());
     _stateList = std::unique_ptr<StateCollection>(new StateCollection());
     _stateList->Add(new StateData{ 0 });
-    int startSymId = Symtab::GetId(startSym);
+
     for (Rule rule : Rules) {
         Item r        = new ItemData{};
         r->id         = rule->id;
         r->left       = rule->left;
         r->right      = rule->right;
         r->func_block = rule->funcBlock;
-	if(r->left == startSymId){
-          r->root = true;
-	}
+        r->root       = rule->root;
         _rules.push_back(r);
     }
-    
+
     Item rule = _rules[0]->Clone();
     rule->SetToken(Symtab::eof->id);
     _stateList->Add(0, rule);
@@ -306,7 +304,7 @@ SemaParser::funcReplace(const Item rule) {
         std::string r    = "(child[" + std::to_string(i);
         r += "].";
         r += name;
-	r += ")";
+        r += ")";
         std::size_t pos;
         while ((pos = tmp.find(w)) != std::string::npos)
             tmp.replace(pos, w.size(), r);

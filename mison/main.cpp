@@ -9,9 +9,9 @@ using std::string;
 
 int
 main(int argc, char* argv[]) {
-    const char* fpath = argv[1];
+    const char* fpath   = argv[1];
     const char* foutput = argv[2];
-    
+
     Symtab::Init();
     FILE* f         = OpenFile(fpath, "r");
     const char* str = ReadFile(f);
@@ -22,11 +22,11 @@ main(int argc, char* argv[]) {
     printf("%s\n", a->_value.c_str());
     LexNode* lex                     = dynamic_cast<LexNode*>(a);
     std::map<string, string> typeMap = lex->GetTypeMap();
-    Rules          = lex->GetRules();
+    Rules                            = lex->GetRules();
 
     printf("type map: {%zd}, rules: {%zd}\n", typeMap.size(), Rules.size());
 
-    SemaParser parser2(lex->startRule);
+    SemaParser parser2;
     parser2.SetTypeMap(typeMap);
     parser2.GenerateParseTable();
 
