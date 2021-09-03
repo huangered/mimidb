@@ -52,7 +52,7 @@ LexNode::GetRules() {
             l_sym->clazz = SymbolClass::nterm;
 
             rule->left = l_sym->id;
-            rule->root = (l_sym->name == startRule);
+            rule->root = false;
             // right nodes
             for (Node r_node : *r->right) {
                 Symbol r_sym = Symtab::SymbolNew(r_node->_value);
@@ -63,7 +63,6 @@ LexNode::GetRules() {
     }
 
     // handle start rule
-    /*
     Rule sRule = new RuleData();
     sRule->root = true;
     sRule->id = i++;
@@ -71,6 +70,6 @@ LexNode::GetRules() {
     sRule->left = Symtab::start->id;
     sRule->right.push_back(Symtab::SymbolNew(startRule));
     rList.push_back(sRule);
-    */
+
     return rList;
 }
