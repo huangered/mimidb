@@ -48,7 +48,7 @@ SemaParser::SemaParser()
         _rules.push_back(r);
     }
 
-    Item rule = _rules[ _rules.size() - 1 ]->Clone();
+    Item rule = _rules[_rules.size() - 1]->Clone();
     rule->SetToken(Symtab::eof->id);
     _stateList->Add(0, rule);
 }
