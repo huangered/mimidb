@@ -38,6 +38,8 @@ SemaParser::SemaParser()
     _stateList = std::unique_ptr<StateCollection>(new StateCollection());
     _stateList->Add(new StateData{ 0 });
 
+    Item rootRule;
+
     for (Rule rule : Rules) {
         Item r        = new ItemData{};
         r->id         = rule->id;
@@ -46,11 +48,14 @@ SemaParser::SemaParser()
         r->func_block = rule->funcBlock;
         r->root       = rule->root;
         _rules.push_back(r);
+
+        if (r->root) {
+            rootRule = r->Clone();
+            rootRule->SetToken(Symtab::eof->id);
+        }
     }
 
-    Item rule = _rules[_rules.size() - 1]->Clone();
-    rule->SetToken(Symtab::eof->id);
-    _stateList->Add(0, rule);
+    _stateList->Add(0, rootRule);
 }
 
 SemaParser::~SemaParser() {
