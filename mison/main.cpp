@@ -5,6 +5,7 @@
 #include "symtab.hpp"
 #include <cstring>
 #include <cassert>
+
 using std::string;
 
 int
