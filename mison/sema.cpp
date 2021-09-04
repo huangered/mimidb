@@ -44,10 +44,9 @@ SemaParser::SemaParser()
         Item r        = new ItemData{};
         r->rule       = rule;
         r->id         = rule->id;
-        r->root       = rule->root;
         _rules.push_back(r);
 
-        if (r->root) {
+        if (r->rule->root) {
             rootRule = r->Clone();
             rootRule->SetToken(Symtab::eof->id);
         }
@@ -170,7 +169,7 @@ SemaParser::generateTable(void) {
                     Item c = _rules[ruleId];
                     if (c->rule->left == r->rule->left && SymbolListEqual(c->rule->right, r->rule->right)) {
                         for (int token : r->GetTokens()) {
-                            _actionTable->AddRule(stateId, token, ruleId, r->root);
+                            _actionTable->AddRule(stateId, token, ruleId, r->rule->root);
                         }
                     }
                 }

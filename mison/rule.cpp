@@ -49,7 +49,6 @@ ItemData::Clone() {
     rule->id         = id;
     rule->dot        = dot;
     rule->next_state = next_state;
-    rule->root       = root;
     rule->tokens     = tokens;
     return rule;
 }

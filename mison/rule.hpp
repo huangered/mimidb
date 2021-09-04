@@ -27,7 +27,6 @@ public:
     int id;
     int dot;
     int next_state;
-    bool root;
     // rule ptr
     Rule rule;
 
