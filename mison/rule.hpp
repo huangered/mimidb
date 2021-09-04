@@ -32,6 +32,7 @@ public:
 
     // look ahead 检查
     std::vector<int> tokens;
+
 public:
     bool IsDotEnd();
 
@@ -54,5 +55,10 @@ public:
 
 typedef ItemData* Item;
 typedef std::vector<Item> ItemList;
+
+#define ItemLeft(item) (item->rule->left)
+#define ItemRoot(item) (item->rule->root)
+#define ItemRight(item, i) (item->rule->right[(i)])
+#define ItemRights(item) (item->rule->right)
 
 #endif // !_rule_hpp_
