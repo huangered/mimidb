@@ -41,13 +41,13 @@ SemaParser::SemaParser()
     Item rootRule;
 
     for (Rule rule : Rules) {
-        Item r        = new ItemData{};
-        r->rule       = rule;
-        r->id         = rule->id;
-        _rules.push_back(r);
+        Item item  = new ItemData{};
+        item->rule = rule;
+        item->id   = rule->id;
+        _rules.push_back(item);
 
-        if (r->rule->root) {
-            rootRule = r->Clone();
+        if (item->rule->root) {
+            rootRule = item->Clone();
             rootRule->SetToken(Symtab::eof->id);
         }
     }
@@ -56,8 +56,8 @@ SemaParser::SemaParser()
 }
 
 SemaParser::~SemaParser() {
-    for (Item r : _rules) {
-        delete r;
+    for (Item item : _rules) {
+        delete item;
     }
 }
 
@@ -84,14 +84,15 @@ SemaParser::GenerateParseTable(void) {
         if (_stateList->IsEmpty(i)) {
             break;
         }
-        printf("state %d\n", i);
-        for (Item r : _stateList->GetRules(i)) {
-            auto r_str = join(r->rule->right);
-            auto t_str = join2(r->tokens);
-            printf("     %d => %s [ %s ] (%d) ", r->rule->left, r_str.c_str(), t_str.c_str(), r->dot);
+        printf("state %d:\n", i);
+        for (Item item : _stateList->GetRules(i)) {
+            auto r_str = join(item->rule->right);
+            auto t_str = join2(item->tokens);
+            printf("     %s => %s [ %s ] (%d) ", Symtab::GetName(item->rule->left).c_str(), r_str.c_str(),
+                   t_str.c_str(), item->dot);
 
-            if (!r->IsDotEnd()) {
-                printf("next %d", r->next_state);
+            if (!item->IsDotEnd()) {
+                printf("next %d", item->next_state);
             }
 
             printf("\n");
@@ -109,9 +110,9 @@ SemaParser::handleState(int stateId) {
     expandRules(state);
     // 2. 构建新状态
     std::map<int, Symbol> tokens;
-    for (Item rule : state->GetItems()) {
-        if (!rule->IsDotEnd()) {
-            Symbol token      = rule->GetTokenAfterDot();
+    for (Item item : state->GetItems()) {
+        if (!item->IsDotEnd()) {
+            Symbol token      = item->GetTokenAfterDot();
             tokens[token->id] = token;
         }
     }
@@ -121,11 +122,11 @@ SemaParser::handleState(int stateId) {
 
         ItemList movedRules;
         ItemList newStateRules;
-        for (Item r : state->GetItems()) {
-            if (!r->IsDotEnd() && r->rule->right[r->dot]->id == token->id) {
-                movedRules.push_back(r);
+        for (Item item : state->GetItems()) {
+            if (!item->IsDotEnd() && item->rule->right[item->dot]->id == token->id) {
+                movedRules.push_back(item);
 
-                Item n = r->Clone();
+                Item n = item->Clone();
                 n->dot++;
                 newStateRules.push_back(n);
             }
@@ -143,13 +144,13 @@ SemaParser::handleState(int stateId) {
                     _stateList->Add(new StateData(i));
                 }
             }
-            for (Item newRule : newStateRules) {
-                _stateList->GetState(_maxState)->Add(newRule);
+            for (Item newItem : newStateRules) {
+                _stateList->GetState(_maxState)->Add(newItem);
             };
         } else {
             // 找到了
-            for (Item r : movedRules) {
-                r->next_state = sameState->GetId();
+            for (Item item : movedRules) {
+                item->next_state = sameState->GetId();
             }
         }
     }
@@ -244,7 +245,8 @@ SemaParser::expandRules(State state) {
     // 合并 state 里的 rules
     for (Item rule : state->GetItems()) {
         auto check_exist = [rule](Item r) -> bool {
-            return r->dot == rule->dot && r->rule->left == rule->rule->left && SymbolListEqual(r->rule->right, rule->rule->right);
+            return r->dot == rule->dot && r->rule->left == rule->rule->left
+                   && SymbolListEqual(r->rule->right, rule->rule->right);
         };
 
         auto iter = std::find_if(tmp.begin(), tmp.end(), check_exist);
@@ -260,11 +262,11 @@ SemaParser::expandRules(State state) {
 }
 
 State
-SemaParser::searchSameState(const ItemList& newStateRules) {
+SemaParser::searchSameState(const ItemList& newStateItems) {
     int max{ _stateList->Size() };
     for (int i{ 0 }; i < max; i++) {
         State state = _stateList->GetState(i);
-        if (state->MatchItem(newStateRules)) {
+        if (state->MatchItem(newStateItems)) {
             return state;
         }
     }
@@ -275,13 +277,8 @@ std::string
 join(const SymbolList& v) {
     std::string a;
     for (Symbol t : v) {
-        if (t->clazz == nterm) {
-            a += t->name;
-            a += ",";
-        } else {
-            a += std::to_string(Symtab::GetId(t->name));
-            a += ",";
-        }
+        a += t->name;
+        a += ",";
     }
     return a;
 }
