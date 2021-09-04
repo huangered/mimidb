@@ -28,14 +28,11 @@ public:
     int dot;
     int next_state;
     bool root;
+    // rule ptr
+    Rule rule;
 
-    int left;
-    SymbolList right;
     // look ahead 检查
     std::vector<int> tokens;
-
-    std::string func_block;
-
 public:
     bool IsDotEnd();
 

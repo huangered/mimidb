@@ -269,7 +269,7 @@ Output::writeConst(FILE* f) {
     WriteFile(f, "define(DATA_RIGHT_NUM, `");
 
     for (int rId{ 0 }; rId < parser->_rules.size(); rId++) {
-        sprintf(buf, "%zd,", parser->_rules[rId]->right.size());
+        sprintf(buf, "%zd,", parser->_rules[rId]->rule->right.size());
         WriteFile(f, buf);
     }
 
@@ -278,7 +278,7 @@ Output::writeConst(FILE* f) {
     memset(buf, 0, 256);
     WriteFile(f, "define(DATA_LEFT_ID, `");
     for (int rId{ 0 }; rId < parser->_rules.size(); rId++) {
-        sprintf(buf, "%d,", parser->_rules[rId]->left);
+        sprintf(buf, "%d,", parser->_rules[rId]->rule->left);
         WriteFile(f, buf);
     }
 
