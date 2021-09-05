@@ -88,8 +88,8 @@ SemaParser::GenerateParseTable(void) {
         for (Item item : _stateList->GetRules(i)) {
             auto r_str = join(ItemRights(item));
             auto t_str = join2(item->tokens);
-            printf("     %s => %s [ %s ] (%d) ", Symtab::GetName(ItemLeft(item)).c_str(), r_str.c_str(),
-                   t_str.c_str(), item->dot);
+            printf("     %s => %s [ %s ] (%d) ", Symtab::GetName(ItemLeft(item)).c_str(), r_str.c_str(), t_str.c_str(),
+                   item->dot);
 
             if (!item->IsDotEnd()) {
                 printf("next %d", item->next_state);
@@ -295,6 +295,7 @@ join2(const std::vector<int>& v) {
 
 std::string
 SemaParser::funcReplace(const Item rule) {
+    // handle $$, $n
     std::string tmp = rule->rule->funcBlock;
     for (int i = rule->rule->right.size() - 1; i >= 0; i--) {
         std::string name = this->_typeMap[ItemRight(rule, i)->name];
@@ -315,6 +316,22 @@ SemaParser::funcReplace(const Item rule) {
         name = "(item." + this->_typeMap[name] + ")";
         tmp.replace(pos, 2, name);
     }
+    // handle @@, @n
+    for (int i = rule->rule->right.size() - 1; i >= 0; i--) {
+        std::string name = this->_typeMap[ItemRight(rule, i)->name];
+        std::string w    = "@" + std::to_string(i);
+        std::string r    = "(child[" + std::to_string(i);
+        r += "]";
+        std::size_t pos;
+        while ((pos = tmp.find(w)) != std::string::npos)
+            tmp.replace(pos, w.size(), r);
+    }
 
+    name = Symtab::GetName(ItemLeft(rule));
+
+    while ((pos = tmp.find("@@")) != std::string::npos) {
+        name = "(item)";
+        tmp.replace(pos, 2, name);
+    }
     return tmp;
 }
