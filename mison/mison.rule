@@ -33,7 +33,7 @@ int yylex();
 %
 
 @type <str> StartRule
-@type <node> t_type t_type_type t_union t_code t_identifier t_colon t_block t_sign t_param t_start_rule
+@type <node> t_identifier t_block t_param
 @type <node> Lex RuleList Rule ID Type Token Code Union Other Param RuleRight
 @type <list> TokenList TypeList RuleList IdList RuleRightList
 
