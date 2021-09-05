@@ -3,7 +3,6 @@
 
 #include <vector>
 #include <set>
-#include <string>
 #include "symtab.hpp"
 
 class RuleData {

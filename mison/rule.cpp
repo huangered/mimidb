@@ -1,5 +1,6 @@
 #include "rule.hpp"
 #include "sema.hpp"
+#include <set>
 
 RuleList Rules;
 
@@ -44,13 +45,13 @@ ItemData::SetTokens(std::vector<int> tokenList) {
 
 ItemData*
 ItemData::Clone() {
-    ItemData* rule   = new ItemData{};
-    rule->rule       = this->rule;
-    rule->id         = id;
-    rule->dot        = dot;
-    rule->next_state = next_state;
-    rule->tokens     = tokens;
-    return rule;
+    Item item        = new ItemData{};
+    item->rule       = rule;
+    item->id         = id;
+    item->dot        = dot;
+    item->next_state = next_state;
+    item->tokens     = tokens;
+    return item;
 }
 
 bool
