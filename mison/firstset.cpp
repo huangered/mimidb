@@ -36,7 +36,7 @@ FirstSet::Find(const SymbolList& tokens, const std::vector<int>& extra) {
     if (c->clazz == nterm) {
         return find(tokens);
     } else {
-        return { Symtab::GetId(c->name) };
+        return { c->id };
     }
 }
 
