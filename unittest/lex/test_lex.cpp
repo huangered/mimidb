@@ -5,7 +5,7 @@
 //#include "sema/sema.hpp"
 //#include <stack>
 //
-//TEST(Lexer, Lexer) {
+// TEST(Lexer, Lexer) {
 //
 //    std::vector<LexTokenData*> arr;
 //    const char* a = "((()) ab 1234";
@@ -28,7 +28,7 @@
 //    delete b;
 //}
 //
-//TEST(Lexer, Lexer1) {
+// TEST(Lexer, Lexer1) {
 //    std::vector<LexToken> arr;
 //    const char* a = "select * from abc where a = 10;";
 //    Lexer* b      = new Lexer(a, strlen(a));
@@ -58,7 +58,7 @@
 //    delete b;
 //}
 //
-//TEST(Lexer, Lexer2) {
+// TEST(Lexer, Lexer2) {
 //    std::vector<LexToken> arr;
 //    const char* a = "\"abcd\" qqq;";
 //    Lexer* b      = new Lexer(a, strlen(a));
@@ -80,7 +80,7 @@
 //    delete b;
 //}
 //
-//TEST(Lex, Token) {
+// TEST(Lex, Token) {
 //
 //    Tok a = GetTokByName("plus");
 //    EXPECT_EQ(a, Tok::plus);

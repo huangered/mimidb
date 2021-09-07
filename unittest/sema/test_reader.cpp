@@ -4,7 +4,7 @@
 //
 //#ifdef _WIN32
 //
-//TEST(Sema, reader) {
+// TEST(Sema, reader) {
 //
 //    /*const char* str = "select * from asdf;";
 //    Node n          = raw_parse(str);

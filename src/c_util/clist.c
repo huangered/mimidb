@@ -3,7 +3,7 @@
 
 List*
 list_new() {
-    List* list = malloc(sizeof(List));
+    List* list   = malloc(sizeof(List));
     list->length = 0;
     list->head   = NULL;
 
@@ -23,10 +23,10 @@ list_free(List* list) {
 
 List*
 list_add(List* list, void* value) {
-    ListCell* cell = malloc(sizeof(ListCell));
+    ListCell* cell       = malloc(sizeof(ListCell));
     cell->data.ptr_value = value;
     cell->next           = list->head;
-    
+
     list->length += 1;
     list->head = cell;
     return list;

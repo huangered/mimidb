@@ -123,7 +123,7 @@ makeStartRule(Node rule) {
     strcpy(data, rule->_value.c_str());
 
     // register $_start nterm
-    Symtab::start = Symtab::SymbolNew("$t_start");
+    Symtab::start        = Symtab::SymbolNew("$t_start");
     Symtab::start->clazz = nterm;
     return data;
 }
