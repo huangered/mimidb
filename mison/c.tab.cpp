@@ -2203,8 +2203,6 @@ Parser::yyshift(std::stack<int>& states, std::stack<YYSTYPE>& syms, std::stack<I
     int curStateId    = states.top();
     InputToken* token = input.top();
 
-    printf("debug (state, tok) (%d, %d)\n", curStateId, token->tok);
-
     int rd       = action_table[curStateId][token->tok];
     *acc         = (rd == 10000);
     bool r_state = (rd > 0);
