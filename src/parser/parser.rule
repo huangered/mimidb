@@ -83,7 +83,7 @@ select_stmt :
 update_stmt :
   UPDATE t_text SET where_stmt { };
 
-insert_stmt : INSERT INTO t_id VALUES value_stmt { };
+insert_stmt : INSERT INTO t_id VALUES value_stmt semicolon { };
 
 delete_stmt : DELETE where_stmt { };
 

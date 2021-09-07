@@ -4,7 +4,7 @@
 #include "node/parsenode.hpp"
 
 // test the basic usage in buff mgr.
-TEST(parser, basic) {
+TEST(parser, select_stmt) {
     SelectStmt* raw = (SelectStmt*)mison_parse("select a,b,c from a;");
     EXPECT_TRUE(raw != NULL);
     EXPECT_EQ(raw->nodetag, NT_SelectStmt);
@@ -13,7 +13,7 @@ TEST(parser, basic) {
 }
 
 
-TEST(parser, basic_insert) {
+TEST(parser, insert_stmt) {
     InsertStmt* raw = (InsertStmt*)mison_parse("insert into s values ( 123,'a','jkl' );");
     EXPECT_TRUE(raw != NULL);
     EXPECT_EQ(raw->nodetag, NT_InsertStmt);
