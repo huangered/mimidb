@@ -93,14 +93,13 @@ public:
 class ColumnDef : public Node {
 public:
     char* colname;
-    TypeName* typeName;
-    int primary;
+    char* typeName;
 };
 
 class SetParam : public Node {
 public:
-  char* colname;
-  Node* value;
+    char* colname;
+    Node* value;
 };
 
 Node* makeIntValue(int i);
@@ -115,7 +114,7 @@ Node* makeCreateTableStmt(char* tbl_name, vector<Node*>* cols);
 Node* makeCreateTableParam(char* col_name, char* type, int primary);
 Node* makeWhereStmt(vector<Node*>* cols);
 Node* makeTypeName(char* type_name);
-Node* makeColumnDef(char* col_name, TypeName* type_name, int primary);
+Node* makeColumnDef(char* col_name, char* type_name);
 Node* makeOrderbyStmt(vector<Node*>* cols);
 Node* makeSetParam(char* col_name, Node* value);
 
