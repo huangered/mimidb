@@ -41,6 +41,7 @@
 @token JOIN
 @token semicolon
 @token comma
+@token t_id
 @token t_text
 @token t_number
 @token t_block
@@ -50,9 +51,10 @@
 
 %
 
-@type <str> t_text
-@type <list> stmts params column_params where_params order_params table_params
-@type <node> param column_param order_param where_param
+@type <num> t_number
+@type <str> t_text t_id
+@type <list> stmts params column_params where_params order_params table_params values value_stmt
+@type <node> param column_param order_param where_param value
 @type <node> Q stmt create_stmt select_stmt update_stmt insert_stmt delete_stmt where_stmt order_stmt
 
 %
@@ -73,15 +75,15 @@ stmt:
 ;
 
 create_stmt :
-  CREATE TABLE t_text table_params semicolon { $$ = makeCreateTableStmt($2, $3); } ;
+  CREATE TABLE t_id table_params semicolon { $$ = makeCreateTableStmt($2, $3); } ;
 
 select_stmt :
- SELECT params FROM t_text where_stmt order_stmt semicolon { $$ = makeSelectStmt($3, $1, $4, $5); } ;
+ SELECT params FROM t_id where_stmt order_stmt semicolon { $$ = makeSelectStmt($3, $1, $4, $5); } ;
 
 update_stmt :
   UPDATE t_text SET where_stmt { };
 
-insert_stmt : INSERT INTO t_text VALUES where_stmt { };
+insert_stmt : INSERT INTO t_id VALUES value_stmt semicolon { $$ = makeInsertStmt($2, $4); };
 
 delete_stmt : DELETE where_stmt { };
 
@@ -101,7 +103,7 @@ params:
 | param { std::vector<Node*>* vec = new std::vector<Node*>(); vec->push_back($0); $$ = vec; }
 ;
 
-param : t_text { $$ = makeStrValue($0); } ;
+param : t_id { $$ = makeStrValue($0); } ;
 
 where_stmt :
 |  WHERE where_params { $$ = makeWhereStmt($1); }
@@ -118,6 +120,18 @@ order_stmt :
 order_params:
   order_params comma order_param { $0->push_back($2); $$ = $0; }
 | order_param { std::vector<Node*>* vec = new std::vector<Node*>(); vec->push_back($0); $$ = vec;  }
+;
+
+value_stmt : l_paran values r_paran { $$ = $1; };
+
+values :
+  values comma value { $0->push_back($2); $$ = $0; }
+| value { std::vector<Node*>* vec = new std::vector<Node*>(); vec->push_back($0); $$ = vec;  }
+;
+
+value:
+  t_text { $$ = makeStrValue($0); }
+| t_number { $$ = makeIntValue($0); }
 ;
 
 @start Q

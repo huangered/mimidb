@@ -16,6 +16,7 @@ public:
 
 private:
     int lexIdentifier();
+  int lexText();
     int lexNumber();
 };
 

@@ -1,7 +1,7 @@
 ﻿#include "symtab.hpp"
 #include "debug.hpp"
 
-static char* sym_name[3] = { "none", "token", "nterm" };
+static const char* sym_name[3] = { "none", "token", "nterm" };
 
 int Symtab::nsym = 0;
 
