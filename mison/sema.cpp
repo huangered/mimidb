@@ -295,20 +295,19 @@ join2(const std::vector<int>& v) {
 
 std::string
 SemaParser::funcReplace(const Item rule) {
+    size_t pos;
     // handle $$, $n
     std::string tmp = rule->rule->funcBlock;
-    for (int i = rule->rule->right.size() - 1; i >= 0; i--) {
-        std::string name = this->_typeMap[ItemRight(rule, i)->name];
-        std::string w    = "$" + std::to_string(i);
-        std::string r    = "(child[" + std::to_string(i);
+    for (size_t i = ItemRightSize(rule), e = 0; i != e; i--) {
+        std::string name = this->_typeMap[ItemRight(rule, i - 1)->name];
+        std::string w    = "$" + std::to_string(i - 1);
+        std::string r    = "(child[" + std::to_string(i - 1);
         r += "].";
         r += name;
         r += ")";
-        std::size_t pos;
         while ((pos = tmp.find(w)) != std::string::npos)
             tmp.replace(pos, w.size(), r);
     }
-    std::size_t pos;
 
     std::string name = Symtab::GetName(ItemLeft(rule));
 
@@ -317,12 +316,11 @@ SemaParser::funcReplace(const Item rule) {
         tmp.replace(pos, 2, name);
     }
     // handle @@, @n
-    for (int i = rule->rule->right.size() - 1; i >= 0; i--) {
-        std::string name = this->_typeMap[ItemRight(rule, i)->name];
-        std::string w    = "@" + std::to_string(i);
-        std::string r    = "(child[" + std::to_string(i);
+    for (size_t i = ItemRightSize(rule), e = 0; i != e; i--) {
+        std::string name = this->_typeMap[ItemRight(rule, i - 1)->name];
+        std::string w    = "@" + std::to_string(i - 1);
+        std::string r    = "(child[" + std::to_string(i - 1);
         r += "]";
-        std::size_t pos;
         while ((pos = tmp.find(w)) != std::string::npos)
             tmp.replace(pos, w.size(), r);
     }

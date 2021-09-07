@@ -59,5 +59,6 @@ typedef std::vector<Item> ItemList;
 #define ItemRoot(item) (item->rule->root)
 #define ItemRight(item, i) (item->rule->right[(i)])
 #define ItemRights(item) (item->rule->right)
+#define ItemRightSize(item) (item->rule->right.size())
 
 #endif // !_rule_hpp_
