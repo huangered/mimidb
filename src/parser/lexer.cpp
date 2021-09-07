@@ -106,9 +106,35 @@ SqlLexer::yylex() {
     case ',':
         _cur++;
         return comma;
+    case '\'':
+        return lexText();
     }
 
+    printf("find unknown\n");
+    
     return -1;
+}
+
+int
+SqlLexer::lexText() {
+    _cur++;
+    int start = _cur;
+    int count = 0;
+    for (; _cur < _size; _cur++) {
+        char c = _buf[_cur];
+        if (c == '\'') {
+	  break;
+        } else {
+	  count++;
+        }
+    }
+    _cur++;
+
+    char* p = new char[count + 1];
+    strncpy(p, _buf + start, count);
+    p[count] = '\0';
+
+  return t_text;
 }
 
 int
@@ -160,7 +186,7 @@ SqlLexer::lexIdentifier() {
     }
 
     // default text
-    if (token == t_text) {
+    if (token == t_id) {
         Parser::yylval.str = p;
     } else {
         delete[] p;
