@@ -112,12 +112,12 @@ SqlLexer::yylex() {
         _cur++;
         return dot;
     case '=':
-      _cur++;
-      return equal;
+        _cur++;
+        return equal;
     }
 
     printf("find unknown\n");
-    
+
     return -1;
 }
 
@@ -129,9 +129,9 @@ SqlLexer::lexText() {
     for (; _cur < _size; _cur++) {
         char c = _buf[_cur];
         if (c == '\'') {
-	  break;
+            break;
         } else {
-	  count++;
+            count++;
         }
     }
     _cur++;
@@ -140,7 +140,7 @@ SqlLexer::lexText() {
     strncpy(p, _buf + start, count);
     p[count] = '\0';
 
-  return t_text;
+    return t_text;
 }
 
 int
