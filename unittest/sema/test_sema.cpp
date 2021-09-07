@@ -3,14 +3,14 @@
 //#include "sema/sema.hpp"
 //#include "sema/rulereader.hpp"
 //
-//TEST(Sema, GroupKeyTest1) {
+// TEST(Sema, GroupKeyTest1) {
 //    group_key k1{ 1, nullptr, {} };
 //    group_key k2{ 2, nullptr, {} };
 //
 //    EXPECT_TRUE(k1 < k2);
 //}
 //
-//TEST(Sema, GroupKeyTest2) {
+// TEST(Sema, GroupKeyTest2) {
 //    SemaToken t1 = new SemaTokenData{ 1, true, "" };
 //    SemaToken t2 = new SemaTokenData{ 2, true, "" };
 //
@@ -23,7 +23,7 @@
 //    delete t2;
 //}
 //
-//TEST(Sema, GroupKeyTest3) {
+// TEST(Sema, GroupKeyTest3) {
 //    SemaToken t1 = new SemaTokenData{ 1, true, "" };
 //    SemaToken t2 = new SemaTokenData{ 2, true, "" };
 //
@@ -36,7 +36,7 @@
 //    delete t2;
 //}
 //
-//TEST(Sema, tok_eq) {
+// TEST(Sema, tok_eq) {
 //    std::set<Tok> a;
 //    std::set<Tok> b;
 //
@@ -46,7 +46,7 @@
 //    EXPECT_TRUE(a == b);
 //}
 //
-//TEST(Sema, tok_ne) {
+// TEST(Sema, tok_ne) {
 //    std::set<Tok> a;
 //    std::set<Tok> b;
 //
@@ -57,12 +57,12 @@
 //}
 //
 //#ifdef _WIN32
-//const char* path = "C:\\work\\mimidb\\sql.rule";
+// const char* path = "C:\\work\\mimidb\\sql.rule";
 //#else
-//const char* path = "./sql.rule";
+// const char* path = "./sql.rule";
 //#endif
 //
-//TEST(Sema, select_test) {
+// TEST(Sema, select_test) {
 //    auto rList = ReadRules(path);
 //
 //    const char* str = "select * from asdf;";
@@ -88,7 +88,7 @@
 //    delete n.second;
 //}
 //
-//TEST(Sema, select_where_test) {
+// TEST(Sema, select_where_test) {
 //    auto rList = ReadRules(path);
 //
 //    const char* str = "select * from asdf where;";
@@ -114,7 +114,7 @@
 //    delete n.second;
 //}
 //
-//TEST(Sema, select_fail_test) {
+// TEST(Sema, select_fail_test) {
 //    auto rList = ReadRules(path);
 //
 //    const char* str = "select * from asdf where a;";
@@ -139,7 +139,7 @@
 //}
 //
 //
-//TEST(Sema, lex_init) {
+// TEST(Sema, lex_init) {
 //    auto rList = ReadRules("C:\\work\\mimidb\\sql-lex.rule");
 //
 //    Parser parser(rList.rules);

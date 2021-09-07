@@ -579,8 +579,6 @@ Parser::yyshift(std::stack<int>& states, std::stack<YYSTYPE>& syms, std::stack<I
     int curStateId    = states.top();
     InputToken* token = input.top();
 
-    printf("debug (state, tok) (%d, %d)\n", curStateId, token->tok);
-
     int rd       = action_table[curStateId][token->tok];
     *acc         = (rd == 10000);
     bool r_state = (rd > 0);
@@ -760,7 +758,7 @@ Parser::yyreduce(std::stack<int>& states, std::stack<YYSTYPE>& syms, int r_id) {
         break;
     case 28:
         // line 560
-        { (item.node) = (child[0].node); }
+        {}
         break;
     }
     syms.push(item);

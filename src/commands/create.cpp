@@ -8,8 +8,8 @@
 #include "commands/indexcmds.hpp"
 #include "util/mctx.hpp"
 
-//static TupleDesc formTupleDesc(List* columns);
-//static void formAttr(FormData_mimi_attribute* attr, ColumnDef* def);
+// static TupleDesc formTupleDesc(List* columns);
+// static void formAttr(FormData_mimi_attribute* attr, ColumnDef* def);
 
 /*
 创建表
@@ -18,8 +18,8 @@ void
 DefineRelation(CreateTableStmt* stmt) {
     Relation heap_rel;
     // 创建堆表
-    const char* name  = stmt->relname;
-    Oid id            = GetNewOid();
+    const char* name = stmt->relname;
+    Oid id           = GetNewOid();
     //    TupleDesc tupdesc = formTupleDesc(stmt->columns);
     //    heap_rel          = heap_create_with_catalog(name, id, tupdesc);
 

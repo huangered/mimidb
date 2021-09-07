@@ -6,7 +6,6 @@ extern "C" {
 #include "c_util/cvector.h"
 }
 
-
 TEST(c_util, cstack) {
     Stack* stack = stack_new();
     stack_push_int(stack, 1);
@@ -14,7 +13,7 @@ TEST(c_util, cstack) {
     stack_push_int(stack, 3);
     stack_push_int(stack, 4);
     stack_push_int(stack, 5);
-    
+
     EXPECT_EQ(5, stack_top_int(stack));
     stack_pop(stack);
     EXPECT_EQ(4, stack_top_int(stack));

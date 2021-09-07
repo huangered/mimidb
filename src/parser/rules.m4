@@ -35,6 +35,6 @@ foreach(`x',
 `(`25',` (item.node) = makeOrderbyStmt((child[1].list)); ', `500')',
 `(`26',` (child[0].list)->push_back((child[2].node)); (item.list) = (child[0].list); ', `520')',
 `(`27',` std::vector<Node*>* vec = new std::vector<Node*>(); vec->push_back((child[0].node)); (item.list) = vec;  ', `540')',
-`(`28',`(item.node) = (child[0].node);', `560')',
+`(`28',`', `560')',
 )',
 `_cat(`_case', x)')dnl

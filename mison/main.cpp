@@ -21,7 +21,7 @@ main(int argc, char* argv[]) {
     Node a = p.parse();
     assert(a);
     printf("%s\n", a->_value.c_str());
-    LexNode* lex                     = dynamic_cast<LexNode*>(a);
+    LexNode* lex = dynamic_cast<LexNode*>(a);
     assert(lex);
     std::map<string, string> typeMap = lex->GetTypeMap();
     Rules                            = lex->GetRules();

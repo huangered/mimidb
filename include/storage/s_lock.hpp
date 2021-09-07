@@ -65,7 +65,7 @@ typedef long slock_t;
 
 #endif
 
-#define S_LOCK(lock)      (TAS(lock) ? s_lock((lock), __FILE__, __LINE__) : 0)
+#define S_LOCK(lock) (TAS(lock) ? s_lock((lock), __FILE__, __LINE__) : 0)
 
 #define S_INIT_LOCK(lock) S_UNLOCK(lock)
 
