@@ -68,7 +68,9 @@ enum yytokentype {
             t_block =  32,
             l_paran =  33,
             r_paran =  34,
-               star =  35,
+                dot =  35,
+              equal =  36,
+               star =  37,
 
 };
 

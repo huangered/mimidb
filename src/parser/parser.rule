@@ -47,14 +47,16 @@
 @token t_block
 @token l_paran
 @token r_paran
+@token dot
+@token equal
 @token star
 
 %
 
 @type <num> t_number
 @type <str> t_text t_id
-@type <list> stmts params column_params where_params order_params table_params values value_stmt
-@type <node> param column_param order_param where_param value
+@type <list> stmts params column_params where_params order_params table_params values value_stmt set_stmt
+@type <node> param column_param order_param where_param value set_param
 @type <node> Q stmt create_stmt select_stmt update_stmt insert_stmt delete_stmt where_stmt order_stmt
 
 %
@@ -81,7 +83,7 @@ select_stmt :
  SELECT params FROM t_id where_stmt order_stmt semicolon { $$ = makeSelectStmt($3, $1, $4, $5); } ;
 
 update_stmt :
-  UPDATE t_text SET where_stmt { };
+  UPDATE t_id SET set_stmt where_stmt semicolon { $$ = makeUpdateStmt($1, $3, $4); };
 
 insert_stmt : INSERT INTO t_id VALUES value_stmt semicolon { $$ = makeInsertStmt($2, $4); };
 
@@ -133,6 +135,15 @@ value:
   t_text { $$ = makeStrValue($0); }
 | t_number { $$ = makeIntValue($0); }
 ;
+
+set_stmt :
+  set_stmt comma set_param {  $0->push_back($2); $$ = $0;  }
+| set_param { std::vector<Node*>* vec = new std::vector<Node*>(); vec->push_back($0); $$ = vec; }
+;
+
+set_param : t_id equal value { $$ = makeSetParam($0, $2); } ;
+
+where_param : t_id equal value { $$ = makeSetParam($0, $2); } ;
 
 @start Q
 

@@ -97,6 +97,12 @@ public:
     int primary;
 };
 
+class SetParam : public Node {
+public:
+  char* colname;
+  Node* value;
+};
+
 Node* makeIntValue(int i);
 Node* makeStrValue(char* str);
 Node* makeExpr(char* key);
@@ -111,6 +117,7 @@ Node* makeWhereStmt(vector<Node*>* cols);
 Node* makeTypeName(char* type_name);
 Node* makeColumnDef(char* col_name, TypeName* type_name, int primary);
 Node* makeOrderbyStmt(vector<Node*>* cols);
+Node* makeSetParam(char* col_name, Node* value);
 
 extern Node* mison_parse(const char* str);
 
