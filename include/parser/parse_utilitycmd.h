@@ -3,7 +3,6 @@
 
 #include "node/parsenode.hpp"
 
-
-//extern List* transformCreateStmt(CreateTableStmt* stmt);
+// extern List* transformCreateStmt(CreateTableStmt* stmt);
 
 #endif // !_PARSE_UTILITY_CMD_

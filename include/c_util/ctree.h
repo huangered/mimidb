@@ -5,7 +5,7 @@ struct TreeCell {
     union {
         int int_value;
         void* ptr_value;
-    }data;
+    } data;
 
     struct TreeCell* left;
     struct TreeCell* right;

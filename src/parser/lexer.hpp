@@ -5,20 +5,18 @@
 
 class SqlLexer : public yylexer {
 private:
-  int _cur;
-  int _size;
-  const char* _buf;
-  
-public:
-  SqlLexer(const char* buf, int size);
+    int _cur;
+    int _size;
+    const char* _buf;
 
-  int yylex();
+public:
+    SqlLexer(const char* buf, int size);
+
+    int yylex();
 
 private:
-
-  int lexIdentifier();
-  int lexNumber();
+    int lexIdentifier();
+    int lexNumber();
 };
-
 
 #endif

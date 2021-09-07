@@ -160,10 +160,10 @@ SqlLexer::lexIdentifier() {
     }
 
     // default text
-    if (token == t_text){
-    Parser::yylval.str = p;
-    }else {
-      delete[] p;
+    if (token == t_text) {
+        Parser::yylval.str = p;
+    } else {
+        delete[] p;
     }
 
     return token;

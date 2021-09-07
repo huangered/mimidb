@@ -5,7 +5,7 @@
 #include "storage/block.hpp"
 #include "storage/bufmgr.hpp"
 
-#define FSM_CATEGORIES   256
+#define FSM_CATEGORIES 256
 
 #define FSM_TREE_DEPTH   3
 #define FSM_ROOT_LEVEL   (FSM_TREE_DEPTH - 1)
