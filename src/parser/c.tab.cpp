@@ -300,7 +300,7 @@ Parser::yyreduce(std::stack<int>& states, std::stack<YYSTYPE>& syms, int r_id) {
         break;
     case 11:
         // line 220
-        {  }
+        { (item.node) = makeInsertStmt((child[2].str), (child[4].list));  }
         break;
     case 12:
         // line 240
