@@ -33,3 +33,11 @@ makeColumnDef(char* col_name, TypeName* type_name, int primary) {
     def->typeName  = type_name;
     return (Node*)def;
 }
+
+Node*
+makeSetParam(char* col_name, Node* value) {
+  SetParam* param = new SetParam();
+  param->colname  = col_name;
+  param->value    = value;
+  return param;
+}

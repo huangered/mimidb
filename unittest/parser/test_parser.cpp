@@ -33,7 +33,7 @@ TEST(parser, basic_create_table) {
     //    TypeName* tname = param->typeName;
     //    EXPECT_STREQ(tname->name, "text");
 }
-
+*/
 TEST(parser, update_row) {
     UpdateStmt* raw = (UpdateStmt*)mison_parse("update test set a='a', b='b',c='c';");
     EXPECT_TRUE(raw != NULL);
@@ -51,4 +51,3 @@ TEST(parser, update_row_where) {
     EXPECT_EQ(3, raw->columns->size());
     EXPECT_TRUE(raw->where_cause != NULL);
 }
-*/

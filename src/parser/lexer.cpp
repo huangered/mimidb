@@ -108,6 +108,12 @@ SqlLexer::yylex() {
         return comma;
     case '\'':
         return lexText();
+    case '.':
+        _cur++;
+        return dot;
+    case '=':
+      _cur++;
+      return equal;
     }
 
     printf("find unknown\n");
