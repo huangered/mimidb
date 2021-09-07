@@ -36,7 +36,7 @@ private:
     std::unique_ptr<StateCollection> _stateList;
 
 public:
-    SemaParser(std::string startSym);
+    SemaParser();
     ~SemaParser();
     void SetTypeMap(const std::map<std::string, std::string>& _typeMap);
     void GenerateParseTable(void);

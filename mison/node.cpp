@@ -34,7 +34,7 @@ LexNode::GetTypeMap() {
 
 std::vector<Rule>
 LexNode::GetRules() {
-    std::vector<Rule> g;
+    std::vector<Rule> rList;
     int i{ 0 };
     for (Node n : *rules) {
         RuleNode* rn              = dynamic_cast<RuleNode*>(n);
@@ -50,17 +50,24 @@ LexNode::GetRules() {
             l_sym->clazz = SymbolClass::nterm;
 
             rule->left = l_sym->id;
+            rule->root = false;
             // right nodes
             for (Node r_node : *r->right) {
                 Symbol r_sym = Symtab::SymbolNew(r_node->_value);
-                if (r_sym->clazz == none) {
-                    r_sym->clazz = nterm;
-                }
-
                 rule->right.push_back(r_sym);
             }
-            g.push_back(rule);
+            rList.push_back(rule);
         }
     }
-    return g;
+
+    // handle start rule
+    Rule sRule       = new RuleData();
+    sRule->root      = true;
+    sRule->id        = i++;
+    sRule->funcBlock = "";
+    sRule->left      = Symtab::start->id;
+    sRule->right.push_back(Symtab::SymbolNew(startRule));
+    rList.push_back(sRule);
+
+    return rList;
 }

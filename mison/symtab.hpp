@@ -36,7 +36,7 @@ public:
     static std::map<std::string, Symbol> _data;
     static Symbol epsilon;
     static Symbol eof;
-
+    static Symbol start;
 public:
     static int nsym;
     static int nnterm();

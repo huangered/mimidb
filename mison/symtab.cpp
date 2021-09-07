@@ -8,6 +8,7 @@ int Symtab::nsym = 0;
 std::map<std::string, Symbol> Symtab::_data;
 Symbol Symtab::epsilon = nullptr;
 Symbol Symtab::eof     = nullptr;
+Symbol Symtab::start   = nullptr;
 
 Symtab::Symtab() {
 }
