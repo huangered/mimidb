@@ -103,7 +103,7 @@ params:
 | param { std::vector<Node*>* vec = new std::vector<Node*>(); vec->push_back($0); $$ = vec; }
 ;
 
-param : t_text { $$ = makeStrValue($0); } ;
+param : t_id { $$ = makeStrValue($0); } ;
 
 where_stmt :
 |  WHERE where_params { $$ = makeWhereStmt($1); }

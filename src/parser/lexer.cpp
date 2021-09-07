@@ -139,7 +139,7 @@ SqlLexer::lexText() {
 
 int
 SqlLexer::lexIdentifier() {
-    yytokentype token = t_text;
+    yytokentype token = t_id;
     int start         = _cur;
     int count         = 0;
     for (; _cur < _size; _cur++) {
