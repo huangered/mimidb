@@ -29,8 +29,6 @@ LexNode::GetTypeMap() {
         }
     }
 
-    _data["$t_start"] = "node";
-
     return _data;
 }
 
@@ -66,7 +64,7 @@ LexNode::GetRules() {
     Rule sRule       = new RuleData();
     sRule->root      = true;
     sRule->id        = i++;
-    sRule->funcBlock = "$$ = $0;";
+    sRule->funcBlock = "";
     sRule->left      = Symtab::start->id;
     sRule->right.push_back(Symtab::SymbolNew(startRule));
     rList.push_back(sRule);

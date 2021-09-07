@@ -2384,7 +2384,7 @@ Parser::yyreduce(std::stack<int>& states, std::stack<YYSTYPE>& syms, int r_id) {
         break;
     case 26:
         // line 520
-        { (item.node) = (child[0].node); }
+        {}
         break;
     }
     syms.push(item);

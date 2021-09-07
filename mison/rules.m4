@@ -33,6 +33,6 @@ foreach(`x',
 `(`23',` (item.node) = (child[0].node); ', `460')',
 `(`24',` (item.str) = makeStartRule((child[1].node)); ', `480')',
 `(`25',`', `500')',
-`(`26',`(item.node) = (child[0].node);', `520')',
+`(`26',`', `520')',
 )',
 `_cat(`_case', x)')dnl
