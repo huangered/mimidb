@@ -67,7 +67,7 @@ Md::Open(SMgrRelation reln, ForkNumber forknum) {
     if (fd <= 0) {
         char* path = GetRelPath(reln->rd_node.dbNode, reln->rd_node.relNode, forknum);
 
-        int fd2           = PathNameOpenFile(path);
+        int fd2 = PathNameOpenFile(path);
         delete[] path;
         reln->fd[forknum] = fd2;
         fd                = fd2;

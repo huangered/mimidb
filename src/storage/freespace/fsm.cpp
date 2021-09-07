@@ -1,7 +1,7 @@
 #include "storage/fsm_internal.hpp"
 #include "storage/smgr.hpp"
 
-#define parentof(X)       (((X)-1) / 2)
+#define parentof(X) (((X)-1) / 2)
 
 #define left_children(X)  (2 * (X) + 1)
 #define right_children(X) (2 * (X) + 2)

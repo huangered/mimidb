@@ -10,13 +10,13 @@ typedef unsigned long long Oid;
 
 typedef uintptr_t Datum;
 
-#define IntGetDatum(X)           ((Datum)(X))
-#define DatumGetInt(X)           ((int)(X))
+#define IntGetDatum(X) ((Datum)(X))
+#define DatumGetInt(X) ((int)(X))
 
-#define PointerGetDatum(X)       ((Datum)(X))
-#define DatumGetPointer(X)       ((void*)(X))
+#define PointerGetDatum(X) ((Datum)(X))
+#define DatumGetPointer(X) ((void*)(X))
 
-#define NAME_LIMIT               64
+#define NAME_LIMIT 64
 
 #define TYPEALIGN(ALIGNVAL, LEN) (((uintptr_t)(LEN) + ((ALIGNVAL)-1)) & ~((uintptr_t)((ALIGNVAL)-1)))
 

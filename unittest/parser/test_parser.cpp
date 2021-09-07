@@ -3,8 +3,6 @@
 
 #include "node/parsenode.hpp"
 
-
-
 // test the basic usage in buff mgr.
 TEST(parser, basic) {
     SelectStmt* raw = (SelectStmt*)mison_parse("select a,b,c from a;");

@@ -71,7 +71,7 @@ public:
 
 class OrderbyStmt : public Node {
 public:
-  vector<Node*>* columns;
+    vector<Node*>* columns;
 };
 
 class IntValue : public Node {

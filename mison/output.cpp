@@ -96,11 +96,10 @@ Output::writeM4(const char* fout) {
     printf("rules.m4 path, %s\n", f);
 #endif
 
-    
     fd = OpenFile(f, "w");
 
     delete[] f;
-    
+
     writeRule(fd);
 
     CloseFile(fd);
