@@ -36,7 +36,7 @@ FirstSet::Find(const SymbolList& tokens, const std::vector<int>& extra) {
     if (c->clazz == nterm) {
         return find(tokens);
     } else {
-        return { Symtab::GetId(c->name) };
+        return { c->id };
     }
 }
 
@@ -83,9 +83,9 @@ FirstSet::Print() {
 #ifdef _log_
     printf("\nfirset: \n");
     for (auto entry = _firstSet.begin(); entry != _firstSet.end(); entry++) {
-        printf("  %d =>", entry->first);
+        printf("  %d => ", entry->first);
         for (int i : entry->second) {
-            printf("%d,", i);
+            printf("%3d, ", i);
         }
         printf("\n");
     }

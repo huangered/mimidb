@@ -33,13 +33,11 @@ int yylex();
 %
 
 @type <str> StartRule
-@type <node> t_type t_type_type t_union t_code t_identifier t_colon t_block t_sign t_param t_start_rule
-@type <node> Lex RuleList Rule ID Type Token Q Code Union Other Param RuleRight
+@type <node> t_identifier t_block t_param
+@type <node> Lex RuleList Rule ID Type Token Code Union Other Param RuleRight
 @type <list> TokenList TypeList RuleList IdList RuleRightList
 
 %
-
-Q : Lex { $$ = $0; } ;
 
 Lex : Code Union Param TokenList t_sign TypeList t_sign RuleList StartRule t_sign Other { $$ = makeLex($0, $1, $2, $3, $5, $7, $8, $10 ); } ;
 
@@ -98,7 +96,7 @@ StartRule:
   t_start_rule t_identifier { $$ = makeStartRule($1); }
 | ;
 
-@start Q
+@start Lex
 
 %
 

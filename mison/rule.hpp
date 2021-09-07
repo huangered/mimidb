@@ -3,11 +3,11 @@
 
 #include <vector>
 #include <set>
-#include <string>
 #include "symtab.hpp"
 
 class RuleData {
 public:
+    bool root;
     int lineId;
     int id;
     int left;
@@ -26,14 +26,11 @@ public:
     int id;
     int dot;
     int next_state;
-    bool root;
+    // rule ptr
+    Rule rule;
 
-    int left;
-    SymbolList right;
     // look ahead 检查
     std::vector<int> tokens;
-
-    std::string func_block;
 
 public:
     bool IsDotEnd();
@@ -57,5 +54,11 @@ public:
 
 typedef ItemData* Item;
 typedef std::vector<Item> ItemList;
+
+#define ItemLeft(item)      (item->rule->left)
+#define ItemRoot(item)      (item->rule->root)
+#define ItemRight(item, i)  (item->rule->right[(i)])
+#define ItemRights(item)    (item->rule->right)
+#define ItemRightSize(item) (item->rule->right.size())
 
 #endif // !_rule_hpp_

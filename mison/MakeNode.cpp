@@ -2,6 +2,7 @@
 #include "symtab.hpp"
 #include "debug.hpp"
 #include <cstring>
+
 Node
 makeLex(Node codeNode, Node unionNode, Node paramNode, std::vector<Node>* tokens, std::vector<Node>* types,
         std::vector<Node>* rules, char* startRule, Node other) {
@@ -51,14 +52,18 @@ makeToken(Node typeNode, Node token) {
 
 Node
 makeRule(Node leftNode, std::vector<Node>* rightList) {
-    RuleNode* n1 = new RuleNode();
-    n1->left     = leftNode;
+    Symbol sym = Symtab::SymbolNew(leftNode->_value);
+    sym->clazz = nterm;
+
+    RuleNode* rule = new RuleNode();
+    rule->left     = leftNode;
     if (rightList == nullptr) {
-        n1->right = new std::vector<Node>();
+        rule->right = new std::vector<Node>();
     } else {
-        n1->right = rightList;
+        rule->right = rightList;
     }
-    return n1;
+
+    return rule;
 }
 
 Node
@@ -69,6 +74,13 @@ makeRuleRight(std::vector<Node>* rightList, Node blockNode) {
         n1->right = new std::vector<Node>();
     } else {
         n1->right = rightList;
+        for (Node n : *n1->right) {
+            Symbol sym = Symtab::SymbolNew(n->_value);
+
+            if (sym->clazz == none) {
+                sym->clazz = nterm;
+            }
+        }
     }
     if (blockNode == nullptr) {
         n1->block = "";
@@ -106,8 +118,12 @@ makeUnion(Node block) {
 
 char*
 makeStartRule(Node rule) {
-  int len = rule->_value.size();
-  char* data = new char[len];
-  strcpy(data, rule->_value.c_str());
-  return data;
+    int len    = rule->_value.size();
+    char* data = new char[len];
+    strcpy(data, rule->_value.c_str());
+
+    // register $_start nterm
+    Symtab::start = Symtab::SymbolNew("$t_start");
+    Symtab::start->clazz = nterm;
+    return data;
 }

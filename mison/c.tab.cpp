@@ -8,8 +8,14 @@
 
 const int goto_table[56][17] = {
     {
-        MAX_ID,
         2,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
         3,
         MAX_ID,
         MAX_ID,
@@ -19,12 +25,6 @@ const int goto_table[56][17] = {
         MAX_ID,
         MAX_ID,
         MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
     },
     {
         MAX_ID,
@@ -46,27 +46,6 @@ const int goto_table[56][17] = {
         MAX_ID,
     },
     {
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-    },
-    {
-        MAX_ID,
-        MAX_ID,
         MAX_ID,
         6,
         MAX_ID,
@@ -82,23 +61,6 @@ const int goto_table[56][17] = {
         MAX_ID,
         MAX_ID,
         MAX_ID,
-    },
-    {
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
         MAX_ID,
         MAX_ID,
     },
@@ -124,6 +86,42 @@ const int goto_table[56][17] = {
     {
         MAX_ID,
         MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+    },
+    {
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+    },
+    {
         MAX_ID,
         MAX_ID,
         9,
@@ -139,23 +137,6 @@ const int goto_table[56][17] = {
         MAX_ID,
         MAX_ID,
         MAX_ID,
-    },
-    {
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
         MAX_ID,
         MAX_ID,
     },
@@ -181,10 +162,28 @@ const int goto_table[56][17] = {
     {
         MAX_ID,
         MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+    },
+    {
         MAX_ID,
         MAX_ID,
         MAX_ID,
         12,
+        MAX_ID,
         MAX_ID,
         MAX_ID,
         MAX_ID,
@@ -196,24 +195,6 @@ const int goto_table[56][17] = {
         MAX_ID,
         MAX_ID,
         MAX_ID,
-    },
-    {
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
         MAX_ID,
     },
     {
@@ -237,6 +218,24 @@ const int goto_table[56][17] = {
     },
     {
         MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+    },
+    {
         MAX_ID,
         MAX_ID,
         MAX_ID,
@@ -253,24 +252,6 @@ const int goto_table[56][17] = {
         MAX_ID,
         MAX_ID,
         MAX_ID,
-    },
-    {
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
         MAX_ID,
     },
     {
@@ -314,11 +295,29 @@ const int goto_table[56][17] = {
     {
         MAX_ID,
         MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+    },
+    {
         MAX_ID,
         MAX_ID,
         MAX_ID,
         MAX_ID,
         20,
+        MAX_ID,
         MAX_ID,
         MAX_ID,
         MAX_ID,
@@ -329,24 +328,6 @@ const int goto_table[56][17] = {
         MAX_ID,
         MAX_ID,
         MAX_ID,
-    },
-    {
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
         MAX_ID,
     },
     {
@@ -389,6 +370,24 @@ const int goto_table[56][17] = {
     },
     {
         MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+    },
+    {
         MAX_ID,
         MAX_ID,
         MAX_ID,
@@ -405,24 +404,6 @@ const int goto_table[56][17] = {
         MAX_ID,
         MAX_ID,
         MAX_ID,
-    },
-    {
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
         MAX_ID,
     },
     {
@@ -466,6 +447,23 @@ const int goto_table[56][17] = {
     {
         MAX_ID,
         MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+    },
+    {
         MAX_ID,
         MAX_ID,
         MAX_ID,
@@ -477,28 +475,11 @@ const int goto_table[56][17] = {
         MAX_ID,
         MAX_ID,
         MAX_ID,
+        MAX_ID,
         30,
         31,
         MAX_ID,
         MAX_ID,
-    },
-    {
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
         MAX_ID,
     },
     {
@@ -561,6 +542,23 @@ const int goto_table[56][17] = {
     {
         MAX_ID,
         MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+    },
+    {
         MAX_ID,
         MAX_ID,
         MAX_ID,
@@ -572,28 +570,11 @@ const int goto_table[56][17] = {
         MAX_ID,
         MAX_ID,
         MAX_ID,
+        MAX_ID,
         35,
         31,
         MAX_ID,
         MAX_ID,
-    },
-    {
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
         MAX_ID,
     },
     {
@@ -617,6 +598,24 @@ const int goto_table[56][17] = {
     },
     {
         MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+    },
+    {
         MAX_ID,
         MAX_ID,
         MAX_ID,
@@ -633,24 +632,6 @@ const int goto_table[56][17] = {
         39,
         MAX_ID,
         MAX_ID,
-    },
-    {
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
         MAX_ID,
     },
     {
@@ -693,6 +674,24 @@ const int goto_table[56][17] = {
     },
     {
         MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+    },
+    {
         MAX_ID,
         MAX_ID,
         MAX_ID,
@@ -709,28 +708,28 @@ const int goto_table[56][17] = {
         45,
         46,
         47,
-    },
-    {
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
         MAX_ID,
     },
     {
         MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+    },
+    {
         MAX_ID,
         MAX_ID,
         MAX_ID,
@@ -747,24 +746,6 @@ const int goto_table[56][17] = {
         48,
         MAX_ID,
         MAX_ID,
-    },
-    {
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
         MAX_ID,
     },
     {
@@ -789,6 +770,23 @@ const int goto_table[56][17] = {
     {
         MAX_ID,
         MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+    },
+    {
         MAX_ID,
         MAX_ID,
         MAX_ID,
@@ -804,23 +802,6 @@ const int goto_table[56][17] = {
         MAX_ID,
         MAX_ID,
         MAX_ID,
-    },
-    {
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
         MAX_ID,
         MAX_ID,
     },
@@ -845,6 +826,24 @@ const int goto_table[56][17] = {
     },
     {
         MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+    },
+    {
         MAX_ID,
         MAX_ID,
         MAX_ID,
@@ -861,24 +860,6 @@ const int goto_table[56][17] = {
         52,
         MAX_ID,
         MAX_ID,
-    },
-    {
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
         MAX_ID,
     },
     {
@@ -1016,6 +997,24 @@ const int goto_table[56][17] = {
     },
     {
         MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+    },
+    {
         MAX_ID,
         MAX_ID,
         MAX_ID,
@@ -1032,6 +1031,7 @@ const int goto_table[56][17] = {
         45,
         MAX_ID,
         55,
+        MAX_ID,
     },
     {
         MAX_ID,
@@ -1113,6 +1113,25 @@ const int action_table[56][17] = {
     },
     {
         MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        5,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+    },
+    {
+        MAX_ID,
         10000,
         MAX_ID,
         MAX_ID,
@@ -1138,26 +1157,7 @@ const int action_table[56][17] = {
         MAX_ID,
         MAX_ID,
         MAX_ID,
-        5,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-    },
-    {
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        -3,
+        -2,
         MAX_ID,
         MAX_ID,
         MAX_ID,
@@ -1220,7 +1220,7 @@ const int action_table[56][17] = {
         MAX_ID,
         MAX_ID,
         MAX_ID,
-        -4,
+        -3,
         MAX_ID,
         MAX_ID,
         MAX_ID,
@@ -1266,7 +1266,7 @@ const int action_table[56][17] = {
     {
         MAX_ID,
         MAX_ID,
-        -2,
+        -1,
         MAX_ID,
         MAX_ID,
         MAX_ID,
@@ -1323,7 +1323,7 @@ const int action_table[56][17] = {
     {
         MAX_ID,
         MAX_ID,
-        -6,
+        -5,
         MAX_ID,
         MAX_ID,
         MAX_ID,
@@ -1331,7 +1331,7 @@ const int action_table[56][17] = {
         MAX_ID,
         MAX_ID,
         MAX_ID,
-        -6,
+        -5,
         MAX_ID,
         MAX_ID,
         MAX_ID,
@@ -1342,7 +1342,7 @@ const int action_table[56][17] = {
     {
         MAX_ID,
         MAX_ID,
-        -7,
+        -6,
         MAX_ID,
         MAX_ID,
         MAX_ID,
@@ -1350,7 +1350,7 @@ const int action_table[56][17] = {
         MAX_ID,
         MAX_ID,
         MAX_ID,
-        -7,
+        -6,
         MAX_ID,
         MAX_ID,
         MAX_ID,
@@ -1399,7 +1399,7 @@ const int action_table[56][17] = {
     {
         MAX_ID,
         MAX_ID,
-        -5,
+        -4,
         MAX_ID,
         MAX_ID,
         MAX_ID,
@@ -1407,7 +1407,7 @@ const int action_table[56][17] = {
         MAX_ID,
         MAX_ID,
         MAX_ID,
-        -5,
+        -4,
         MAX_ID,
         MAX_ID,
         MAX_ID,
@@ -1481,9 +1481,9 @@ const int action_table[56][17] = {
         MAX_ID,
         MAX_ID,
         MAX_ID,
-        -10,
+        -9,
         MAX_ID,
-        -10,
+        -9,
         MAX_ID,
         MAX_ID,
         MAX_ID,
@@ -1557,9 +1557,9 @@ const int action_table[56][17] = {
         MAX_ID,
         MAX_ID,
         MAX_ID,
-        -9,
+        -8,
         MAX_ID,
-        -9,
+        -8,
         MAX_ID,
         MAX_ID,
         MAX_ID,
@@ -1570,7 +1570,7 @@ const int action_table[56][17] = {
     {
         MAX_ID,
         MAX_ID,
-        -8,
+        -7,
         MAX_ID,
         MAX_ID,
         MAX_ID,
@@ -1578,7 +1578,7 @@ const int action_table[56][17] = {
         MAX_ID,
         MAX_ID,
         MAX_ID,
-        -8,
+        -7,
         MAX_ID,
         MAX_ID,
         MAX_ID,
@@ -1610,7 +1610,7 @@ const int action_table[56][17] = {
         MAX_ID,
         MAX_ID,
         MAX_ID,
-        -23,
+        -22,
         MAX_ID,
         MAX_ID,
         MAX_ID,
@@ -1635,7 +1635,7 @@ const int action_table[56][17] = {
         MAX_ID,
         MAX_ID,
         MAX_ID,
-        -26,
+        -25,
         MAX_ID,
         MAX_ID,
         MAX_ID,
@@ -1649,18 +1649,18 @@ const int action_table[56][17] = {
         MAX_ID,
         MAX_ID,
         MAX_ID,
-        -13,
+        -12,
         MAX_ID,
         MAX_ID,
         MAX_ID,
         MAX_ID,
-        -13,
+        -12,
         MAX_ID,
         MAX_ID,
         MAX_ID,
         MAX_ID,
         MAX_ID,
-        -13,
+        -12,
     },
     {
         MAX_ID,
@@ -1744,18 +1744,18 @@ const int action_table[56][17] = {
         MAX_ID,
         MAX_ID,
         MAX_ID,
-        -12,
+        -11,
         MAX_ID,
         MAX_ID,
         MAX_ID,
         MAX_ID,
-        -12,
+        -11,
         MAX_ID,
         MAX_ID,
         MAX_ID,
         MAX_ID,
         MAX_ID,
-        -12,
+        -11,
     },
     {
         MAX_ID,
@@ -1772,8 +1772,8 @@ const int action_table[56][17] = {
         MAX_ID,
         MAX_ID,
         MAX_ID,
-        -20,
-        -20,
+        -19,
+        -19,
         MAX_ID,
     },
     {
@@ -1782,12 +1782,12 @@ const int action_table[56][17] = {
         MAX_ID,
         MAX_ID,
         MAX_ID,
-        -23,
+        -22,
         MAX_ID,
         MAX_ID,
-        -23,
+        -22,
         MAX_ID,
-        -23,
+        -22,
         MAX_ID,
         MAX_ID,
         MAX_ID,
@@ -1804,28 +1804,9 @@ const int action_table[56][17] = {
         37,
         MAX_ID,
         MAX_ID,
-        -11,
+        -10,
         MAX_ID,
-        -11,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-    },
-    {
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        -22,
-        MAX_ID,
-        MAX_ID,
-        -22,
-        MAX_ID,
-        -22,
+        -10,
         MAX_ID,
         MAX_ID,
         MAX_ID,
@@ -1839,12 +1820,31 @@ const int action_table[56][17] = {
         MAX_ID,
         MAX_ID,
         MAX_ID,
+        -21,
+        MAX_ID,
+        MAX_ID,
+        -21,
+        MAX_ID,
+        -21,
         MAX_ID,
         MAX_ID,
         MAX_ID,
         MAX_ID,
         MAX_ID,
-        -25,
+        MAX_ID,
+    },
+    {
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        -24,
         MAX_ID,
         MAX_ID,
         MAX_ID,
@@ -1877,8 +1877,8 @@ const int action_table[56][17] = {
         MAX_ID,
         MAX_ID,
         MAX_ID,
-        -23,
-        -23,
+        -22,
+        -22,
         MAX_ID,
         MAX_ID,
         MAX_ID,
@@ -1886,8 +1886,8 @@ const int action_table[56][17] = {
         MAX_ID,
         MAX_ID,
         MAX_ID,
-        -23,
-        -23,
+        -22,
+        -22,
         MAX_ID,
     },
     {
@@ -1905,8 +1905,8 @@ const int action_table[56][17] = {
         MAX_ID,
         MAX_ID,
         MAX_ID,
-        -19,
-        -19,
+        -18,
+        -18,
         MAX_ID,
     },
     {
@@ -1924,8 +1924,8 @@ const int action_table[56][17] = {
         MAX_ID,
         MAX_ID,
         MAX_ID,
-        -18,
-        -18,
+        -17,
+        -17,
         MAX_ID,
     },
     {
@@ -1934,8 +1934,8 @@ const int action_table[56][17] = {
         MAX_ID,
         MAX_ID,
         MAX_ID,
-        -22,
-        -22,
+        -21,
+        -21,
         MAX_ID,
         MAX_ID,
         MAX_ID,
@@ -1943,8 +1943,8 @@ const int action_table[56][17] = {
         MAX_ID,
         MAX_ID,
         MAX_ID,
-        -22,
-        -22,
+        -21,
+        -21,
         MAX_ID,
     },
     {
@@ -1981,6 +1981,82 @@ const int action_table[56][17] = {
         MAX_ID,
         MAX_ID,
         MAX_ID,
+        -15,
+        -15,
+        MAX_ID,
+    },
+    {
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        -20,
+        MAX_ID,
+        MAX_ID,
+        -20,
+        MAX_ID,
+        -20,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+    },
+    {
+        MAX_ID,
+        -23,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+    },
+    {
+        MAX_ID,
+        -0,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+    },
+    {
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
+        MAX_ID,
         -16,
         -16,
         MAX_ID,
@@ -1991,93 +2067,17 @@ const int action_table[56][17] = {
         MAX_ID,
         MAX_ID,
         MAX_ID,
-        -21,
+        -20,
+        -20,
         MAX_ID,
         MAX_ID,
-        -21,
         MAX_ID,
-        -21,
         MAX_ID,
         MAX_ID,
         MAX_ID,
         MAX_ID,
-        MAX_ID,
-        MAX_ID,
-    },
-    {
-        MAX_ID,
-        -24,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-    },
-    {
-        MAX_ID,
-        -1,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-    },
-    {
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        -17,
-        -17,
-        MAX_ID,
-    },
-    {
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        -21,
-        -21,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        MAX_ID,
-        -21,
-        -21,
+        -20,
+        -20,
         MAX_ID,
     },
     {
@@ -2095,8 +2095,8 @@ const int action_table[56][17] = {
         MAX_ID,
         MAX_ID,
         MAX_ID,
-        -20,
-        -20,
+        -19,
+        -19,
         MAX_ID,
     },
     {
@@ -2105,18 +2105,18 @@ const int action_table[56][17] = {
         MAX_ID,
         MAX_ID,
         MAX_ID,
-        -14,
+        -13,
         MAX_ID,
         MAX_ID,
         MAX_ID,
         MAX_ID,
-        -14,
+        -13,
         MAX_ID,
         MAX_ID,
         MAX_ID,
         MAX_ID,
         MAX_ID,
-        -14,
+        -13,
     },
     {
         MAX_ID,
@@ -2133,16 +2133,16 @@ const int action_table[56][17] = {
         MAX_ID,
         MAX_ID,
         MAX_ID,
-        -15,
-        -15,
+        -14,
+        -14,
         MAX_ID,
     },
 };
 const int rule_right_children_num_arr[] = {
-    1, 11, 2, 2, 2, 2, 1, 2, 5, 2, 1, 5, 2, 1, 4, 3, 1, 2, 1, 1, 0, 2, 1, 1, 1, 2, 0,
+    11, 2, 2, 2, 2, 1, 2, 5, 2, 1, 5, 2, 1, 4, 3, 1, 2, 1, 1, 0, 2, 1, 1, 1, 2, 0, 1,
 };
 const int rule_left_id_arr[] = {
-    17, 18, 21, 19, 20, 22, 22, 27, 27, 23, 23, 28, 24, 24, 30, 32, 32, 33, 33, 33, 33, 29, 29, 31, 26, 25, 25,
+    25, 19, 17, 18, 20, 20, 26, 26, 21, 21, 27, 22, 22, 29, 31, 31, 32, 32, 32, 32, 28, 28, 30, 24, 23, 23, 33,
 };
 
 Parser::Parser(yylexer* lexer) {
@@ -2202,11 +2202,12 @@ bool
 Parser::yyshift(std::stack<int>& states, std::stack<YYSTYPE>& syms, std::stack<InputToken*>& input, bool* acc) {
     int curStateId    = states.top();
     InputToken* token = input.top();
-    int rd            = action_table[curStateId][token->tok];
-    *acc              = (rd == 10000);
-    bool r_state      = (rd > 0);
-    int r_id          = abs(rd);
-    bool r_find       = (r_id != MAX_ID);
+
+    int rd       = action_table[curStateId][token->tok];
+    *acc         = (rd == 10000);
+    bool r_state = (rd > 0);
+    int r_id     = abs(rd);
+    bool r_find  = (r_id != MAX_ID);
     if (r_find) {
 
         if (*acc) {
@@ -2241,133 +2242,133 @@ Parser::yyreduce(std::stack<int>& states, std::stack<YYSTYPE>& syms, int r_id) {
 
     case 0:
         // line 0
-        { (item.node) = (child[0].node); }
-        break;
-    case 1:
-        // line 20
         {
             (item.node) = makeLex((child[0].node), (child[1].node), (child[2].node), (child[3].list), (child[5].list),
                                   (child[7].list), (child[8].str), (child[10].node));
         }
         break;
+    case 1:
+        // line 20
+        { (item.node) = makeParam((child[1].node)); }
+        break;
     case 2:
         // line 40
-        { (item.node) = makeParam((child[1].node)); }
+        { (item.node) = makeCode((child[1].node)); }
         break;
     case 3:
         // line 60
-        { (item.node) = makeCode((child[1].node)); }
+        { (item.node) = makeUnion((child[1].node)); }
         break;
     case 4:
         // line 80
-        { (item.node) = makeUnion((child[1].node)); }
+        {
+            (child[0].list)->push_back((child[1].node));
+            (item.list) = (child[0].list);
+        }
         break;
     case 5:
         // line 100
         {
-            (child[0].list)->push_back((child[1].node));
-            (item.list) = (child[0].list);
+            std::vector<Node>* vec = new std::vector<Node>();
+            vec->push_back((child[0].node));
+            (item.list) = vec;
         }
         break;
     case 6:
         // line 120
-        {
-            std::vector<Node>* vec = new std::vector<Node>();
-            vec->push_back((child[0].node));
-            (item.list) = vec;
-        }
+        { (item.node) = makeToken((child[1].node)); }
         break;
     case 7:
         // line 140
-        { (item.node) = makeToken((child[1].node)); }
+        { (item.node) = makeToken((child[2].node), (child[4].node)); }
         break;
     case 8:
         // line 160
-        { (item.node) = makeToken((child[2].node), (child[4].node)); }
+        {
+            (child[0].list)->push_back((child[1].node));
+            (item.list) = (child[0].list);
+        }
         break;
     case 9:
         // line 180
         {
-            (child[0].list)->push_back((child[1].node));
-            (item.list) = (child[0].list);
+            std::vector<Node>* vec = new std::vector<Node>();
+            vec->push_back((child[0].node));
+            (item.list) = vec;
         }
         break;
     case 10:
         // line 200
-        {
-            std::vector<Node>* vec = new std::vector<Node>();
-            vec->push_back((child[0].node));
-            (item.list) = vec;
-        }
+        { (item.node) = makeType((child[2].node), (child[4].list)); }
         break;
     case 11:
         // line 220
-        { (item.node) = makeType((child[2].node), (child[4].list)); }
-        break;
-    case 12:
-        // line 240
         {
             (child[0].list)->push_back((child[1].node));
             (item.list) = (child[0].list);
         }
         break;
-    case 13:
-        // line 260
+    case 12:
+        // line 240
         {
             std::vector<Node>* vec = new std::vector<Node>();
             vec->push_back((child[0].node));
             (item.list) = vec;
         }
         break;
-    case 14:
-        // line 280
+    case 13:
+        // line 260
         { (item.node) = makeRule((child[0].node), (child[2].list)); }
         break;
-    case 15:
-        // line 300
+    case 14:
+        // line 280
         {
             (child[0].list)->push_back((child[2].node));
             (item.list) = (child[0].list);
         }
         break;
-    case 16:
-        // line 320
+    case 15:
+        // line 300
         {
             std::vector<Node>* vec = new std::vector<Node>();
             vec->push_back((child[0].node));
             (item.list) = vec;
         }
         break;
+    case 16:
+        // line 320
+        { (item.node) = makeRuleRight((child[0].list), (child[1].node)); }
+        break;
     case 17:
         // line 340
-        { (item.node) = makeRuleRight((child[0].list), (child[1].node)); }
+        { (item.node) = makeRuleRight((child[0].list), nullptr); }
         break;
     case 18:
         // line 360
-        { (item.node) = makeRuleRight((child[0].list), nullptr); }
+        { (item.node) = makeRuleRight(nullptr, (child[0].node)); }
         break;
     case 19:
         // line 380
-        { (item.node) = makeRuleRight(nullptr, (child[0].node)); }
+        { (item.node) = makeRuleRight(nullptr, nullptr); }
         break;
     case 20:
         // line 400
-        { (item.node) = makeRuleRight(nullptr, nullptr); }
-        break;
-    case 21:
-        // line 420
         {
             (child[0].list)->push_back((child[1].node));
             (item.list) = (child[0].list);
         }
         break;
-    case 22:
-        // line 440
+    case 21:
+        // line 420
         {
             std::vector<Node>* vec = new std::vector<Node>();
             vec->push_back((child[0].node));
             (item.list) = vec;
         }
+        break;
+    case 22:
+        // line 440
+        { (item.node) = (child[0].node); }
         break;
     case 23:
         // line 460
@@ -2375,11 +2376,11 @@ Parser::yyreduce(std::stack<int>& states, std::stack<YYSTYPE>& syms, int r_id) {
         break;
     case 24:
         // line 480
-        { (item.node) = (child[0].node); }
+        { (item.str) = makeStartRule((child[1].node)); }
         break;
     case 25:
         // line 500
-        { (item.str) = makeStartRule((child[1].node)); }
+        {}
         break;
     case 26:
         // line 520

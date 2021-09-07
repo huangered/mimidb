@@ -3,4 +3,7 @@
 
 #define _log_ 1
 
+void log(const char* msg);
+void logErr(const char* msg);
+
 #endif

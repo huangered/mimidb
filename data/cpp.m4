@@ -69,6 +69,7 @@ bool
 Parser::yyshift(std::stack<int>& states, std::stack<YYSTYPE>& syms, std::stack<InputToken*>& input, bool* acc) {
     int curStateId    = states.top();
     InputToken* token = input.top();
+
     int rd  = action_table[curStateId][token->tok];
     *acc   = (rd == 10000);
     bool r_state = (rd > 0);
