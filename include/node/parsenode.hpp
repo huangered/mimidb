@@ -99,8 +99,8 @@ public:
 
 class SetParam : public Node {
 public:
-  char* colname;
-  Node* value;
+    char* colname;
+    Node* value;
 };
 
 Node* makeIntValue(int i);
