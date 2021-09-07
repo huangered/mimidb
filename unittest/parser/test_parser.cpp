@@ -19,9 +19,9 @@ TEST(parser, insert_stmt) {
     EXPECT_STREQ(raw->relname, "s");
     EXPECT_EQ(3, raw->columns->size());
 }
-
+/*
 TEST(parser, basic_create_table) {
-    CreateTableStmt* raw = (CreateTableStmt*)mison_parse("create table test ( a int primary key, b text, c text );");
+      CreateTableStmt* raw = (CreateTableStmt*)mison_parse("create table test ( a int primary key, b text, c text );");
     EXPECT_TRUE(raw != NULL);
     EXPECT_EQ(raw->nodetag, NT_CreateTableStmt);
     EXPECT_STREQ(raw->relname, "test");
@@ -32,7 +32,7 @@ TEST(parser, basic_create_table) {
     //    TypeName* tname = param->typeName;
     //    EXPECT_STREQ(tname->name, "text");
 }
-
+*/
 TEST(parser, update_row) {
     UpdateStmt* raw = (UpdateStmt*)mison_parse("update test set a='a', b='b',c='c';");
     EXPECT_TRUE(raw != NULL);
