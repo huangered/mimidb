@@ -27,11 +27,11 @@ makeTypeName(char* type_name) {
 }
 
 Node*
-makeColumnDef(char* col_name, TypeName* type_name, int primary) {
+makeColumnDef(char* col_name, char* type_name) {
     ColumnDef* def = new ColumnDef();
     def->colname   = col_name;
     def->typeName  = type_name;
-    return (Node*)def;
+    return def;
 }
 
 Node*
