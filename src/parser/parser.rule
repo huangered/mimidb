@@ -98,7 +98,7 @@ column_params :
 ;
 
 column_param :
-  t_text t_text { };
+  t_id t_id { $$ = makeColumnDef($0, $1); };
 
 params:
   params comma param { $0->push_back($2); $$ = $0; }
