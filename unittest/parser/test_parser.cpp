@@ -25,7 +25,7 @@ TEST(parser, insert_stmt2) {
     EXPECT_TRUE(raw != NULL);
     EXPECT_EQ(raw->nodetag, NT_InsertStmt);
     EXPECT_STREQ(raw->relname, "s");
-    EXPECT_EQ(3, raw->columns->size());
+    EXPECT_EQ(2, raw->columns->size());
 }
 
 TEST(parser, basic_create_table) {
