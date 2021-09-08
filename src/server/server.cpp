@@ -1,15 +1,26 @@
-#include "storage/fd.hpp"
-#include <fcntl.h>
-#ifdef _WIN32
-#include <io.h>
-#endif
 #include <cstdio>
+#include "node/parsenode.hpp"
+
 int
 main(int argc, char* argv[]) {
-    int fd           = PathNameOpenFile("test.txt");
-    const char* data = "12345";
-    lseek(fd, 1, SEEK_SET);
-    write(fd, data, 5);
-    close(fd);
+
+    printf("hello mimi db!\n");
+
+    char str[256];
+
+    while (true) {
+        printf("enter sql:\n");
+        fgets(str, 256, stdin);
+
+        printf("you enter:%s\n", str);
+
+        Node* raw = mison_parse(str);
+
+        if (raw != nullptr) {
+            printf("%p\n", raw);
+            delete raw;
+        }
+    }
+
     return 0;
 }
