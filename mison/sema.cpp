@@ -6,8 +6,12 @@
 #include "symtab.hpp"
 #include "absl/strings/str_join.h"
 
-static std::string join(const SymbolList& v);
-static std::string join2(const std::vector<int>& v);
+struct SymbolFormatter {
+    void
+    operator()(std::string* out, Symbol i) const {
+        out->append(i->name);
+    }
+};
 
 struct group_key {
     int dot;
@@ -87,8 +91,8 @@ SemaParser::GenerateParseTable(void) {
         }
         printf("state %d:\n", i);
         for (Item item : _stateList->GetRules(i)) {
-            auto r_str = join(ItemRights(item));
-            auto t_str = join2(item->tokens);
+            auto r_str = absl::StrJoin(ItemRights(item), ",", SymbolFormatter());
+            auto t_str = absl::StrJoin(item->tokens, ",");
             printf("     %s => %s [ %s ] (%d) ", Symtab::GetName(ItemLeft(item)).c_str(), r_str.c_str(), t_str.c_str(),
                    item->dot);
 
@@ -272,25 +276,6 @@ SemaParser::searchSameState(const ItemList& newStateItems) {
         }
     }
     return nullptr;
-}
-
-struct MyFormatter {
-    void
-    operator()(std::string* out, Symbol i) const {
-        out->append(i->name);
-    }
-};
-
-std::string
-join(const SymbolList& v) {
-    std::string a = absl::StrJoin(v, ",", MyFormatter());
-    return a;
-}
-
-std::string
-join2(const std::vector<int>& v) {
-    std::string a = absl::StrJoin(v, ",");
-    return a;
 }
 
 std::string
