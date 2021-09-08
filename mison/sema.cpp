@@ -4,6 +4,7 @@
 #include <cstring>
 #include "debug.hpp"
 #include "symtab.hpp"
+#include "absl/strings/str_join.h"
 
 static std::string join(const SymbolList& v);
 static std::string join2(const std::vector<int>& v);
@@ -273,23 +274,22 @@ SemaParser::searchSameState(const ItemList& newStateItems) {
     return nullptr;
 }
 
+struct MyFormatter {
+    void
+    operator()(std::string* out, Symbol i) const {
+        out->append(i->name);
+    }
+};
+
 std::string
 join(const SymbolList& v) {
-    std::string a;
-    for (Symbol t : v) {
-        a += t->name;
-        a += ",";
-    }
+    std::string a = absl::StrJoin(v, ",", MyFormatter());
     return a;
 }
 
 std::string
 join2(const std::vector<int>& v) {
-    std::string a;
-    for (int t : v) {
-        a += std::to_string(t);
-        a += ",";
-    }
+    std::string a = absl::StrJoin(v, ",");
     return a;
 }
 

@@ -2,6 +2,8 @@ AUX_SOURCE_DIRECTORY(. DIR_SRCS)
 
 add_executable(mison ${DIR_SRCS})
 
+target_link_libraries(mison absl::strings)
+
 add_custom_target(
   build_m4 ALL
   COMMAND mison ${PROJECT_SOURCE_DIR}/mison/mison.rule ${PROJECT_SOURCE_DIR}/mison/
