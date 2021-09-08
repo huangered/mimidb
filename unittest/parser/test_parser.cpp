@@ -13,7 +13,15 @@ TEST(parser, select_stmt) {
 }
 
 TEST(parser, insert_stmt) {
-    InsertStmt* raw = (InsertStmt*)mison_parse("insert into s values ( 123,'a','jkl' );");
+    InsertStmt* raw = (InsertStmt*)mison_parse("insert into s values ( 123, 'a', 'jkl' );");
+    EXPECT_TRUE(raw != NULL);
+    EXPECT_EQ(raw->nodetag, NT_InsertStmt);
+    EXPECT_STREQ(raw->relname, "s");
+    EXPECT_EQ(3, raw->columns->size());
+}
+
+TEST(parser, insert_stmt2) {
+    InsertStmt* raw = (InsertStmt*)mison_parse("insert into s values ( 123, 456 );");
     EXPECT_TRUE(raw != NULL);
     EXPECT_EQ(raw->nodetag, NT_InsertStmt);
     EXPECT_STREQ(raw->relname, "s");
