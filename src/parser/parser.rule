@@ -56,7 +56,7 @@
 @type <num> t_number
 @type <str> t_text t_id
 @type <list> stmts params column_params where_params order_params table_params values value_stmt set_stmt
-@type <node> param column_param order_param where_param value set_param
+@type <node> param column_param order_param where_param value set_param op_param
 @type <node> Q stmt create_stmt select_stmt update_stmt insert_stmt delete_stmt where_stmt order_stmt
 
 %
@@ -144,6 +144,11 @@ set_stmt :
 set_param : t_id equal value { $$ = makeSetParam($0, $2); } ;
 
 where_param : t_id equal value { $$ = makeSetParam($0, $2); } ;
+
+op_param :
+  AND { $$ = makeOpParam(OP_AND); } 
+| OR { $$ = makeOpParam(OP_OR); }
+;
 
 @start Q
 

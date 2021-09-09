@@ -41,3 +41,10 @@ makeSetParam(char* col_name, Node* value) {
     param->value    = value;
     return param;
 }
+
+Node*
+makeOpParam(Op op) {
+    OpParam* param = new OpParam();
+    param->op      = op;
+    return param;
+}

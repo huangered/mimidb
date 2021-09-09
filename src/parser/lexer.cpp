@@ -189,6 +189,10 @@ SqlLexer::lexIdentifier() {
         token = BEGIN;
     } else if (strcmp(p, "commit") == 0) {
         token = COMMIT;
+    } else if (strcmp(p, "and") == 0) {
+        token = AND;
+    } else if (strcmp(p, "or") == 0) {
+        token = OR;
     }
 
     // default text

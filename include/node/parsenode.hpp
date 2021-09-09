@@ -102,6 +102,11 @@ public:
     Node* value;
 };
 
+class OpParam : public Node {
+public:
+    Op op;
+};
+
 Node* makeIntValue(int i);
 Node* makeStrValue(char* str);
 Node* makeExpr(char* key);
@@ -117,6 +122,7 @@ Node* makeTypeName(char* type_name);
 Node* makeColumnDef(char* col_name, char* type_name);
 Node* makeOrderbyStmt(vector<Node*>* cols);
 Node* makeSetParam(char* col_name, Node* value);
+Node* makeOpParam(Op op);
 
 extern Node* mison_parse(const char* str);
 
