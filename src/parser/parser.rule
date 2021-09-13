@@ -94,7 +94,7 @@ table_params :
 
 column_params :
   column_params comma column_param { $0->push_back($2); $$ = $0;  }
-| column_param { std::vector<Node*>* vec = new std::vector<Node*>(); vec->push_back($0); $$ = vec; }
+| column_param { $$ = newList($0); }
 ;
 
 column_param :
@@ -102,7 +102,7 @@ column_param :
 
 params:
   params comma param { $0->push_back($2); $$ = $0; }
-| param { std::vector<Node*>* vec = new std::vector<Node*>(); vec->push_back($0); $$ = vec; }
+| param { $$ = newList($0); }
 ;
 
 param : t_id { $$ = makeStrValue($0); } ;
@@ -112,7 +112,7 @@ where_stmt :
 ;
 
 where_params : where_params where_param { $0->push_back($1); $$ = $0; }
-| where_param {  std::vector<Node*>* vec = new std::vector<Node*>(); vec->push_back($0); $$ = vec;  }
+| where_param {  $$ = newList($0); }
 ;
 
 order_stmt :
@@ -121,14 +121,14 @@ order_stmt :
 
 order_params:
   order_params comma order_param { $0->push_back($2); $$ = $0; }
-| order_param { std::vector<Node*>* vec = new std::vector<Node*>(); vec->push_back($0); $$ = vec;  }
+| order_param { $$ = newList($0); }
 ;
 
 value_stmt : l_paran values r_paran { $$ = $1; };
 
 values :
   values comma value { $0->push_back($2); $$ = $0; }
-| value { std::vector<Node*>* vec = new std::vector<Node*>(); vec->push_back($0); $$ = vec;  }
+| value { $$ = newList($0); }
 ;
 
 value:
@@ -138,7 +138,7 @@ value:
 
 set_stmt :
   set_stmt comma set_param {  $0->push_back($2); $$ = $0;  }
-| set_param { std::vector<Node*>* vec = new std::vector<Node*>(); vec->push_back($0); $$ = vec; }
+| set_param { $$ = newList($0); }
 ;
 
 set_param : t_id equal value { $$ = makeSetParam($0, $2); } ;

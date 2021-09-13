@@ -11,8 +11,9 @@ private:
 
 public:
     Lexer(const char* buf, int size);
-    ~Lexer();
-    int yylex();
+    virtual ~Lexer();
+    virtual int yylex();
+    virtual int pos();
 
 private:
     int lexPiont();

@@ -67,6 +67,15 @@ class yylexer {
 public:
     virtual int yylex() = 0;
     virtual ~yylexer(){};
+
+    virtual int
+    pos() {
+        return 0;
+    }
+    virtual int
+    line() {
+        return 0;
+    }
 };
 
 class Parser {

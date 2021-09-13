@@ -2,6 +2,14 @@
 #include "c.tab.hpp"
 #include "lexer.hpp"
 #include <cstring>
+
+std::vector<Node*>*
+newList(Node* node) {
+    std::vector<Node*>* vec = new std::vector<Node*>();
+    vec->push_back(node);
+    return vec;
+}
+
 /*
  * 解析create table sql
  */

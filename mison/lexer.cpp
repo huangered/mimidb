@@ -121,6 +121,11 @@ Lexer::yylex() {
 }
 
 int
+Lexer::pos() {
+    return _cur;
+}
+
+int
 Lexer::lexIdentifier() {
     int start = _cur;
     int count = 0;

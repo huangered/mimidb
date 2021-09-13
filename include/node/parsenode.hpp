@@ -107,6 +107,8 @@ public:
     Op op;
 };
 
+std::vector<Node*>* newList(Node* node);
+
 Node* makeIntValue(int i);
 Node* makeStrValue(char* str);
 Node* makeExpr(char* key);

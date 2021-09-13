@@ -1025,11 +1025,7 @@ Parser::yyreduce(std::stack<int>& states, std::stack<YYSTYPE>& syms, int r_id) {
         break;
     case 15:
         // line 300
-        {
-            std::vector<Node*>* vec = new std::vector<Node*>();
-            vec->push_back((child[0].node));
-            (item.list) = vec;
-        }
+        { (item.list) = newList((child[0].node)); }
         break;
     case 16:
         // line 320
@@ -1044,11 +1040,7 @@ Parser::yyreduce(std::stack<int>& states, std::stack<YYSTYPE>& syms, int r_id) {
         break;
     case 18:
         // line 360
-        {
-            std::vector<Node*>* vec = new std::vector<Node*>();
-            vec->push_back((child[0].node));
-            (item.list) = vec;
-        }
+        { (item.list) = newList((child[0].node)); }
         break;
     case 19:
         // line 380
@@ -1071,11 +1063,7 @@ Parser::yyreduce(std::stack<int>& states, std::stack<YYSTYPE>& syms, int r_id) {
         break;
     case 23:
         // line 460
-        {
-            std::vector<Node*>* vec = new std::vector<Node*>();
-            vec->push_back((child[0].node));
-            (item.list) = vec;
-        }
+        { (item.list) = newList((child[0].node)); }
         break;
     case 24:
         // line 480
@@ -1094,11 +1082,7 @@ Parser::yyreduce(std::stack<int>& states, std::stack<YYSTYPE>& syms, int r_id) {
         break;
     case 27:
         // line 540
-        {
-            std::vector<Node*>* vec = new std::vector<Node*>();
-            vec->push_back((child[0].node));
-            (item.list) = vec;
-        }
+        { (item.list) = newList((child[0].node)); }
         break;
     case 28:
         // line 560
@@ -1113,11 +1097,7 @@ Parser::yyreduce(std::stack<int>& states, std::stack<YYSTYPE>& syms, int r_id) {
         break;
     case 30:
         // line 600
-        {
-            std::vector<Node*>* vec = new std::vector<Node*>();
-            vec->push_back((child[0].node));
-            (item.list) = vec;
-        }
+        { (item.list) = newList((child[0].node)); }
         break;
     case 31:
         // line 620
@@ -1136,11 +1116,7 @@ Parser::yyreduce(std::stack<int>& states, std::stack<YYSTYPE>& syms, int r_id) {
         break;
     case 34:
         // line 680
-        {
-            std::vector<Node*>* vec = new std::vector<Node*>();
-            vec->push_back((child[0].node));
-            (item.list) = vec;
-        }
+        { (item.list) = newList((child[0].node)); }
         break;
     case 35:
         // line 700
