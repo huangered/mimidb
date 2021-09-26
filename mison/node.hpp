@@ -5,16 +5,12 @@
 #include <string>
 #include <map>
 #include <algorithm>
-
+#include "rule.hpp"
 using std::string;
 
 class NodeData;
 
 typedef NodeData* Node;
-
-class RuleData;
-
-typedef RuleData* Rule;
 
 class NodeData {
 public:

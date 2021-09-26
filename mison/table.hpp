@@ -11,8 +11,10 @@ private:
 
 public:
     GotoTable(int row, int col);
-    GotoTable(const GotoTable&);
+    GotoTable(const GotoTable&) = delete;
+    GotoTable& operator=(const GotoTable&) = delete;
     ~GotoTable();
+
     void Add(int stateId, int semaId, int nextStateId);
 
     Record Find(int stateId, int semaId);
@@ -26,8 +28,10 @@ class ActionTable {
 
 public:
     ActionTable(int row, int col);
-    ActionTable(const ActionTable&);
+    ActionTable(const ActionTable&) = delete;
+    ActionTable& operator=(const ActionTable&) = delete;
     ~ActionTable();
+
     Record Find(int stateId, int lexTokenId);
 
     void AddRule(int stateId, int lexTokenId, int ruleId, bool acc);
