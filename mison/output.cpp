@@ -189,8 +189,8 @@ Output::writeRule(FILE* f) {
     WriteFile(f, "foreach(`x',\n");
     WriteFile(f, "`(\n");
 
-    for (int i{ 0 }; i < parser->_rules.size(); i++) {
-        std::string g = parser->funcReplace(parser->_rules[i]);
+    for (int i{ 0 }; i < Rules.size(); i++) {
+        std::string g = parser->funcReplace(Rules[i]);
 
         char* buf = new char[256];
         memset(buf, 0, 256);
@@ -267,8 +267,8 @@ Output::writeConst(FILE* f) {
     memset(buf, 0, 256);
     WriteFile(f, "define(DATA_RIGHT_NUM, `");
 
-    for (int rId{ 0 }; rId < parser->_rules.size(); rId++) {
-        sprintf(buf, "%zd,", parser->_rules[rId]->rule->right.size());
+    for (int rId{ 0 }; rId < Rules.size(); rId++) {
+        sprintf(buf, "%zd,", Rules[rId]->right.size());
         WriteFile(f, buf);
     }
 
@@ -276,8 +276,8 @@ Output::writeConst(FILE* f) {
     // data left id
     memset(buf, 0, 256);
     WriteFile(f, "define(DATA_LEFT_ID, `");
-    for (int rId{ 0 }; rId < parser->_rules.size(); rId++) {
-        sprintf(buf, "%d,", parser->_rules[rId]->rule->left);
+    for (int rId{ 0 }; rId < Rules.size(); rId++) {
+        sprintf(buf, "%d,", Rules[rId]->left);
         WriteFile(f, buf);
     }
 

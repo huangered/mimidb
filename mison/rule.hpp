@@ -23,11 +23,10 @@ extern RuleList Rules;
 
 class ItemData {
 public:
+    // rule id
     int id;
     int dot;
     int next_state;
-    // rule ptr
-    Rule rule;
 
     // look ahead 检查
     std::vector<int> tokens;
@@ -55,10 +54,10 @@ public:
 typedef ItemData* Item;
 typedef std::vector<Item> ItemList;
 
-#define ItemLeft(item)      (item->rule->left)
-#define ItemRoot(item)      (item->rule->root)
-#define ItemRight(item, i)  (item->rule->right[(i)])
-#define ItemRights(item)    (item->rule->right)
-#define ItemRightSize(item) (item->rule->right.size())
+#define ItemLeft(item)      (Rules[item->id]->left)
+#define ItemRoot(item)      (Rules[item->id]->root)
+#define ItemRight(item, i)  (Rules[item->id]->right[(i)])
+#define ItemRights(item)    (Rules[item->id]->right)
+#define ItemRightSize(item) (Rules[item->id]->right.size())
 
 #endif // !_rule_hpp_

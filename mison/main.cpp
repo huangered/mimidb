@@ -28,8 +28,8 @@ main(int argc, char* argv[]) {
 
     printf("type map: {%zd}, rules: {%zd}\n", typeMap.size(), Rules.size());
 
-    SemaParser parser;
-    parser.SetTypeMap(typeMap);
+    SemaParser parser{ typeMap };
+
     parser.GenerateParseTable();
 
     Output output(&parser);
