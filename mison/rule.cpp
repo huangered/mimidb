@@ -6,17 +6,17 @@ RuleList Rules;
 
 bool
 ItemData::IsDotEnd() {
-    return dot == rule->right.size();
+    return dot == Rules[id]->right.size();
 }
 
 Symbol
 ItemData::GetTokenAfterDot() {
-    return rule->right[dot];
+    return Rules[id]->right[dot];
 }
 
 SymbolList
 ItemData::GetStringAfterDot() {
-    SymbolList t{ rule->right.begin() + dot + 1, rule->right.end() };
+    SymbolList t{ Rules[id]->right.begin() + dot + 1, Rules[id]->right.end() };
     return t;
 }
 
@@ -46,7 +46,6 @@ ItemData::SetTokens(std::vector<int> tokenList) {
 ItemData*
 ItemData::Clone() {
     Item item        = new ItemData{};
-    item->rule       = rule;
     item->id         = id;
     item->dot        = dot;
     item->next_state = next_state;
@@ -56,11 +55,7 @@ ItemData::Clone() {
 
 bool
 ItemData::operator==(const ItemData& other) {
-    if (rule->left != other.rule->left) {
-        return false;
-    }
-
-    if (!SymbolListEqual(rule->right, other.rule->right)) {
+    if (id != other.id) {
         return false;
     }
 

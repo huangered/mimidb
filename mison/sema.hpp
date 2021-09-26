@@ -2,11 +2,11 @@
 #define _sema_hpp_
 
 #include "lexer.hpp"
-#include "FindAll.hpp"
+#include "findall.hpp"
 #include "node.hpp"
 #include "rule.hpp"
 #include "table.hpp"
-#include "FirstSet.hpp"
+#include "firstset.hpp"
 #include "state.hpp"
 
 #include <map>
@@ -29,16 +29,16 @@ private:
     int _maxState;
     std::map<std::string, std::string> _typeMap;
 
-    ItemList _rules;
     std::unique_ptr<GotoTable> _gotoTable;
     std::unique_ptr<ActionTable> _actionTable;
     std::unique_ptr<FirstSet> _firstSet;
     std::unique_ptr<StateCollection> _stateList;
 
 public:
-    SemaParser();
+    SemaParser(const std::map<std::string, std::string>& _typeMap);
+    SemaParser(const SemaParser&) = delete;
+    SemaParser& operator=(const SemaParser&) = delete;
     ~SemaParser();
-    void SetTypeMap(const std::map<std::string, std::string>& _typeMap);
     void GenerateParseTable(void);
 
 private:
@@ -48,7 +48,7 @@ private:
     State searchSameState(const ItemList& newStateRules);
 
     // code generate
-    std::string funcReplace(const Item rule);
+    std::string funcReplace(const Rule rule);
 
     friend class Output;
 };
