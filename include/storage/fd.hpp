@@ -16,4 +16,6 @@ int FileSync(File fd);
 off_t FileSeek(File fd, off_t offset, int whence);
 void FileClose(File fd);
 
+void DirMake(const char* dirname);
+
 #endif

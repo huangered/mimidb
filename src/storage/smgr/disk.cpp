@@ -6,9 +6,8 @@
 #else
 #include <unistd.h>
 #endif
-extern "C" {
-#include "storage/fd.h"
-}
+#include "storage/fd.hpp"
+
 
 int
 Md::Nblock(SMgrRelation reln, ForkNumber forknum) {
