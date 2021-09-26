@@ -1,8 +1,6 @@
 #include "../g.hpp"
 
-extern "C" {
-#include "storage/fd.h"
-}
+#include "storage/fd.hpp"
 
 TEST(fd, basic) {
     const char* buf = "tmp_file.txt";
@@ -34,4 +32,8 @@ TEST(fd, basic) {
     delete[] buf3;
 
     FileClose(fd);
+}
+
+TEST(fd, dir_make) {
+  DirMake("test1234");
 }

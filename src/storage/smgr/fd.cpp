@@ -1,4 +1,4 @@
-#include "storage/fd.h"
+#include "storage/fd.hpp"
 #include <fcntl.h>
 #include <sys/stat.h>
 #ifdef _WIN32
@@ -52,4 +52,9 @@ void
 FileClose(File fd) {
     close(fd);
     return;
+}
+
+void
+DirMake(const char* dirname) {
+  mkdir(dirname, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 }
