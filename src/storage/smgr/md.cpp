@@ -13,15 +13,27 @@ mdcreate(SMgrRelation reln, ForkNumber forknum) {
 
 void
 mdread(SMgrRelation reln, ForkNumber forknum, BlockNumber blocknum, char* buf) {
+  MdVec* md = mdopen(reln, forknum);
+
+  FileSeek(md->fd, blocknum*BLKSZ, SEEK_SET);
+
+  FileRead(md->fd, buf, BLKSZ);
 }
 
 void
 mdwrite(SMgrRelation reln, ForkNumber forknum, BlockNumber blocknum, char* buf) {
+  MdVec* md = mdopen(reln, forknum);
+
+  FileSeek(md->fd, blocknum*BLKSZ, SEEK_SET);
+
+  FileWrite(md->fd, buf, BLKSZ);
 }
+
 BlockNumber
 mdnblocks(SMgrRelation reln, ForkNumber forknum) {
     return 0;
 }
+
 void
 mdextend(SMgrRelation reln, ForkNumber forknum, BlockNumber blocknum, char* buf) {
 }
