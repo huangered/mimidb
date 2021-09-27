@@ -14,6 +14,7 @@ struct SMgrRelationData {
     BlockNumber smgr_fsm_nblocks;  /* last known size of fsm fork */
 
     int fd[ForkNumber::NUMS_FORKNUM];
+    struct _md_vec* md_fd[NUMS_FORKNUM];
 };
 
 typedef SMgrRelationData* SMgrRelation;
@@ -57,5 +58,12 @@ extern Smgr* smgr;
 打开relation的文件
 */
 void RelationOpenSmgr(Relation rel);
+
+// private md method
+void mdcreate(SMgrRelation reln, ForkNumber forknum);
+void mdread(SMgrRelation reln, ForkNumber forknum, BlockNumber blocknum, char* buf);
+void mdwrite(SMgrRelation reln, ForkNumber forknum, BlockNumber blocknum, char* buf);
+BlockNumber mdnblocks(SMgrRelation reln, ForkNumber forknum);
+void mdextend(SMgrRelation reln, ForkNumber forknum, BlockNumber blocknum, char* buf);
 
 #endif // !_smgr_h_
