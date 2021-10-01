@@ -4,6 +4,7 @@
 
 TEST(fd, basic) {
     const char* buf = "tmp_file.txt";
+
     int fd          = PathNameOpenFile(buf);
     int num{ 0 };
     char* buf3{ nullptr };

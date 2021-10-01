@@ -7,6 +7,10 @@ typedef struct _md_vec {
 
 static MdVec* mdopen(SMgrRelation reln, ForkNumber forknum);
 
+bool mdexist(SMgrRelation reln, ForkNumber forknum){
+  return true;
+}
+
 void
 mdcreate(SMgrRelation reln, ForkNumber forknum) {
 }
@@ -24,18 +28,31 @@ void
 mdwrite(SMgrRelation reln, ForkNumber forknum, BlockNumber blocknum, char* buf) {
   MdVec* md = mdopen(reln, forknum);
 
-  FileSeek(md->fd, blocknum*BLKSZ, SEEK_SET);
+  FileSeek(md->fd, blocknum * BLKSZ, SEEK_SET);
 
   FileWrite(md->fd, buf, BLKSZ);
 }
 
 BlockNumber
 mdnblocks(SMgrRelation reln, ForkNumber forknum) {
-    return 0;
+  MdVec* md = mdopen(reln, forknum);
+  int sz = FileSeek(md->fd, 0, SEEK_END);
+  return sz / BLKSZ;
 }
 
 void
 mdextend(SMgrRelation reln, ForkNumber forknum, BlockNumber blocknum, char* buf) {
+  MdVec* md = mdopen(reln, forknum);
+  int off = BLKSZ * blocknum;
+  FileSeek(md->fd, off, SEEK_SET);
+  FileWrite(md->fd, buf, BLKSZ);
+}
+
+void mdclose(SMgrRelation reln, ForkNumber forknum) {
+    MdVec* md = mdopen(reln, forknum);
+    FileClose(md->fd);
+    delete md;
+    reln->md_fd[forknum] = nullptr;
 }
 
 // private method
