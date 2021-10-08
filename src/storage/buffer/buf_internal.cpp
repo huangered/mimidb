@@ -131,6 +131,8 @@ void
 BufferMgr::MarkBufferDirty(Buffer bufId) {
     BufferDesc* bd = &_buffDesc[bufId - 1];
     bd->dirty      = true;
+    // flush to disk force now.
+    FlushBuffer(bd);
 }
 
 Buffer
