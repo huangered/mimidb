@@ -6,12 +6,12 @@
 #include "storage/smgr.hpp"
 
 TEST(fsm, leaf) {
-    //    freespace fspace{};
-    //    RelationData rel;
-    //    rel.rnode = 2000;
-    //    rel.rd_smgr = new SMgrRelationData;
-    //    rel.rd_smgr->smgr_fsm_nblocks = 0;
-    //    fspace.RecordPageWithFreeSpace(&rel, 0, BLKSZ);
-    //    fspace.FreeSpaceMapVacuumRange(&rel, 0, 1);
-    //    fspace.GetPageWithFreeSpace(&rel, 20);
+    Relation rel = new RelationData{};
+    rel->rd_id   = 2000;
+    rel->rd_node = { 2000, rel->rd_id };
+    rel->rd_smgr = nullptr;
+
+    RecordPageWithFreeSpace(rel, 0, BLKSZ);
+    FreeSpaceMapVacuumRange(rel, 0, 1);
+    GetPageWithFreeSpace(rel, 20);
 }
