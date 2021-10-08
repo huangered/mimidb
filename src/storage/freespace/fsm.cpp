@@ -16,7 +16,8 @@ fsm::fsm_readbuf(Relation rel, FSMAddress addr, bool extend) {
     Buffer buf;
 
     // open smgr of rel
-
+    RelationOpenSmgr(rel);
+    
     // if exist rel fsm file
     if (rel->rd_smgr->smgr_fsm_nblocks == INVALID_BLOCK || blkno >= rel->rd_smgr->smgr_fsm_nblocks) {
         if (smgr->Exists(rel->rd_smgr, FSM_FORKNUM)) {
