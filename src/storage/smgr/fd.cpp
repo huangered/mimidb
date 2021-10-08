@@ -63,7 +63,7 @@ FileSeek(File fd, off_t offset, int whence) {
 void
 FileClose(File fd) {
 #ifdef _WIN32
-    close(fd);
+    _close(fd);
 #else
     close(fd);
 #endif
