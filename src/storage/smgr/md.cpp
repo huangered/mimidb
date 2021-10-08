@@ -14,6 +14,20 @@ mdexist(SMgrRelation reln, ForkNumber forknum) {
 
 void
 mdcreate(SMgrRelation reln, ForkNumber forknum) {
+    char* path;
+    File fd;
+
+    if (reln->md_fd[forknum] != nullptr) {
+        return;
+    }
+
+    path = GetRelPath(reln->rd_node.dbNode, reln->rd_node.relNode, forknum);
+    fd   = PathNameOpenFile(path);
+
+    delete[] path;
+
+    reln->md_fd[forknum]     = new MdVec{};
+    reln->md_fd[forknum]->fd = fd;
 }
 
 void
