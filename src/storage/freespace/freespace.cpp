@@ -12,27 +12,27 @@ static Size fsm_space_cat_to_avail(uint8 cat);
 
 BlockNumber
 GetPageWithFreeSpace(Relation rel, Size spaceNeeded) {
-    BlockNumber block;
+    int min_cat = fsm_space_avail_to_cat(spaceNeeded);
 
-    block = _fsm->fsm_search(rel, spaceNeeded);
-
-    return block;
+    return _fsm->fsm_search(rel, spaceNeeded);
 }
 
 void
 RecordPageWithFreeSpace(Relation rel, BlockNumber usedBlock, Size freeSpace) {
-
+    int new_cat = fsm_space_avail_to_cat(freeSpace);
     FSMAddress addr;
     int slot = 0;
 
     addr = _fsm->fsm_get_location(usedBlock, &slot);
-    _fsm->fsm_set_and_search(rel, addr, slot, freeSpace, 0);
+    _fsm->fsm_set_and_search(rel, addr, slot, new_cat, 0);
 }
 
 BlockNumber
 RecordAndGetPageWithFreeSpace(Relation rel, BlockNumber oldPage, Size oldSpaceAvail, Size spaceNeeded) {
-    RecordPageWithFreeSpace(rel, oldPage, oldSpaceAvail);
-    return GetPageWithFreeSpace(rel, spaceNeeded);
+    uint old_cat   = fsm_space_avail_to_cat(oldSpaceAvail);
+    uint space_cat = fsm_space_avail_to_cat(spaceNeeded);
+    RecordPageWithFreeSpace(rel, oldPage, old_cat);
+    return GetPageWithFreeSpace(rel, space_cat);
 }
 
 void
