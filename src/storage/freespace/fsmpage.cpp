@@ -52,7 +52,6 @@ fsm_set_avail(Page page, int slot, uint8 value) {
             break;
 
         fsmpage->fp_nodes[nodeno] = newvalue;
-        printf("no %4d %4d\n", nodeno, newvalue);
 
     } while (nodeno > 0);
 
