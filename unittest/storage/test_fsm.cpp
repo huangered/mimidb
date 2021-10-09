@@ -5,6 +5,10 @@
 #include "storage/freespace.hpp"
 #include "storage/smgr.hpp"
 
+TEST(fsm, print) {
+    printf("%d\n%d\n%d\n", NodesPerPage, NonLeafNodesPerPage, LeafNodesPerPage);
+}
+
 TEST(fsm, leaf) {
     Relation rel = new RelationData{};
     rel->rd_id   = 2000;

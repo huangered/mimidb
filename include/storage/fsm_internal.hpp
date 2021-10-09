@@ -13,10 +13,6 @@
 
 #define FLEXIBLE_ARRAY_MEMBER
 
-#define NodesPerPage        7
-#define NonLeafNodesPerPage 3
-#define LeafNodesPerPage    (NodesPerPage - NonLeafNodesPerPage)
-
 typedef struct FsmAddress {
     int level;     /* level */
     int logpageno; /* page number in the level */
@@ -31,6 +27,10 @@ struct FSMPageData {
 };
 
 typedef struct FSMPageData* FSMPage;
+
+#define NodesPerPage        (BLKSZ - SizeOfPageHeaderData - offsetof(struct FSMPageData, fp_nodes))
+#define NonLeafNodesPerPage (BLKSZ / 2 - 1)
+#define LeafNodesPerPage    (NodesPerPage - NonLeafNodesPerPage)
 
 class fsm {
 public:

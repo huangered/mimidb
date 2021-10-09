@@ -6,8 +6,10 @@
 #include "storage/fsm_internal.hpp"
 
 // 堆表
+Size GetRecordedFreeSpace(Relation rel, BlockNumber heapBlk);
 BlockNumber GetPageWithFreeSpace(Relation rel, Size spaceNeeded);
 void RecordPageWithFreeSpace(Relation rel, BlockNumber usedBlock, Size freeSpace);
+void FreeSpaceMapVacuumRange(Relation rel);
 void FreeSpaceMapVacuumRange(Relation rel, BlockNumber start, BlockNumber end);
 BlockNumber RecordAndGetPageWithFreeSpace(Relation rel, BlockNumber oldPage, Size oldSpaceAvail, Size spaceNeeded);
 
