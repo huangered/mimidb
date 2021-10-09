@@ -1,4 +1,4 @@
-#include "storage/fsm_internal.hpp"
+﻿#include "storage/fsm_internal.hpp"
 #include "storage/smgr.hpp"
 
 #define parentof(X) (((X)-1) / 2)
@@ -14,8 +14,11 @@ fsm_get_avail(Page page, int slot) {
     return fsmpage->fp_nodes[NonLeafNodesPerPage + slot];
 }
 
+/*
+  在 slot 上赋值，如果有改动，返回 true
+ */
 bool
-fsm_set_avail(Page page, int slot, int value) {
+fsm_set_avail(Page page, int slot, uint8 value) {
 
     int nodeno      = slot + NonLeafNodesPerPage;
     FSMPage fsmpage = (FSMPage)PageGetContent(page);
@@ -27,7 +30,10 @@ fsm_set_avail(Page page, int slot, int value) {
         return false;
 
     fsmpage->fp_nodes[nodeno] = value;
-
+    printf("no %4d %4d\n", nodeno, value);
+    /*
+     * 向上传播，如果不需要更新或遇到 root 节点，停止
+     */
     do {
         int newvalue = 0;
         int lchild;
@@ -46,7 +52,13 @@ fsm_set_avail(Page page, int slot, int value) {
             break;
 
         fsmpage->fp_nodes[nodeno] = newvalue;
+        printf("no %4d %4d\n", nodeno, newvalue);
+
     } while (nodeno > 0);
+
+    if (value > fsmpage->fp_nodes[0]) {
+        fsm_rebuild_page(page);
+    }
 
     return true;
 }
@@ -67,6 +79,7 @@ fsm_search_avail(Buffer buf, uint8 minValue) {
     while (no < NonLeafNodesPerPage) {
         int left  = left_children(no);
         int right = right_children(no);
+    
         if (fsm->fp_nodes[left] >= minValue) {
             no = left;
         } else if (fsm->fp_nodes[right] >= minValue) {
@@ -76,4 +89,36 @@ fsm_search_avail(Buffer buf, uint8 minValue) {
     slot = no - NonLeafNodesPerPage;
 
     return slot;
+}
+
+bool
+fsm_rebuild_page(Page page) {
+    FSMPage fsmpage = (FSMPage)PageGetContent(page);
+    bool changed    = false;
+    int nodeno;
+
+	/*
+     * Start from the lowest non-leaf level, at last node, working our way
+     * backwards, through all non-leaf nodes at all levels, up to the root.
+     */
+    for (nodeno = NonLeafNodesPerPage - 1; nodeno >= 0; nodeno--) {
+        int lchild     = left_children(nodeno);
+        int rchild     = lchild + 1;
+        int newvalue = 0;
+
+        /* The first few nodes we examine might have zero or one child. */
+        if (lchild < NodesPerPage)
+            newvalue = fsmpage->fp_nodes[lchild];
+
+        if (rchild < NodesPerPage)
+            newvalue = std::max(newvalue, fsmpage->fp_nodes[rchild]);
+
+        if (fsmpage->fp_nodes[nodeno] != newvalue) {
+            fsmpage->fp_nodes[nodeno] = newvalue;
+            printf("no %4d %4d\n", nodeno, newvalue);
+            changed                   = true;
+        }
+    }
+
+    return changed;
 }

@@ -15,7 +15,21 @@ TEST(fsm, leaf) {
     rel->rd_node = { 2000, rel->rd_id };
     rel->rd_smgr = nullptr;
 
-    RecordPageWithFreeSpace(rel, 0, BLKSZ);
-    FreeSpaceMapVacuumRange(rel, 0, 1);
-    GetPageWithFreeSpace(rel, 20);
+    RecordPageWithFreeSpace(rel, 0, 1000);
+
+    UpdateFreeSpaceMap(rel, 0, 0, 1000);
+
+    for (int j = 1; j < 3; j++) {
+        Page page = BufferGetPage(j);
+        FSMPage fsm = (FSMPage)PageGetContent(page);
+
+        for (int i = 0; i != 8000; i++) {
+            if (fsm->fp_nodes[i] != 0) {
+                printf("error buf %d , %d -> %d\n", j, i, fsm->fp_nodes[i]);
+            }
+        }
+    }
+
+     BlockNumber blk = GetPageWithFreeSpace(rel, 100);
+    EXPECT_GT(blk, -1);
 }

@@ -22,10 +22,10 @@ static const FSMAddress FSM_ROOT_ADDRESS = { FSM_ROOT_LEVEL, 0 };
 static Buffer fsm_readbuf(Relation rel, FSMAddress addr, bool extend);
 static BlockNumber fsm_search(Relation rel, uint8 cat);
 static void fsm_extend(Relation rel, BlockNumber blkno);
-static int fsm_set_and_search(Relation rel, FSMAddress addr, int slot, int newValue, int minValue);
+static int fsm_set_and_search(Relation rel, FSMAddress addr, int slot, uint8 newValue, uint8 minValue);
 static int fsm_vacuum_page(Relation rel, FSMAddress addr, BlockNumber start, BlockNumber end);
-
-// fsm 树导航函数
+static void fsm_update_recursive(Relation rel, FSMAddress addr, uint8 new_cat);
+    // fsm 树导航函数
 static FSMAddress fsm_get_child(FSMAddress addr, int slot);
 static FSMAddress fsm_get_parent(FSMAddress child, int* slot);
 static FSMAddress fsm_get_location(BlockNumber heapblk, int* slot);
@@ -84,6 +84,25 @@ void
 FreeSpaceMapVacuum(Relation rel) {
 }
 
+void
+UpdateFreeSpaceMap(Relation rel, BlockNumber startBlkNum, BlockNumber endBlkNum, Size freespace) {
+    int new_cat = fsm_space_avail_to_cat(freespace);
+    FSMAddress addr;
+    int slot;
+    BlockNumber blockNum;
+
+    blockNum = startBlkNum;
+
+    while (blockNum <= endBlkNum) {
+        addr = fsm_get_location(blockNum, &slot);
+        fsm_update_recursive(rel, addr, new_cat);
+
+        blockNum++;
+    }
+
+}
+
+
 /** private api **/
 static uint8
 fsm_space_avail_to_cat(Size avail) {
@@ -139,6 +158,9 @@ fsm_readbuf(Relation rel, FSMAddress addr, bool extend) {
     return buf;
 }
 
+/*
+搜索 fsm 树，查找符合 min_cat 的节点
+*/
 static BlockNumber
 fsm_search(Relation rel, uint8 min_cat) {
     FSMAddress address = FSM_ROOT_ADDRESS;
@@ -181,6 +203,8 @@ fsm_search(Relation rel, uint8 min_cat) {
 
 typedef struct PgData {
     char data[BLKSZ];
+    double force_align_d;
+    long long force_align_i64;
 } PgData;
 
 static void
@@ -189,25 +213,26 @@ fsm_extend(Relation rel, BlockNumber blkno) {
     PageInit((Page)data.data, BLKSZ, 0);
     BlockNumber fsm_blocks = smgr->Nblocks(rel->rd_smgr, FSM_FORKNUM);
     while (fsm_blocks < blkno) {
-        smgr->Extend(rel->rd_smgr, FSM_FORKNUM, fsm_blocks, (Page)data.data);
+        smgr->Extend(rel->rd_smgr, FSM_FORKNUM, fsm_blocks, data.data);
         fsm_blocks++;
     }
     rel->rd_smgr->smgr_fsm_nblocks = fsm_blocks;
 }
 
+// 转换 fsm 地址到 fsm page 的 blocknum
 static BlockNumber
 fsm_logic_to_physical(FSMAddress addr) {
     BlockNumber pages;
     int leafno;
-    int l;
+    int level;
 
     leafno = addr.logpageno;
-    for (l = 0; l < addr.level; l++) {
+    for (level = 0; level < addr.level; level++) {
         leafno *= LeafNodesPerPage;
     }
 
     pages = 0;
-    for (l = 0; l < FSM_TREE_DEPTH; l++) {
+    for (level = 0; level < FSM_TREE_DEPTH; level++) {
         pages += leafno + 1;
         leafno /= LeafNodesPerPage;
     }
@@ -217,13 +242,16 @@ fsm_logic_to_physical(FSMAddress addr) {
 }
 
 /*
-get real block number
+  获取对应 fsm address 和 slot 的 block number
 */
 static BlockNumber
 fsm_get_heap_blk(FSMAddress addr, int slot) {
     return addr.logpageno * LeafNodesPerPage + slot;
 }
 
+/*
+根据 slot 和 addr 返回子 addr
+*/
 static FSMAddress
 fsm_get_child(FSMAddress addr, int slot) {
     FSMAddress child;
@@ -232,6 +260,9 @@ fsm_get_child(FSMAddress addr, int slot) {
     return child;
 }
 
+/*
+获取对应的parent address
+*/
 static FSMAddress
 fsm_get_parent(FSMAddress child, int* slot) {
     FSMAddress parent;
@@ -243,8 +274,11 @@ fsm_get_parent(FSMAddress child, int* slot) {
     return parent;
 }
 
+/*
+* 在给定的 fsm page 和 slot 上赋值
+*/
 static int
-fsm_set_and_search(Relation rel, FSMAddress addr, int slot, int newValue, int minValue) {
+fsm_set_and_search(Relation rel, FSMAddress addr, int slot, uint8 newValue, uint8 minValue) {
     Buffer buf;
     Page page;
     int newslot = -1;
@@ -252,11 +286,21 @@ fsm_set_and_search(Relation rel, FSMAddress addr, int slot, int newValue, int mi
     buf  = fsm_readbuf(rel, addr, true);
     page = BufferGetPage(buf);
 
-    fsm_set_avail(page, slot, newValue);
+    if (fsm_set_avail(page, slot, newValue)) {
+        MarkBufferDirty(buf);
+    }
+
+    if (minValue != 0) {
+        newslot = fsm_search_avail(buf, minValue);
+    }
 
     return newslot;
 }
 
+
+/*
+  从 block num 获取对应 fsm address 和 slot
+*/
 static FSMAddress
 fsm_get_location(BlockNumber heapblk, int* slot) {
     FSMAddress addr;
@@ -338,4 +382,25 @@ fsm_vacuum_page(Relation rel, FSMAddress addr, BlockNumber start, BlockNumber en
     max_avail = fsmpage->fp_nodes[0];
 
     return max_avail;
+}
+
+/*
+ * Recursively update the FSM tree from given address to
+ * all the way up to root.
+ */
+static void
+fsm_update_recursive(Relation rel, FSMAddress addr, uint8 new_cat) {
+    int parentslot;
+    FSMAddress parent;
+
+    if (addr.level == FSM_ROOT_LEVEL)
+        return;
+
+    /*
+     * Get the parent page and our slot in the parent page, and update the
+     * information in that.
+     */
+    parent = fsm_get_parent(addr, &parentslot);
+    fsm_set_and_search(rel, parent, parentslot, new_cat, 0);
+    //fsm_update_recursive(rel, parent, new_cat);
 }

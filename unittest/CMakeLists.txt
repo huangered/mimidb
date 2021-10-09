@@ -30,7 +30,7 @@ if (CMAKE_VERSION VERSION_LESS 2.8.11)
   include_directories("${gtest_SOURCE_DIR}/include")
 endif()
 
-file(GLOB sub_sources */*.cpp)
+file(GLOB sub_sources storage/test_fsm.cpp)
 
 # Now simply link against gtest or gtest_main as needed. Eg
 #add_executable(unittest "access/test_access_heap.cpp")

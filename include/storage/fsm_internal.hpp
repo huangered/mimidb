@@ -16,8 +16,11 @@ typedef struct FSMPageData* FSMPage;
 #define NonLeafNodesPerPage (BLKSZ / 2 - 1)
 #define LeafNodesPerPage    (NodesPerPage - NonLeafNodesPerPage)
 
+#define SlotsPerFSMPage LeafNodesPerPage
+
 int fsm_search_avail(Buffer buf, uint8 minValue);
 int fsm_get_avail(Page page, int slot);
-bool fsm_set_avail(Page page, int slot, int value);
+bool fsm_set_avail(Page page, int slot, uint8 value);
+bool fsm_rebuild_page(Page page);
 
 #endif // !_fsm_internal_h_
