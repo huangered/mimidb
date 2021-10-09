@@ -30,12 +30,12 @@ fsm_set_avail(Page page, int slot, uint8 value) {
         return false;
 
     fsmpage->fp_nodes[nodeno] = value;
-    printf("no %4d %4d\n", nodeno, value);
+
     /*
      * 向上传播，如果不需要更新或遇到 root 节点，停止
      */
     do {
-        int newvalue = 0;
+        uint8 newvalue = 0;
         int lchild;
         int rchild;
 
@@ -104,7 +104,7 @@ fsm_rebuild_page(Page page) {
     for (nodeno = NonLeafNodesPerPage - 1; nodeno >= 0; nodeno--) {
         int lchild     = left_children(nodeno);
         int rchild     = lchild + 1;
-        int newvalue = 0;
+        uint8 newvalue = 0;
 
         /* The first few nodes we examine might have zero or one child. */
         if (lchild < NodesPerPage)
@@ -115,7 +115,6 @@ fsm_rebuild_page(Page page) {
 
         if (fsmpage->fp_nodes[nodeno] != newvalue) {
             fsmpage->fp_nodes[nodeno] = newvalue;
-            printf("no %4d %4d\n", nodeno, newvalue);
             changed                   = true;
         }
     }

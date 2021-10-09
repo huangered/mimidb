@@ -19,17 +19,6 @@ TEST(fsm, leaf) {
 
     UpdateFreeSpaceMap(rel, 0, 0, 1000);
 
-    for (int j = 1; j < 3; j++) {
-        Page page = BufferGetPage(j);
-        FSMPage fsm = (FSMPage)PageGetContent(page);
-
-        for (int i = 0; i != 8000; i++) {
-            if (fsm->fp_nodes[i] != 0) {
-                printf("error buf %d , %d -> %d\n", j, i, fsm->fp_nodes[i]);
-            }
-        }
-    }
-
-     BlockNumber blk = GetPageWithFreeSpace(rel, 100);
-    EXPECT_GT(blk, -1);
+    BlockNumber blk = GetPageWithFreeSpace(rel, 100);
+    EXPECT_EQ(blk, 0);
 }

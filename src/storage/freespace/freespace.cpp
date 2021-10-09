@@ -402,5 +402,5 @@ fsm_update_recursive(Relation rel, FSMAddress addr, uint8 new_cat) {
      */
     parent = fsm_get_parent(addr, &parentslot);
     fsm_set_and_search(rel, parent, parentslot, new_cat, 0);
-    //fsm_update_recursive(rel, parent, new_cat);
+    fsm_update_recursive(rel, parent, new_cat);
 }

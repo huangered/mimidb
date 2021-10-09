@@ -1,4 +1,4 @@
-#ifndef _fsm_internal_h_
+﻿#ifndef _fsm_internal_h_
 #define _fsm_internal_h_
 
 #include "access/rel.hpp"
@@ -7,7 +7,7 @@
 
 struct FSMPageData {
     int fp_next_slot;
-    int fp_nodes[1];
+    uint8 fp_nodes[1];  // 对象是8位
 };
 
 typedef struct FSMPageData* FSMPage;
