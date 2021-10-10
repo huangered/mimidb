@@ -7,7 +7,7 @@
 
 struct FSMPageData {
     int fp_next_slot;
-    uint8 fp_nodes[1];  // 对象是8位
+    uint8 fp_nodes[1]; // 对象是8位
 };
 
 typedef struct FSMPageData* FSMPage;

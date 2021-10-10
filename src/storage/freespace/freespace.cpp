@@ -1,4 +1,4 @@
-﻿#include "storage/freespace.hpp"
+#include "storage/freespace.hpp"
 #include "storage/fsm_internal.hpp"
 #include "storage/page.hpp"
 
@@ -23,9 +23,9 @@ static Buffer fsm_readbuf(Relation rel, FSMAddress addr, bool extend);
 static BlockNumber fsm_search(Relation rel, uint8 cat);
 static void fsm_extend(Relation rel, BlockNumber blkno);
 static int fsm_set_and_search(Relation rel, FSMAddress addr, int slot, uint8 newValue, uint8 minValue);
-static int fsm_vacuum_page(Relation rel, FSMAddress addr, BlockNumber start, BlockNumber end);
+static uint8 fsm_vacuum_page(Relation rel, FSMAddress addr, BlockNumber start, BlockNumber end);
 static void fsm_update_recursive(Relation rel, FSMAddress addr, uint8 new_cat);
-    // fsm 树导航函数
+// fsm 树导航函数
 static FSMAddress fsm_get_child(FSMAddress addr, int slot);
 static FSMAddress fsm_get_parent(FSMAddress child, int* slot);
 static FSMAddress fsm_get_location(BlockNumber heapblk, int* slot);
@@ -82,6 +82,7 @@ FreeSpaceMapVacuumRange(Relation rel, BlockNumber start, BlockNumber end) {
 
 void
 FreeSpaceMapVacuum(Relation rel) {
+    fsm_vacuum_page(rel, FSM_ROOT_ADDRESS, 0, INVALID_BLOCK);
 }
 
 void
@@ -99,9 +100,7 @@ UpdateFreeSpaceMap(Relation rel, BlockNumber startBlkNum, BlockNumber endBlkNum,
 
         blockNum++;
     }
-
 }
-
 
 /** private api **/
 static uint8
@@ -275,8 +274,8 @@ fsm_get_parent(FSMAddress child, int* slot) {
 }
 
 /*
-* 在给定的 fsm page 和 slot 上赋值
-*/
+ * 在给定的 fsm page 和 slot 上赋值
+ */
 static int
 fsm_set_and_search(Relation rel, FSMAddress addr, int slot, uint8 newValue, uint8 minValue) {
     Buffer buf;
@@ -297,7 +296,6 @@ fsm_set_and_search(Relation rel, FSMAddress addr, int slot, uint8 newValue, uint
     return newslot;
 }
 
-
 /*
   从 block num 获取对应 fsm address 和 slot
 */
@@ -312,15 +310,19 @@ fsm_get_location(BlockNumber heapblk, int* slot) {
     return addr;
 }
 
-static int
+/*
+ * 递归调用 vacuum 函数
+ * 返回最大的 catagory
+ */
+static uint8
 fsm_vacuum_page(Relation rel, FSMAddress addr, BlockNumber start, BlockNumber end) {
     Buffer buf;
     Page page;
-    int max_avail = 0;
+    uint8 max_avail = 0;
 
     /* read the buf */
     buf = fsm_readbuf(rel, addr, false);
-    if (BufferIsInvalid(buf)) {
+    if (!BufferIsInvalid(buf)) {
         return 0;
     }
 

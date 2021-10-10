@@ -10,8 +10,9 @@ TEST(fsm, test_record) {
 
     RecordPageWithFreeSpace(rel, 0, 1000);
 
-    UpdateFreeSpaceMap(rel, 0, 0, 1000);
+    FreeSpaceMapVacuum(rel);
 
     BlockNumber blk = GetPageWithFreeSpace(rel, 100);
+
     EXPECT_EQ(blk, 0);
 }

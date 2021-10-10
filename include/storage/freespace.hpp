@@ -1,4 +1,4 @@
-﻿#ifndef _freespace_h_
+#ifndef _freespace_h_
 #define _freespace_h_
 
 #include "storage/block.hpp"
@@ -8,7 +8,7 @@
 Size GetRecordedFreeSpace(Relation rel, BlockNumber heapBlk);
 BlockNumber GetPageWithFreeSpace(Relation rel, Size spaceNeeded);
 void RecordPageWithFreeSpace(Relation rel, BlockNumber usedBlock, Size freeSpace);
-void FreeSpaceMapVacuumRange(Relation rel);
+void FreeSpaceMapVacuum(Relation rel);
 void FreeSpaceMapVacuumRange(Relation rel, BlockNumber start, BlockNumber end);
 BlockNumber RecordAndGetPageWithFreeSpace(Relation rel, BlockNumber oldPage, Size oldSpaceAvail, Size spaceNeeded);
 void UpdateFreeSpaceMap(Relation rel, BlockNumber startBlkNum, BlockNumber endBlkNum, Size freeSpace);

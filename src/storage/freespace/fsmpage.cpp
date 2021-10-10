@@ -6,7 +6,6 @@
 #define left_children(X)  (2 * (X) + 1)
 #define right_children(X) (2 * (X) + 2)
 
-
 int
 fsm_get_avail(Page page, int slot) {
     FSMPage fsmpage = (FSMPage)PageGetContent(page);
@@ -62,7 +61,6 @@ fsm_set_avail(Page page, int slot, uint8 value) {
     return true;
 }
 
-
 int
 fsm_search_avail(Buffer buf, uint8 minValue) {
     int no = 0;
@@ -78,7 +76,7 @@ fsm_search_avail(Buffer buf, uint8 minValue) {
     while (no < NonLeafNodesPerPage) {
         int left  = left_children(no);
         int right = right_children(no);
-    
+
         if (fsm->fp_nodes[left] >= minValue) {
             no = left;
         } else if (fsm->fp_nodes[right] >= minValue) {
@@ -96,7 +94,7 @@ fsm_rebuild_page(Page page) {
     bool changed    = false;
     int nodeno;
 
-	/*
+    /*
      * Start from the lowest non-leaf level, at last node, working our way
      * backwards, through all non-leaf nodes at all levels, up to the root.
      */
