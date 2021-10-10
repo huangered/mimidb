@@ -322,7 +322,7 @@ fsm_vacuum_page(Relation rel, FSMAddress addr, BlockNumber start, BlockNumber en
 
     /* read the buf */
     buf = fsm_readbuf(rel, addr, false);
-    if (!BufferIsInvalid(buf)) {
+    if (!BufferIsValid(buf)) {
         return 0;
     }
 
