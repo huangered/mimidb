@@ -348,18 +348,20 @@ fsm_vacuum_page(Relation rel, FSMAddress addr, BlockNumber start, BlockNumber en
             fsm_start = fsm_get_parent(fsm_start, &fsm_start_slot);
             fsm_end   = fsm_get_parent(fsm_end, &fsm_end_slot);
         }
+        
+        assert(fsm_start.level == addr.level);
 
         if (fsm_start.logpageno == addr.logpageno)
             start_slot = fsm_start_slot;
         else if (fsm_start.logpageno > addr.logpageno)
-            start_slot = LeafNodesPerPage; /* shouldn't get here... */
+            start_slot = SlotsPerFSMPage; /* shouldn't get here... */
         else
             start_slot = 0;
 
         if (fsm_end.logpageno == addr.logpageno)
             end_slot = fsm_end_slot;
         else if (fsm_end.logpageno > addr.logpageno)
-            end_slot = LeafNodesPerPage - 1;
+            end_slot = SlotsPerFSMPage - 1;
         else
             end_slot = -1; /* shouldn't get here... */
 
@@ -374,14 +376,15 @@ fsm_vacuum_page(Relation rel, FSMAddress addr, BlockNumber start, BlockNumber en
 
             /* Update information about the child */
             if (fsm_get_avail(page, slot) != child_avail) {
+                // lock buf
                 fsm_set_avail(page, slot, child_avail);
+                MarkBufferDirty(buf);
+                // unlock buf
             }
         }
     }
 
-    FSMPage fsmpage = (FSMPage)PageGetContent(page);
-
-    max_avail = fsmpage->fp_nodes[0];
+    max_avail = fsm_get_max_avail(page);
 
     return max_avail;
 }

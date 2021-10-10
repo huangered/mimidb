@@ -1,4 +1,4 @@
-﻿#include "storage/fsm_internal.hpp"
+#include "storage/fsm_internal.hpp"
 #include "storage/smgr.hpp"
 
 #define parentof(X) (((X)-1) / 2)
@@ -6,11 +6,19 @@
 #define left_children(X)  (2 * (X) + 1)
 #define right_children(X) (2 * (X) + 2)
 
-int
+uint8
 fsm_get_avail(Page page, int slot) {
     FSMPage fsmpage = (FSMPage)PageGetContent(page);
 
     return fsmpage->fp_nodes[NonLeafNodesPerPage + slot];
+}
+
+/*
+ * 返回根结点值
+ */
+uint8 fsm_get_max_avail(Page page) {
+    FSMPage fsmpage = (FSMPage)PageGetContent(page);
+    return fsmpage->fp_nodes[0];
 }
 
 /*

@@ -1,4 +1,4 @@
-﻿#ifndef _fsm_internal_h_
+#ifndef _fsm_internal_h_
 #define _fsm_internal_h_
 
 #include "access/rel.hpp"
@@ -19,7 +19,8 @@ typedef struct FSMPageData* FSMPage;
 #define SlotsPerFSMPage LeafNodesPerPage
 
 int fsm_search_avail(Buffer buf, uint8 minValue);
-int fsm_get_avail(Page page, int slot);
+uint8 fsm_get_avail(Page page, int slot);
+uint8 fsm_get_max_avail(Page page);
 bool fsm_set_avail(Page page, int slot, uint8 value);
 bool fsm_rebuild_page(Page page);
 
