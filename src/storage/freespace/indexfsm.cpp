@@ -1,5 +1,5 @@
 #include "storage/freespace.hpp"
-#include "storage/page.hpp"
+#include "storage/indexfsm.hpp"
 
 BlockNumber
 GetFreeIndexPage(Relation rel) {
@@ -14,6 +14,16 @@ GetFreeIndexPage(Relation rel) {
 }
 
 void
+RecordFreeIndexPage(Relation rel, BlockNumber usedBlock) {
+    RecordPageWithFreeSpace(rel, usedBlock, BLKSZ - 1);
+}
+
+void
 RecordUsedIndexPage(Relation rel, BlockNumber usedBlock) {
     RecordPageWithFreeSpace(rel, usedBlock, 0);
+}
+
+void
+IndexFreeSpaceMapVacuum(Relation rel) {
+    FreeSpaceMapVacuum(rel);
 }

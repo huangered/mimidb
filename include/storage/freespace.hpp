@@ -13,8 +13,4 @@ void FreeSpaceMapVacuumRange(Relation rel, BlockNumber start, BlockNumber end);
 BlockNumber RecordAndGetPageWithFreeSpace(Relation rel, BlockNumber oldPage, Size oldSpaceAvail, Size spaceNeeded);
 void UpdateFreeSpaceMap(Relation rel, BlockNumber startBlkNum, BlockNumber endBlkNum, Size freeSpace);
 
-// 索引
-BlockNumber GetFreeIndexPage(Relation rel);
-void RecordUsedIndexPage(Relation rel, BlockNumber usedBlock);
-
 #endif // !_freespace_h_

@@ -1,5 +1,5 @@
 ﻿#include "access/btree.hpp"
-#include "storage/freespace.hpp"
+#include "storage/indexfsm.hpp"
 #include <assert.h>
 
 BTreeMetaData*
