@@ -16,7 +16,8 @@ fsm_get_avail(Page page, int slot) {
 /*
  * 返回根结点值
  */
-uint8 fsm_get_max_avail(Page page) {
+uint8
+fsm_get_max_avail(Page page) {
     FSMPage fsmpage = (FSMPage)PageGetContent(page);
     return fsmpage->fp_nodes[0];
 }
@@ -76,19 +77,25 @@ fsm_search_avail(Buffer buf, uint8 minValue) {
 
     Page page   = BufferGetPage(buf);
     FSMPage fsm = (FSMPage)PageGetContent(page);
-
+restart:
     if (fsm->fp_nodes[no] < minValue) {
         return -1;
     }
 
     while (no < NonLeafNodesPerPage) {
-        int left  = left_children(no);
-        int right = right_children(no);
+        int childnodeno = left_children(no);
 
-        if (fsm->fp_nodes[left] >= minValue) {
-            no = left;
-        } else if (fsm->fp_nodes[right] >= minValue) {
-            no = right;
+        if (childnodeno < NodesPerPage && fsm->fp_nodes[childnodeno] >= minValue) {
+            no = childnodeno;
+            continue;
+        }
+        childnodeno++;
+        if (childnodeno < NodesPerPage && fsm->fp_nodes[childnodeno] >= minValue) {
+            no = childnodeno;
+        } else {
+            fsm_rebuild_page(page);
+            MarkBufferDirty(buf);
+            goto restart;
         }
     }
     slot = no - NonLeafNodesPerPage;

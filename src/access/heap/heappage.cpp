@@ -24,7 +24,7 @@ Heap::_get_buffer_for_tuple(Relation rel, Size len) {
         // 检查 buffer的空间是否足够
         page          = BufferGetPage(buffer);
         pageFreeSpace = PageGetFreeSpace(page);
-        if (len < pageFreeSpace) {
+        if (len <= pageFreeSpace) {
             RelationSetTargetBlock(rel, targetBlock);
             return buffer;
         }

@@ -34,12 +34,13 @@ static BlockNumber fsm_get_heap_blk(FSMAddress addr, int slot);
 
 // 辅助转换函数
 static uint8 fsm_space_avail_to_cat(Size avail);
+static uint8 fsm_space_needed_to_cat(Size avail);
 static Size fsm_space_cat_to_avail(uint8 cat);
 
 /** public method **/
 BlockNumber
 GetPageWithFreeSpace(Relation rel, Size spaceNeeded) {
-    int min_cat = fsm_space_avail_to_cat(spaceNeeded);
+    int min_cat = fsm_space_needed_to_cat(spaceNeeded);
 
     return fsm_search(rel, min_cat);
 }
@@ -57,14 +58,14 @@ RecordPageWithFreeSpace(Relation rel, BlockNumber usedBlock, Size freeSpace) {
 BlockNumber
 RecordAndGetPageWithFreeSpace(Relation rel, BlockNumber oldPage, Size oldSpaceAvail, Size spaceNeeded) {
     int old_cat   = fsm_space_avail_to_cat(oldSpaceAvail);
-    int space_cat = fsm_space_avail_to_cat(spaceNeeded);
+    int space_cat = fsm_space_needed_to_cat(spaceNeeded);
     FSMAddress addr;
     int slot;
     int search_slot;
 
     addr = fsm_get_location(oldPage, &slot);
 
-    search_slot = fsm_set_and_search(rel, addr, slot, space_cat, old_cat);
+    search_slot = fsm_set_and_search(rel, addr, slot, old_cat, space_cat);
 
     if (search_slot != -1) {
         return fsm_get_heap_blk(addr, search_slot);
@@ -111,6 +112,23 @@ fsm_space_avail_to_cat(Size avail) {
 
     if (cat > 254) {
         cat = 254;
+    }
+    return (uint8)cat;
+}
+
+/** private api **/
+static uint8
+fsm_space_needed_to_cat(Size needed) {
+    int cat;
+
+    if (needed == 0) {
+        return 1;
+    }
+
+    cat = (needed + FSM_CAT_STEP -1) / FSM_CAT_STEP;
+
+    if (cat > 255) {
+        cat = 255;
     }
     return (uint8)cat;
 }
