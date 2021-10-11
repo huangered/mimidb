@@ -125,7 +125,7 @@ fsm_space_needed_to_cat(Size needed) {
         return 1;
     }
 
-    cat = (needed + FSM_CAT_STEP -1) / FSM_CAT_STEP;
+    cat = (needed + FSM_CAT_STEP - 1) / FSM_CAT_STEP;
 
     if (cat > 255) {
         cat = 255;
@@ -366,7 +366,7 @@ fsm_vacuum_page(Relation rel, FSMAddress addr, BlockNumber start, BlockNumber en
             fsm_start = fsm_get_parent(fsm_start, &fsm_start_slot);
             fsm_end   = fsm_get_parent(fsm_end, &fsm_end_slot);
         }
-        
+
         assert(fsm_start.level == addr.level);
 
         if (fsm_start.logpageno == addr.logpageno)

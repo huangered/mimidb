@@ -5,7 +5,7 @@
 TEST(fd, basic) {
     const char* buf = "tmp_file.txt";
 
-    int fd          = PathNameOpenFile(buf);
+    int fd = PathNameOpenFile(buf);
     int num{ 0 };
     char* buf3{ nullptr };
     EXPECT_GT(fd, 0);
@@ -36,5 +36,5 @@ TEST(fd, basic) {
 }
 
 TEST(fd, dir_make) {
-  DirMake("test1234");
+    DirMake("test1234");
 }
