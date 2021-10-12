@@ -1,7 +1,7 @@
 #include "access/heapio.hpp"
 
 void
-RelationPutHeapTuple(Relation rel, Buffer buffer) {
+RelationPutHeapTuple(Relation rel, Buffer buffer, HeapTuple tuple) {
 }
 
 Buffer
