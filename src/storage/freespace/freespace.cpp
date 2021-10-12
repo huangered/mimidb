@@ -185,11 +185,17 @@ fsm_search(Relation rel, uint8 min_cat) {
     for (;;) {
         int slot;
         Buffer buf;
+        uint8 max_avail = 0;
 
         buf = fsm_readbuf(rel, address, false);
 
         if (BufferIsValid(buf)) {
+            // lock buffer
             slot = fsm_search_avail(buf, min_cat);
+            if (slot == -1) {
+                max_avail = fsm_get_max_avail(BufferGetPage(buf));
+            }
+            // unlock buffer
         } else
             slot = -1;
 
@@ -209,7 +215,7 @@ fsm_search(Relation rel, uint8 min_cat) {
             FSMAddress parent;
 
             parent = fsm_get_parent(address, &parentslot);
-            fsm_set_and_search(rel, parent, parentslot, BLKSZ, 0);
+            fsm_set_and_search(rel, parent, parentslot, max_avail, 0);
 
             address = FSM_ROOT_ADDRESS;
         }
