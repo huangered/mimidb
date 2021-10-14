@@ -8,8 +8,8 @@
 TEST(heap, incr_insert) {
     // insert
     Relation rel = new RelationData{};
-    rel->rd_id   = 2000;
-    rel->rd_node = { 0, rel->rd_id };
+    rel->rd_id   = HEAP_REL_ID_1;
+    rel->rd_node = { DB_ID, rel->rd_id };
     rel->tb_am   = HeapRoute();
 
     RelationOpenSmgr(rel);
@@ -47,10 +47,6 @@ TEST(heap, incr_insert) {
 
     rel->tb_am->EndScan(hsDesc);
 
-    // rel->tb_am->debug(rel);
-
-    // if (htup)
-    //    delete htup;
     pfree(skey);
 
     FreeTupleDesc(rel->tupleDesc);
