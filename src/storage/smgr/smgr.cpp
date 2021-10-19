@@ -46,7 +46,7 @@ Smgr::Nblocks(SMgrRelation reln, ForkNumber forknum) {
 
 void
 Smgr::Create(SMgrRelation reln, ForkNumber forknum) {
-    //md->Create(reln, forknum);
+    mdcreate(reln, forknum);
 }
 
 void

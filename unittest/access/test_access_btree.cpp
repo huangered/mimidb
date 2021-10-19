@@ -9,8 +9,8 @@
 // test the basic usage in buff mgr.
 TEST(btree, incr_insert) {
     Relation rel = new RelationData{};
-    rel->rd_id   = 10000;
-    rel->rd_node = { 0, rel->rd_id };
+    rel->rd_id   = BTREE_REL_ID_1;
+    rel->rd_node = { DB_ID, rel->rd_id };
     RelationOpenSmgr(rel);
 
     rel->index_am = BtreeRoute();
@@ -38,8 +38,8 @@ TEST(btree, incr_insert) {
 
 TEST(btree, decr_insert) {
     Relation rel = new RelationData{};
-    rel->rd_id   = 20000;
-    rel->rd_node = { 10000, rel->rd_id };
+    rel->rd_id   = BTREE_REL_ID_2;
+    rel->rd_node = { DB_ID, rel->rd_id };
     RelationOpenSmgr(rel);
 
     rel->index_am = BtreeRoute();
@@ -64,8 +64,8 @@ TEST(btree, decr_insert) {
 
 TEST(btree, blk_insert) {
     Relation rel = (Relation)palloc0(sizeof(RelationData));
-    rel->rd_id   = 30000;
-    rel->rd_node = { 10000, rel->rd_id };
+    rel->rd_id   = BTREE_REL_ID_3;
+    rel->rd_node = { DB_ID, rel->rd_id };
     RelationOpenSmgr(rel);
 
     rel->index_am = BtreeRoute();

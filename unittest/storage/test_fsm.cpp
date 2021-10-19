@@ -1,17 +1,19 @@
 #include "../g.hpp"
 
-#include "storage/bufmgr.hpp"
-#include "storage/fsm_internal.hpp"
 #include "storage/freespace.hpp"
-#include "storage/smgr.hpp"
 
-TEST(fsm, leaf) {
-    //    freespace fspace{};
-    //    RelationData rel;
-    //    rel.rnode = 2000;
-    //    rel.rd_smgr = new SMgrRelationData;
-    //    rel.rd_smgr->smgr_fsm_nblocks = 0;
-    //    fspace.RecordPageWithFreeSpace(&rel, 0, BLKSZ);
-    //    fspace.FreeSpaceMapVacuumRange(&rel, 0, 1);
-    //    fspace.GetPageWithFreeSpace(&rel, 20);
+TEST(fsm, test_record) {
+    Relation rel = new RelationData{};
+    rel->rd_id   = FSM_REL_ID;
+    rel->rd_node = { DB_ID, rel->rd_id };
+    rel->rd_smgr = nullptr;
+
+    RecordPageWithFreeSpace(rel, 0, 10);
+    RecordPageWithFreeSpace(rel, 1, 1000);
+
+    FreeSpaceMapVacuum(rel);
+
+    BlockNumber blk = GetPageWithFreeSpace(rel, 100);
+
+    EXPECT_EQ(blk, 1);
 }
