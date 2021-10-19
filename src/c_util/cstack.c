@@ -11,9 +11,6 @@ stack_new() {
 
 void
 stack_free(Stack* stack) {
-    while (stack->head != NULL) {
-        stack_pop(stack);
-    }
     free(stack);
 }
 

@@ -21,6 +21,24 @@ TEST(c_util, cstack) {
     stack_free(stack);
 }
 
+TEST(c_util, cstack_ptr) {
+    int* ptr     = (int*)std::malloc(sizeof(int));
+    Stack* stack = stack_new();
+    stack_push(stack, ptr);
+    stack_push(stack, ptr);
+    stack_push(stack, ptr);
+    stack_push(stack, ptr);
+    stack_push(stack, ptr);
+
+    EXPECT_EQ(ptr, stack_top(stack));
+    stack_pop(stack);
+    EXPECT_EQ(ptr, stack_top(stack));
+
+    stack_free(stack);
+
+    std::free(ptr);
+}
+
 TEST(c_util, cstr) {
     Str* s = str_new("hello", 5);
     EXPECT_EQ(s->len, 5);
