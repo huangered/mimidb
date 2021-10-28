@@ -10,6 +10,7 @@
 
 Buffer ReadBuffer(Relation rel, BlockNumber block);
 Buffer ReadBufferExtend(Relation rel, ForkNumber fork, BlockNumber block);
+void LockBuffer(Buffer buf, int mode);
 void ReleaseBuffer(Buffer buffer);
 BufferDesc* GetBufferDesc(Buffer buffer);
 Page BufferGetPage(Buffer buffer);

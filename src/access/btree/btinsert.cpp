@@ -3,7 +3,7 @@
 #include "storage/bufmgr.hpp"
 
 bool
-BtreeIndex::_bt_do_insert(Relation rel, IndexTuple itup) {
+BtreeIndex::_bt_do_insert(Relation rel, IndexTuple itup, IndexUniqueCheck checkUnique, Relation heapRel) {
     BTStack stack = NULL;
     bool fastpath = false;
     OffsetNumber newitemoffset;
@@ -18,10 +18,20 @@ top:
         stack = _bt_search(rel, itup_key, &buf);
     }
 
-    newitemoffset = _bt_findinsertloc(rel, buf, itup_key);
+    LockBuffer(buf, 0);
 
-    _bt_insertonpg(rel, buf, newitemoffset, itup_key, stack);
+    if (checkUnique != UNIQUE_CHECK_NO) {
+        // 检查索引唯一性
+    }
 
+    if (checkUnique != UNIQUE_CHECK_EXISTING) {
+        newitemoffset = _bt_findinsertloc(rel, buf, itup_key);
+        _bt_insertonpg(rel, buf, newitemoffset, itup_key, stack);
+    } else {
+        _bt_relbuf(rel, buf);
+    }
+
+    /* 数据清空 */
     _bt_freestack(stack);
 
     delete itup_key;
@@ -113,15 +123,15 @@ BtreeIndex::_bt_split(Relation rel, IndexTuple itup, Buffer buf, OffsetNumber ne
     BTreeSpecial rightspecial  = PageGetSpecial(rightpage);
 
     // update right / left point
-    leftspecial->block_next  = GetBufferDesc(rbuf)->tag.blockNum;
-    rightspecial->block_next = originspecial->block_next;
+    leftspecial->btsd_next  = GetBufferDesc(rbuf)->tag.blockNum;
+    rightspecial->btsd_next = originspecial->btsd_next;
 
-    leftspecial->block_prev  = originspecial->block_prev;
-    rightspecial->block_prev = GetBufferDesc(buf)->tag.blockNum;
+    leftspecial->btsd_prev  = originspecial->btsd_prev;
+    rightspecial->btsd_prev = GetBufferDesc(buf)->tag.blockNum;
 
     if (P_ISLEAF(originspecial)) {
-        leftspecial->flags  = BTP_LEAF;
-        rightspecial->flags = BTP_LEAF;
+        leftspecial->btsd_flags  = BTP_LEAF;
+        rightspecial->btsd_flags = BTP_LEAF;
     }
 
     // copy items
@@ -188,7 +198,7 @@ BtreeIndex::_bt_split(Relation rel, IndexTuple itup, Buffer buf, OffsetNumber ne
 bool
 BtreeIndex::_bt_addtup(Page page, Item item, Size itemsz, OffsetNumber newitemoffset) {
 
-    PageAddItem(page, item, itemsz, newitemoffset);
+    PageAddItem(page, item, itemsz, newitemoffset, false);
 
     return true;
 }
@@ -252,11 +262,11 @@ BtreeIndex::_bt_newroot(Relation rel, Buffer lbuf, Buffer rbuf) {
 
     /* 更新 root special */
     rootspecial             = (BTreeSpecial)PageGetSpecial(rootpage);
-    rootspecial->flags      = BTP_ROOT;
-    rootspecial->level      = lspecial->level + 1;
-    rootspecial->block_next = rootspecial->block_prev = P_NONE;
+    rootspecial->btsd_flags = BTP_ROOT;
+    rootspecial->btsd.level = lspecial->btsd.level + 1;
+    rootspecial->btsd_next = rootspecial->btsd_prev = P_NONE;
     /* 更新 meta */
-    metad->root     = rootblkno;
+    metad->btm_root = rootblkno;
     metad->fastroot = rootblkno;
 
     // get left page high key

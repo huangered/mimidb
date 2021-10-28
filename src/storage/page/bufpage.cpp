@@ -20,7 +20,7 @@ PageInit(Page page, Size pageSize, Size specialSize) {
 }
 
 OffsetNumber
-PageAddItem(Page page, Item item, Size itemsz, OffsetNumber offsetNumber) {
+PageAddItem(Page page, Item item, Size itemsz, OffsetNumber offsetNumber, bool is_heap) {
     // if the offset == invalid, find a new one
     if (offsetNumber == InvalidOffsetNumber) {
         offsetNumber = PageGetMaxOffsetNumber(page);
@@ -50,6 +50,11 @@ PageAddItem(Page page, Item item, Size itemsz, OffsetNumber offsetNumber) {
     memcpy((char*)page + header->pd_upper, item, itemsz);
 
     return offsetNumber;
+}
+
+OffsetNumber
+PageAddItemExtend(Page page, Item item, Size itemsz, OffsetNumber offsetNumber, int flags) {
+    return 0;
 }
 
 void
