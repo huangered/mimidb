@@ -55,7 +55,7 @@ Heap::_relation_put_heap_tuple(Relation rel, Buffer buf, HeapTuple htup) {
         PageInit(page, BLKSZ, 0);
     }
 
-    offset = PageAddItem(page, (htup->t_data), htup->t_len, InvalidOffsetNumber);
+    offset = PageAddItem(page, (htup->t_data), htup->t_len, InvalidOffsetNumber, true);
 
     htup->t_data->t_ctid.blocknum = GetBufferDesc(buf)->tag.blockNum;
     htup->t_data->t_ctid.offset   = offset;

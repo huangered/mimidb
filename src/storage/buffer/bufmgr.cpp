@@ -14,6 +14,10 @@ ReadBufferExtend(Relation rel, ForkNumber fork, BlockNumber block) {
 }
 
 void
+LockBuffer(Buffer buf, int mode) {
+}
+
+void
 ReleaseBuffer(Buffer buffer) {
     bmgr->ReleaseBuffer(buffer);
 }

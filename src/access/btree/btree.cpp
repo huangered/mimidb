@@ -30,7 +30,7 @@ BtreeIndex::Insert(Relation rel, int key, int ht_id) {
 
     tup = _bt_make_tuple(key, ht_id);
 
-    result = _bt_do_insert(rel, tup);
+    result = _bt_do_insert(rel, tup, UNIQUE_CHECK_YES, nullptr);
 
     delete tup;
 
@@ -85,7 +85,7 @@ BtreeIndex::_bt_moveright(Relation rel, BTreeScan key, Buffer buf) {
         }
 
         if (_bt_compare(rel, key, page, P_HIKEY) >= 0) {
-            buf = _bt_relandgetbuf(rel, buf, special->block_next);
+            buf = _bt_relandgetbuf(rel, buf, special->btsd_next);
             continue;
         } else {
             break;

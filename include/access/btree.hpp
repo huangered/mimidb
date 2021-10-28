@@ -1,20 +1,14 @@
-#ifndef _btree_hpp_
+﻿#ifndef _btree_hpp_
 #define _btree_hpp_
 
 #include "mimi.hpp"
 #include "access/amapi.hpp"
+#include "access/genam.hpp"
 #include "access/offset.hpp"
 #include "access/rel.hpp"
 #include "access/scankey.hpp"
 #include "storage/block.hpp"
 #include "storage/bufmgr.hpp"
-
-struct BTreeMetaData {
-    uint32_t btm_magic;
-    uint32_t btm_version;
-    BlockNumber root;
-    BlockNumber fastroot;
-};
 
 struct IndexTupleData {
     int ht_id;      // record heap tuple id
@@ -26,13 +20,34 @@ struct IndexTupleData {
 typedef IndexTupleData* IndexTuple;
 
 struct BTreeSpecialData {
-    BlockNumber block_next;
-    BlockNumber block_prev;
-    uint16 level;
-    uint16 flags;
+    BlockNumber btsd_next;
+    BlockNumber btsd_prev;
+    union {
+        uint16 level;
+    } btsd;
+    uint16 btsd_flags;
 };
 
 typedef BTreeSpecialData* BTreeSpecial;
+
+/* btsd的bits定义*/
+#define BTP_LEAF      (1 << 0)
+#define BTP_ROOT      (1 << 1)
+#define BTP_DELETED   (1 << 2) /* 已经在树中删除的页 */
+#define BTP_META      (1 << 3) /* 元数据页 */
+#define BTP_SPLIT_END (1 << 5) /* 分割组里最右页 */
+
+struct BTreeMetaData {
+    uint32 btm_magic;
+    uint32 btm_version;
+    BlockNumber btm_root; /* 当前根页位置 */
+    uint32 btm_level;     /* 根页的level*/
+    BlockNumber fastroot;
+};
+
+#define BTREE_METAPAGE 0 /* 默认第一页是 meta */
+#define BTREE_MAGIC 0x1234
+#define BTREE_VERSION 1
 
 struct BTStackData {
     BlockNumber blkno;
@@ -68,26 +83,32 @@ struct BTreeSearchKeyData {
 
 typedef BTreeSearchKeyData* BTreeSearchKey;
 
-#define BTREE_METAPAGE       0
+
 #define P_NEW                INVALID_BLOCK
 #define P_NONE               0
-#define P_RIGHTMOST(special) ((special)->block_next == P_NONE)
 
-#define BTP_LEAF (1 << 0)
-#define BTP_ROOT (1 << 1)
-#define BTP_META (1 << 2)
+/*
+ * 测试 page 位置的宏
+ */
+#define P_LEFTMOST(special)  ((special)->btsd_prev == P_NONE)
+#define P_RIGHTMOST(special) ((special)->btsd_next == P_NONE)
+#define P_ISLEAF(special)    ((special)->btsd_flags & BTP_LEAF)
+#define P_ISROOT(special)    ((special)->btsd_flags & BTP_ROOT)
+#define P_ISDELETED(special) ((special)->btsd_flags & BTP_DELETED)
 
 #define IID_USE (1 << 0)
 #define IID_DEL (1 << 1)
 
-#define P_ISLEAF(special) ((special->flags & BTP_LEAF) != 0)
-#define P_ISROOT(special) ((special->flags & BTP_ROOT) != 0)
-
+/*
+ * lehman and Yao's 算法
+ */
 #define P_HIKEY                 ((OffsetNumber)1)
 #define P_FIRSTKEY              ((OffsetNumber)2)
 #define P_FIRSTDATAKEY(special) (P_RIGHTMOST(special) ? P_HIKEY : P_FIRSTKEY)
 
 #define BTreeTupleGetDownLink(itup) (itup->ht_id)
+
+// 函数原型
 
 class BtreeIndex : public IndexAm {
 private:
@@ -108,7 +129,7 @@ private:
     OffsetNumber _bt_findinsertloc(Relation rel, Buffer buffer, BTreeScan key);
 
     // insert
-    bool _bt_do_insert(Relation rel, IndexTuple itup);
+    bool _bt_do_insert(Relation rel, IndexTuple itup, IndexUniqueCheck checkUnique, Relation heapRel);
     BTStack _bt_search(Relation rel, BTreeScan itup_key, Buffer* bufp);
 
     bool _bt_addtup(Page page, Item item, Size itemsz, OffsetNumber newitemoffset);

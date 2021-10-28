@@ -35,7 +35,7 @@ BtreeIndex::_bt_get_root(Relation rel) {
     // 从 meta 缓存里获取 root buf
     if (rel->rd_metacache != nullptr) {
         metad = (BTreeMetaData*)rel->rd_metacache;
-        assert(metad->root != P_NONE);
+        assert(metad->btm_root != P_NONE);
 
         rootbuf = _bt_get_buf(rel, metad->fastroot);
         return rootbuf;
@@ -46,7 +46,7 @@ BtreeIndex::_bt_get_root(Relation rel) {
     metapage = BufferGetPage(metabuf);
     metad    = (BTreeMetaData*)PageGetContent(metapage);
 
-    if (metad->root == P_NONE) {
+    if (metad->btm_root == P_NONE) {
         // 如果meta没有初始化，初始化
         // 1. 创建root block
         rootbuf   = _bt_get_buf(rel, P_NEW);
@@ -54,12 +54,12 @@ BtreeIndex::_bt_get_root(Relation rel) {
         // 1.1 更新root block
         rootpage                 = BufferGetPage(rootbuf);
         BTreeSpecial rootspecial = (BTreeSpecial)PageGetSpecial(rootpage);
-        rootspecial->block_next  = P_NONE;
-        rootspecial->block_prev  = P_NONE;
-        rootspecial->flags       = (BTP_LEAF | BTP_ROOT);
+        rootspecial->btsd_next   = P_NONE;
+        rootspecial->btsd_prev   = P_NONE;
+        rootspecial->btsd_flags  = (BTP_LEAF | BTP_ROOT);
 
         // 2. 更新meta
-        metad->root     = rootblkno;
+        metad->btm_root = rootblkno;
         metad->fastroot = rootblkno;
 
         MarkBufferDirty(rootbuf);
