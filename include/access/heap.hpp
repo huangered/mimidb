@@ -8,6 +8,18 @@
 #include "access/scan.hpp"
 #include "access/tableapi.hpp"
 
+
+/* */
+extern Relation relation_open(Oid relationId);
+extern void relation_close(Relation relation);
+
+extern Relation heap_open(Oid relationId);
+extern void heap_close(Relation relation);
+
+/* heap api */
+
+extern Oid heap_insert(Relation relation, HeapTuple tup);
+
 /*
 堆表操作类
 */
