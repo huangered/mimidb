@@ -21,40 +21,59 @@ PageInit(Page page, Size pageSize, Size specialSize) {
 
 OffsetNumber
 PageAddItem(Page page, Item item, Size itemsz, OffsetNumber offsetNumber, bool is_heap) {
-    // if the offset == invalid, find a new one
-    if (offsetNumber == InvalidOffsetNumber) {
-        offsetNumber = PageGetMaxOffsetNumber(page);
-        offsetNumber = OffsetNumberNext(offsetNumber);
-    }
-
-    PageHeader header = PageGetHeader(page);
-    // move item
-
-    ItemId itemId = PageGetItemId(page, offsetNumber);
-
-    OffsetNumber limit = OffsetNumberNext(PageGetMaxOffsetNumber(page));
-
-    memmove(itemId + 1, itemId, (limit - offsetNumber) * sizeof(ItemIdData));
-
-    header->pd_lower = header->pd_lower + sizeof(ItemIdData);
-
-    // add index
-
-    header->pd_upper = header->pd_upper - itemsz;
-
-    // update item;
-    itemId->lp_off = header->pd_upper;
-    // itemId->lp_flags = IID_USE;
-    itemId->lp_len = itemsz;
-
-    memcpy((char*)page + header->pd_upper, item, itemsz);
-
-    return offsetNumber;
+    return PageAddItemExtend(page, item, itemsz, offsetNumber, 0);
 }
 
 OffsetNumber
 PageAddItemExtend(Page page, Item item, Size itemsz, OffsetNumber offsetNumber, int flags) {
-    return 0;
+    PageHeader header = PageGetHeader(page);
+    int lower;
+    int upper;
+    ItemId itemId;
+    OffsetNumber limit;
+    bool needShuffle = false;
+
+    limit = OffsetNumberNext(PageGetMaxOffsetNumber(page));
+
+    // if the offset == invalid, find a new one
+    if (offsetNumber != InvalidOffsetNumber) {
+        if (offsetNumber < limit)
+            needShuffle = true;
+    } else {
+        offsetNumber = PageGetMaxOffsetNumber(page);
+        offsetNumber = OffsetNumberNext(offsetNumber);
+    }
+
+    if (offsetNumber == limit || needShuffle) {
+        lower = header->pd_lower + sizeof(ItemIdData);
+    } else {
+        lower = header->pd_lower;
+    }
+
+    upper = (int)header->pd_upper - (int)itemsz;
+
+    if (lower > upper) {
+        return InvalidOffsetNumber;
+    }
+
+    itemId = PageGetItemId(page, offsetNumber);
+
+    if (needShuffle) {
+        memmove(itemId + 1, itemId, (limit - offsetNumber) * sizeof(ItemIdData));
+    }
+
+    // set item pointer
+    itemId->lp_off = upper;
+    itemId->lp_len = itemsz;
+
+    // copy data
+    memcpy((char*)page + upper, item, itemsz);
+
+    // adjust page header
+    header->pd_lower = (LocationIndex)lower;
+    header->pd_upper = (LocationIndex)upper;
+
+    return offsetNumber;
 }
 
 void
