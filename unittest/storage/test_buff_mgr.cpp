@@ -13,7 +13,7 @@ TEST(buff_mgr, p_new) {
     for (int i = 0; i < 10; i++) {
         Buffer buf_id = ReadBuffer(rel, P_NEW);
         EXPECT_GT(buf_id, 0);
-        FlushBuffer(buf_id);
+        FlushOneBuffer(buf_id);
         ReleaseBuffer(buf_id);
     }
     delete rel;

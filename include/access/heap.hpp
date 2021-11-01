@@ -8,7 +8,6 @@
 #include "access/scan.hpp"
 #include "access/tableapi.hpp"
 
-
 /* */
 extern Relation relation_open(Oid relationId);
 extern void relation_close(Relation relation);

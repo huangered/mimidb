@@ -46,8 +46,8 @@ struct BTreeMetaData {
 };
 
 #define BTREE_METAPAGE 0 /* 默认第一页是 meta */
-#define BTREE_MAGIC 0x1234
-#define BTREE_VERSION 1
+#define BTREE_MAGIC    0x1234
+#define BTREE_VERSION  1
 
 struct BTStackData {
     BlockNumber blkno;
@@ -83,9 +83,8 @@ struct BTreeSearchKeyData {
 
 typedef BTreeSearchKeyData* BTreeSearchKey;
 
-
-#define P_NEW                INVALID_BLOCK
-#define P_NONE               0
+#define P_NEW  INVALID_BLOCK
+#define P_NONE 0
 
 /*
  * 测试 page 位置的宏

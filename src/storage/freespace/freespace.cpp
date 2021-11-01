@@ -189,7 +189,7 @@ fsm_search(Relation rel, uint8 min_cat) {
 
         buf = fsm_readbuf(rel, address, false);
 
-        if (BufferIsValid(buf)) {
+        if (!BufferIsInvalid(buf)) {
             // lock buffer
             slot = fsm_search_avail(buf, min_cat);
             if (slot == -1) {
@@ -346,7 +346,7 @@ fsm_vacuum_page(Relation rel, FSMAddress addr, BlockNumber start, BlockNumber en
 
     /* read the buf */
     buf = fsm_readbuf(rel, addr, false);
-    if (!BufferIsValid(buf)) {
+    if (BufferIsInvalid(buf)) {
         return 0;
     }
 

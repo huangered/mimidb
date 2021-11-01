@@ -224,7 +224,7 @@ Heap::Insert(Relation rel, HeapTuple htup) {
     _relation_put_heap_tuple(rel, buffer, htup);
 
     MarkBufferDirty(buffer);
-    FlushBuffer(buffer);
+    FlushOneBuffer(buffer);
     return true;
 }
 

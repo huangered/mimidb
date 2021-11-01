@@ -6,6 +6,9 @@
 #include "storage/buf.hpp"
 #include "storage/buf_internal.hpp"
 
+extern int NBuffers;
+extern char* BufferBlocks;
+
 #define P_NEW INVALID_BLOCK
 
 Buffer ReadBuffer(Relation rel, BlockNumber block);
@@ -16,8 +19,6 @@ BufferDesc* GetBufferDesc(Buffer buffer);
 Page BufferGetPage(Buffer buffer);
 void MarkBufferDirty(Buffer buffer);
 BlockNumber BufferGetBlockNumber(Buffer buffer);
-void FlushBuffer(Buffer buffer);
-
-extern BufferMgr* bmgr;
+void FlushOneBuffer(Buffer buffer);
 
 #endif // !_BUFMGR_H_
