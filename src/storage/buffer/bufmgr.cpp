@@ -3,6 +3,9 @@
 #include "storage/smgr.hpp"
 #include "storage/bufmgr.hpp"
 
+/* internal use */
+#define BufHdrGetBlock(bufHdr) ((Block)(BufferBlocks + ((bufHdr)->buf_id)*BLKSZ))
+
 static HashMap<BufferTag, Buffer> _hashMap;
 
 static void _Cleanup();
@@ -32,6 +35,7 @@ ReadBufferExtend(Relation rel, ForkNumber forkNumber, BlockNumber blkno) {
  */
 Buffer
 _ReadBufferCommon(Relation rel, ForkNumber forkNumber, BlockNumber blkno) {
+    Block bufBlock;
     BufferDesc* desc;
     bool found{};
     bool isExtend{};
@@ -43,8 +47,8 @@ _ReadBufferCommon(Relation rel, ForkNumber forkNumber, BlockNumber blkno) {
     if (isExtend) {
         blkno = smgr->Nblocks(rel->rd_smgr, forkNumber);
     }
-    desc      = _BufferAlloc(rel, forkNumber, blkno, &found);
-    Page page = BufferGetPage(desc->buf_id);
+    desc     = _BufferAlloc(rel, forkNumber, blkno, &found);
+    bufBlock = BufHdrGetBlock(desc);
     if (found) {
         if (!isExtend) {
             return BufferDescriptorGetBuffer(desc);
@@ -52,10 +56,10 @@ _ReadBufferCommon(Relation rel, ForkNumber forkNumber, BlockNumber blkno) {
     }
     // load or save data
     if (isExtend) {
-        memset(page, 0, BLKSZ);
-        smgr->Extend(rel->rd_smgr, forkNumber, blkno, page);
+        memset(bufBlock, 0, BLKSZ);
+        smgr->Extend(rel->rd_smgr, forkNumber, blkno, (char*)bufBlock);
     } else {
-        smgr->Read(rel->rd_smgr, forkNumber, blkno, page);
+        smgr->Read(rel->rd_smgr, forkNumber, blkno, (char*)bufBlock);
     }
     return BufferDescriptorGetBuffer(desc);
 }

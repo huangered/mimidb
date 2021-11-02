@@ -10,7 +10,7 @@ class Env1 : public ::testing::Environment {
 public:
     void
     SetUp() override {
-        printf("hello world");
+        printf("Buf pool init\n");
         InitBufferPool();
     }
 };

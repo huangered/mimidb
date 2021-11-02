@@ -42,9 +42,10 @@ BtreeIndex::_bt_get_root(Relation rel) {
     }
 
     // 从 blocknum 0 加载 meta
-    metabuf  = _bt_get_buf(rel, BTREE_METAPAGE);
-    metapage = BufferGetPage(metabuf);
-    metad    = (BTreeMetaData*)PageGetContent(metapage);
+    metabuf                              = _bt_get_buf(rel, BTREE_METAPAGE);
+    metapage                             = BufferGetPage(metabuf);
+    metad                                = (BTreeMetaData*)PageGetContent(metapage);
+    PageGetHeader(metapage)->pd_checksum = 12345;
 
     if (metad->btm_root == P_NONE) {
         // 如果meta没有初始化，初始化
@@ -63,7 +64,7 @@ BtreeIndex::_bt_get_root(Relation rel) {
         metad->fastroot = rootblkno;
 
         MarkBufferDirty(rootbuf);
-        MarkBufferDirty(metabuf); // todo, 这里有异常
+        MarkBufferDirty(metabuf);
         // 释放metabuf
         ReleaseBuffer(metabuf);
     } else {
