@@ -4,7 +4,7 @@
 #include "storage/bufmgr.hpp"
 
 /* internal use */
-#define BufHdrGetBlock(bufHdr) ((Block)(BufferBlocks + ((bufHdr)->buf_id)*BLKSZ))
+#define BufHdrGetBlock(bufHdr) ((Block)(BufferBlocks + ((bufHdr)->buf_id) * BLKSZ))
 
 static HashMap<BufferTag, Buffer> _hashMap;
 
