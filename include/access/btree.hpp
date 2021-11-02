@@ -83,7 +83,6 @@ struct BTreeSearchKeyData {
 
 typedef BTreeSearchKeyData* BTreeSearchKey;
 
-#define P_NEW  INVALID_BLOCK
 #define P_NONE 0
 
 /*

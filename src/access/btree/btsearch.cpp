@@ -55,7 +55,7 @@ BtreeIndex::_bt_first(IndexScanDesc scan) {
     BTreeScan itup_key = _bt_make_scankey(scan->index_rel, itup);
     stack              = _bt_search(scan->index_rel, itup_key, &buf);
 
-    BufferDesc* desc  = GetBufferDesc(buf);
+    BufferDesc* desc  = GetBufferDescriptor(buf);
     Page page         = BufferGetPage(buf);
     itup_key->nextkey = false;
     offset            = _bt_binsrch(scan->index_rel, page, itup_key);

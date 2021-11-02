@@ -70,7 +70,7 @@ BtreeIndex::_bt_search(Relation rel, BTreeScan itup_key, Buffer* bufp) {
         itemid    = PageGetItemId(page, offsetnum);
         itup      = (IndexTuple)PageGetItem(page, itemid);
         blkno     = BTreeTupleGetDownLink(itup);
-        par_blkno = GetBufferDesc(*bufp)->tag.blockNum;
+        par_blkno = GetBufferDescriptor(*bufp)->tag.blockNum;
 
         BTStack new_stack = new BTStackData{};
         new_stack->parent = stack_in;
@@ -123,11 +123,11 @@ BtreeIndex::_bt_split(Relation rel, IndexTuple itup, Buffer buf, OffsetNumber ne
     BTreeSpecial rightspecial  = PageGetSpecial(rightpage);
 
     // update right / left point
-    leftspecial->btsd_next  = GetBufferDesc(rbuf)->tag.blockNum;
+    leftspecial->btsd_next  = GetBufferDescriptor(rbuf)->tag.blockNum;
     rightspecial->btsd_next = originspecial->btsd_next;
 
     leftspecial->btsd_prev  = originspecial->btsd_prev;
-    rightspecial->btsd_prev = GetBufferDesc(buf)->tag.blockNum;
+    rightspecial->btsd_prev = GetBufferDescriptor(buf)->tag.blockNum;
 
     if (P_ISLEAF(originspecial)) {
         leftspecial->btsd_flags  = BTP_LEAF;
@@ -213,7 +213,7 @@ BtreeIndex::_bt_insert_parent(Relation rel, Buffer buf, Buffer rbuf, BTStack sta
         IndexTuple ritem   = (IndexTuple)PageGetItem(page, PageGetItemId(page, P_HIKEY));
         IndexTuple itup    = new IndexTupleData;
         itup->key          = ritem->key;
-        itup->ht_id        = GetBufferDesc(rbuf)->tag.blockNum;
+        itup->ht_id        = GetBufferDescriptor(rbuf)->tag.blockNum;
         itup->tuple_size   = sizeof(IndexTupleData);
         BTreeScan itup_key = _bt_make_scankey(rel, itup);
         Buffer pbuf        = _bt_get_buf(rel, stack->blkno);
@@ -241,15 +241,15 @@ BtreeIndex::_bt_newroot(Relation rel, Buffer lbuf, Buffer rbuf) {
     BTreeSpecial rootspecial;
     BTreeMetaData* metad;
 
-    lblkno   = GetBufferDesc(lbuf)->tag.blockNum;
-    rblkno   = GetBufferDesc(rbuf)->tag.blockNum;
+    lblkno   = GetBufferDescriptor(lbuf)->tag.blockNum;
+    rblkno   = GetBufferDescriptor(rbuf)->tag.blockNum;
     lpage    = BufferGetPage(lbuf);
     lspecial = (BTreeSpecial)PageGetSpecial(lpage);
 
     /* 创建新的 root buf */
     rootbuf   = _bt_get_buf(rel, P_NEW);
     rootpage  = BufferGetPage(rootbuf);
-    rootblkno = GetBufferDesc(rootbuf)->tag.blockNum;
+    rootblkno = GetBufferDescriptor(rootbuf)->tag.blockNum;
 
     /* 获取索引 meta 页 */
     metabuf  = _bt_get_buf(rel, BTREE_METAPAGE);

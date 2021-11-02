@@ -50,7 +50,7 @@ BtreeIndex::_bt_get_root(Relation rel) {
         // 如果meta没有初始化，初始化
         // 1. 创建root block
         rootbuf   = _bt_get_buf(rel, P_NEW);
-        rootblkno = GetBufferDesc(rootbuf)->tag.blockNum;
+        rootblkno = GetBufferDescriptor(rootbuf)->tag.blockNum;
         // 1.1 更新root block
         rootpage                 = BufferGetPage(rootbuf);
         BTreeSpecial rootspecial = (BTreeSpecial)PageGetSpecial(rootpage);

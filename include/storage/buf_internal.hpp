@@ -42,4 +42,16 @@ struct BufferDesc {
     int freeNext;
 };
 
+typedef union BufferDescPadded {
+    BufferDesc bufferdesc;
+} BufferDescPadded;
+
+#define GetBufferDescriptor(id)          (&BufferDescriptors[(id)].bufferdesc)
+#define BufferDescriptorGetBuffer(bdesc) ((bdesc)->buf_id + 1)
+
+extern BufferDescPadded* BufferDescriptors;
+
+/* buf freelist.cpp */
+extern Buffer FindFreeBuffer();
+
 #endif
