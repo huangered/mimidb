@@ -53,6 +53,6 @@ extern BufferDescPadded* BufferDescriptors;
 
 /* buf freelist.cpp */
 extern void StrategyInit();
-extern Buffer FindFreeBuffer();
+extern BufferDesc* FindFreeBuffer();
 
 #endif

@@ -75,16 +75,14 @@ _BufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno, bool* found
     }
     // if find, return
     // create new one and find a valid buffdesc or find a victim;
-    buf_id = FindFreeBuffer();
-    assert(buf_id <= NBuffers);
+    BufferDesc* desc = FindFreeBuffer();
 
-    BufferDesc* desc = GetBufferDescriptor(buf_id);
     assert(desc);
     desc->refcnt += 1;
     desc->tag = tag;
     // insert into hash
-    _hashMap.Put(tag, buf_id);
-    return GetBufferDescriptor(buf_id);
+    _hashMap.Put(tag, desc->buf_id);
+    return desc;
 }
 
 void

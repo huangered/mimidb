@@ -14,7 +14,7 @@ StrategyInit() {
     StrategyControl->lastFreeBuffer  = NBuffers - 1;
 }
 
-Buffer
+BufferDesc*
 FindFreeBuffer() {
     BufferDesc* buf;
     if (StrategyControl->firstFreeBuffer >= 0) {
@@ -22,10 +22,10 @@ FindFreeBuffer() {
         StrategyControl->firstFreeBuffer = buf->freeNext;
         buf->freeNext                    = -1;
 
-        return buf->buf_id;
+        return buf;
     }
 
     printf("not find free buffer\n");
 
-    return 0;
+    return nullptr;
 }
