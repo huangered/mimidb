@@ -68,7 +68,7 @@ _BufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno, bool* found
     // use buftag to find
     *found = _hashMap.Get(tag, &buf_id);
 
-    if (buf_id > INVALID_BUFFER) {
+    if (*found) {
         // add ref count;
         GetBufferDescriptor(buf_id)->refcnt += 1;
         return GetBufferDescriptor(buf_id);
