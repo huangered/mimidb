@@ -52,6 +52,7 @@ typedef union BufferDescPadded {
 extern BufferDescPadded* BufferDescriptors;
 
 /* buf freelist.cpp */
+extern void StrategyInit();
 extern Buffer FindFreeBuffer();
 
 #endif

@@ -12,8 +12,8 @@ static void FlushBuffer(BufferDesc* buf);
 
 BlockNumber
 BufferGetBlockNumber(Buffer buffer) {
-  BufferDesc* desc = GetBufferDescriptor(buffer - 1);
-  return desc->tag.blockNum;
+    BufferDesc* desc = GetBufferDescriptor(buffer - 1);
+    return desc->tag.blockNum;
 }
 
 Buffer
@@ -77,7 +77,7 @@ _BufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno, bool* found
     // create new one and find a valid buffdesc or find a victim;
     buf_id = FindFreeBuffer();
     assert(buf_id <= NBuffers);
-    assert(buf_id != INVALID_BUFFER);
+
     BufferDesc* desc = GetBufferDescriptor(buf_id);
     assert(desc);
     desc->refcnt += 1;
@@ -117,4 +117,3 @@ MarkBufferDirty(Buffer buf) {
 void
 LockBuffer(Buffer buf, int mode) {
 }
-

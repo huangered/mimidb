@@ -26,4 +26,6 @@ InitBufferPool(void) {
     }
 
     GetBufferDescriptor(NBuffers - 1)->freeNext = INVALID_BUFFER;
+
+    StrategyInit();
 }
