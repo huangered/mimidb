@@ -50,7 +50,7 @@ BtreeIndex::_bt_get_root(Relation rel) {
         // 如果meta没有初始化，初始化
         // 1. 创建root block
         rootbuf   = _bt_get_buf(rel, P_NEW);
-        rootblkno = GetBufferDescriptor(rootbuf)->tag.blockNum;
+        rootblkno = BufferGetBlockNumber(rootbuf);
         // 1.1 更新root block
         rootpage                 = BufferGetPage(rootbuf);
         BTreeSpecial rootspecial = (BTreeSpecial)PageGetSpecial(rootpage);
@@ -63,7 +63,7 @@ BtreeIndex::_bt_get_root(Relation rel) {
         metad->fastroot = rootblkno;
 
         MarkBufferDirty(rootbuf);
-        MarkBufferDirty(metabuf);
+        MarkBufferDirty(metabuf); // todo, 这里有异常
         // 释放metabuf
         ReleaseBuffer(metabuf);
     } else {

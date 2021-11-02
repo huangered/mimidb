@@ -47,7 +47,7 @@ _ReadBufferCommon(Relation rel, ForkNumber forkNumber, BlockNumber blkno) {
     Page page = BufferGetPage(desc->buf_id);
     if (found) {
         if (!isExtend) {
-            return desc->buf_id;
+            return BufferDescriptorGetBuffer(desc);
         }
     }
     // load or save data
@@ -100,7 +100,7 @@ FlushOneBuffer(Buffer buffer) {
 void
 FlushBuffer(BufferDesc* buffDesc) {
     SMgrRelation reln = smgr->Open(buffDesc->tag.rnode);
-    Page buf          = BufferGetPage(buffDesc->buf_id);
+    Page buf          = BufferGetPage(BufferDescriptorGetBuffer(buffDesc));
     smgr->Write(reln, buffDesc->tag.forkNum, buffDesc->tag.blockNum, buf);
 }
 
