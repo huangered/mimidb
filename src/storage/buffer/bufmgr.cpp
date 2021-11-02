@@ -57,7 +57,7 @@ _ReadBufferCommon(Relation rel, ForkNumber forkNumber, BlockNumber blkno) {
     } else {
         smgr->Read(rel->rd_smgr, forkNumber, blkno, page);
     }
-    return desc->buf_id;
+    return BufferDescriptorGetBuffer(desc);
 }
 
 BufferDesc*
