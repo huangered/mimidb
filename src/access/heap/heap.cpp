@@ -132,9 +132,9 @@ Heap::_heap_get_tuple(HeapScanDesc scan, ScanDirection direction) {
             // todo test scan key;
 
             if (TestKey(tuple, scan)) {
-                scan->rs_curblock              = blkno;
-                tuple->t_data->t_ctid.ip_blkno = blkno;
-                tuple->t_data->t_ctid.ip_offset   = offset;
+                scan->rs_curblock               = blkno;
+                tuple->t_data->t_ctid.ip_blkno  = blkno;
+                tuple->t_data->t_ctid.ip_offset = offset;
                 return;
             }
         }

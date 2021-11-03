@@ -47,10 +47,10 @@ BtreeIndex::_bt_first(IndexScanDesc scan) {
     OffsetNumber offset;
     Buffer buf;
 
-    IndexTuple itup  = new IndexTupleData;
-    itup->key        = scan->key;
-    itup->value      = scan->value;
-    itup->t_info = sizeof(IndexTupleData);
+    IndexTuple itup = new IndexTupleData;
+    itup->key       = scan->key;
+    itup->value     = scan->value;
+    itup->t_info    = sizeof(IndexTupleData);
 
     BTreeScan itup_key = _bt_make_scankey(scan->index_rel, itup);
     stack              = _bt_search(scan->index_rel, itup_key, &buf);
