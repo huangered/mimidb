@@ -2,9 +2,10 @@
 #define _index_tuple_h_
 
 #include "access/tupledesc.hpp"
+#include "storage/itemptr.hpp"
 
 typedef struct IndexTupleData {
-    int t_tid;
+    ItemPointerData t_tid;
     int t_info;
     int key;      // will remove when heap is ready.
     int value;    // will remove when heap is ready.

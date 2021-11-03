@@ -127,6 +127,6 @@ BtreeIndex::debug(Relation rel) {
         ItemId itemId    = PageGetItemId(page, low);
         Item item        = PageGetItem(page, itemId);
         IndexTuple tuple = (IndexTuple)item;
-        printf(">>> %d %d\r\n", tuple->key, tuple->ht_id);
+        printf(">>> %d (%d, %d)\n", tuple->key, tuple->t_tid.ip_blkno, tuple->t_tid.ip_offset);
     }
 }

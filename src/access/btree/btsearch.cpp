@@ -49,8 +49,8 @@ BtreeIndex::_bt_first(IndexScanDesc scan) {
 
     IndexTuple itup  = new IndexTupleData;
     itup->key        = scan->key;
-    itup->ht_id      = scan->value;
-    itup->tuple_size = sizeof(IndexTupleData);
+    itup->value      = scan->value;
+    itup->t_info = sizeof(IndexTupleData);
 
     BTreeScan itup_key = _bt_make_scankey(scan->index_rel, itup);
     stack              = _bt_search(scan->index_rel, itup_key, &buf);
@@ -66,7 +66,7 @@ BtreeIndex::_bt_first(IndexScanDesc scan) {
     Item item = PageGetItem(page, PageGetItemId(page, offset));
 
     IndexTuple itup1 = (IndexTuple)item;
-    scan->value      = itup1->ht_id;
+    scan->value      = itup1->value;
 
     delete itup;
     delete itup_key;
@@ -95,7 +95,7 @@ BtreeIndex::_bt_next(IndexScanDesc scan) {
     Item item       = PageGetItem(page, itemid);
     IndexTuple itup = (IndexTuple)item;
     if (itup->key == scan->key) {
-        scan->value  = itup->ht_id;
+        scan->value  = itup->value;
         scan->offset = offset;
         return true;
     }

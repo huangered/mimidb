@@ -30,8 +30,8 @@ IndexTuple
 BtreeIndex::_bt_make_tuple(int key, int ht_id) {
     IndexTuple tup  = new IndexTupleData{};
     tup->key        = key;
-    tup->ht_id      = ht_id;
-    tup->tuple_size = sizeof(IndexTupleData);
+    tup->value      = ht_id;
+    tup->t_info = sizeof(IndexTupleData);
     return tup;
 }
 

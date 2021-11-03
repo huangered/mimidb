@@ -4,20 +4,12 @@
 #include "mimi.hpp"
 #include "access/amapi.hpp"
 #include "access/genam.hpp"
+#include "access/indextuple.hpp"
 #include "access/offset.hpp"
 #include "access/rel.hpp"
 #include "access/scankey.hpp"
 #include "storage/block.hpp"
 #include "storage/bufmgr.hpp"
-
-struct IndexTupleData {
-    int ht_id;      // record heap tuple id
-    int tuple_size; // temporarily value;
-    int key;
-    // data part
-};
-
-typedef IndexTupleData* IndexTuple;
 
 struct BTreeSpecialData {
     BlockNumber btsd_next;
@@ -104,7 +96,7 @@ typedef BTreeSearchKeyData* BTreeSearchKey;
 #define P_FIRSTKEY              ((OffsetNumber)2)
 #define P_FIRSTDATAKEY(special) (P_RIGHTMOST(special) ? P_HIKEY : P_FIRSTKEY)
 
-#define BTreeTupleGetDownLink(itup) (itup->ht_id)
+#define BTreeTupleGetDownLink(itup) (itup->t_tid.ip_blkno)
 
 // 函数原型
 

@@ -84,8 +84,8 @@ Heap::Remove(Relation rel, int key) {
             // add new deleted record?!
             return true;
         } else {
-            blkNum = tup->t_data->t_ctid.blocknum;
-            offset = tup->t_data->t_ctid.offset;
+            blkNum = tup->t_data->t_ctid.ip_blkno;
+            offset = tup->t_data->t_ctid.ip_offset;
         }
     }
 
@@ -112,7 +112,7 @@ Heap::_heap_get_tuple(HeapScanDesc scan, ScanDirection direction) {
         tuple->t_data     = nullptr;
     } else {
         blkno  = scan->rs_curblock;
-        offset = OffsetNumberNext(scan->rs_curtuple.t_data->t_ctid.offset);
+        offset = OffsetNumberNext(scan->rs_curtuple.t_data->t_ctid.ip_offset);
     }
 
     buf  = ReadBuffer(scan->rs_rd, blkno);
@@ -133,8 +133,8 @@ Heap::_heap_get_tuple(HeapScanDesc scan, ScanDirection direction) {
 
             if (TestKey(tuple, scan)) {
                 scan->rs_curblock              = blkno;
-                tuple->t_data->t_ctid.blocknum = blkno;
-                tuple->t_data->t_ctid.offset   = offset;
+                tuple->t_data->t_ctid.ip_blkno = blkno;
+                tuple->t_data->t_ctid.ip_offset   = offset;
                 return;
             }
         }
@@ -257,7 +257,7 @@ Heap::debug(Relation rel) {
             char* data = (char*)tup + HEAP_TUPLE_HEADER_SIZE;
             int* a     = (int*)data;
             printf(">>> debug min,max: (%d , %d) bo, (%d, %d) value: (%d , %d)\r\n", tup->t_heap.t_xmin,
-                   tup->t_heap.t_xmax, tup->t_ctid.blocknum, tup->t_ctid.offset, *a, *(a + 1));
+                   tup->t_heap.t_xmax, tup->t_ctid.ip_blkno, tup->t_ctid.ip_offset, *a, *(a + 1));
             j++;
         }
         printf(">>>\r\n");
