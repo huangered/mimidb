@@ -3,6 +3,7 @@
 #include "storage/bufmgr.hpp"
 #include "access/relcache.hpp"
 #include "access/rel.hpp"
+#include "util/mctx.hpp"
 
 #define HOT_UPDATED 0
 #define HOT_REMOVED 1
@@ -264,4 +265,71 @@ Heap::debug(Relation rel) {
         ReleaseBuffer(buf);
     }
     printf("total %d\r\n", j);
+}
+
+/* public api */
+Relation
+relation_open(Oid relationId) {
+    // 从relation cache加载
+    Relation r;
+    r = relcache->RelationIdGetRelation(relationId);
+    if (r->rd_rel->relkind != RELKIND_RELATION) {
+        printf("rel %s is not a relation", r->rd_rel->relname);
+    }
+
+    return r;
+}
+
+void
+relation_close(Relation relation) {
+    relcache->RelationClose(relation);
+}
+
+Relation
+heap_open(Oid relationId) {
+    Relation r;
+    r = relation_open(relationId);
+
+    return r;
+}
+
+void
+heap_close(Relation relation) {
+    relation_close(relation);
+}
+
+HeapScanDesc
+heap_beginscan(Relation rel, int nkeys, ScanKey key) {
+    HeapScanDesc scan;
+
+    // increment relation ref count
+
+    // alloc scan desc
+
+    scan = (HeapScanDesc)palloc(sizeof(HeapScanDescData));
+    return NULL;
+}
+
+void
+heap_endscan(HeapScanDesc scan) {
+}
+
+HeapTuple
+heap_getnext(HeapScanDesc scan, ScanDirection direction) {
+    return NULL;
+}
+
+Oid
+heap_insert(Relation relation, HeapTuple tup) {
+    return 0;
+}
+void
+heap_delete(Relation relation, ItemPointer tid) {
+}
+
+/*
+ * force sync relation to disk
+ */
+void
+heap_sync(Relation relation) {
 }
