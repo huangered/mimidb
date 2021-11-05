@@ -12,3 +12,9 @@ _deps
 .vs/
 out/
 
+*_main
+*_fsm
+bin
+lib
+unittest/googletest-build
+unittest/googletest-download
