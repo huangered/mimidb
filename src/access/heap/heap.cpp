@@ -9,11 +9,20 @@
 #define HOT_REMOVED 1
 #define HOT_NORMAL  2
 
+static void initscan(HeapScanDesc scan, ScanKey key);
+
 static Heap heap{};
 
 Heap*
 HeapRoute() {
     return &heap;
+}
+
+/*
+ * heap support method
+ */
+void
+initscan(HeapScanDesc scan, ScanKey key) {
 }
 
 //临时方法，会移到事务管理器中
@@ -128,7 +137,6 @@ Heap::_heap_get_tuple(HeapScanDesc scan, ScanDirection direction) {
         for (; offset <= max; offset++) {
             ItemId itemid = PageGetItemId(page, offset);
             tuple->t_data = (HeapTupleHeader)PageGetItem(page, itemid);
-            ;
             tuple->t_len = itemid->lp_len;
             // todo test scan key;
 
@@ -305,13 +313,34 @@ heap_beginscan(Relation rel, int nkeys, ScanKey key) {
     // increment relation ref count
 
     // alloc scan desc
-
     scan = (HeapScanDesc)palloc(sizeof(HeapScanDescData));
-    return NULL;
+
+    // init scankey
+    if (nkeys > 0) {
+        scan->rs_key = (ScanKey)palloc(sizeof(ScanKeyData) * nkeys);
+    } else {
+        scan->rs_key = NULL;
+    }
+
+    initscan(scan, key);
+
+    return scan;
 }
 
 void
 heap_endscan(HeapScanDesc scan) {
+
+    // 释放 scan 当前buf
+    if (BufferIsValid(scan->rs_curbuf))
+        ReleaseBuffer(scan->rs_curbuf);
+
+    // descease the relation ref count
+
+    if (scan->rs_key) {
+        pfree(scan->rs_key);
+    }
+
+    pfree(scan);
 }
 
 HeapTuple
