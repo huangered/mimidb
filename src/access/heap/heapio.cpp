@@ -16,7 +16,7 @@ RelationPutHeapTuple(Relation rel, Buffer buffer, HeapTuple htup) {
 
     offset = PageAddItem(page, (htup->t_data), htup->t_len, InvalidOffsetNumber, true);
 
-    htup->t_data->t_ctid.ip_blkno  = GetBufferDescriptor(buffer)->tag.blockNum;
+    htup->t_data->t_ctid.ip_blkno = BufferGetBlockNumber(buffer);
     htup->t_data->t_ctid.ip_offset = offset;
 
     // 更新 ctid 相关数据

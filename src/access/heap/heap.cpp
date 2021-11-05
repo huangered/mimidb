@@ -22,6 +22,14 @@ initscan(HeapScanDesc scan, ScanKey key) {
     scan->rs_nblocks    = RelationGetNumberOfBlocksInFork(scan->rs_rd, MAIN_FORKNUM);
     scan->rs_startblock = 0;
     scan->rs_numblocks  = scan->rs_nblocks;
+
+    scan->rs_inited          = false;
+    scan->rs_curtuple.t_data = NULL;
+    scan->rs_curbuf          = INVALID_BUFFER;
+    scan->rs_curblock        = INVALID_BLOCK;
+
+    if (key != NULL)
+        memcpy(scan->rs_key, key, scan->rs_nkeys * sizeof(ScanKeyData));
 }
 
 //临时方法，会移到事务管理器中
