@@ -11,7 +11,7 @@ struct ItemPointerData {
 
 typedef ItemPointerData* ItemPointer;
 
-#define ItemPointerGetBlockNumber(pointer) (&(pointer)->ip_blkno)
+#define ItemPointerGetBlockNumber(pointer)  (&(pointer)->ip_blkno)
 #define ItemPointerGetOffsetNumber(pointer) (&(pointer)->ip_offset)
 
 #endif

@@ -125,10 +125,9 @@ LockBuffer(Buffer buf, int mode) {
  *		Determines the current number of pages in the specified relation fork.
  */
 BlockNumber
-RelationGetNumberOfBlocksInFork(Relation relation, ForkNumber forkNum)
-{
-	/* Open it at the smgr level if not already done */
-	RelationOpenSmgr(relation);
+RelationGetNumberOfBlocksInFork(Relation relation, ForkNumber forkNum) {
+    /* Open it at the smgr level if not already done */
+    RelationOpenSmgr(relation);
 
-	return smgr->Nblocks(relation->rd_smgr, forkNum);
+    return smgr->Nblocks(relation->rd_smgr, forkNum);
 }

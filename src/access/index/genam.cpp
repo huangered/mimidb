@@ -23,6 +23,6 @@ systable_getnext(SysTableScan scan) {
 
 void
 systable_endscan(SysTableScan scan) {
-   heap_endscan(scan->heap_scan);
+    heap_endscan(scan->heap_scan);
     pfree(scan);
 };

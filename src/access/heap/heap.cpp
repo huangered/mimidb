@@ -93,7 +93,7 @@ _heap_get_tuple(HeapScanDesc scan, ScanDirection direction) {
         for (; offset <= max; offset++) {
             ItemId itemid = PageGetItemId(page, offset);
             tuple->t_data = (HeapTupleHeader)PageGetItem(page, itemid);
-            tuple->t_len = itemid->lp_len;
+            tuple->t_len  = itemid->lp_len;
             // todo test scan key;
 
             if (TestKey(tuple, scan)) {
