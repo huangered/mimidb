@@ -26,6 +26,8 @@ void MarkBufferDirty(Buffer buffer);
 BlockNumber BufferGetBlockNumber(Buffer buffer);
 void FlushOneBuffer(Buffer buffer);
 
+BlockNumber RelationGetNumberOfBlocksInFork(Relation rel, ForkNumber forkNum);
+
 // buf_init.cpp
 extern void InitBufferPool(void);
 
