@@ -119,3 +119,16 @@ MarkBufferDirty(Buffer buf) {
 void
 LockBuffer(Buffer buf, int mode) {
 }
+
+/*
+ * RelationGetNumberOfBlocksInFork
+ *		Determines the current number of pages in the specified relation fork.
+ */
+BlockNumber
+RelationGetNumberOfBlocksInFork(Relation relation, ForkNumber forkNum)
+{
+	/* Open it at the smgr level if not already done */
+	RelationOpenSmgr(relation);
+
+	return smgr->Nblocks(relation->rd_smgr, forkNum);
+}
