@@ -36,7 +36,7 @@ top:
 
     delete itup_key;
     ReleaseBuffer(buf);
-    FlushBuffer(buf);
+    FlushOneBuffer(buf);
 
     return true;
 }
@@ -70,7 +70,7 @@ BtreeIndex::_bt_search(Relation rel, BTreeScan itup_key, Buffer* bufp) {
         itemid    = PageGetItemId(page, offsetnum);
         itup      = (IndexTuple)PageGetItem(page, itemid);
         blkno     = BTreeTupleGetDownLink(itup);
-        par_blkno = GetBufferDesc(*bufp)->tag.blockNum;
+        par_blkno = BufferGetBlockNumber(*bufp);
 
         BTStack new_stack = new BTStackData{};
         new_stack->parent = stack_in;
@@ -123,11 +123,11 @@ BtreeIndex::_bt_split(Relation rel, IndexTuple itup, Buffer buf, OffsetNumber ne
     BTreeSpecial rightspecial  = PageGetSpecial(rightpage);
 
     // update right / left point
-    leftspecial->btsd_next  = GetBufferDesc(rbuf)->tag.blockNum;
+    leftspecial->btsd_next  = BufferGetBlockNumber(rbuf);
     rightspecial->btsd_next = originspecial->btsd_next;
 
     leftspecial->btsd_prev  = originspecial->btsd_prev;
-    rightspecial->btsd_prev = GetBufferDesc(buf)->tag.blockNum;
+    rightspecial->btsd_prev = BufferGetBlockNumber(buf);
 
     if (P_ISLEAF(originspecial)) {
         leftspecial->btsd_flags  = BTP_LEAF;
@@ -209,14 +209,14 @@ BtreeIndex::_bt_insert_parent(Relation rel, Buffer buf, Buffer rbuf, BTStack sta
         Buffer rootbuf;
         rootbuf = _bt_newroot(rel, buf, rbuf);
     } else {
-        Page page          = BufferGetPage(buf);
-        IndexTuple ritem   = (IndexTuple)PageGetItem(page, PageGetItemId(page, P_HIKEY));
-        IndexTuple itup    = new IndexTupleData;
-        itup->key          = ritem->key;
-        itup->ht_id        = GetBufferDesc(rbuf)->tag.blockNum;
-        itup->tuple_size   = sizeof(IndexTupleData);
-        BTreeScan itup_key = _bt_make_scankey(rel, itup);
-        Buffer pbuf        = _bt_get_buf(rel, stack->blkno);
+        Page page            = BufferGetPage(buf);
+        IndexTuple ritem     = (IndexTuple)PageGetItem(page, PageGetItemId(page, P_HIKEY));
+        IndexTuple itup      = new IndexTupleData;
+        itup->key            = ritem->key;
+        itup->t_tid.ip_blkno = BufferGetBlockNumber(rbuf);
+        itup->t_info         = sizeof(IndexTupleData);
+        BTreeScan itup_key   = _bt_make_scankey(rel, itup);
+        Buffer pbuf          = _bt_get_buf(rel, stack->blkno);
         _bt_insertonpg(rel, pbuf, stack->offset + 1, itup_key, stack->parent);
         delete itup;
         delete itup_key;
@@ -241,15 +241,15 @@ BtreeIndex::_bt_newroot(Relation rel, Buffer lbuf, Buffer rbuf) {
     BTreeSpecial rootspecial;
     BTreeMetaData* metad;
 
-    lblkno   = GetBufferDesc(lbuf)->tag.blockNum;
-    rblkno   = GetBufferDesc(rbuf)->tag.blockNum;
+    lblkno   = BufferGetBlockNumber(lbuf);
+    rblkno   = BufferGetBlockNumber(rbuf);
     lpage    = BufferGetPage(lbuf);
     lspecial = (BTreeSpecial)PageGetSpecial(lpage);
 
     /* 创建新的 root buf */
     rootbuf   = _bt_get_buf(rel, P_NEW);
     rootpage  = BufferGetPage(rootbuf);
-    rootblkno = GetBufferDesc(rootbuf)->tag.blockNum;
+    rootblkno = BufferGetBlockNumber(rootbuf);
 
     /* 获取索引 meta 页 */
     metabuf  = _bt_get_buf(rel, BTREE_METAPAGE);
@@ -272,8 +272,8 @@ BtreeIndex::_bt_newroot(Relation rel, Buffer lbuf, Buffer rbuf) {
     // get left page high key
     IndexTuple hkey = new IndexTupleData{};
     // hkey->key = INT_MIN;
-    hkey->ht_id      = lblkno;
-    hkey->tuple_size = sizeof(IndexTupleData);
+    hkey->t_tid.ip_blkno = lblkno;
+    hkey->t_info         = sizeof(IndexTupleData);
     // set first item
     _bt_addtup(rootpage, hkey, sizeof(IndexTupleData), P_HIKEY);
 
@@ -282,10 +282,10 @@ BtreeIndex::_bt_newroot(Relation rel, Buffer lbuf, Buffer rbuf) {
     IndexTuple second;
     IndexTuple lphkey = (IndexTuple)PageGetItem(lpage, PageGetItemId(lpage, P_HIKEY));
 
-    second             = new IndexTupleData{};
-    second->key        = lphkey->key;
-    second->ht_id      = rblkno;
-    second->tuple_size = sizeof(IndexTupleData);
+    second                 = new IndexTupleData{};
+    second->key            = lphkey->key;
+    second->t_tid.ip_blkno = rblkno;
+    second->t_info         = sizeof(IndexTupleData);
     _bt_addtup(rootpage, second, sizeof(IndexTupleData), P_FIRSTKEY);
 
     delete second;

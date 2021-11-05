@@ -6,6 +6,17 @@
 #include "storage/smgr.hpp"
 #include "util/mctx.hpp"
 
+class Env1 : public ::testing::Environment {
+public:
+    void
+    SetUp() override {
+        printf("Buf pool init\n");
+        InitBufferPool();
+    }
+};
+
+testing::Environment* const foo_env = testing::AddGlobalTestEnvironment(new Env1);
+
 // test the basic usage in buff mgr.
 TEST(btree, incr_insert) {
     Relation rel = new RelationData{};

@@ -10,7 +10,6 @@ TEST(heap, incr_insert) {
     Relation rel = new RelationData{};
     rel->rd_id   = HEAP_REL_ID_1;
     rel->rd_node = { DB_ID, rel->rd_id };
-    rel->tb_am   = HeapRoute();
 
     RelationOpenSmgr(rel);
 
@@ -24,7 +23,7 @@ TEST(heap, incr_insert) {
     for (int i = 0; i < 1000; i++) {
         int* value      = new int[2]{ i, i * 10 };
         HeapTuple tuple = heap_form_tuple(rel->tupleDesc, (Datum*)value);
-        bool result     = rel->tb_am->Insert(rel, tuple);
+        bool result     = heap_insert(rel, tuple);
         EXPECT_TRUE(result);
         heap_free_tuple(tuple);
         delete[] value;
@@ -33,9 +32,9 @@ TEST(heap, incr_insert) {
     Datum datum  = IntGetDatum(0);
     ScanKey skey = (ScanKey)palloc0(sizeof(ScanKeyData));
     ScanKeyInit(skey, 0, BTEqualStrategyNumber, datum, 2);
-    HeapScanDesc hsDesc = rel->tb_am->BeginScan(rel, 1, skey);
+    HeapScanDesc hsDesc = heap_beginscan(rel, 1, skey);
     for (int i{}; i < 5; i++) {
-        HeapTuple htup = rel->tb_am->GetNext(hsDesc, ScanDirection::Forward);
+        HeapTuple htup = heap_getnext(hsDesc, ScanDirection::Forward);
         if (htup->t_data != nullptr) {
             char* data = (char*)htup->t_data + HEAP_TUPLE_HEADER_SIZE;
             int* j     = (int*)data;
@@ -45,7 +44,7 @@ TEST(heap, incr_insert) {
         }
     }
 
-    rel->tb_am->EndScan(hsDesc);
+    heap_endscan(hsDesc);
 
     pfree(skey);
 

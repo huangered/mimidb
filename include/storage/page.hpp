@@ -49,7 +49,6 @@ typedef PageHeaderData* PageHeader;
 #define PageGetContent(page) ((char*)(page + SizeOfPageHeaderData))
 #define PageGetSpecial(page) (BTreeSpecial)(page + PageGetHeader(page)->pd_special)
 
-
 inline bool
 PageIsNew(Page page) {
     return ((PageHeader)(page))->pd_upper == 0;

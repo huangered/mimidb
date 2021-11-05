@@ -1,4 +1,7 @@
-﻿#ifndef _amapi_hpp_
+﻿/*
+ * define all index access methods.
+ */
+#ifndef _amapi_hpp_
 #define _amapi_hpp_
 
 #include "mimi.hpp"

@@ -1,8 +1,11 @@
 #ifndef _block_h_
 #define _block_h_
 
-typedef unsigned int BlockNumber;
+#include "c.hpp"
 
-#define INVALID_BLOCK 0xffff
+typedef uint32 BlockNumber;
+
+#define INVALID_BLOCK  ((BlockNumber)0xffffffff)
+#define MaxBlockNumber ((BlockNumber)0xfffffffe)
 
 #endif // !_BLOCK_H_

@@ -1,18 +1,35 @@
 ﻿#include "access/heap.hpp"
+#include "access/heapio.hpp"
 #include "storage/page.hpp"
 #include "storage/bufmgr.hpp"
 #include "access/relcache.hpp"
 #include "access/rel.hpp"
+#include "util/mctx.hpp"
 
 #define HOT_UPDATED 0
 #define HOT_REMOVED 1
 #define HOT_NORMAL  2
 
-static Heap heap{};
+static HeapTuple _tuple_prepare_insert(Relation rel, HeapTuple tup, int xmin);
+static void initscan(HeapScanDesc scan, ScanKey key);
+static void _heap_get_tuple(HeapScanDesc scan, ScanDirection direction);
 
-Heap*
-HeapRoute() {
-    return &heap;
+/*
+ * heap support method
+ */
+void
+initscan(HeapScanDesc scan, ScanKey key) {
+    scan->rs_nblocks    = RelationGetNumberOfBlocksInFork(scan->rs_rd, MAIN_FORKNUM);
+    scan->rs_startblock = 0;
+    scan->rs_numblocks  = scan->rs_nblocks;
+
+    scan->rs_inited          = false;
+    scan->rs_curtuple.t_data = NULL;
+    scan->rs_curbuf          = INVALID_BUFFER;
+    scan->rs_curblock        = INVALID_BLOCK;
+
+    if (key != NULL)
+        memcpy(scan->rs_key, key, scan->rs_nkeys * sizeof(ScanKeyData));
 }
 
 //临时方法，会移到事务管理器中
@@ -41,62 +58,11 @@ TestKey(HeapTuple tuple, HeapScanDesc scan) {
     return result1;
 }
 
-// 打开relation
-Relation
-Heap::Open(Oid relaitonId) {
-    // 从relation cache加载
-    Relation rel = relcache->RelationIdGetRelation(relaitonId);
-    if (rel->rd_rel->relkind != RELKIND_RELATION) {
-        printf("rel %s is not a relation", rel->rd_rel->relname);
-    }
-
-    return rel;
-}
-
-// 关闭relation
-void
-Heap::Close(Relation rel) {
-    // 从relation cache释放
-    relcache->RelationClose(rel);
-}
-
-Heap::Heap() {
-}
-
-bool
-Heap::Remove(Relation rel, int key) {
-
-    BlockNumber blkNum = 0;
-    int offset         = 0;
-    int cur_tran       = 0xffff;
-    Buffer buf         = ReadBuffer(rel, blkNum);
-
-    Page page = BufferGetPage(buf);
-
-    PageHeader pHeader = (PageHeader)page;
-    for (;;) {
-        ItemId itemId = PageGetItemId(page, offset);
-        Item item     = PageGetItem(page, itemId);
-
-        HeapTuple tup = (HeapTuple)item;
-        if (tup->t_data->t_heap.t_xmax == 0) { // for now , only get latest one.
-            tup->t_data->t_heap.t_xmax = cur_tran;
-            // add new deleted record?!
-            return true;
-        } else {
-            blkNum = tup->t_data->t_ctid.blocknum;
-            offset = tup->t_data->t_ctid.offset;
-        }
-    }
-
-    return false;
-}
-
 /*
 现在只支持前向搜索
 */
 void
-Heap::_heap_get_tuple(HeapScanDesc scan, ScanDirection direction) {
+_heap_get_tuple(HeapScanDesc scan, ScanDirection direction) {
     HeapTuple tuple = &(scan->rs_curtuple);
     BlockNumber blkno;
     OffsetNumber offset;
@@ -112,7 +78,7 @@ Heap::_heap_get_tuple(HeapScanDesc scan, ScanDirection direction) {
         tuple->t_data     = nullptr;
     } else {
         blkno  = scan->rs_curblock;
-        offset = OffsetNumberNext(scan->rs_curtuple.t_data->t_ctid.offset);
+        offset = OffsetNumberNext(scan->rs_curtuple.t_data->t_ctid.ip_offset);
     }
 
     buf  = ReadBuffer(scan->rs_rd, blkno);
@@ -127,14 +93,13 @@ Heap::_heap_get_tuple(HeapScanDesc scan, ScanDirection direction) {
         for (; offset <= max; offset++) {
             ItemId itemid = PageGetItemId(page, offset);
             tuple->t_data = (HeapTupleHeader)PageGetItem(page, itemid);
-            ;
-            tuple->t_len = itemid->lp_len;
+            tuple->t_len  = itemid->lp_len;
             // todo test scan key;
 
             if (TestKey(tuple, scan)) {
-                scan->rs_curblock              = blkno;
-                tuple->t_data->t_ctid.blocknum = blkno;
-                tuple->t_data->t_ctid.offset   = offset;
+                scan->rs_curblock               = blkno;
+                tuple->t_data->t_ctid.ip_blkno  = blkno;
+                tuple->t_data->t_ctid.ip_offset = offset;
                 return;
             }
         }
@@ -155,113 +120,143 @@ Heap::_heap_get_tuple(HeapScanDesc scan, ScanDirection direction) {
     scan->rs_curblock = INVALID_BLOCK;
 }
 
-HeapScanDesc
-Heap::BeginScan(Relation rel, int nkeys, ScanKey key) {
-    HeapScanDesc scan{};
-
-    // increase relation ref count
-    scan           = new HeapScanDescData{};
-    scan->rs_rd    = rel;
-    scan->rs_nkeys = nkeys;
-    scan->rs_key   = new ScanKeyData[nkeys];
-    memcpy(scan->rs_key, key, nkeys * sizeof(ScanKeyData));
-
-    RelationOpenSmgr(rel);
-    scan->rs_nblocks    = smgr->Nblocks(rel->rd_smgr, MAIN_FORKNUM);
-    scan->rs_startblock = 0;
-    scan->rs_numblocks  = scan->rs_nblocks;
-
-    return scan;
-}
-
-HeapTuple
-Heap::GetNext(HeapScanDesc scan, ScanDirection direction) {
-    _heap_get_tuple(scan, direction);
-    return &scan->rs_curtuple;
-}
-
-bool
-Heap::EndScan(HeapScanDesc scan) {
-    // 释放 scan 当前buf
-    ReleaseBuffer(scan->rs_curbuf);
-    // descease the relation ref count
-
-    if (scan->rs_key) {
-        delete scan->rs_key;
-    }
-
-    delete scan;
-    return true;
-}
-
-/*
-1. run the heap page vacuu
-2. update the fsm page
-*/
-void
-Heap::Vacuum(Relation rel) {
-}
-
-/*
-for catalog operation
-*/
-void
-Heap::simple_heap_insert(Relation rel, HeapTuple tup) {
-    Insert(rel, tup);
-}
-
-//插入操作
-bool
-Heap::Insert(Relation rel, HeapTuple htup) {
-    // get current transition id.
-    int xid = GetCurrentTransactionId();
-    Buffer buffer;
-
-    htup = _tuple_prepare_insert(rel, htup, xid);
-
-    buffer = _get_buffer_for_tuple(rel, htup->t_len);
-
-    _relation_put_heap_tuple(rel, buffer, htup);
-
-    MarkBufferDirty(buffer);
-    FlushBuffer(buffer);
-    return true;
-}
-
 /*
 给heaptup的事务id赋值
 */
 HeapTuple
-Heap::_tuple_prepare_insert(Relation rel, HeapTuple tup, int xmin) {
+_tuple_prepare_insert(Relation rel, HeapTuple tup, int xmin) {
     // 设置 （xmin， xmax）
     tup->t_data->t_heap.t_xmin = xmin;
     tup->t_data->t_heap.t_xmax = 0;
     return tup;
 }
 
-void
-Heap::debug(Relation rel) {
-    int j{ 0 };
-    RelationOpenSmgr(rel);
-    int nblocks = smgr->Nblocks(rel->rd_smgr, MAIN_FORKNUM);
-    for (int i{}; i < nblocks; i++) {
-        Buffer buf       = ReadBuffer(rel, i);
-        Page page        = BufferGetPage(buf);
-        OffsetNumber max = PageGetMaxOffsetNumber(page);
-
-        for (OffsetNumber offset{ 1 }; offset <= max; offset++) {
-            ItemId itemid       = PageGetItemId(page, offset);
-            Item item           = PageGetItem(page, itemid);
-            HeapTupleHeader tup = (HeapTupleHeader)item;
-            // todo test scan key;
-            char* data = (char*)tup + HEAP_TUPLE_HEADER_SIZE;
-            int* a     = (int*)data;
-            printf(">>> debug min,max: (%d , %d) bo, (%d, %d) value: (%d , %d)\r\n", tup->t_heap.t_xmin,
-                   tup->t_heap.t_xmax, tup->t_ctid.blocknum, tup->t_ctid.offset, *a, *(a + 1));
-            j++;
-        }
-        printf(">>>\r\n");
-        ReleaseBuffer(buf);
+/* public api */
+Relation
+relation_open(Oid relationId) {
+    // 从relation cache加载
+    Relation r;
+    r = relcache->RelationIdGetRelation(relationId);
+    if (r->rd_rel->relkind != RELKIND_RELATION) {
+        printf("rel %s is not a relation", r->rd_rel->relname);
     }
-    printf("total %d\r\n", j);
+
+    return r;
+}
+
+void
+relation_close(Relation relation) {
+    relcache->RelationClose(relation);
+}
+
+Relation
+heap_open(Oid relationId) {
+    Relation r;
+    r = relation_open(relationId);
+
+    return r;
+}
+
+void
+heap_close(Relation relation) {
+    relation_close(relation);
+}
+
+HeapScanDesc
+heap_beginscan(Relation rel, int nkeys, ScanKey key) {
+    HeapScanDesc scan;
+
+    // increment relation ref count
+
+    // alloc scan desc
+    scan = (HeapScanDesc)palloc(sizeof(HeapScanDescData));
+
+    scan->rs_rd    = rel;
+    scan->rs_nkeys = nkeys;
+
+    // init scankey
+    if (nkeys > 0) {
+        scan->rs_key = (ScanKey)palloc(sizeof(ScanKeyData) * nkeys);
+    } else {
+        scan->rs_key = NULL;
+    }
+
+    initscan(scan, key);
+
+    return scan;
+}
+
+void
+heap_endscan(HeapScanDesc scan) {
+
+    // 释放 scan 当前buf
+    if (BufferIsValid(scan->rs_curbuf))
+        ReleaseBuffer(scan->rs_curbuf);
+
+    // descease the relation ref count
+
+    if (scan->rs_key) {
+        pfree(scan->rs_key);
+    }
+
+    pfree(scan);
+}
+
+HeapTuple
+heap_getnext(HeapScanDesc scan, ScanDirection direction) {
+    _heap_get_tuple(scan, direction);
+    return &scan->rs_curtuple;
+}
+
+Oid
+heap_insert(Relation relation, HeapTuple htup) {
+    // get current transition id.
+    int xid = GetCurrentTransactionId();
+    Buffer buffer;
+
+    htup = _tuple_prepare_insert(relation, htup, xid);
+
+    buffer = RelationGetBufferForTuple(relation, htup->t_len);
+
+    RelationPutHeapTuple(relation, buffer, htup);
+
+    MarkBufferDirty(buffer);
+    FlushOneBuffer(buffer);
+    return true;
+}
+void
+heap_delete(Relation relation, ItemPointer tid) {
+    BlockNumber blkNum = 0;
+    int offset         = 0;
+    int cur_tran       = 0xffff;
+    Buffer buf         = ReadBuffer(relation, blkNum);
+
+    Page page = BufferGetPage(buf);
+
+    PageHeader pHeader = (PageHeader)page;
+    for (;;) {
+        ItemId itemId = PageGetItemId(page, offset);
+        Item item     = PageGetItem(page, itemId);
+
+        HeapTuple tup = (HeapTuple)item;
+        if (tup->t_data->t_heap.t_xmax == 0) { // for now , only get latest one.
+            tup->t_data->t_heap.t_xmax = cur_tran;
+            // add new deleted record?!
+        } else {
+            blkNum = tup->t_data->t_ctid.ip_blkno;
+            offset = tup->t_data->t_ctid.ip_offset;
+        }
+    }
+}
+
+/*
+ * force sync relation to disk
+ */
+void
+heap_sync(Relation relation) {
+}
+
+void
+simple_heap_insert(Relation relation, HeapTuple tup) {
+    heap_insert(relation, tup);
 }

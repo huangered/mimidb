@@ -8,33 +8,51 @@
 #include "storage/buf.hpp"
 #include "util/hashmap.hpp"
 
-class BufferMgr {
-private:
-    BufferDesc* _freeBuffDesc;
-    BufferDesc* _buffDesc;
-    HashMap<BufferTag, Buffer> _hashMap;
-    char* _blocks;
-    // int index;
-public:
-    BufferMgr();
-    ~BufferMgr();
+typedef struct buftag {
+    RelFileNode rnode;
+    ForkNumber forkNum;
+    BlockNumber blockNum;
 
-    // Read MAIN_FORK
-    Buffer ReadBuffer(Relation rel, BlockNumber block);
-    Buffer ReadBufferExtend(Relation rel, ForkNumber fork, BlockNumber block);
+    int
+    hash() const {
+        return rnode.relNode * 17 * 17 + forkNum * 17 + blockNum;
+    }
 
-    void ReleaseBuffer(Buffer buffer);
-    void FlushBuffer(BufferDesc* buffDesc);
-    BufferDesc* GetBufferDesc(Buffer buffer);
-    Page GetPage(Buffer bufId);
-    void MarkBufferDirty(Buffer bufId);
-    void Debug(void);
+    friend bool
+    operator==(const buftag& l, const buftag& r) {
+        return l.rnode == r.rnode && l.forkNum == r.forkNum && l.blockNum == r.blockNum;
+    }
 
-private:
-    Buffer _ReadBufferCommon(Relation rel, ForkNumber fork, BlockNumber block);
-    BufferDesc* _BufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno, bool* found);
-    Buffer _FindFreeBuffer(void);
-    void _Cleanup(void);
+    friend bool
+    operator!=(const buftag& l, const buftag& r) {
+        return !(l == r);
+    }
+
+} BufferTag;
+
+#define BUFFERTAG_EQUAL(a, b) ((a).rnode == (b).rnode && (a).forkNum == (b).forkNum && (a).blockNum == (b).blockNum)
+
+struct BufferDesc {
+    BufferTag tag;
+    int buf_id;
+    // the buf state, include ref_count;
+    int refcnt;
+    // the buf is updated.
+    bool dirty;
+    int freeNext;
 };
+
+typedef union BufferDescPadded {
+    BufferDesc bufferdesc;
+} BufferDescPadded;
+
+#define GetBufferDescriptor(id)          (&BufferDescriptors[(id)].bufferdesc)
+#define BufferDescriptorGetBuffer(bdesc) ((bdesc)->buf_id + 1)
+
+extern BufferDescPadded* BufferDescriptors;
+
+/* buf freelist.cpp */
+extern void StrategyInit();
+extern BufferDesc* FindFreeBuffer();
 
 #endif
