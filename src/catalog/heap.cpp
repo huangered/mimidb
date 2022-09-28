@@ -2,7 +2,6 @@
 #include "catalog/heap.hpp"
 #include "access/rel.hpp"
 #include "access/relation.hpp"
-#include "util/mctx.hpp"
 #include "catalog/storage.hpp"
 #include "catalog/mimi_code.hpp"
 #include "access/heaptuple.hpp"

@@ -4,7 +4,6 @@
 #include "storage/bufmgr.hpp"
 #include "access/relcache.hpp"
 #include "access/rel.hpp"
-#include "util/mctx.hpp"
 
 #define HOT_UPDATED 0
 #define HOT_REMOVED 1
@@ -146,7 +145,7 @@ relation_open(Oid relationId) {
 
 void
 relation_close(Relation relation) {
-    relcache->RelationClose(relation);
+    // relcache->RelationClose(relation);
 }
 
 Relation
@@ -222,7 +221,7 @@ heap_insert(Relation relation, HeapTuple htup) {
 
     MarkBufferDirty(buffer);
     FlushOneBuffer(buffer);
-    return true;
+    return 1;
 }
 void
 heap_delete(Relation relation, ItemPointer tid) {
@@ -247,13 +246,6 @@ heap_delete(Relation relation, ItemPointer tid) {
             offset = tup->t_data->t_ctid.ip_offset;
         }
     }
-}
-
-/*
- * force sync relation to disk
- */
-void
-heap_sync(Relation relation) {
 }
 
 void

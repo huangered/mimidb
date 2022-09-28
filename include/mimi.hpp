@@ -2,6 +2,7 @@
 #define _MIMI_H_
 
 #include "c.hpp"
+#include "util/palloc.hpp"
 
 typedef unsigned long long Oid;
 

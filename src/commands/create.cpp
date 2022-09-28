@@ -6,7 +6,6 @@
 #include "catalog/heap.hpp"
 #include "catalog/index.hpp"
 #include "commands/indexcmds.hpp"
-#include "util/mctx.hpp"
 
 // static TupleDesc formTupleDesc(List* columns);
 // static void formAttr(FormData_mimi_attribute* attr, ColumnDef* def);

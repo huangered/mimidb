@@ -11,9 +11,9 @@ FetchContent_MakeAvailable(googletest)
 file(GLOB sub_sources */*.cpp)
 
 # Now simply link against gtest or gtest_main as needed. Eg
-add_executable(unittest ${sub_sources})
+add_executable(unittest global_app.cpp ${sub_sources} )
 target_link_libraries(unittest 
-GTest::gtest_main
+ GTest::gtest_main
  access catalog common port storage util c_util parser)
  
 include(GoogleTest)

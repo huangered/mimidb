@@ -1,6 +1,5 @@
 ﻿#include "access/heaptuple.hpp"
 #include "access/tupledesc.hpp"
-#include "util/mctx.hpp"
 
 HeapTuple
 heap_form_tuple(TupleDesc desc, Datum* values) {

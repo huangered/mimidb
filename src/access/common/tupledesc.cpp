@@ -1,5 +1,4 @@
 ﻿#include "access/tupledesc.hpp"
-#include "util/mctx.hpp"
 
 /*
  * 创建一个空的 tupledesc

@@ -1,7 +1,6 @@
 #include "access/indextuple.hpp"
 #include "access/offset.hpp"
 #include "storage/page.hpp"
-#include "util/mctx.hpp"
 
 /*
 init the raw page

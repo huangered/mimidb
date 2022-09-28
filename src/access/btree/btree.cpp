@@ -1,6 +1,5 @@
 #include "access/btree.hpp"
 #include "storage/freespace.hpp"
-#include "util/mctx.hpp"
 
 static BtreeIndex btree{};
 
