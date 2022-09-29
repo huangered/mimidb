@@ -12,7 +12,7 @@ private:
 
 public:
     FirstSet();
-    FirstSet(const FirstSet&) = delete;
+    FirstSet(const FirstSet&)            = delete;
     FirstSet& operator=(const FirstSet&) = delete;
 
     std::vector<int> Find(const SymbolList& tokens, const std::vector<int>& extra);

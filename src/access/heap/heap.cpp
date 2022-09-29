@@ -4,7 +4,6 @@
 #include "storage/bufmgr.hpp"
 #include "access/relcache.hpp"
 #include "access/rel.hpp"
-#include "util/mctx.hpp"
 
 #define HOT_UPDATED 0
 #define HOT_REMOVED 1
@@ -222,7 +221,7 @@ heap_insert(Relation relation, HeapTuple htup) {
 
     MarkBufferDirty(buffer);
     FlushOneBuffer(buffer);
-    return true;
+    return 1;
 }
 void
 heap_delete(Relation relation, ItemPointer tid) {

@@ -1,7 +1,6 @@
 #include "access/btree.hpp"
 #include "access/rel.hpp"
 #include "storage/page.hpp"
-#include "util/mctx.hpp"
 
 OffsetNumber
 BtreeIndex::_bt_binsrch(Relation rel, Page page, BTreeScan key) {

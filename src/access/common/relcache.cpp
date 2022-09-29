@@ -9,9 +9,9 @@
 #include "catalog/mimi_code.hpp"
 #include "storage/smgr.hpp"
 #include "util/builtins.hpp"
+#include <iostream>
 
-RelCache* relcache = new RelCache{};
-
+RelCache* relcache = nullptr;
 // private area
 static const FormData_mimi_attribute desc_pg_class[4] = { { 1, { "oid" }, sizeof(int), 0, 1 },
                                                           { 1, { "relkind" }, sizeof(int), 0, 1 },
@@ -25,11 +25,19 @@ static const FormData_mimi_attribute desc_pg_type[1] = { { 1, { "oid" }, sizeof(
 static void RelationIncRefCount(Relation rel);
 static void RelationDecRefCount(Relation rel);
 
+void
+RelationCacheInitialize(void) {
+    if (relcache == nullptr) {
+        relcache = new RelCache{};
+    }
+}
+
 /*
 1. init the relation cache
 2. insert the basic system relation
 */
 RelCache::RelCache() {
+    std::cout << "RelCache init" << std::endl;
     _formrdesc("mimi_class", ClassRelationId, 4, desc_pg_class);
     _formrdesc("mimi_attribute", AttributeRelationId, 1, desc_pg_attribute);
     _formrdesc("mimi_type", TypeRelationId, 1, desc_pg_type);

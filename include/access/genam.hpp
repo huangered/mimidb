@@ -8,8 +8,7 @@
 #include "access/scankey.hpp"
 #include "access/scan.hpp"
 
-enum IndexUniqueCheck
-{
+enum IndexUniqueCheck {
     UNIQUE_CHECK_NO,  /* 不做 unique 检查 */
     UNIQUE_CHECK_YES, /* 插入时检查 unique */
     UNIQUE_CHECK_EXISTING,

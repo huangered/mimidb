@@ -53,8 +53,7 @@ struct SysTableScanData {
 
 typedef SysTableScanData* SysTableScan;
 
-enum class ScanDirection
-{
+enum class ScanDirection {
     Backward,
     Forward
 };

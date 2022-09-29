@@ -1,6 +1,5 @@
 #include "executor/nodeModifyTable.hpp"
 
-#include "util/mctx.hpp"
 #include "access/rel.hpp"
 
 void ExecInsertTuple(Relation rel, TupleSlotDesc* slot);

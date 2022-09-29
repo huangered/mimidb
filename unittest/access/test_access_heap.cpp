@@ -3,10 +3,8 @@
 #include "access/heap.hpp"
 #include "access/rel.hpp"
 #include "storage/smgr.hpp"
-#include "util/mctx.hpp"
 // test the basic usage in buff mgr.
 TEST(heap, incr_insert) {
-    // insert
     Relation rel = new RelationData{};
     rel->rd_id   = HEAP_REL_ID_1;
     rel->rd_node = { DB_ID, rel->rd_id };
@@ -19,11 +17,10 @@ TEST(heap, incr_insert) {
 
     rel->tupleDesc = CreateTupleDesc(2, attr);
     delete[] attr;
-
     for (int i = 0; i < 1000; i++) {
         int* value      = new int[2]{ i, i * 10 };
         HeapTuple tuple = heap_form_tuple(rel->tupleDesc, (Datum*)value);
-        bool result     = heap_insert(rel, tuple);
+        Oid result      = heap_insert(rel, tuple);
         EXPECT_TRUE(result);
         heap_free_tuple(tuple);
         delete[] value;

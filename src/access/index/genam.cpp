@@ -2,7 +2,6 @@
 #include "access/rel.hpp"
 #include "access/relcache.hpp"
 #include "access/scankey.hpp"
-#include "util/mctx.hpp"
 #include "access/heap.hpp"
 
 SysTableScan

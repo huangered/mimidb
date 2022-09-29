@@ -1,8 +1,7 @@
 #ifndef _node_hpp_
 #define _node_hpp_
 
-enum NodeTag
-{
+enum NodeTag {
     // ddl
     NT_InsertStmt = 0,
     NT_UpdateStmt,
@@ -33,8 +32,7 @@ public:
     NodeTag nodetag;
 };
 
-typedef enum Op
-{
+typedef enum Op {
     OP_AND,
     OP_OR,
     OP_NOT,

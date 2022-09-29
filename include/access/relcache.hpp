@@ -7,6 +7,8 @@
 #include "access/tupledesc.hpp"
 #include "util/hashmap.hpp"
 
+extern void RelationCacheInitialize(void);
+
 struct RelCacheEntry {
     Oid oid;
     Relation rel;

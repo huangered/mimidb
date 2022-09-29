@@ -11,7 +11,7 @@ private:
 
 public:
     GotoTable(int row, int col);
-    GotoTable(const GotoTable&) = delete;
+    GotoTable(const GotoTable&)            = delete;
     GotoTable& operator=(const GotoTable&) = delete;
     ~GotoTable();
 
@@ -28,7 +28,7 @@ class ActionTable {
 
 public:
     ActionTable(int row, int col);
-    ActionTable(const ActionTable&) = delete;
+    ActionTable(const ActionTable&)            = delete;
     ActionTable& operator=(const ActionTable&) = delete;
     ~ActionTable();
 

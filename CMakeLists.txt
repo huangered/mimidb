@@ -16,7 +16,8 @@ endif()
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 include_directories("include")
-
+enable_testing()
 add_subdirectory(mison)
 add_subdirectory(src)
 add_subdirectory(unittest)
+

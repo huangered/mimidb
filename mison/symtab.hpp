@@ -5,8 +5,7 @@
 #include <map>
 #include <vector>
 
-enum SymbolClass
-{
+enum SymbolClass {
     none,
     token,
     nterm
