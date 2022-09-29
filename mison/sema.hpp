@@ -36,7 +36,7 @@ private:
 
 public:
     SemaParser(const std::map<std::string, std::string>& _typeMap);
-    SemaParser(const SemaParser&) = delete;
+    SemaParser(const SemaParser&)            = delete;
     SemaParser& operator=(const SemaParser&) = delete;
     ~SemaParser();
     void GenerateParseTable(void);

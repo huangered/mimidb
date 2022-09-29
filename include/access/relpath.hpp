@@ -3,8 +3,7 @@
 
 #include "mimi.hpp"
 
-typedef enum ForkNumber
-{
+typedef enum ForkNumber {
     MAIN_FORKNUM = 0,
     FSM_FORKNUM,
     INIT_FORKNUM,

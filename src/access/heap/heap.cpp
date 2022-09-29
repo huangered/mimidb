@@ -145,7 +145,7 @@ relation_open(Oid relationId) {
 
 void
 relation_close(Relation relation) {
-    // relcache->RelationClose(relation);
+    relcache->RelationClose(relation);
 }
 
 Relation
@@ -246,6 +246,13 @@ heap_delete(Relation relation, ItemPointer tid) {
             offset = tup->t_data->t_ctid.ip_offset;
         }
     }
+}
+
+/*
+ * force sync relation to disk
+ */
+void
+heap_sync(Relation relation) {
 }
 
 void
