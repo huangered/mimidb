@@ -13,8 +13,8 @@ add_custom_target(
   
   COMMENT "build header and cpp"
 
-  COMMAND cp c.tab.hpp ${PROJECT_SOURCE_DIR}/mison/
-  COMMAND cp c.tab.cpp ${PROJECT_SOURCE_DIR}/mison/
+  COMMAND rsync c.tab.hpp ${PROJECT_SOURCE_DIR}/mison/c.tab.hpp
+  COMMAND rsync c.tab.cpp ${PROJECT_SOURCE_DIR}/mison/c.tab.cpp
 )
 
 INSTALL(TARGETS mison
