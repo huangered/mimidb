@@ -28,7 +28,7 @@ struct HeapScanDescData {
     Buffer rs_curbuf;          // 当前buf
 };
 
-typedef HeapScanDescData* HeapScanDesc;
+typedef struct HeapScanDescData* HeapScanDesc;
 
 // 索引表扫描描述
 struct IndexScanDescData1 {
@@ -41,7 +41,7 @@ struct IndexScanDescData1 {
     ScanKey keyData;
 };
 
-typedef IndexScanDescData1* IndexScanDesc1;
+typedef struct IndexScanDescData1* IndexScanDesc1;
 
 // 系统表扫描描述
 struct SysTableScanData {

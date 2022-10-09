@@ -6,7 +6,7 @@
  * 解析create table sql
  */
 Node*
-makeCreateTableStmt(char* tbl_name, vector<Node*>* cols) {
+makeCreateTableStmt(char* tbl_name, NodeList cols) {
     CreateTableStmt* stmt = new CreateTableStmt();
     stmt->nodetag         = NT_CreateTableStmt;
     stmt->relname         = tbl_name;
@@ -16,7 +16,7 @@ makeCreateTableStmt(char* tbl_name, vector<Node*>* cols) {
 }
 
 Node*
-makeSelectStmt(char* tbl_name, vector<Node*>* cols, Node* whereStmt, Node* orderByStmt) {
+makeSelectStmt(char* tbl_name, NodeList cols, Node* whereStmt, Node* orderByStmt) {
     SelectStmt* stmt = new SelectStmt();
     stmt->nodetag    = NT_SelectStmt;
     stmt->relname    = tbl_name;
@@ -28,7 +28,7 @@ makeSelectStmt(char* tbl_name, vector<Node*>* cols, Node* whereStmt, Node* order
 }
 
 Node*
-makeInsertStmt(char* tbl_name, vector<Node*>* cols) {
+makeInsertStmt(char* tbl_name, NodeList cols) {
     InsertStmt* stmt = new InsertStmt();
     stmt->nodetag    = NT_InsertStmt;
     stmt->relname    = tbl_name;

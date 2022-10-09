@@ -58,8 +58,8 @@ TestKey(HeapTuple tuple, HeapScanDesc scan) {
 }
 
 /*
-现在只支持前向搜索
-*/
+ * 现在只支持前向搜索
+ */
 void
 _heap_get_tuple(HeapScanDesc scan, ScanDirection direction) {
     HeapTuple tuple = &(scan->rs_curtuple);

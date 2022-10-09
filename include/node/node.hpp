@@ -27,8 +27,7 @@ enum NodeTag {
 
 typedef enum NodeTag NodeTag;
 
-class Node {
-public:
+struct Node {
     NodeTag nodetag;
 };
 

@@ -1,11 +1,9 @@
 ﻿#include "commands/create.hpp"
 #include "top/utility.hpp"
-extern "C" {
-#include "parser/parse_utilitycmd.h"
-}
+#include "parser/parse_utilitycmd.hpp"
 /*
-处理create table sql
-*/
+ * 处理create table sql
+ */
 void
 ProcessUtility(Node* pstmt) {
     /*

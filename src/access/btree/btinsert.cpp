@@ -16,12 +16,21 @@ top:
 
     if (!fastpath) {
         stack = _bt_search(rel, itup_key, &buf);
+        LockBuffer(buf, 0);
+        LockBuffer(buf, 0);
+
+        /*
+         * 如果page被分割了， 要move right
+         */
+        buf = _bt_moveright(rel, itup_key, buf);
     }
 
     LockBuffer(buf, 0);
 
+    /*
+     * 检查索引唯一性
+     */
     if (checkUnique != UNIQUE_CHECK_NO) {
-        // 检查索引唯一性
     }
 
     if (checkUnique != UNIQUE_CHECK_EXISTING) {
@@ -106,8 +115,8 @@ BtreeIndex::_bt_insertonpg(Relation rel, Buffer buffer, OffsetNumber newitemoffs
 }
 
 /*
-切分页，返回右页buffer id
-*/
+ * 切分页，返回右页buffer id
+ */
 Buffer
 BtreeIndex::_bt_split(Relation rel, IndexTuple itup, Buffer buf, OffsetNumber newitemoff) {
     OffsetNumber splitoff = _bt_find_split_offset(buf);
@@ -226,9 +235,8 @@ BtreeIndex::_bt_insert_parent(Relation rel, Buffer buf, Buffer rbuf, BTStack sta
 }
 
 /*
-创建一个新的root页，返回buffer id
-
-*/
+ * 创建一个新的root页，返回buffer id
+ */
 Buffer
 BtreeIndex::_bt_newroot(Relation rel, Buffer lbuf, Buffer rbuf) {
     Buffer rootbuf;
@@ -270,25 +278,25 @@ BtreeIndex::_bt_newroot(Relation rel, Buffer lbuf, Buffer rbuf) {
     metad->fastroot = rootblkno;
 
     // get left page high key
-    IndexTuple hkey = new IndexTupleData{};
+    IndexTuple hkey = (IndexTuple)palloc(sizeof(IndexTupleData));
     // hkey->key = INT_MIN;
     hkey->t_tid.ip_blkno = lblkno;
     hkey->t_info         = sizeof(IndexTupleData);
     // set first item
     _bt_addtup(rootpage, hkey, sizeof(IndexTupleData), P_HIKEY);
 
-    delete hkey;
+    pfree(hkey);
     // set second item
     IndexTuple second;
     IndexTuple lphkey = (IndexTuple)PageGetItem(lpage, PageGetItemId(lpage, P_HIKEY));
 
-    second                 = new IndexTupleData{};
+    second                 = (IndexTuple)palloc(sizeof(IndexTupleData));
     second->key            = lphkey->key;
     second->t_tid.ip_blkno = rblkno;
     second->t_info         = sizeof(IndexTupleData);
     _bt_addtup(rootpage, second, sizeof(IndexTupleData), P_FIRSTKEY);
 
-    delete second;
+    pfree(second);
 
     ReleaseBuffer(rbuf);
     ReleaseBuffer(rootbuf);

@@ -6,8 +6,8 @@
 #include "storage/relfilenode.hpp"
 
 /*
-zero is invalid, the index of shared buffer is [1..NBuffers]
-*/
+ * zero is invalid, the index of shared buffer is [1..NBuffers]
+ */
 typedef int Buffer;
 
 #define INVALID_BUFFER 0

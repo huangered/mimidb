@@ -10,18 +10,18 @@ BtreeIndex::_bt_getmeta(Relation rel, Buffer metabuf) {
 }
 
 /*
-update the metapage and save to disk.
-*/
+ * update the metapage and save to disk.
+ */
 void
 BtreeIndex::_bt_updatemeta(Buffer metabuf) {
 }
 
 /*
-Get the relation root page buffer
-
-1. load the relation cache block num.
-2. if the cache is empty , load from meta page.
-3. if block num is null in meta, create new root.
+ * Get the relation root page buffer
+ *
+ * 1. load the relation cache block num.
+ * 2. if the cache is empty , load from meta page.
+ * 3. if block num is null in meta, create new root.
  */
 Buffer
 BtreeIndex::_bt_get_root(Relation rel) {

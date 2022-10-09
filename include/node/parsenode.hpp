@@ -6,98 +6,84 @@
 
 using std::vector;
 
-class ExprStmt : public Node {
-public:
+typedef vector<Node*>* NodeList;
+
+struct ExprStmt : Node {
     char* key;
 };
 
-class SelectStmt : public Node {
-public:
+struct SelectStmt : Node {
     char* relname;
-    vector<Node*>* columns;
+    NodeList columns;
 };
 
-class InsertStmt : public Node {
-public:
+struct InsertStmt : Node {
     char* relname;
-    vector<Node*>* columns;
+    NodeList columns;
 };
 
-class UpdateStmt : public Node {
-public:
+struct UpdateStmt : Node {
     char* relname;
-    vector<Node*>* columns;
+    NodeList columns;
     Node* where_cause;
 };
 
-class AssignStmt : public Node {
-public:
+struct AssignStmt : Node {
     char* col_name;
     Node* value;
 };
 
-class CreateTableStmt : public Node {
-public:
+struct CreateTableStmt : Node {
     char* relname;
-    vector<Node*>* columns;
+    NodeList columns;
 };
 
-class CreateTableParam : public Node {
-public:
+struct CreateTableParam : Node {
     char* colname;
     char* type;
     int primary;
 };
 
 /*
-index 描述
-*/
-class CreateIndexStmt : public Node {
-public:
+ * index 描述
+ */
+struct CreateIndexStmt : Node {
     char* relname;
-    vector<Node*>* columns;
+    NodeList columns;
 };
 
-class ParamStmt : public Node {
-public:
+struct ParamStmt : Node {
     char* key;
     char* type;
 };
 
-class WhereStmt : public Node {
-public:
-    vector<Node*>* columns;
+struct WhereStmt : Node {
+    NodeList columns;
 };
 
-class OrderbyStmt : public Node {
-public:
-    vector<Node*>* columns;
+struct OrderbyStmt : Node {
+    NodeList columns;
 };
 
-class IntValue : public Node {
-public:
+struct IntValue : Node {
     int number;
 };
 
-class StrValue : public Node {
-public:
+struct StrValue : Node {
     char* str;
 };
 
-class TypeName : public Node {
-public:
+struct TypeName : Node {
     char* name;
     long typeOid;
 };
 
-class ColumnDef : public Node {
-public:
+struct ColumnDef : Node {
     char* colname;
     char* typeName;
 };
 
-class SetParam : public Node {
-public:
+struct SetParam : Node {
     char* colname;
     Node* value;
 };
@@ -107,15 +93,15 @@ Node* makeStrValue(char* str);
 Node* makeExpr(char* key);
 Node* makeParam(char* param1, char* param2);
 Node* makeAssignStmt(char* col_name, Node* value);
-Node* makeSelectStmt(char* tbl_name, vector<Node*>* cols, Node* whereStmt, Node* orderByStmt);
-Node* makeInsertStmt(char* tbl_name, vector<Node*>* cols);
-Node* makeUpdateStmt(char* tbl_name, vector<Node*>* cols, Node* where_cause);
-Node* makeCreateTableStmt(char* tbl_name, vector<Node*>* cols);
+Node* makeSelectStmt(char* tbl_name, NodeList cols, Node* whereStmt, Node* orderByStmt);
+Node* makeInsertStmt(char* tbl_name, NodeList cols);
+Node* makeUpdateStmt(char* tbl_name, NodeList cols, Node* where_cause);
+Node* makeCreateTableStmt(char* tbl_name, NodeList cols);
 Node* makeCreateTableParam(char* col_name, char* type, int primary);
-Node* makeWhereStmt(vector<Node*>* cols);
+Node* makeWhereStmt(NodeList cols);
 Node* makeTypeName(char* type_name);
 Node* makeColumnDef(char* col_name, char* type_name);
-Node* makeOrderbyStmt(vector<Node*>* cols);
+Node* makeOrderbyStmt(NodeList cols);
 Node* makeSetParam(char* col_name, Node* value);
 
 extern Node* mison_parse(const char* str);
