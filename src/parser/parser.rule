@@ -1,5 +1,5 @@
 %code {
-#include "node/parsenode.hpp"
+#include "node/parsenode.h"
 #include <vector>
 #include <cstdlib>
 #include <cstdio>

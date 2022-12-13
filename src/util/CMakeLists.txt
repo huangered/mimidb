@@ -1,4 +1,4 @@
-﻿FILE(GLOB sources */*.cpp)
+﻿FILE(GLOB sources */*.c)
 
 AUX_SOURCE_DIRECTORY(. DIR_SRCS)
 

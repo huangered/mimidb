@@ -1,3 +1,3 @@
-﻿FILE(GLOB sources *.cpp)
+﻿FILE(GLOB sources *.c)
 
 add_library(commands ${sources})
