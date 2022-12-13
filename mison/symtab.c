@@ -6,9 +6,9 @@ static const char* sym_name[3] = { "none", "token", "nterm" };
 int Symtab::nsym = 0;
 
 std::map<std::string, Symbol> Symtab::_data;
-Symbol Symtab::epsilon = nullptr;
-Symbol Symtab::eof     = nullptr;
-Symbol Symtab::start   = nullptr;
+Symbol Symtab::epsilon = NULL;
+Symbol Symtab::eof     = NULL;
+Symbol Symtab::start   = NULL;
 
 Symtab::Symtab() {
 }

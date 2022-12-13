@@ -15,7 +15,7 @@ pprint(Relation rel, Page page) {
 
     printf("Root page itemsz: %d , %d , %d \r\n", max, special->btsd_flags, special->btsd.level);
     for (int i = P_FIRSTDATAKEY(special); i <= max; i++) {
-        ItemIdData item = header->pd_linp[i - 1];
+        struct ItemIdData item = header->pd_linp[i - 1];
         if (P_ISLEAF(special)) {
             IndexTuple tuple = (IndexTuple)(PageGetItem(page, PageGetItemId(page, i)));
 

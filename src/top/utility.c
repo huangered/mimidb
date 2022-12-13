@@ -5,11 +5,11 @@
  * 处理create table sql
  */
 void
-ProcessUtility(Node* pstmt) {
+ProcessUtility(struct Node* pstmt) {
     /*
       switch (pstmt->nodetag) {
       case NT_CreateTableStmt: {
-          List* stmts = nullptr;
+          List* stmts = NULL;
 
           // 拆解create table sql
           stmts = transformCreateStmt((CreateTableStmt*)pstmt);

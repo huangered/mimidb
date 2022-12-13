@@ -3,6 +3,6 @@
 
 #include "node/parsenode.h"
 
-extern void ProcessUtility(Node* pstmt);
+extern void ProcessUtility(struct Node* pstmt);
 
 #endif // !_UTILITY_H_

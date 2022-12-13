@@ -7,7 +7,7 @@ struct ItemIdData {
     unsigned lp_len : 15;
 };
 
-typedef ItemIdData* ItemId;
+typedef struct ItemIdData* ItemId;
 
 enum LpFlag {
     LP_UNUSED   = 0,

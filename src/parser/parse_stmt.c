@@ -21,8 +21,8 @@ makeSelectStmt(char* tbl_name, NodeList cols, Node* whereStmt, Node* orderByStmt
     stmt->nodetag    = NT_SelectStmt;
     stmt->relname    = tbl_name;
     stmt->columns    = cols;
-    if (whereStmt == nullptr) {
-        printf("where stmt is nullptr\n");
+    if (whereStmt == NULL) {
+        printf("where stmt is NULL\n");
     }
     return stmt;
 }

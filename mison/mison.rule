@@ -78,9 +78,9 @@ RuleRightList :
 
 RuleRight : 
   IdList t_block { $$ = makeRuleRight($0, $1); } 
-| IdList         { $$ = makeRuleRight($0, nullptr); } 
-| t_block        { $$ = makeRuleRight(nullptr, $0); } 
-|                { $$ = makeRuleRight(nullptr, nullptr); } 
+| IdList         { $$ = makeRuleRight($0, NULL); } 
+| t_block        { $$ = makeRuleRight(NULL, $0); } 
+|                { $$ = makeRuleRight(NULL, NULL); } 
 ;
 
 IdList :

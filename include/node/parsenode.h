@@ -101,6 +101,6 @@ struct Node* makeColumnDef(char* col_name, char* type_name);
 struct Node* makeOrderbyStmt(NodeList cols);
 struct Node* makeSetParam(char* col_name, struct Node* value);
 
-extern Node* mison_parse(const char* str);
+extern struct Node* mison_parse(const char* str);
 
 #endif

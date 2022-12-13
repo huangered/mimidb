@@ -40,7 +40,7 @@ heap_create_with_catalog(const char* name, Oid relid, TupleDesc tupDesc) {
 
 Relation
 heap_create(Oid relid, const char* name, TupleDesc tupdesc) {
-    Relation heap_rel = relcache->BuildLocalRelation(relid, name, tupdesc);
+    Relation heap_rel; // todo relcache->BuildLocalRelation(relid, name, tupdesc);
 
     switch (heap_rel->rd_rel->relkind) {
     case RELKIND_INDEX:
@@ -77,7 +77,7 @@ InsertMimiClassTuple(Relation mimi_class_desc, Form_mimi_class new_rel_reltup) {
 
     simple_heap_insert(mimi_class_desc, tuple);
 
-    std::free(tuple);
+    pfree(tuple);
 }
 
 void
@@ -108,5 +108,5 @@ InsertMimiAttributeTuple(Relation mimi_attribute_rel, Form_mimi_attribute new_at
 
     simple_heap_insert(mimi_attribute_rel, tuple);
 
-    std::free(tuple);
+    pfree(tuple);
 }

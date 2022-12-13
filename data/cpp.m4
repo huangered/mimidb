@@ -58,7 +58,7 @@ Parser::parse() {
     if (acc) {
         item = token_stack.top();
     } else {
-        return nullptr;
+        return NULL;
     }
     DATA_RETURN* ptr = reinterpret_cast<DATA_RETURN*>(&item);
     return *ptr;

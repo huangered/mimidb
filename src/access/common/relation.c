@@ -4,12 +4,14 @@
 
 Relation
 relation_open(Oid relid) {
-    Relation rel = relcache->RelationIdGetRelation(relid);
+    //todo
+    //Relation rel = relcache->RelationIdGetRelation(relid);
 
-    return rel;
+    //return rel;
+    return NULL;
 }
 
 void
 relation_close(Relation rel) {
-    relcache->RelationClose(rel);
+    //relcache->RelationClose(rel);
 }

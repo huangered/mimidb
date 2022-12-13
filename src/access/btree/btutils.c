@@ -4,11 +4,11 @@
 make a scan key
 */
 BTreeScan
-BtreeIndex::_bt_make_scankey(Relation rel, IndexTuple itup) {
+_bt_make_scankey(Relation rel, IndexTuple itup) {
     int nkeys = 1;
     ScanKey skey;
 
-    BTreeScan key = new BTreeScanData(nkeys);
+    BTreeScan key = palloc(sizeof(struct BTreeScanData));
     key->itup     = itup;
     key->itemsz   = sizeof(IndexTupleData);
     key->nextkey  = false;
@@ -27,8 +27,8 @@ BtreeIndex::_bt_make_scankey(Relation rel, IndexTuple itup) {
 make a index tuple
 */
 IndexTuple
-BtreeIndex::_bt_make_tuple(int key, int ht_id) {
-    IndexTuple tup = new IndexTupleData{};
+_bt_make_tuple(int key, int ht_id) {
+    IndexTuple tup = palloc(sizeof(IndexTupleData));
     tup->key       = key;
     tup->value     = ht_id;
     tup->t_info    = sizeof(IndexTupleData);
@@ -39,10 +39,10 @@ BtreeIndex::_bt_make_tuple(int key, int ht_id) {
 free the tree stack
 */
 void
-BtreeIndex::_bt_freestack(BTStack stack) {
-    while (stack != nullptr) {
+_bt_freestack(BTStack stack) {
+    while (stack != NULL) {
         BTStack parent = stack->parent;
-        delete stack;
+        pfree(stack);
         stack = parent;
     }
 }

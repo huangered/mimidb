@@ -4,7 +4,8 @@
 
 void
 RelationCreateStorage(Relation rel) {
-    smgr->Create(rel->rd_smgr, MAIN_FORKNUM);
+    // todo:
+    // smgr->Create(rel->rd_smgr, MAIN_FORKNUM);
 }
 
 void

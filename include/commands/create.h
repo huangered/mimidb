@@ -3,6 +3,6 @@
 
 #include "node/parsenode.h"
 
-void DefineRelation(CreateTableStmt* stmt);
+void DefineRelation(struct CreateTableStmt* stmt);
 
 #endif // !_create_h_

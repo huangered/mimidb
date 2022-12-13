@@ -44,7 +44,7 @@ PageAddItemExtend(Page page, Item item, Size itemsz, OffsetNumber offsetNumber, 
     }
 
     if (offsetNumber == limit || needShuffle) {
-        lower = header->pd_lower + sizeof(ItemIdData);
+        lower = header->pd_lower + sizeof(struct ItemIdData);
     } else {
         lower = header->pd_lower;
     }
@@ -58,7 +58,7 @@ PageAddItemExtend(Page page, Item item, Size itemsz, OffsetNumber offsetNumber, 
     itemId = PageGetItemId(page, offsetNumber);
 
     if (needShuffle) {
-        memmove(itemId + 1, itemId, (limit - offsetNumber) * sizeof(ItemIdData));
+        memmove(itemId + 1, itemId, (limit - offsetNumber) * sizeof(struct ItemIdData));
     }
 
     // set item pointer
@@ -83,14 +83,14 @@ PageRemoveItem(Page page, OffsetNumber itemoffset) {
 
     OffsetNumber limit = PageGetMaxOffsetNumber(page);
 
-    memmove(itemId, itemId + 1, (limit - itemoffset) * sizeof(ItemIdData));
+    memmove(itemId, itemId + 1, (limit - itemoffset) * sizeof(struct ItemIdData));
 
-    header->pd_lower = header->pd_lower - sizeof(ItemIdData);
+    header->pd_lower = header->pd_lower - sizeof(struct ItemIdData);
 }
 
 Page
 GetTempPage(Page page) {
-    char* temp = new char[BLKSZ];
+    char* temp = palloc(BLKSZ);
     return temp;
 }
 
@@ -99,10 +99,10 @@ PageGetFreeSpace(Page page) {
     PageHeader header = PageGetHeader(page);
 
     OffsetNumber space = header->pd_upper - header->pd_lower;
-    if (space < sizeof(ItemIdData)) {
+    if (space < sizeof(struct ItemIdData)) {
         return 0;
     } else {
-        space -= sizeof(ItemIdData);
+        space -= sizeof(struct ItemIdData);
     }
     return space;
 }
@@ -112,5 +112,5 @@ PageRestoreTempPage(Page temp, Page origin) {
     int size = BLKSZ;
     memcpy((char*)origin, (char*)temp, size);
 
-    delete[] temp;
+    palloc(temp);
 }

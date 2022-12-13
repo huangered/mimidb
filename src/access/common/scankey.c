@@ -5,8 +5,8 @@
  * attrNumber	比较字段的位置
  */
 void
-ScanKeyInit(ScanKey entry, int attrNumber, StrategyNumber strategy, Datum datum, Oid funcOid) {
-    memset(entry, 0, sizeof(ScanKeyData));
+ScanKeyInit(ScanKey entry, int attrNumber, enum StrategyNumber strategy, Datum datum, Oid funcOid) {
+    memset(entry, 0, sizeof(struct ScanKeyData));
 
     entry->sk_att_no   = attrNumber;
     entry->sk_strategy = strategy;

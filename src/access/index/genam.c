@@ -8,7 +8,7 @@ SysTableScan
 systable_beginscan(Relation heapRel, int nkeys, ScanKey key) {
     SysTableScan sysscan;
 
-    sysscan            = (SysTableScan)palloc0(sizeof(SysTableScanData));
+    sysscan            = (SysTableScan)palloc0(sizeof(struct SysTableScanData));
     sysscan->heap_rel  = heapRel;
     sysscan->heap_scan = heap_beginscan(heapRel, nkeys, key);
     return sysscan;
@@ -16,7 +16,7 @@ systable_beginscan(Relation heapRel, int nkeys, ScanKey key) {
 
 HeapTuple
 systable_getnext(SysTableScan scan) {
-    HeapTuple htup = heap_getnext(scan->heap_scan, ScanDirection::Forward);
+    HeapTuple htup = heap_getnext(scan->heap_scan, Forward);
     return htup;
 };
 

@@ -53,7 +53,7 @@ fsm_set_avail(Page page, int slot, uint8 value) {
 
         newvalue = fsmpage->fp_nodes[lchild];
         if (rchild < NodesPerPage)
-            newvalue = std::max(newvalue, fsmpage->fp_nodes[rchild]);
+            newvalue = max(newvalue, fsmpage->fp_nodes[rchild]);
 
         oldvalue = fsmpage->fp_nodes[nodeno];
         if (oldvalue == newvalue)
@@ -123,7 +123,7 @@ fsm_rebuild_page(Page page) {
             newvalue = fsmpage->fp_nodes[lchild];
 
         if (rchild < NodesPerPage)
-            newvalue = std::max(newvalue, fsmpage->fp_nodes[rchild]);
+            newvalue = max(newvalue, fsmpage->fp_nodes[rchild]);
 
         if (fsmpage->fp_nodes[nodeno] != newvalue) {
             fsmpage->fp_nodes[nodeno] = newvalue;

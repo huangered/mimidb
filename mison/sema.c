@@ -126,7 +126,7 @@ SemaParser::handleState(int stateId) {
         // 寻找相同的状态集合。
         State sameState = searchSameState(newStateRules);
 
-        if (sameState == nullptr) {
+        if (sameState == NULL) {
             // 没找到
             _maxState++;
             std::for_each(movedRules.begin(), movedRules.end(), [&](Item r) { r->next_state = _maxState; });
@@ -262,7 +262,7 @@ SemaParser::searchSameState(const ItemList& newStateItems) {
             return state;
         }
     }
-    return nullptr;
+    return NULL;
 }
 
 std::string

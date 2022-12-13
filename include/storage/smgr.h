@@ -8,7 +8,7 @@
 #include "storage/relfilenode.h"
 
 struct SMgrRelationData {
-    RelFileNode rd_node;
+    struct RelFileNode rd_node;
 
     BlockNumber smgr_target_block; /* 当前插入的block */
     BlockNumber smgr_fsm_nblocks;  /* last known size of fsm fork */
@@ -16,26 +16,16 @@ struct SMgrRelationData {
     struct _MdFdVec* md_fd[NUMS_FORKNUM];
 };
 
-typedef SMgrRelationData* SMgrRelation;
+typedef struct SMgrRelationData* SMgrRelation;
 
-class Smgr {
-private:
-    HashMap<RelFileNode, SMgrRelation> _data;
-
-public:
-    Smgr();
-    ~Smgr();
-    SMgrRelation Open(RelFileNode rnode);
-    bool Exists(SMgrRelation reln, ForkNumber forknum);
-    BlockNumber Nblocks(SMgrRelation reln, ForkNumber forknum);
-    void Create(SMgrRelation reln, ForkNumber forknum);
-    void Read(SMgrRelation reln, ForkNumber forknum, BlockNumber blocknum, char* buf);
-    void Write(SMgrRelation reln, ForkNumber forknum, BlockNumber blocknum, char* buf);
-    void Extend(SMgrRelation reln, ForkNumber forknum, BlockNumber blocknum, char* buf);
-    void Close(SMgrRelation reln);
-};
-
-extern Smgr* smgr;
+SMgrRelation Open(struct RelFileNode rnode);
+bool Exists(SMgrRelation reln, ForkNumber forknum);
+BlockNumber Nblocks(SMgrRelation reln, ForkNumber forknum);
+void Create(SMgrRelation reln, ForkNumber forknum);
+void Read(SMgrRelation reln, ForkNumber forknum, BlockNumber blocknum, char* buf);
+void Write(SMgrRelation reln, ForkNumber forknum, BlockNumber blocknum, char* buf);
+void Extend(SMgrRelation reln, ForkNumber forknum, BlockNumber blocknum, char* buf);
+void Close(SMgrRelation reln);
 
 // 更上层函数
 /*

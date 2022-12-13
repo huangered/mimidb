@@ -24,7 +24,7 @@ typedef struct PageHeaderData {
     LocationIndex pd_upper;   /* 空闲空间结束 */
     LocationIndex pd_special; /* 特殊空间开始 */
     uint16 pd_pagesize_version;
-    ItemIdData pd_linp[];
+    struct ItemIdData pd_linp[];
 } PageHeaderData;
 
 typedef PageHeaderData* PageHeader;
@@ -57,7 +57,7 @@ PageIsNew(Page page) {
 inline size_t
 PageGetMaxOffsetNumber(Page page) {
     OffsetNumber lower = PageGetHeader(page)->pd_lower;
-    return lower <= SizeOfPageHeaderData ? 0 : (lower - SizeOfPageHeaderData) / sizeof(ItemIdData);
+    return lower <= SizeOfPageHeaderData ? 0 : (lower - SizeOfPageHeaderData) / sizeof(struct ItemIdData);
 }
 
 inline ItemId

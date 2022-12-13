@@ -9,6 +9,6 @@ struct FormData_mimi_index {
     int index_natts; /* index 的属性数 */
 };
 
-typedef FormData_mimi_index* Form_mimi_index;
+typedef struct FormData_mimi_index* Form_mimi_index;
 
 #endif // !_mimi_class_h_

@@ -23,7 +23,7 @@ struct HeapScanDescData {
 
     /* scan 当前状态 */
     bool rs_inited;            // scan是否初始化
-    HeapTupleData rs_curtuple; // 当前tuple
+    struct HeapTupleData rs_curtuple; // 当前tuple
     BlockNumber rs_curblock;   // 当前block
     Buffer rs_curbuf;          // 当前buf
 };
@@ -51,9 +51,9 @@ struct SysTableScanData {
     IndexScanDesc1 index_scan;
 };
 
-typedef SysTableScanData* SysTableScan;
+typedef struct SysTableScanData* SysTableScan;
 
-enum class ScanDirection {
+enum ScanDirection {
     Backward,
     Forward
 };

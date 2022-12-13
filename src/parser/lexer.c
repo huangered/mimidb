@@ -1,5 +1,5 @@
 #include "lexer.h"
-#include <cstring>
+#include <string.h>
 #include "c.tab.h"
 
 static bool

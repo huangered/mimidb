@@ -227,7 +227,7 @@ Output::writeConst(FILE* f) {
         WriteFile(f, "{");
         for (int j{ 0 }; j < Symtab::ntoken(); j++) {
             Record record = parser->_actionTable->Find(i, j);
-            if (record != nullptr) {
+            if (record != NULL) {
                 if (record->acc) {
                     sprintf(buf, "10000,");
                 } else if (record->state) {
@@ -252,7 +252,7 @@ Output::writeConst(FILE* f) {
         WriteFile(f, "{");
         for (int j{ 0 }; j < Symtab::nsym - Symtab::ntoken(); j++) {
             Record record = parser->_gotoTable->Find(i, j);
-            if (record != nullptr) {
+            if (record != NULL) {
                 sprintf(buf, "%d,", record->id);
                 WriteFile(f, buf);
             } else {

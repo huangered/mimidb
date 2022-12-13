@@ -5,7 +5,7 @@
 #include "access/relcache.h"
 #include "executor/tuptable.h"
 
-void ExecModifyTable(Relation rel);
-void ExecInsert(Relation rel, TupleSlotDesc* slot);
+extern void ExecModifyTable(Relation rel);
+extern void ExecInsert(Relation rel, struct TupleSlotDesc* slot);
 
 #endif // !_node_modify_table_h_

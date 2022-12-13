@@ -12,7 +12,7 @@ mdexist(SMgrRelation reln, ForkNumber forknum) {
     // close first
     mdclose(reln, forknum);
     MdFdVec* md = mdopen(reln, forknum);
-    return md != nullptr;
+    return md != NULL;
 }
 
 void
@@ -20,16 +20,16 @@ mdcreate(SMgrRelation reln, ForkNumber forknum) {
     char* path;
     File fd;
 
-    if (reln->md_fd[forknum] != nullptr) {
+    if (reln->md_fd[forknum] != NULL) {
         return;
     }
 
     path = GetRelPath(reln->rd_node.dbNode, reln->rd_node.relNode, forknum);
     fd   = PathNameOpenFile(path);
 
-    delete[] path;
+    pfree(path);
 
-    reln->md_fd[forknum]     = new MdFdVec{};
+    reln->md_fd[forknum]     = palloc(sizeof(MdFdVec));
     reln->md_fd[forknum]->fd = fd;
 }
 
@@ -71,12 +71,12 @@ mdextend(SMgrRelation reln, ForkNumber forknum, BlockNumber blocknum, char* buf)
 void
 mdclose(SMgrRelation reln, ForkNumber forknum) {
     MdFdVec* md = reln->md_fd[forknum];
-    if (md == nullptr) {
+    if (md == NULL) {
         return;
     }
     FileClose(md->fd);
-    delete md;
-    reln->md_fd[forknum] = nullptr;
+    pfree(md);
+    reln->md_fd[forknum] = NULL;
 }
 
 // private method
@@ -86,7 +86,7 @@ mdopen(SMgrRelation reln, ForkNumber forknum) {
     char* path;
     File fd;
 
-    if (reln->md_fd[forknum] != nullptr) {
+    if (reln->md_fd[forknum] != NULL) {
         return reln->md_fd[forknum];
     }
 
@@ -94,9 +94,9 @@ mdopen(SMgrRelation reln, ForkNumber forknum) {
 
     fd = PathNameOpenFile(path);
 
-    delete[] path;
+    pfree(path);
 
-    reln->md_fd[forknum] = md = new MdFdVec{};
+    reln->md_fd[forknum] = md = palloc(sizeof(MdFdVec));
     md->fd                    = fd;
 
     return md;

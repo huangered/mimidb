@@ -2,10 +2,10 @@
 #include "storage/indexfsm.h"
 #include <assert.h>
 
-BTreeMetaData*
-BtreeIndex::_bt_getmeta(Relation rel, Buffer metabuf) {
-    Page metap           = BufferGetPage(metabuf);
-    BTreeMetaData* metad = (BTreeMetaData*)PageGetContent(metap);
+struct BTreeMetaData*
+_bt_getmeta(Relation rel, Buffer metabuf) {
+    Page metap                  = BufferGetPage(metabuf);
+    struct BTreeMetaData* metad = (struct BTreeMetaData*)PageGetContent(metap);
     return metad;
 }
 
@@ -13,7 +13,7 @@ BtreeIndex::_bt_getmeta(Relation rel, Buffer metabuf) {
  * update the metapage and save to disk.
  */
 void
-BtreeIndex::_bt_updatemeta(Buffer metabuf) {
+_bt_updatemeta(Buffer metabuf) {
 }
 
 /*
@@ -24,17 +24,17 @@ BtreeIndex::_bt_updatemeta(Buffer metabuf) {
  * 3. if block num is null in meta, create new root.
  */
 Buffer
-BtreeIndex::_bt_get_root(Relation rel) {
+_bt_get_root(Relation rel) {
     Buffer metabuf;
     Page metapage;
     Buffer rootbuf;
-    BTreeMetaData* metad;
+    struct BTreeMetaData* metad;
     BlockNumber rootblkno;
     Page rootpage;
 
     // 从 meta 缓存里获取 root buf
-    if (rel->rd_metacache != nullptr) {
-        metad = (BTreeMetaData*)rel->rd_metacache;
+    if (rel->rd_metacache != NULL) {
+        metad = (struct BTreeMetaData*)rel->rd_metacache;
         assert(metad->btm_root != P_NONE);
 
         rootbuf = _bt_get_buf(rel, metad->fastroot);
@@ -44,7 +44,7 @@ BtreeIndex::_bt_get_root(Relation rel) {
     // 从 blocknum 0 加载 meta
     metabuf                              = _bt_get_buf(rel, BTREE_METAPAGE);
     metapage                             = BufferGetPage(metabuf);
-    metad                                = (BTreeMetaData*)PageGetContent(metapage);
+    metad                                = (struct BTreeMetaData*)PageGetContent(metapage);
     PageGetHeader(metapage)->pd_checksum = 12345;
 
     if (metad->btm_root == P_NONE) {
@@ -78,7 +78,7 @@ BtreeIndex::_bt_get_root(Relation rel) {
 }
 
 Buffer
-BtreeIndex::_bt_get_buf(Relation rel, BlockNumber blkno) {
+_bt_get_buf(Relation rel, BlockNumber blkno) {
     Buffer buf;
     if (blkno != P_NEW) {
         buf = ReadBuffer(rel, blkno);
@@ -93,6 +93,6 @@ BtreeIndex::_bt_get_buf(Relation rel, BlockNumber blkno) {
 }
 
 void
-BtreeIndex::_bt_relbuf(Relation rel, Buffer buf) {
+_bt_relbuf(Relation rel, Buffer buf) {
     ReleaseBuffer(buf);
 }

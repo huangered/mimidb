@@ -11,7 +11,7 @@
 
 static HeapTuple _tuple_prepare_insert(Relation rel, HeapTuple tup, int xmin);
 static void initscan(HeapScanDesc scan, ScanKey key);
-static void _heap_get_tuple(HeapScanDesc scan, ScanDirection direction);
+static void _heap_get_tuple(HeapScanDesc scan, enum ScanDirection direction);
 
 /*
  * heap support method
@@ -28,7 +28,7 @@ initscan(HeapScanDesc scan, ScanKey key) {
     scan->rs_curblock        = INVALID_BLOCK;
 
     if (key != NULL)
-        memcpy(scan->rs_key, key, scan->rs_nkeys * sizeof(ScanKeyData));
+        memcpy(scan->rs_key, key, scan->rs_nkeys * sizeof(struct ScanKeyData));
 }
 
 //临时方法，会移到事务管理器中
@@ -40,10 +40,10 @@ GetCurrentTransactionId(void) {
 
 static bool
 TestKey(HeapTuple tuple, HeapScanDesc scan) {
-    bool result1{ true };
-    char* data = (char*)tuple->t_data + HEAP_TUPLE_HEADER_SIZE;
+    bool result1 = true;
+    char* data   = (char*)tuple->t_data + HEAP_TUPLE_HEADER_SIZE;
 
-    for (int i{ 0 }; i < scan->rs_nkeys; i++) {
+    for (int i = 0; i < scan->rs_nkeys; i++) {
         int key   = *((int*)data);
         int value = *(((int*)data) + 1);
 
@@ -61,7 +61,7 @@ TestKey(HeapTuple tuple, HeapScanDesc scan) {
  * 现在只支持前向搜索
  */
 void
-_heap_get_tuple(HeapScanDesc scan, ScanDirection direction) {
+_heap_get_tuple(HeapScanDesc scan, enum ScanDirection direction) {
     HeapTuple tuple = &(scan->rs_curtuple);
     BlockNumber blkno;
     OffsetNumber offset;
@@ -74,7 +74,7 @@ _heap_get_tuple(HeapScanDesc scan, ScanDirection direction) {
         blkno             = start;
         offset            = FirstOffsetNumber;
         scan->rs_inited   = true;
-        tuple->t_data     = nullptr;
+        tuple->t_data     = NULL;
     } else {
         blkno  = scan->rs_curblock;
         offset = OffsetNumberNext(scan->rs_curtuple.t_data->t_ctid.ip_offset);
@@ -113,7 +113,7 @@ _heap_get_tuple(HeapScanDesc scan, ScanDirection direction) {
     }
 
     // search all blocks, no one found.
-    tuple->t_data     = nullptr;
+    tuple->t_data     = NULL;
     scan->rs_inited   = false;
     scan->rs_curbuf   = INVALID_BUFFER;
     scan->rs_curblock = INVALID_BLOCK;
@@ -135,7 +135,7 @@ Relation
 relation_open(Oid relationId) {
     // 从relation cache加载
     Relation r;
-    r = relcache->RelationIdGetRelation(relationId);
+    // todo: r = relcache->RelationIdGetRelation(relationId);
     if (r->rd_rel->relkind != RELKIND_RELATION) {
         printf("rel %s is not a relation", r->rd_rel->relname);
     }
@@ -145,7 +145,7 @@ relation_open(Oid relationId) {
 
 void
 relation_close(Relation relation) {
-    relcache->RelationClose(relation);
+    // todo: relcache->RelationClose(relation);
 }
 
 Relation
@@ -168,14 +168,14 @@ heap_beginscan(Relation rel, int nkeys, ScanKey key) {
     // increment relation ref count
 
     // alloc scan desc
-    scan = (HeapScanDesc)palloc(sizeof(HeapScanDescData));
+    scan = (HeapScanDesc)palloc(sizeof(struct HeapScanDescData));
 
     scan->rs_rd    = rel;
     scan->rs_nkeys = nkeys;
 
     // init scankey
     if (nkeys > 0) {
-        scan->rs_key = (ScanKey)palloc(sizeof(ScanKeyData) * nkeys);
+        scan->rs_key = (ScanKey)palloc(sizeof(struct ScanKeyData) * nkeys);
     } else {
         scan->rs_key = NULL;
     }
@@ -202,7 +202,7 @@ heap_endscan(HeapScanDesc scan) {
 }
 
 HeapTuple
-heap_getnext(HeapScanDesc scan, ScanDirection direction) {
+heap_getnext(HeapScanDesc scan, enum ScanDirection direction) {
     _heap_get_tuple(scan, direction);
     return &scan->rs_curtuple;
 }

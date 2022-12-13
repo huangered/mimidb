@@ -34,7 +34,7 @@ formTupleDesc(List* columns) {
     int natts = list_len(columns);
 
     TupleDesc tupdesc = CreateTempTupleDesc(natts);
-    for (cell = list_first_elem(columns); cell != nullptr; cell = list_next_elem(cell)) {
+    for (cell = list_first_elem(columns); cell != NULL; cell = list_next_elem(cell)) {
         columndef = (ColumnDef*)cell->data.ptr_value;
 
         // 生产 attr 对象

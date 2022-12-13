@@ -3,7 +3,7 @@
 #include "storage/page.h"
 
 OffsetNumber
-BtreeIndex::_bt_binsrch(Relation rel, Page page, BTreeScan key) {
+_bt_binsrch(Relation rel, Page page, BTreeScan key) {
     int result;
 
     BTreeSpecial special = PageGetSpecial(page);
@@ -39,14 +39,14 @@ BtreeIndex::_bt_binsrch(Relation rel, Page page, BTreeScan key) {
 }
 
 bool
-BtreeIndex::_bt_first(IndexScanDesc scan) {
+_bt_first(IndexScanDesc scan) {
     // bin_srch the point
-    BTStack stack{};
+    BTStack stack;
 
     OffsetNumber offset;
     Buffer buf;
 
-    IndexTuple itup = new IndexTupleData;
+    IndexTuple itup = palloc(sizeof(IndexTupleData));
     itup->key       = scan->key;
     itup->value     = scan->value;
     itup->t_info    = sizeof(IndexTupleData);
@@ -54,10 +54,10 @@ BtreeIndex::_bt_first(IndexScanDesc scan) {
     BTreeScan itup_key = _bt_make_scankey(scan->index_rel, itup);
     stack              = _bt_search(scan->index_rel, itup_key, &buf);
 
-    BufferDesc* desc  = GetBufferDescriptor(buf);
-    Page page         = BufferGetPage(buf);
-    itup_key->nextkey = false;
-    offset            = _bt_binsrch(scan->index_rel, page, itup_key);
+    struct BufferDesc* desc = GetBufferDescriptor(buf);
+    Page page               = BufferGetPage(buf);
+    itup_key->nextkey       = false;
+    offset                  = _bt_binsrch(scan->index_rel, page, itup_key);
 
     scan->block  = desc->tag.blockNum;
     scan->offset = offset;
@@ -67,15 +67,15 @@ BtreeIndex::_bt_first(IndexScanDesc scan) {
     IndexTuple itup1 = (IndexTuple)item;
     scan->value      = itup1->value;
 
-    delete itup;
-    delete itup_key;
+    pfree(itup);
+    pfree(itup_key);
 
     _bt_freestack(stack);
     return true;
 }
 
 bool
-BtreeIndex::_bt_next(IndexScanDesc scan) {
+_bt_next(IndexScanDesc scan) {
     Page page;
     Buffer buf;
     Relation rel        = scan->index_rel;
@@ -103,7 +103,7 @@ BtreeIndex::_bt_next(IndexScanDesc scan) {
 }
 
 int
-BtreeIndex::_bt_compare(Relation rel, BTreeScan key, Page page, OffsetNumber offset) {
+_bt_compare(Relation rel, BTreeScan key, Page page, OffsetNumber offset) {
 
     int keysz;
     ScanKey skey;
@@ -123,7 +123,7 @@ BtreeIndex::_bt_compare(Relation rel, BTreeScan key, Page page, OffsetNumber off
 
     for (int i = 0; i < keysz; i++) {
 
-        FmgrInfo info = skey->sk_func;
+        struct FmgrInfo info = skey->sk_func;
 
         Datum result = DirectFunctionCall2Coll(info.fn_method, key->itup->key, itup->key);
 

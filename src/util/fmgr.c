@@ -21,11 +21,11 @@ fmgr_isbuildin(Oid functionId) {
 }
 
 void
-fmgr_info(Oid functionId, FmgrInfo* finfo) {
+fmgr_info(Oid functionId, struct FmgrInfo* finfo) {
     const FmgrBuildin* fbp;
     finfo->fn_id = 0;
 
-    if ((fbp = fmgr_isbuildin(functionId)) != nullptr) {
+    if ((fbp = fmgr_isbuildin(functionId)) != NULL) {
         finfo->fn_method = fbp->func;
         finfo->fn_id     = functionId;
         return;
@@ -36,7 +36,7 @@ fmgr_info(Oid functionId, FmgrInfo* finfo) {
 
 Datum
 DirectFunctionCall2Coll(Method func, Datum arg1, Datum arg2) {
-    FunctionCallInfoData fdata{};
+    struct FunctionCallInfoData fdata;
     fdata.flinfo  = &func;
     fdata.nargs   = 2;
     fdata.args[0] = arg1;

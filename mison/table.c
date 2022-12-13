@@ -10,7 +10,7 @@ GotoTable::GotoTable(int row, int col)
         _data[i] = new Record[col]{};
         for (int j = 0; j < col; j++) {
             auto q = _data[i] + j;
-            *q     = nullptr;
+            *q     = NULL;
         }
     }
 }
@@ -19,7 +19,7 @@ GotoTable::~GotoTable() {
     for (int i{ 0 }; i < _row; i++) {
         for (int j{ 0 }; j < _col; j++) {
             Record* r = _data[i] + j;
-            if (*r != nullptr) {
+            if (*r != NULL) {
                 delete *r;
             }
         }
@@ -31,7 +31,7 @@ GotoTable::~GotoTable() {
 void
 GotoTable::Add(int stateId, int tokenId, int nextStateId) {
     Record* record = &_data[stateId][tokenId];
-    if (*record == nullptr) {
+    if (*record == NULL) {
         *record = new RecordData{};
     }
 
@@ -43,7 +43,7 @@ GotoTable::Add(int stateId, int tokenId, int nextStateId) {
 Record
 GotoTable::Find(int stateId, int tokenId) {
     if (stateId < 0 || stateId > _row || tokenId < 0 || tokenId > _col) {
-        return nullptr;
+        return NULL;
     }
 
     auto record = _data[stateId][tokenId];
@@ -63,7 +63,7 @@ GotoTable::Print() {
         printf("%3d:", stateId);
         for (int i{ 0 }; i < _col; i++) {
             Record record = _data[stateId][i];
-            if (record != nullptr) {
+            if (record != NULL) {
                 printf("%3d", record->id);
             } else {
                 printf("   ");
@@ -82,7 +82,7 @@ ActionTable::ActionTable(int row, int col)
     for (int i = 0; i < row; i++) {
         _data[i] = new Record[col]{};
         for (int j = 0; j < col; j++) {
-            _data[i][j] = nullptr;
+            _data[i][j] = NULL;
         }
     }
 }
@@ -91,7 +91,7 @@ ActionTable::~ActionTable() {
     for (int i{ 0 }; i < _row; i++) {
         for (int j{ 0 }; j < _col; j++) {
             Record* r = _data[i] + j;
-            if (*r != nullptr) {
+            if (*r != NULL) {
                 delete *r;
             }
         }
@@ -103,7 +103,7 @@ ActionTable::~ActionTable() {
 Record
 ActionTable::Find(int stateId, int lexTokenId) {
     if (stateId < 0 || stateId > _row || lexTokenId < 0 || lexTokenId > _col) {
-        return nullptr;
+        return NULL;
     }
 
     auto record = _data[stateId][lexTokenId];
@@ -113,7 +113,7 @@ ActionTable::Find(int stateId, int lexTokenId) {
 void
 ActionTable::AddRule(int stateId, int lexTokenId, int ruleId, bool acc) {
     Record* r = &_data[stateId][lexTokenId];
-    if (*r == nullptr) {
+    if (*r == NULL) {
         *r = new RecordData{};
     }
     (*r)->id    = ruleId;
@@ -124,7 +124,7 @@ ActionTable::AddRule(int stateId, int lexTokenId, int ruleId, bool acc) {
 void
 ActionTable::Add(int stateId, int lexTokenId, int nextStateId) {
     Record* r = &_data[stateId][lexTokenId];
-    if (*r == nullptr) {
+    if (*r == NULL) {
         *r = new RecordData{};
     }
     (*r)->id    = nextStateId;
@@ -143,7 +143,7 @@ ActionTable::Print() {
         printf("%4d:", stateId);
         for (int i{ 0 }; i < _col; i++) {
             Record record = _data[stateId][i];
-            if (record != nullptr) {
+            if (record != NULL) {
                 if (record->acc) {
                     printf("acc ");
                 } else {

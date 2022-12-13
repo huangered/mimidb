@@ -2192,7 +2192,7 @@ Parser::parse() {
     if (acc) {
         item = token_stack.top();
     } else {
-        return nullptr;
+        return NULL;
     }
     Node* ptr = reinterpret_cast<Node*>(&item);
     return *ptr;
@@ -2341,15 +2341,15 @@ Parser::yyreduce(std::stack<int>& states, std::stack<YYSTYPE>& syms, int r_id) {
         break;
     case 17:
         // line 340
-        { (item.node) = makeRuleRight((child[0].list), nullptr); }
+        { (item.node) = makeRuleRight((child[0].list), NULL); }
         break;
     case 18:
         // line 360
-        { (item.node) = makeRuleRight(nullptr, (child[0].node)); }
+        { (item.node) = makeRuleRight(NULL, (child[0].node)); }
         break;
     case 19:
         // line 380
-        { (item.node) = makeRuleRight(nullptr, nullptr); }
+        { (item.node) = makeRuleRight(NULL, NULL); }
         break;
     case 20:
         // line 400

@@ -57,7 +57,7 @@ makeRule(Node leftNode, std::vector<Node>* rightList) {
 
     RuleNode* rule = new RuleNode();
     rule->left     = leftNode;
-    if (rightList == nullptr) {
+    if (rightList == NULL) {
         rule->right = new std::vector<Node>();
     } else {
         rule->right = rightList;
@@ -70,7 +70,7 @@ Node
 makeRuleRight(std::vector<Node>* rightList, Node blockNode) {
     RuleRightNode* n1 = new RuleRightNode();
 
-    if (rightList == nullptr) {
+    if (rightList == NULL) {
         n1->right = new std::vector<Node>();
     } else {
         n1->right = rightList;
@@ -82,7 +82,7 @@ makeRuleRight(std::vector<Node>* rightList, Node blockNode) {
             }
         }
     }
-    if (blockNode == nullptr) {
+    if (blockNode == NULL) {
         n1->block = "";
     } else {
         n1->block = blockNode->_value;

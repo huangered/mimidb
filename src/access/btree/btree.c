@@ -1,46 +1,44 @@
 #include "access/btree.h"
 #include "storage/freespace.h"
 
-static BtreeIndex btree{};
 
-IndexAm*
+
+struct IndexAm*
 BtreeRoute() {
-    return &btree;
-}
-
-BtreeIndex::BtreeIndex() {
+    // todo return &btree;
+    return NULL;
 }
 
 void
-BtreeIndex::BuildEmpty(Relation rel) {
+BuildEmpty(Relation rel) {
     Page metap = (Page)palloc(BLKSZ);
     _bt_init_page(metap);
 
     // write to local file system
-    smgr->Write(rel->rd_smgr, MAIN_FORKNUM, BTREE_METAPAGE, metap);
+    //smgr->Write(rel->rd_smgr, MAIN_FORKNUM, BTREE_METAPAGE, metap);
 
     pfree(metap);
 }
 
 bool
-BtreeIndex::Insert(Relation rel, int key, int ht_id) {
+Insert(Relation rel, int key, int ht_id) {
     bool result;
     IndexTuple tup;
 
     tup = _bt_make_tuple(key, ht_id);
 
-    result = _bt_do_insert(rel, tup, UNIQUE_CHECK_YES, nullptr);
+    result = _bt_do_insert(rel, tup, UNIQUE_CHECK_YES, NULL);
 
-    delete tup;
+    pfree(tup);
 
     return result;
 }
 bool
-BtreeIndex::Remove(Relation rel, int key) {
+Remove(Relation rel, int key) {
     return false;
 }
 bool
-BtreeIndex::GetNext(IndexScanDesc scan, ScanDirection dir) {
+GetNext(IndexScanDesc scan, enum ScanDirection dir) {
 
     if (scan->block == INVALID_BLOCK) {
         return _bt_first(scan);
@@ -50,30 +48,30 @@ BtreeIndex::GetNext(IndexScanDesc scan, ScanDirection dir) {
 }
 
 IndexScanDesc
-BtreeIndex::BeginScan(Relation nrel, int nkeys, ScanKey key) {
-    return nullptr;
+BeginScan(Relation nrel, int nkeys, ScanKey key) {
+    return NULL;
 }
 void
-BtreeIndex::EndScan(Relation rel, int nkeys) {
+EndScan(Relation rel, int nkeys) {
     // todo
 }
 
 // private method
 
 void
-BtreeIndex::_bt_init_metapage(Page page, BlockNumber rootblkno) {
+_bt_init_metapage(Page page, BlockNumber rootblkno) {
     _bt_init_page(page);
-    BTreeMetaData* metad = (BTreeMetaData*)PageGetContent(page);
+    struct BTreeMetaData* metad = (struct BTreeMetaData*)PageGetContent(page);
     metad->fastroot      = P_NONE;
 }
 
 void
-BtreeIndex::_bt_init_page(Page page) {
-    PageInit(page, BLKSZ, sizeof(BTreeSpecialData));
+_bt_init_page(Page page) {
+    PageInit(page, BLKSZ, sizeof(struct BTreeSpecialData));
 }
 
 Buffer
-BtreeIndex::_bt_moveright(Relation rel, BTreeScan key, Buffer buf) {
+_bt_moveright(Relation rel, BTreeScan key, Buffer buf) {
     for (;;) {
         Page page            = BufferGetPage(buf);
         PageHeader header    = PageGetHeader(page);
@@ -94,14 +92,14 @@ BtreeIndex::_bt_moveright(Relation rel, BTreeScan key, Buffer buf) {
 }
 
 Buffer
-BtreeIndex::_bt_relandgetbuf(Relation rel, Buffer obuf, BlockNumber blkno) {
+_bt_relandgetbuf(Relation rel, Buffer obuf, BlockNumber blkno) {
     ReleaseBuffer(obuf);
     Buffer buffer = ReadBuffer(rel, blkno);
     return buffer;
 }
 
 void
-BtreeIndex::debug(Relation rel) {
+debug(Relation rel) {
     Buffer bufp = _bt_get_root(rel);
     Page page   = BufferGetPage(bufp);
 

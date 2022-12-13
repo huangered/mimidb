@@ -5,18 +5,18 @@ typedef struct BufferStrategyControl {
     int lastFreeBuffer;
 } BufferStrategyControl;
 
-static BufferStrategyControl* StrategyControl = nullptr;
+static BufferStrategyControl* StrategyControl = NULL;
 
 void
 StrategyInit() {
-    StrategyControl                  = (BufferStrategyControl*)std::malloc(sizeof(BufferStrategyControl));
+    StrategyControl                  = (BufferStrategyControl*)palloc(sizeof(BufferStrategyControl));
     StrategyControl->firstFreeBuffer = 0;
     StrategyControl->lastFreeBuffer  = NBuffers - 1;
 }
 
-BufferDesc*
+struct BufferDesc*
 FindFreeBuffer() {
-    BufferDesc* buf;
+    struct BufferDesc* buf;
     if (StrategyControl->firstFreeBuffer >= 0) {
         buf                              = GetBufferDescriptor(StrategyControl->firstFreeBuffer);
         StrategyControl->firstFreeBuffer = buf->freeNext;
@@ -27,5 +27,5 @@ FindFreeBuffer() {
 
     printf("not find free buffer\n");
 
-    return nullptr;
+    return NULL;
 }

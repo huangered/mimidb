@@ -9,25 +9,9 @@
 #include "util/hashmap.h"
 
 typedef struct buftag {
-    RelFileNode rnode;
+    struct RelFileNode rnode;
     ForkNumber forkNum;
     BlockNumber blockNum;
-
-    int
-    hash() const {
-        return rnode.relNode * 17 * 17 + forkNum * 17 + blockNum;
-    }
-
-    friend bool
-    operator==(const buftag& l, const buftag& r) {
-        return l.rnode == r.rnode && l.forkNum == r.forkNum && l.blockNum == r.blockNum;
-    }
-
-    friend bool
-    operator!=(const buftag& l, const buftag& r) {
-        return !(l == r);
-    }
-
 } BufferTag;
 
 #define BUFFERTAG_EQUAL(a, b) ((a).rnode == (b).rnode && (a).forkNum == (b).forkNum && (a).blockNum == (b).blockNum)
@@ -43,7 +27,7 @@ struct BufferDesc {
 };
 
 typedef union BufferDescPadded {
-    BufferDesc bufferdesc;
+    struct BufferDesc bufferdesc;
 } BufferDescPadded;
 
 #define GetBufferDescriptor(id)          (&BufferDescriptors[(id)].bufferdesc)
@@ -53,6 +37,6 @@ extern BufferDescPadded* BufferDescriptors;
 
 /* buf freelist.cpp */
 extern void StrategyInit();
-extern BufferDesc* FindFreeBuffer();
+extern struct BufferDesc* FindFreeBuffer();
 
 #endif

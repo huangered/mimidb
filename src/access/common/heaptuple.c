@@ -3,10 +3,10 @@
 
 HeapTuple
 heap_form_tuple(TupleDesc desc, Datum* values) {
-    int datasz{};
-    HeapTupleHeader td{};
+    int datasz;
+    HeapTupleHeader td;
 
-    for (int i{}; i < desc->natts; i++) {
+    for (int i = 0; i < desc->natts; i++) {
         datasz += desc->attr[i].att_len;
     }
 

@@ -152,11 +152,12 @@ fsm_readbuf(Relation rel, FSMAddress addr, bool extend) {
 
     // if exist rel fsm file
     if (rel->rd_smgr->smgr_fsm_nblocks == INVALID_BLOCK || blkno >= rel->rd_smgr->smgr_fsm_nblocks) {
+        /* todo
         if (smgr->Exists(rel->rd_smgr, FSM_FORKNUM)) {
-            rel->rd_smgr->smgr_fsm_nblocks = smgr->Nblocks(rel->rd_smgr, FSM_FORKNUM);
-        } else {
-            rel->rd_smgr->smgr_fsm_nblocks = 0;
-        }
+             rel->rd_smgr->smgr_fsm_nblocks = smgr->Nblocks(rel->rd_smgr, FSM_FORKNUM);
+         } else {
+             rel->rd_smgr->smgr_fsm_nblocks = 0;
+         }*/
     }
 
     if (blkno >= rel->rd_smgr->smgr_fsm_nblocks) {
@@ -234,9 +235,9 @@ static void
 fsm_extend(Relation rel, BlockNumber blkno) {
     PgData data;
     PageInit((Page)data.data, BLKSZ, 0);
-    BlockNumber fsm_blocks = smgr->Nblocks(rel->rd_smgr, FSM_FORKNUM);
+    BlockNumber fsm_blocks;//todo    = smgr->Nblocks(rel->rd_smgr, FSM_FORKNUM);
     while (fsm_blocks < blkno) {
-        smgr->Extend(rel->rd_smgr, FSM_FORKNUM, fsm_blocks, data.data);
+        //smgr->Extend(rel->rd_smgr, FSM_FORKNUM, fsm_blocks, data.data);
         fsm_blocks++;
     }
     rel->rd_smgr->smgr_fsm_nblocks = fsm_blocks;

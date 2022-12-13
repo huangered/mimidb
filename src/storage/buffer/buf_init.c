@@ -11,16 +11,16 @@ int NBuffers = 1024;
 void
 InitBufferPool(void) {
     size_t size  = NBuffers * BLKSZ;
-    BufferBlocks = (char*)std::malloc(size);
+    BufferBlocks = (char*)palloc(size);
 
     memset(BufferBlocks, 0, size);
 
-    BufferDescriptors = (BufferDescPadded*)std::malloc(NBuffers * sizeof(BufferDescPadded));
+    BufferDescriptors = (BufferDescPadded*)palloc(NBuffers * sizeof(BufferDescPadded));
 
     memset(BufferDescriptors, 0, NBuffers * sizeof(BufferDescPadded));
 
-    for (int i{ 0 }; i < NBuffers; i++) {
-        BufferDesc* desc = GetBufferDescriptor(i);
+    for (int i=0; i < NBuffers; i++) {
+       struct  BufferDesc* desc = GetBufferDescriptor(i);
         desc->buf_id     = i;
         desc->freeNext   = i + 1;
     }

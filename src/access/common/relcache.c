@@ -9,26 +9,25 @@
 #include "catalog/mimi_code.h"
 #include "storage/smgr.h"
 #include "util/builtins.h"
-#include <iostream>
 
-RelCache* relcache = nullptr;
+struct RelCache* relcache = NULL;
 // private area
-static const FormData_mimi_attribute desc_pg_class[4] = { { 1, { "oid" }, sizeof(int), 0, 1 },
-                                                          { 1, { "relkind" }, sizeof(int), 0, 1 },
-                                                          { 1, { "relpages" }, sizeof(int), 0, 1 },
-                                                          { 1, { "tuples" }, sizeof(int), 0, 1 } };
+static const struct FormData_mimi_attribute desc_pg_class[4] = { { 1, { "oid" }, sizeof(int), 0, 1 },
+                                                                 { 1, { "relkind" }, sizeof(int), 0, 1 },
+                                                                 { 1, { "relpages" }, sizeof(int), 0, 1 },
+                                                                 { 1, { "tuples" }, sizeof(int), 0, 1 } };
 
-static const FormData_mimi_attribute desc_pg_attribute[1] = { { 1, { "oid" }, sizeof(int), 0, 1 } };
+static const struct FormData_mimi_attribute desc_pg_attribute[1] = { { 1, { "oid" }, sizeof(int), 0, 1 } };
 
-static const FormData_mimi_attribute desc_pg_type[1] = { { 1, { "oid" }, sizeof(int), 0, 1 } };
+static const struct FormData_mimi_attribute desc_pg_type[1] = { { 1, { "oid" }, sizeof(int), 0, 1 } };
 
 static void RelationIncRefCount(Relation rel);
 static void RelationDecRefCount(Relation rel);
 
 void
 RelationCacheInitialize(void) {
-    if (relcache == nullptr) {
-        relcache = new RelCache{};
+    if (relcache == NULL) {
+        // relcache = palloc(sizeof(struct RelCache));
     }
 }
 
@@ -36,21 +35,21 @@ RelationCacheInitialize(void) {
 1. init the relation cache
 2. insert the basic system relation
 */
-RelCache::RelCache() {
-    std::cout << "RelCache init" << std::endl;
+RelCacheInit() {
+   
     _formrdesc("mimi_class", ClassRelationId, 4, desc_pg_class);
     _formrdesc("mimi_attribute", AttributeRelationId, 1, desc_pg_attribute);
     _formrdesc("mimi_type", TypeRelationId, 1, desc_pg_type);
 }
 
 Relation
-RelCache::RelationIdGetRelation(Oid relid) {
-    RelCacheEntry entry;
+RelationIdGetRelation(Oid relid) {
+    struct RelCacheEntry entry;
 
-    if (cache.Get(relid, &entry)) {
-        RelationIncRefCount(entry.rel);
-        return entry.rel;
-    }
+    // if (cache.Get(relid, &entry)) {
+    //        RelationIncRefCount(entry.rel);
+    //        return entry.rel;
+    //    }
 
     Relation rel = BuildRelationDesc(relid, true);
     RelationIncRefCount(rel);
@@ -58,7 +57,7 @@ RelCache::RelationIdGetRelation(Oid relid) {
 }
 
 void
-RelCache::RelationClose(Relation rel) {
+RelationClose(Relation rel) {
     RelationDecRefCount(rel);
     if (rel->refcount == 0) {
         // remove from cache;
@@ -70,28 +69,28 @@ RelCache::RelationClose(Relation rel) {
 2. insert the rel into relcache by hardcode
 */
 void
-RelCache::_formrdesc(const char* relname, Oid reltype, int natts, const FormData_mimi_attribute* attrs) {
-    Relation rel = new RelationData{};
+_formrdesc(const char* relname, Oid reltype, int natts, const struct FormData_mimi_attribute* attrs) {
+    Relation rel = palloc(sizeof(struct RelationData));
 
     /*
     init the ref count: 1 because it needs keep in cache
     */
     rel->refcount = 1;
     rel->rd_id    = reltype;
-    rel->rd_rel   = new FormData_mimi_class{};
+    rel->rd_rel   = palloc(sizeof(FormData_mimi_class));
     strcpy(rel->rd_rel->relname, relname);
 
-    rel->tb_am = nullptr; // table_route();
+    rel->tb_am = NULL; // table_route();
     // build relation tuple desc
     rel->tupleDesc = CreateTempTupleDesc(natts);
     for (int i = 0; i < natts; i++) {
-        FormData_mimi_attribute* attr = (FormData_mimi_attribute*)(attrs + i);
-        memcpy(&rel->tupleDesc->attr[i], attr, sizeof(FormData_mimi_attribute));
+        // FormData_mimi_attribute* attr = (FormData_mimi_attribute*)(attrs + i);
+        // memcpy(&rel->tupleDesc->attr[i], attr, sizeof(FormData_mimi_attribute));
     }
-    rel->rd_smgr = nullptr;
+    rel->rd_smgr = NULL;
 
-    RelCacheEntry entry{ rel->rd_id, rel };
-    cache.Put(rel->rd_id, entry);
+    // RelCacheEntry entry{ rel->rd_id, rel };
+    // cache.Put(rel->rd_id, entry);
 }
 
 /*
@@ -99,26 +98,27 @@ RelCache::_formrdesc(const char* relname, Oid reltype, int natts, const FormData
 2. if insert == true, insert into cache
 */
 Relation
-RelCache::BuildRelationDesc(Oid oid, bool insert) {
-    HeapTuple heap_tup;
-    Form_mimi_class rel_class;
+BuildRelationDesc(Oid oid, bool insert) {
+    return NULL;
+    //HeapTuple heap_tup;
+    //Form_mimi_class rel_class;
 
-    heap_tup  = _scanMimiRelation(oid);
-    rel_class = (Form_mimi_class)(heap_tup->t_data);
+    //heap_tup  = _scanMimiRelation(oid);
+    //rel_class = (Form_mimi_class)(heap_tup->t_data);
 
-    Relation heaprel = new RelationData;
-    heaprel->rd_id   = oid;
-    heaprel->rd_rel  = new FormData_mimi_class;
-    strcpy(heaprel->rd_rel->relname, rel_class->relname);
+    //Relation heaprel = new RelationData;
+    //heaprel->rd_id   = oid;
+    //heaprel->rd_rel  = new FormData_mimi_class;
+    //strcpy(heaprel->rd_rel->relname, rel_class->relname);
 
-    // RelationBuildTuple(heaprel);
+    //// RelationBuildTuple(heaprel);
 
-    heaprel->refcount = 0;
-    if (insert) {
-        RelCacheEntry entry{ heaprel->rd_id, heaprel };
-        cache.Put(heaprel->rd_id, entry);
-    }
-    return heaprel;
+    //heaprel->refcount = 0;
+    //if (insert) {
+    //    RelCacheEntry entry{ heaprel->rd_id, heaprel };
+    //    cache.Put(heaprel->rd_id, entry);
+    //}
+    //return heaprel;
 }
 
 /*
@@ -126,8 +126,9 @@ RelCache::BuildRelationDesc(Oid oid, bool insert) {
 2. return relation object
 */
 Relation
-RelCache::BuildLocalRelation(Oid oid, const char* relname, TupleDesc tupdesc) {
-    Relation heaprel = new RelationData{};
+BuildLocalRelation(Oid oid, const char* relname, TupleDesc tupdesc) {
+    return NULL;
+    /*Relation heaprel = new RelationData{};
     heaprel->rd_id   = oid;
     heaprel->rd_rel  = new FormData_mimi_class{};
     strcpy(heaprel->rd_rel->relname, relname);
@@ -135,28 +136,29 @@ RelCache::BuildLocalRelation(Oid oid, const char* relname, TupleDesc tupdesc) {
     _relationBuildTuple(heaprel, tupdesc);
 
     heaprel->refcount = 0;
-    return heaprel;
+    return heaprel;*/
 }
 
 void
-RelCache::_relationBuildTuple(Relation heaprel, TupleDesc tupdesc) {
+_relationBuildTuple(Relation heaprel, TupleDesc tupdesc) {
     // find tuple desc from meta data
-
-    heaprel->tupleDesc        = new TupleDescData;
+    return NULL;
+   /* heaprel->tupleDesc        = new TupleDescData;
     heaprel->tupleDesc->natts = tupdesc->natts;
     for (int i = 0; i < heaprel->tupleDesc->natts; i++) {
         heaprel->tupleDesc->attr[i].att_len = tupdesc->attr[i].att_len;
         heaprel->tupleDesc->attr[i].typid   = tupdesc->attr[i].typid;
         strcpy(heaprel->tupleDesc->attr[i].att_name, tupdesc->attr[i].att_name);
-    }
+    }*/
 }
 
 /*
  * 扫描 mm_class 表，获取 relation tuple 信息
  */
 HeapTuple
-RelCache::_scanMimiRelation(Oid relid) {
-    HeapTuple tup = NULL;
+_scanMimiRelation(Oid relid) {
+    return NULL;
+   /* HeapTuple tup = NULL;
     ScanKeyData key[1];
     Relation pg_class_relation;
     SysTableScan scan;
@@ -170,7 +172,7 @@ RelCache::_scanMimiRelation(Oid relid) {
 
     relation_close(pg_class_relation);
 
-    return tup;
+    return tup;*/
 }
 
 // === internal method
