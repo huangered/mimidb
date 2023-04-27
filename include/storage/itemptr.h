@@ -4,12 +4,12 @@
 #include "storage/block.h"
 #include "access/offset.h"
 
-struct ItemPointerData {
+typedef struct ItemPointerData {
     BlockNumber ip_blkno;
     OffsetNumber ip_offset;
-};
+} ItemPointerData;
 
-typedef struct ItemPointerData* ItemPointer;
+typedef ItemPointerData* ItemPointer;
 
 #define ItemPointerGetBlockNumber(pointer)  (&(pointer)->ip_blkno)
 #define ItemPointerGetOffsetNumber(pointer) (&(pointer)->ip_offset)

@@ -125,8 +125,8 @@ _heap_get_tuple(HeapScanDesc scan, enum ScanDirection direction) {
 HeapTuple
 _tuple_prepare_insert(Relation rel, HeapTuple tup, int xmin) {
     // 设置 （xmin， xmax）
-    tup->t_data->t_heap.t_xmin = xmin;
-    tup->t_data->t_heap.t_xmax = 0;
+    tup->t_data->t_choice.t_heap.t_xmin = xmin;
+    tup->t_data->t_choice.t_heap.t_xmax = 0;
     return tup;
 }
 
@@ -238,8 +238,8 @@ heap_delete(Relation relation, ItemPointer tid) {
         Item item     = PageGetItem(page, itemId);
 
         HeapTuple tup = (HeapTuple)item;
-        if (tup->t_data->t_heap.t_xmax == 0) { // for now , only get latest one.
-            tup->t_data->t_heap.t_xmax = cur_tran;
+        if (tup->t_data->t_choice.t_heap.t_xmax == 0) { // for now , only get latest one.
+            tup->t_data->t_choice.t_heap.t_xmax = cur_tran;
             // add new deleted record?!
         } else {
             blkNum = tup->t_data->t_ctid.ip_blkno;

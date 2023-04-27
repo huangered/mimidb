@@ -1,8 +1,6 @@
 #include "access/btree.h"
 #include "storage/freespace.h"
 
-
-
 struct IndexAm*
 BtreeRoute() {
     // todo return &btree;
@@ -124,6 +122,6 @@ debug(Relation rel) {
         ItemId itemId    = PageGetItemId(page, low);
         Item item        = PageGetItem(page, itemId);
         IndexTuple tuple = (IndexTuple)item;
-        printf(">>> %d (%d, %d)\n", tuple->key, tuple->t_tid.ip_blkno, tuple->t_tid.ip_offset);
+        //printf(">>> %d (%d, %d)\n", tuple->key, tuple->t_tid.ip_blkno, tuple->t_tid.ip_offset);
     }
 }

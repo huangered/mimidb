@@ -47,8 +47,6 @@ _bt_first(IndexScanDesc scan) {
     Buffer buf;
 
     IndexTuple itup = palloc(sizeof(IndexTupleData));
-    itup->key       = scan->key;
-    itup->value     = scan->value;
     itup->t_info    = sizeof(IndexTupleData);
 
     BTreeScan itup_key = _bt_make_scankey(scan->index_rel, itup);
@@ -65,7 +63,7 @@ _bt_first(IndexScanDesc scan) {
     Item item = PageGetItem(page, PageGetItemId(page, offset));
 
     IndexTuple itup1 = (IndexTuple)item;
-    scan->value      = itup1->value;
+    //scan->value      = itup1->value;
 
     pfree(itup);
     pfree(itup_key);
@@ -93,11 +91,11 @@ _bt_next(IndexScanDesc scan) {
     ItemId itemid   = PageGetItemId(page, offset);
     Item item       = PageGetItem(page, itemid);
     IndexTuple itup = (IndexTuple)item;
-    if (itup->key == scan->key) {
-        scan->value  = itup->value;
-        scan->offset = offset;
-        return true;
-    }
+    //if (itup->key == scan->key) {
+    //    scan->value  = itup->value;
+    //    scan->offset = offset;
+    //    return true;
+    //}
 
     return false;
 }
@@ -125,9 +123,9 @@ _bt_compare(Relation rel, BTreeScan key, Page page, OffsetNumber offset) {
 
         struct FmgrInfo info = skey->sk_func;
 
-        Datum result = DirectFunctionCall2Coll(info.fn_method, key->itup->key, itup->key);
+//        Datum result = DirectFunctionCall2Coll(info.fn_method, key->itup->key, itup->key);
 
-        int r = DatumGetInt(result);
+        int r;//        = DatumGetInt(result);
 
         if (r != 0) {
             return r;

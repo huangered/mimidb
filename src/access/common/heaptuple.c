@@ -3,22 +3,32 @@
 
 HeapTuple
 heap_form_tuple(TupleDesc desc, Datum* values) {
+
+    HeapTuple tuple;    // 返回值
+    HeapTupleHeader td; // data
+    Size len, datalen;
+    int hoff;
     int datasz;
-    HeapTupleHeader td;
 
     for (int i = 0; i < desc->natts; i++) {
         datasz += desc->attr[i].att_len;
     }
 
-    int hoff       = HEAP_TUPLE_HEADER_SIZE;
-    int len        = HEAP_TUPLE_SIZE + hoff + datasz;
-    HeapTuple htup = (HeapTuple)palloc0(len);
+    // 决定要多大的空间
+    len = offsetof(HeapTupleHeaderData, t_bits);
 
-    htup->t_len  = datasz + hoff;
+    hoff = len = MAXALIGN(len);
+
+    datalen = heap_compute_data_size(desc, values);
+
+    len += datalen;
+
+    HeapTuple htup = (HeapTuple)palloc0( HEAP_TUPLE_SIZE + len);
     htup->t_data = td = (HeapTupleHeader)((char*)htup + HEAP_TUPLE_SIZE);
 
-    // for simple, we only have (key,value) now.
-    memcpy(((char*)td + hoff), values, datasz);
+    htup->t_len = len;
+    
+    heap_fill_tuple(desc, values, (char*)td + hoff, datalen);
     return htup;
 }
 

@@ -17,9 +17,10 @@ typedef uintptr_t Datum;
 #define PointerGetDatum(X) ((Datum)(X))
 #define DatumGetPointer(X) ((void*)(X))
 
-#define NAME_LIMIT 64
-
+#define NAME_LIMIT               64
+#define MAXIMUM_ALIGNOF          8
 #define TYPEALIGN(ALIGNVAL, LEN) (((uintptr_t)(LEN) + ((ALIGNVAL)-1)) & ~((uintptr_t)((ALIGNVAL)-1)))
+#define MAXALIGN(LEN)            TYPEALIGN(MAXIMUM_ALIGNOF, (LEN))
 
 #define FLEX_ARRAY_SIZE
 

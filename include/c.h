@@ -25,4 +25,6 @@ typedef signed char int8;
 typedef signed short int16;
 typedef signed int int32;
 
+typedef uint8 bits8;
+
 #endif // !_C_H_

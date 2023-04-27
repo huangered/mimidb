@@ -7,6 +7,7 @@
 #include "access/indextuple.h"
 #include "access/offset.h"
 #include "access/rel.h"
+#include "access/relscan.h"
 #include "access/scankey.h"
 #include "storage/block.h"
 #include "storage/bufmgr.h"

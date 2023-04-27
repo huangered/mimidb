@@ -19,13 +19,13 @@ pprint(Relation rel, Page page) {
         if (P_ISLEAF(special)) {
             IndexTuple tuple = (IndexTuple)(PageGetItem(page, PageGetItemId(page, i)));
 
-            printf("Leaf    index: %d , off: %d , len: %d , key: %d , value: %d \r\n", i, item.lp_off, item.lp_len,
-                   tuple->key, tuple->t_tid.ip_blkno);
+           // printf("Leaf    index: %d , off: %d , len: %d , key: %d , value: %d \r\n", i, item.lp_off, item.lp_len,
+             //      tuple->key, tuple->t_tid.ip_blkno);
         } else {
             IndexTuple tuple = (IndexTuple)(PageGetItem(page, PageGetItemId(page, i)));
 
-            printf("No-leaf index: %d , off: %d , len: %d , key: %d , blkno: %d\r\n", i, item.lp_off, item.lp_len,
-                   tuple->key, tuple->value);
+           // printf("No-leaf index: %d , off: %d , len: %d , key: %d , blkno: %d\r\n", i, item.lp_off, item.lp_len,
+             //      tuple->key, tuple->value);
             BlockNumber blkno = tuple->t_tid.ip_blkno;
             // Buffer buf = _bt_get_buf(rel, blkno);
             // Page p2 = BufferGetPage(buf);

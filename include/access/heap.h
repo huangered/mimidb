@@ -4,6 +4,7 @@
 #include "mimi.h"
 #include "access/relation.h"
 #include "access/heaptuple.h"
+#include "access/relscan.h"
 #include "access/scankey.h"
 #include "access/scan.h"
 #include "access/tableapi.h"
