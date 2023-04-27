@@ -17,7 +17,8 @@ union YYSTYPE {
     char* str;
 };
 
-enum yytokentype {
+enum yytokentype
+{
     t_token      = 2,
     t_code       = 3,
     t_colon      = 4,
