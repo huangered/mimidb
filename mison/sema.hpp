@@ -15,8 +15,7 @@
 #include <string>
 #include <memory>
 
-class RecordData {
-public:
+struct RecordData {
     bool acc;
     bool state;
     int id;

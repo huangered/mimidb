@@ -7,7 +7,7 @@ typedef RecordData* Record;
 class GotoTable {
 private:
     int _row, _col;
-    Record** _data;
+    Record* _data;
 
 public:
     GotoTable(int row, int col);
@@ -24,7 +24,7 @@ public:
 
 class ActionTable {
     int _row, _col;
-    Record** _data;
+    Record* _data;
 
 public:
     ActionTable(int row, int col);
