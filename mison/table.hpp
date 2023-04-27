@@ -25,6 +25,7 @@ public:
 class ActionTable {
     int _row, _col;
     Record* _data;
+
 public:
     ActionTable(int row, int col);
     ActionTable(const ActionTable&)            = delete;
