@@ -4,7 +4,7 @@
 #include <cstring>
 #include <cstdlib>
 
-#define MAX_ID 65536
+const int MAX_ID = 65535;
 
 const int goto_table[56][17] = {
     {

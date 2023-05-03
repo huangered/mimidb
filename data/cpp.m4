@@ -4,7 +4,7 @@ include(`value.m4')
 #include <cstring>
 #include <cstdlib>
 
-#define MAX_ID 65536
+const int MAX_ID = DATA_MAX_ID;
 
 const int goto_table[ NUMSTATE ][ NUMNTERM ] = { DATA_GOTO };
 const int action_table[ NUMSTATE ][ NUMTOKEN ] = { DATA_ACTION };

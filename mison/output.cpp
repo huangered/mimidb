@@ -293,5 +293,10 @@ Output::writeConst(FILE* f) {
     sprintf(buf, "define(DATA_RETURN, `%s')\n", this->param.c_str());
     WriteFile(f, buf);
 
+    // max id
+    memset(buf, 0, 256);
+    sprintf(buf, "define(DATA_MAX_ID, `%d')\n", 65535);
+    WriteFile(f, buf);
+
     delete[] buf;
 }
