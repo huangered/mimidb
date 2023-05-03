@@ -78,18 +78,27 @@ public:
     std::map<string, string> GetTypeMap();
 
     std::vector<Rule> GetRules();
+
+public:
+    virtual ~LexNode();
 };
 
 class RuleNode : public NodeData {
 public:
     Node left;
     std::vector<Node>* right;
+
+public:
+    virtual ~RuleNode();
 };
 
 class RuleRightNode : public NodeData {
 public:
     std::vector<Node>* right;
     string block;
+
+public:
+    virtual ~RuleRightNode();
 };
 
 #endif

@@ -2,6 +2,7 @@
 #include "rule.hpp"
 #include "symtab.hpp"
 #include "sema.hpp"
+#include "debug.hpp"
 
 NodeData::NodeData() {
 }
@@ -70,4 +71,41 @@ LexNode::GetRules() {
     rList.push_back(sRule);
 
     return rList;
+}
+
+LexNode::~LexNode() {
+
+    for (Node n : *tokens) {
+        log("Delete token node");
+        delete n;
+    }
+    delete tokens;
+
+    for (Node n : *types) {
+        log("Delete type node");
+        delete n;
+    }
+    delete types;
+
+    for (Node n : *rules) {
+        log("Delete rule node");
+        delete n;
+    }
+    delete rules;
+}
+
+RuleNode::~RuleNode() {
+    for (Node n : *right) {
+        log("Delete rule node");
+        delete n;
+    }
+    delete right;
+}
+
+RuleRightNode::~RuleRightNode() {
+    for (Node n : *right) {
+        log("Delete rule node");
+        delete n;
+    }
+    delete right;
 }

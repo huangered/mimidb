@@ -3,7 +3,9 @@
 
 void
 log(const char* msg) {
+#ifdef _log_
     fprintf(stdout, "info: %s\n", msg);
+#endif
 }
 
 void

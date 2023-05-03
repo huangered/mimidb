@@ -40,5 +40,8 @@ main(int argc, char* argv[]) {
     output.OutputFile(foutput);
 
     Symtab::Print();
+
+    delete lex;
+
     return 0;
 }
