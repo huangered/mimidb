@@ -1,8 +1,8 @@
 #include "access/btree.h"
 #include "storage/freespace.h"
 
-IndexAm*
-BtreeRoute() {
+Datum
+bthandler() {
     // todo return &btree;
     IndexAm* am     = palloc(sizeof(IndexAm));
     am->ambuild     = btbuild;
@@ -11,7 +11,7 @@ BtreeRoute() {
     am->ambeginscan = btbeginscan;
     am->amgetnext   = btgetnext;
     am->amendscan   = btendscan;
-    return am;
+    return (Datum)am;
 }
 
 IndexBuildResult*

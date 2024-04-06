@@ -4,10 +4,12 @@
 #include "access/relcache.h"
 #include "access/scankey.h"
 #include "access/heap.h"
+// temp solution
+#include "access/btree.h"
 
 IndexAm*
 GetIndexAmRoutine(Oid amhandler) {
-    return NULL;
+    return (IndexAm*)bthandler();
 }
 
 SysTableScan

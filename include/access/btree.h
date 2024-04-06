@@ -91,6 +91,7 @@ typedef struct BTreeSearchKeyData* BTreeSearchKey;
 #define BTreeTupleGetDownLink(itup) (itup->t_tid.ip_blkno)
 
 // 函数原型 extern entry points for btree, in btree.c
+extern Datum bthandler();
 extern IndexBuildResult* btbuild(Relation heap, Relation index);
 extern bool btinsert(Relation rel, int key, int ht_id);
 extern bool btremove(Relation rel, int key);

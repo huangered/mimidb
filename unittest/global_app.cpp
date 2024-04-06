@@ -12,9 +12,9 @@ public:
     // Override this to define how to set up the environment.
     void
     SetUp() override {
-        //MemoryContextInit();
-        //InitBufferPool();
-        //RelationCacheInitialize();
+        MemoryContextInit();
+        InitBufferPool();
+        RelationCacheInitialize();
     }
 
     // Override this to define how to tear down the environment.
