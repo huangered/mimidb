@@ -218,10 +218,10 @@ _bt_insert_parent(Relation rel, Buffer buf, Buffer rbuf, BTStack stack, bool is_
         Buffer rootbuf;
         rootbuf = _bt_newroot(rel, buf, rbuf);
     } else {
-        Page page            = BufferGetPage(buf);
-        IndexTuple ritem     = (IndexTuple)PageGetItem(page, PageGetItemId(page, P_HIKEY));
-        IndexTuple itup      = palloc(sizeof(struct IndexTupleData));
-        //itup->key            = ritem->key;
+        Page page        = BufferGetPage(buf);
+        IndexTuple ritem = (IndexTuple)PageGetItem(page, PageGetItemId(page, P_HIKEY));
+        IndexTuple itup  = palloc(sizeof(struct IndexTupleData));
+        // itup->key            = ritem->key;
         itup->t_tid.ip_blkno = BufferGetBlockNumber(rbuf);
         itup->t_info         = sizeof(IndexTupleData);
         BTreeScan itup_key   = _bt_make_scankey(rel, itup);
@@ -274,8 +274,8 @@ _bt_newroot(Relation rel, Buffer lbuf, Buffer rbuf) {
     rootspecial->btsd.level = lspecial->btsd.level + 1;
     rootspecial->btsd_next = rootspecial->btsd_prev = P_NONE;
     /* 更新 meta */
-    metad->btm_root = rootblkno;
-    metad->fastroot = rootblkno;
+    metad->btm_root     = rootblkno;
+    metad->btm_fastroot = rootblkno;
 
     // get left page high key
     IndexTuple hkey = (IndexTuple)palloc(sizeof(IndexTupleData));
@@ -290,8 +290,8 @@ _bt_newroot(Relation rel, Buffer lbuf, Buffer rbuf) {
     IndexTuple second;
     IndexTuple lphkey = (IndexTuple)PageGetItem(lpage, PageGetItemId(lpage, P_HIKEY));
 
-    second                 = (IndexTuple)palloc(sizeof(IndexTupleData));
-    //second->key            = lphkey->key;
+    second = (IndexTuple)palloc(sizeof(IndexTupleData));
+    // second->key            = lphkey->key;
     second->t_tid.ip_blkno = rblkno;
     second->t_info         = sizeof(IndexTupleData);
     _bt_addtup(rootpage, second, sizeof(IndexTupleData), P_FIRSTKEY);

@@ -6,7 +6,6 @@
 /* internal use */
 #define BufHdrGetBlock(bufHdr) ((Block)(BufferBlocks + ((bufHdr)->buf_id) * BLKSZ))
 
-static void _Cleanup();
 static Buffer _ReadBufferCommon(Relation rel, ForkNumber forkNumber, BlockNumber blkno);
 static struct BufferDesc* _BufferAlloc(Relation rel, ForkNumber forkNumber, BlockNumber blkno, bool* found);
 static void FlushBuffer(struct BufferDesc* buf);
@@ -36,7 +35,7 @@ _ReadBufferCommon(Relation rel, ForkNumber forkNumber, BlockNumber blkno) {
     Block bufBlock;
     struct BufferDesc* desc;
     bool found;
-    bool isExtend;
+    bool isExtend = false;
 
     if (blkno == P_NEW) {
         isExtend = true;

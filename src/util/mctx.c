@@ -11,9 +11,9 @@ MemoryContext ErrorContext;
 
 void*
 palloc(Size size) {
-    void* ret;
+    void* ret = malloc(size);
 
-    ret = (*CurrentMemoryContext->methods->alloc)(CurrentMemoryContext, size);
+    //ret = (*CurrentMemoryContext->methods->alloc)(CurrentMemoryContext, size);
 
     return ret;
 }
@@ -26,7 +26,8 @@ palloc0(Size size) {
 }
 void
 pfree(void* ptr) {
-    (*CurrentMemoryContext->methods->free_p)(CurrentMemoryContext, ptr);
+    free(ptr);
+    //(*CurrentMemoryContext->methods->free_p)(CurrentMemoryContext, ptr);
 }
 
 void

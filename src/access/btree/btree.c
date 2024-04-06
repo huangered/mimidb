@@ -27,7 +27,7 @@ btbuild(Relation heap, Relation index) {
 }
 
 bool
-btinsert(Relation rel, int key, int ht_id) {
+btinsert(Relation rel, Datum* values, int key, int ht_id) {
     bool result;
     IndexTuple tup;
 
@@ -39,12 +39,14 @@ btinsert(Relation rel, int key, int ht_id) {
 
     return result;
 }
+
 bool
 btremove(Relation rel, int key) {
     return false;
 }
+
 bool
-btgetnext(IndexScanDesc scan, enum ScanDirection dir) {
+btgetnext(IndexScanDesc scan, ScanDirection dir) {
 
     if (scan->block == INVALID_BLOCK) {
         return _bt_first(scan);
@@ -68,7 +70,7 @@ void
 _bt_init_metapage(Page page, BlockNumber rootblkno) {
     _bt_init_page(page);
     struct BTreeMetaData* metad = (struct BTreeMetaData*)PageGetContent(page);
-    metad->fastroot             = P_NONE;
+    metad->btm_fastroot         = P_NONE;
 }
 
 void

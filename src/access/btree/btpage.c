@@ -37,7 +37,7 @@ _bt_get_root(Relation rel) {
         metad = (struct BTreeMetaData*)rel->rd_metacache;
         assert(metad->btm_root != P_NONE);
 
-        rootbuf = _bt_get_buf(rel, metad->fastroot);
+        rootbuf = _bt_get_buf(rel, metad->btm_fastroot);
         return rootbuf;
     }
 
@@ -60,8 +60,8 @@ _bt_get_root(Relation rel) {
         rootspecial->btsd_flags  = (BTP_LEAF | BTP_ROOT);
 
         // 2. 更新meta
-        metad->btm_root = rootblkno;
-        metad->fastroot = rootblkno;
+        metad->btm_root     = rootblkno;
+        metad->btm_fastroot = rootblkno;
 
         MarkBufferDirty(rootbuf);
         MarkBufferDirty(metabuf);
@@ -69,7 +69,7 @@ _bt_get_root(Relation rel) {
         ReleaseBuffer(metabuf);
     } else {
         // 如果meta初始化了
-        rootblkno         = metad->fastroot;
+        rootblkno         = metad->btm_fastroot;
         rel->rd_metacache = metad;
         rootbuf           = _bt_get_buf(rel, rootblkno);
     }

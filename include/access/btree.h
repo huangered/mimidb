@@ -12,20 +12,20 @@
 #include "storage/block.h"
 #include "storage/bufmgr.h"
 
-struct BTreeSpecialData {
+typedef struct BTreeSpecialData {
     BlockNumber btsd_next;
     BlockNumber btsd_prev;
     union {
         uint16 level;
     } btsd;
     uint16 btsd_flags;
-};
+} BTreeSpecialData;
 
-typedef struct BTreeSpecialData* BTreeSpecial;
+typedef BTreeSpecialData* BTreeSpecial;
 
 /* btsd的bits定义*/
-#define BTP_LEAF      (1 << 0)
-#define BTP_ROOT      (1 << 1)
+#define BTP_LEAF      (1 << 0) /* 叶子节点 */
+#define BTP_ROOT      (1 << 1) /* 根节点 */
 #define BTP_DELETED   (1 << 2) /* 已经在树中删除的页 */
 #define BTP_META      (1 << 3) /* 元数据页 */
 #define BTP_OTHER     (1 << 4)
@@ -36,7 +36,8 @@ struct BTreeMetaData {
     uint32 btm_version;
     BlockNumber btm_root; /* 当前根页位置 */
     uint32 btm_level;     /* 根页的level*/
-    BlockNumber fastroot;
+    BlockNumber btm_fastroot;
+    uint32 btm_fastlevel;
 };
 
 #define BTREE_METAPAGE 0 /* 默认第一页是 meta */
@@ -77,6 +78,7 @@ typedef struct BTreeSearchKeyData* BTreeSearchKey;
 #define P_ISLEAF(special)    ((special)->btsd_flags & BTP_LEAF)
 #define P_ISROOT(special)    ((special)->btsd_flags & BTP_ROOT)
 #define P_ISDELETED(special) ((special)->btsd_flags & BTP_DELETED)
+#define P_ISMETA(special)    ((special)->btsd_flags & BTP_META)
 
 #define IID_USE (1 << 0)
 #define IID_DEL (1 << 1)
