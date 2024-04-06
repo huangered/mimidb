@@ -17,7 +17,7 @@ TEST(btree, incr_insert) {
     rel->index_am->ambuild(rel, rel);
 
     for (int i = 0; i < 1000; i++) {
-        bool result = rel->index_am->aminsert(rel, i, i);
+        bool result = rel->index_am->aminsert(rel, NULL, i, i);
         EXPECT_TRUE(result);
     }
 
@@ -47,7 +47,7 @@ TEST(btree, decr_insert) {
 
     for (int i = 10; i > 0; i--) {
         // printf("insert %d\r\n", i);
-        bool result = rel->index_am->aminsert(rel, i, i);
+        bool result = rel->index_am->aminsert(rel, NULL, i, i);
         EXPECT_TRUE(result);
     }
 
@@ -73,7 +73,7 @@ TEST(btree, blk_insert) {
 
     for (int i{}; i < 10; i++) {
         // printf("insert %d\r\n", i);
-        bool result = rel->index_am->aminsert(rel, i, i);
+        bool result = rel->index_am->aminsert(rel, NULL, i, i);
         EXPECT_TRUE(result);
     }
 

@@ -8,7 +8,7 @@
 #include "access/genam.h"
 
 typedef IndexBuildResult* (*ambuild_function)(Relation heapRealtion, Relation indexRelation);
-typedef bool (*aminsert_function)(Relation rel, int nkey, int ht_id);
+typedef bool (*aminsert_function)(Relation rel, Datum *values, int nkey, int ht_id);
 typedef bool (*amremove_function)(Relation rel, int nkey);
 typedef IndexScanDesc (*ambeginscan_function)(Relation nrel, int nkeys, ScanKey key);
 typedef bool (*amgetnext_function)(IndexScanDesc scan, enum ScanDirection dir);

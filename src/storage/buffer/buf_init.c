@@ -3,8 +3,6 @@
 char* BufferBlocks;
 BufferDescPadded* BufferDescriptors;
 
-int NBuffers = 1024;
-
 /*
  * init the shared buffer pool
  */

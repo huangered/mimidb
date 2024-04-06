@@ -93,9 +93,9 @@ typedef struct BTreeSearchKeyData* BTreeSearchKey;
 // 函数原型 extern entry points for btree, in btree.c
 extern Datum bthandler();
 extern IndexBuildResult* btbuild(Relation heap, Relation index);
-extern bool btinsert(Relation rel, int key, int ht_id);
+extern bool btinsert(Relation rel, Datum* values, int key, int ht_id);
 extern bool btremove(Relation rel, int key);
-extern bool btgetnext(IndexScanDesc scan, enum ScanDirection dir);
+extern bool btgetnext(IndexScanDesc scan, ScanDirection dir);
 extern IndexScanDesc btbeginscan(Relation nrel, int nkeys, ScanKey key);
 extern void btendscan(Relation rel, int nkeys);
 
