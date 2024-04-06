@@ -1,25 +1,33 @@
 #include "access/btree.h"
 #include "storage/freespace.h"
 
-struct IndexAm*
+IndexAm*
 BtreeRoute() {
     // todo return &btree;
-    return NULL;
+    IndexAm* am     = palloc(sizeof(IndexAm));
+    am->ambuild     = btbuild;
+    am->aminsert    = btinsert;
+    am->amremove    = btremove;
+    am->ambeginscan = btbeginscan;
+    am->amgetnext   = btgetnext;
+    am->amendscan   = btendscan;
+    return am;
 }
 
-void
-BuildEmpty(Relation rel) {
+IndexBuildResult*
+btbuild(Relation heap, Relation index) {
     Page metap = (Page)palloc(BLKSZ);
     _bt_init_page(metap);
 
     // write to local file system
-    //smgr->Write(rel->rd_smgr, MAIN_FORKNUM, BTREE_METAPAGE, metap);
+    // smgr->Write(rel->rd_smgr, MAIN_FORKNUM, BTREE_METAPAGE, metap);
 
     pfree(metap);
+    return NULL;
 }
 
 bool
-Insert(Relation rel, int key, int ht_id) {
+btinsert(Relation rel, int key, int ht_id) {
     bool result;
     IndexTuple tup;
 
@@ -32,11 +40,11 @@ Insert(Relation rel, int key, int ht_id) {
     return result;
 }
 bool
-Remove(Relation rel, int key) {
+btremove(Relation rel, int key) {
     return false;
 }
 bool
-GetNext(IndexScanDesc scan, enum ScanDirection dir) {
+btgetnext(IndexScanDesc scan, enum ScanDirection dir) {
 
     if (scan->block == INVALID_BLOCK) {
         return _bt_first(scan);
@@ -60,7 +68,7 @@ void
 _bt_init_metapage(Page page, BlockNumber rootblkno) {
     _bt_init_page(page);
     struct BTreeMetaData* metad = (struct BTreeMetaData*)PageGetContent(page);
-    metad->fastroot      = P_NONE;
+    metad->fastroot             = P_NONE;
 }
 
 void
@@ -122,6 +130,6 @@ debug(Relation rel) {
         ItemId itemId    = PageGetItemId(page, low);
         Item item        = PageGetItem(page, itemId);
         IndexTuple tuple = (IndexTuple)item;
-        //printf(">>> %d (%d, %d)\n", tuple->key, tuple->t_tid.ip_blkno, tuple->t_tid.ip_offset);
+        // printf(">>> %d (%d, %d)\n", tuple->key, tuple->t_tid.ip_blkno, tuple->t_tid.ip_offset);
     }
 }

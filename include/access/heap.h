@@ -9,7 +9,7 @@
 #include "access/scan.h"
 #include "access/tableapi.h"
 
-/* in heap.cpp*/
+/* in heap.cpp */
 extern Relation relation_open(Oid relationId);
 extern void relation_close(Relation relation);
 

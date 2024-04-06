@@ -28,6 +28,7 @@ typedef struct BTreeSpecialData* BTreeSpecial;
 #define BTP_ROOT      (1 << 1)
 #define BTP_DELETED   (1 << 2) /* 已经在树中删除的页 */
 #define BTP_META      (1 << 3) /* 元数据页 */
+#define BTP_OTHER     (1 << 4)
 #define BTP_SPLIT_END (1 << 5) /* 分割组里最右页 */
 
 struct BTreeMetaData {
@@ -89,7 +90,13 @@ typedef struct BTreeSearchKeyData* BTreeSearchKey;
 
 #define BTreeTupleGetDownLink(itup) (itup->t_tid.ip_blkno)
 
-// 函数原型
+// 函数原型 extern entry points for btree, in btree.c
+extern IndexBuildResult* btbuild(Relation heap, Relation index);
+extern bool btinsert(Relation rel, int key, int ht_id);
+extern bool btremove(Relation rel, int key);
+extern bool btgetnext(IndexScanDesc scan, enum ScanDirection dir);
+extern IndexScanDesc btbeginscan(Relation nrel, int nkeys, ScanKey key);
+extern void btendscan(Relation rel, int nkeys);
 
 // methods in btpage.c
 void _bt_init_page(Page page);

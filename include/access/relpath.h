@@ -10,6 +10,6 @@ typedef enum ForkNumber {
     NUMS_FORKNUM,
 } ForkNumber;
 
-char* GetRelPath(Oid dbNode, Oid relNode, ForkNumber fn);
+extern char* GetRelPath(Oid dbNode, Oid relNode, ForkNumber fn);
 
 #endif // !_relpath_h_
