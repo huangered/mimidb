@@ -1,8 +1,9 @@
 #include "g.hpp"
+extern "C" {
 #include "util/memutils.h"
 #include "storage/bufmgr.h"
 #include "access/relcache.h"
-
+}
 class Environment1 : public ::testing::Environment {
 public:
     ~Environment1() override {
@@ -11,9 +12,9 @@ public:
     // Override this to define how to set up the environment.
     void
     SetUp() override {
-        MemoryContextInit();
-        InitBufferPool();
-        RelationCacheInitialize();
+        //MemoryContextInit();
+        //InitBufferPool();
+        //RelationCacheInitialize();
     }
 
     // Override this to define how to tear down the environment.

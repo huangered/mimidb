@@ -1,9 +1,10 @@
 #include "../g.hpp"
 
+extern "C" {
 #include "access/rel.h"
 #include "storage/bufmgr.h"
 #include "access/heap.h"
-
+}
 // test the basic usage in buff mgr.
 TEST(buff_mgr, p_new) {
     Relation rel = new RelationData{};

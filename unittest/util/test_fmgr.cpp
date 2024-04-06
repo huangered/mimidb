@@ -1,7 +1,9 @@
 #include "../g.hpp"
 
+_EXTERN_C
 #include "util/fmgr.h"
 #include "util/builtins.h"
+_END_EXTERN_C
 
 TEST(hash_fmgr, basic_int) {
     int r = DirectFunctionCall2Coll(int8cmp, 1, 2);

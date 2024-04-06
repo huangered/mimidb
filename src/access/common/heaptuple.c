@@ -1,6 +1,12 @@
 ﻿#include "access/heaptuple.h"
 #include "access/tupledesc.h"
 
+static Size heap_compute_data_size(TupleDesc desc, Datum* value);
+
+void
+heap_fill_tuple(TupleDesc tupleDesc, Datum* values, char* data, Size data_size) {
+}
+
 HeapTuple
 heap_form_tuple(TupleDesc desc, Datum* values) {
 
@@ -37,4 +43,10 @@ void
 heap_free_tuple(HeapTuple tuple) {
 
     pfree(tuple);
+}
+
+/********** internal function **********/
+Size
+heap_compute_data_size(TupleDesc desc, Datum* value) {
+    return 1;
 }

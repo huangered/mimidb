@@ -1,8 +1,14 @@
+#include "access/amapi.h"
 #include "access/genam.h"
 #include "access/rel.h"
 #include "access/relcache.h"
 #include "access/scankey.h"
 #include "access/heap.h"
+
+IndexAm*
+GetIndexAmRoutine(Oid amhandler) {
+    return NULL;
+}
 
 SysTableScan
 systable_beginscan(Relation heapRel, int nkeys, ScanKey key) {
