@@ -1,6 +1,6 @@
 #include "../g.hpp"
 
-#include "storage/freespace.hpp"
+#include "storage/freespace.h"
 
 TEST(fsm, test_record) {
     Relation rel = new RelationData{};

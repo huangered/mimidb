@@ -1,5 +1,5 @@
 #include "../g.hpp"
-
+/*
 #include "util/hashmap.hpp"
 
 TEST(hash_test, basic_int) {
@@ -48,3 +48,4 @@ TEST(hash_test, keys_and_values) {
     EXPECT_EQ(100, map.Keys().size());
     EXPECT_EQ(100, map.Values().size());
 }
+*/

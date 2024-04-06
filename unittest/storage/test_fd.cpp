@@ -1,6 +1,6 @@
 #include "../g.hpp"
 
-#include "storage/fd.hpp"
+#include "storage/fd.h"
 
 TEST(fd, basic) {
     const char* buf = "tmp_file.txt";

@@ -1,8 +1,8 @@
 #include "../g.hpp"
 
-#include "access/heap.hpp"
-#include "access/rel.hpp"
-#include "storage/smgr.hpp"
+#include "access/heap.h"
+#include "access/rel.h"
+#include "storage/smgr.h"
 // test the basic usage in buff mgr.
 TEST(heap, incr_insert) {
     Relation rel = new RelationData{};

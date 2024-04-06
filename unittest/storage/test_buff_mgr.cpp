@@ -1,8 +1,8 @@
 #include "../g.hpp"
 
-#include "access/rel.hpp"
-#include "storage/bufmgr.hpp"
-#include "access/heap.hpp"
+#include "access/rel.h"
+#include "storage/bufmgr.h"
+#include "access/heap.h"
 
 // test the basic usage in buff mgr.
 TEST(buff_mgr, p_new) {

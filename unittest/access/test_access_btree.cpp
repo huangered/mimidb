@@ -1,9 +1,9 @@
 #include "../g.hpp"
 
-#include "access/btree.hpp"
-#include "storage/bufmgr.hpp"
-#include "storage/freespace.hpp"
-#include "storage/smgr.hpp"
+#include "access/btree.h"
+#include "storage/bufmgr.h"
+#include "storage/freespace.h"
+#include "storage/smgr.h"
 
 // test the basic usage in buff mgr.
 TEST(btree, incr_insert) {
@@ -12,11 +12,11 @@ TEST(btree, incr_insert) {
     rel->rd_node = { DB_ID, rel->rd_id };
     RelationOpenSmgr(rel);
 
-    rel->index_am = BtreeRoute();
-    rel->index_am->BuildEmpty(rel);
+    rel->index_am = NULL;
+    rel->index_am->ambuild(rel, rel);
 
     for (int i = 0; i < 1000; i++) {
-        bool result = rel->index_am->Insert(rel, i, i);
+        bool result = rel->index_am->aminsert(rel, i, i);
         EXPECT_TRUE(result);
     }
 
@@ -67,12 +67,12 @@ TEST(btree, blk_insert) {
     rel->rd_node = { DB_ID, rel->rd_id };
     RelationOpenSmgr(rel);
 
-    rel->index_am = BtreeRoute();
-    rel->index_am->BuildEmpty(rel);
+    rel->index_am = NULL;
+    rel->index_am->ambuild(rel, rel);
 
     for (int i{}; i < 10; i++) {
         // printf("insert %d\r\n", i);
-        bool result = rel->index_am->Insert(rel, i, i);
+        bool result = rel->index_am->aminsert(rel, i, i);
         EXPECT_TRUE(result);
     }
 
@@ -80,7 +80,7 @@ TEST(btree, blk_insert) {
     scan->index_rel    = rel;
     scan->key          = 5;
     scan->block        = INVALID_BLOCK;
-    bool result        = rel->index_am->GetNext(scan, ScanDirection::Forward);
+    bool result        = rel->index_am->amgetnext(scan, ScanDirection::Forward);
 
     EXPECT_EQ(5, scan->value);
     pfree(scan);

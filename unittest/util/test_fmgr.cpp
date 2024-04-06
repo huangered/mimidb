@@ -1,7 +1,7 @@
 #include "../g.hpp"
 
-#include "util/fmgr.hpp"
-#include "util/builtins.hpp"
+#include "util/fmgr.h"
+#include "util/builtins.h"
 
 TEST(hash_fmgr, basic_int) {
     int r = DirectFunctionCall2Coll(int8cmp, 1, 2);

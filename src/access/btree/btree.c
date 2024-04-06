@@ -54,11 +54,11 @@ btgetnext(IndexScanDesc scan, enum ScanDirection dir) {
 }
 
 IndexScanDesc
-BeginScan(Relation nrel, int nkeys, ScanKey key) {
+btbeginscan(Relation nrel, int nkeys, ScanKey key) {
     return NULL;
 }
 void
-EndScan(Relation rel, int nkeys) {
+btendscan(Relation rel, int nkeys) {
     // todo
 }
 

@@ -6,36 +6,43 @@
 typedef int NodeList;
 
 struct ExprStmt {
+    NodeTag nodetag;
     char* key;
 };
 
 struct SelectStmt {
+    NodeTag nodetag;
     char* relname;
     NodeList columns;
 };
 
 struct InsertStmt {
+    NodeTag nodetag;
     char* relname;
     NodeList columns;
 };
 
 struct UpdateStmt {
+    NodeTag nodetag;
     char* relname;
     NodeList columns;
     struct Node* where_cause;
 };
 
 struct AssignStmt {
+    NodeTag nodetag;
     char* col_name;
     struct Node* value;
 };
 
 struct CreateTableStmt {
+    NodeTag nodetag;
     char* relname;
     NodeList columns;
 };
 
 struct CreateTableParam {
+    NodeTag nodetag;
     char* colname;
     char* type;
     int primary;
@@ -45,42 +52,51 @@ struct CreateTableParam {
  * index 描述
  */
 struct CreateIndexStmt {
+    NodeTag nodetag;
     char* relname;
     NodeList columns;
 };
 
 struct ParamStmt {
+    NodeTag nodetag;
     char* key;
     char* type;
 };
 
 struct WhereStmt {
+    NodeTag nodetag;
     NodeList columns;
 };
 
 struct OrderbyStmt {
+    NodeTag nodetag;
     NodeList columns;
 };
 
 struct IntValue {
+    NodeTag nodetag;
     int number;
 };
 
 struct StrValue {
+    NodeTag nodetag;
     char* str;
 };
 
 struct TypeName {
+    NodeTag nodetag;
     char* name;
     long typeOid;
 };
 
 struct ColumnDef {
+    NodeTag nodetag;
     char* colname;
     char* typeName;
 };
 
 struct SetParam {
+    NodeTag nodetag;
     char* colname;
     struct Node* value;
 };

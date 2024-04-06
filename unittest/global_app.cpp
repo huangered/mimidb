@@ -1,7 +1,7 @@
 #include "g.hpp"
-#include "util/memutils.hpp"
-#include "storage/bufmgr.hpp"
-#include "access/relcache.hpp"
+#include "util/memutils.h"
+#include "storage/bufmgr.h"
+#include "access/relcache.h"
 
 class Environment1 : public ::testing::Environment {
 public:
