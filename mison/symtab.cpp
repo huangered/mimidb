@@ -1,6 +1,6 @@
 ﻿#include "symtab.hpp"
 #include "debug.hpp"
-
+#include <algorithm>
 static const char* sym_name[3] = { "none", "token", "nterm" };
 
 int Symtab::nsym = 0;
@@ -28,10 +28,10 @@ Symtab::Init() {
 Symbol
 Symtab::SymbolNew(std::string name) {
     if (_data.count(name) == 0) {
-        Symbol symbol = new SymbolData{};
-        symbol->name  = name;
-        symbol->clazz = none;
-        symbol->id    = nsym++;
+        Symbol symbol = new SymbolData{nsym++, name, {0,0}, none};
+        //symbol->name  = name;
+        //symbol->clazz = none;
+        //symbol->id    = nsym++;
         _data[name]   = symbol;
 #ifdef _log_
         printf("symbol new %15s => %d\n", name.c_str(), symbol->id);
@@ -72,23 +72,17 @@ Symtab::Print() {
 
 int
 Symtab::nnterm() {
-    int i = 0;
-    for (auto it = _data.begin(); it != _data.end(); it++) {
-        if (it->second->clazz == nterm) {
-            i++;
-        }
-    }
+    int i = std::count_if(_data.begin(), _data.end(), [](auto gg){
+        return gg.second->clazz == nterm;
+    });
     return i;
 }
 
 int
 Symtab::ntoken() {
-    int i = 0;
-    for (auto it = _data.begin(); it != _data.end(); it++) {
-        if (it->second->clazz == token) {
-            i++;
-        }
-    }
+    int i = std::count_if(_data.begin(), _data.end(), [](auto gg){
+        return gg.second->clazz == token;
+    });
     return i;
 }
 

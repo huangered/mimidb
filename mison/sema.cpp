@@ -4,7 +4,8 @@
 #include <cstring>
 #include "debug.hpp"
 #include "symtab.hpp"
-
+#include <algorithm>
+#include <numeric>
 static std::string join(const SymbolList& v);
 static std::string join2(const std::vector<int>& v);
 
@@ -61,7 +62,9 @@ void
 SemaParser::GenerateParseTable(void) {
     _firstSet->Gen();
     _firstSet->Print();
+    printf("----------%d\n", _stateList->Size());
     for (int i{}; i < _stateList->Size(); i++) {
+        printf("---------%d\n", i);
         if (_stateList->IsEmpty(i)) {
             break;
         }
@@ -96,6 +99,7 @@ SemaParser::GenerateParseTable(void) {
 // === private part ===
 void
 SemaParser::handleState(int stateId) {
+    printf("handle state %d\n", stateId);
     State state = _stateList->GetState(stateId);
     // 1. 扩展规则
     expandRules(state);

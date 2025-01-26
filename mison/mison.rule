@@ -17,15 +17,15 @@ int yylex();
 @token t_token
 @token t_code
 @token t_colon
-@token t_identifier
-@token t_block
+@token <node> t_identifier
+@token <node> t_block
 @token t_union
 @token t_type
 @token t_type_type
 @token t_sign
 @token t_less
 @token t_greater
-@token t_param
+@token <node> t_param
 @token t_maybe
 @token t_semicolon
 @token t_start_rule
@@ -33,7 +33,6 @@ int yylex();
 %
 
 @type <str> StartRule
-@type <node> t_identifier t_block t_param
 @type <node> Lex RuleList Rule ID Type Token Code Union Other Param RuleRight
 @type <list> TokenList TypeList RuleList IdList RuleRightList
 

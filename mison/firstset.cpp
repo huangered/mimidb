@@ -83,9 +83,9 @@ FirstSet::Print() {
 #ifdef _log_
     printf("\nfirset: \n");
     for (auto entry = _firstSet.begin(); entry != _firstSet.end(); entry++) {
-        printf("  %d => ", entry->first);
+        printf(" (%10s) (%3d) => ", Symtab::GetName(entry->first).c_str(), entry->first);
         for (int i : entry->second) {
-            printf("%3d, ", i);
+            printf("(%10s) (%3d), ",Symtab::GetName(i).c_str(), i);
         }
         printf("\n");
     }

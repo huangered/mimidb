@@ -5,7 +5,7 @@
 #include "symtab.hpp"
 #include <cstring>
 #include <cassert>
-
+#include <iostream>
 using std::string;
 
 int
@@ -27,7 +27,9 @@ main(int argc, char* argv[]) {
     Rules                            = lex->GetRules();
 
     printf("type map: {%zd}, rules: {%zd}\n", typeMap.size(), Rules.size());
-
+    for(auto iter=typeMap.begin();iter!=typeMap.end();iter++){
+        std::cout<<iter->first<<" "<<iter->second<<std::endl;
+    }
     SemaParser parser{ typeMap };
 
     parser.GenerateParseTable();

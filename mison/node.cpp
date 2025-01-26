@@ -24,11 +24,16 @@ LexNode::GetTypeMap() {
     std::map<std::string, std::string> _data;
     for (Node n : *types) {
         TypeData* td = dynamic_cast<TypeData*>(n);
-        for (std::string n : td->_children) {
-            _data[n] = td->_type;
+        for (std::string n1 : td->_children) {
+            _data[n1] = td->_type;
         }
     }
-
+    for (Node n : *tokens){
+        TokenData* td = dynamic_cast<TokenData*>(n);
+        if (td->_type != "" ) {
+            _data[td->_value] = td->_type;
+        }
+    }
     return _data;
 }
 

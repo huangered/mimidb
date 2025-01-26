@@ -33,6 +33,7 @@ makeParam(Node param) {
 Node
 makeToken(Node token) {
     TokenData* node = new TokenData();
+    node->_type = "";
     Symbol sym      = Symtab::SymbolNew(token->_value);
     sym->clazz      = SymbolClass::token;
     delete token;
@@ -43,6 +44,7 @@ Node
 makeToken(Node typeNode, Node token) {
     TokenData* node = new TokenData();
     node->_type     = typeNode->_value;
+    node->_value    = token->_value;
     Symbol sym      = Symtab::SymbolNew(token->_value);
     sym->clazz      = SymbolClass::token;
     delete token;
