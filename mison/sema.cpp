@@ -281,11 +281,7 @@ join(const SymbolList& v) {
 
 std::string
 join2(const std::vector<int>& v) {
-    std::string a;
-    for (int t : v) {
-        a += std::to_string(t);
-        a += ",";
-    }
+    std::string a = format_string<int>(v);
     return a;
 }
 
