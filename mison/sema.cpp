@@ -223,7 +223,7 @@ SemaParser::expandRules(State state) {
     }
      // update closure
     for (Item i : item_set) {
-        state->_closures.push_back(i);
+        state->_closures.push_back(i->Clone());
     }
 
     // 合并 state 里的 rules
