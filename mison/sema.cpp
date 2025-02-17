@@ -85,8 +85,8 @@ SemaParser::GenerateParseTable(void) {
             }
         }
     }
-
-     for (int i{}; i < _stateList->Size(); i++) {
+    printf("**********debug\n");
+    for (int i{}; i < _stateList->Size(); i++) {
         State s = _stateList->GetState(i);
         s->print();
     }
@@ -101,8 +101,7 @@ SemaParser::GenerateParseTable(void) {
         for (Item item : _stateList->GetRules(i)) {
             auto r_str = join(ItemRights(item));
             auto t_str = join2(item->tokens);
-            printf("     %s => %s [ %s ] (%d) ", ItemLeft(item)->name.c_str(), r_str.c_str(), t_str.c_str(),
-                   item->dot);
+            printf("     %s => %s [ %s ] (%d) ", ItemLeft(item)->name.c_str(), r_str.c_str(), t_str.c_str(), item->dot);
 
             if (!item->IsDotEnd()) {
                 printf("next %d", item->next_state);
@@ -174,6 +173,7 @@ struct ItemLess {
 // 创建closure items
 std::vector<State>
 SemaParser::expandRules(State state) {
+    state->print();
     std::vector<State> rets;
 
     std::stack<Item> item_stack;
@@ -181,8 +181,8 @@ SemaParser::expandRules(State state) {
 
     // init
     for (Item item : state->_items) {
-        Item copy = item->Clone();
-
+        Item copy        = item->Clone();
+        copy->next_state = 0;
         item_stack.push(copy);
         item_set.insert(copy);
     }
@@ -221,9 +221,9 @@ SemaParser::expandRules(State state) {
             }
         }
     }
-     // update closure
+    // update closure
     for (Item i : item_set) {
-        state->_closures.push_back(i->Clone());
+        state->_closures.push_back(i);
     }
 
     // 合并 state 里的 rules
@@ -246,12 +246,15 @@ SemaParser::expandRules(State state) {
     for (auto i : group_map) {
         int k      = i.first;
         ItemList v = i.second;
+        ItemList copylist;
         for (Item i : v) {
             if (!i->IsDotEnd()) {
-                i->dot++;
+                Item copy = i->Clone();
+                copy->dot++;
+                copylist.push_back(copy);
             }
         }
-        State s = this->_stateList->has(v);
+        State s = this->_stateList->has(copylist);
         if (s != nullptr) {
             // 找到了重复state
             std::for_each(v.begin(), v.end(), [s](Item i) { i->next_state = s->_id; });
@@ -261,7 +264,7 @@ SemaParser::expandRules(State state) {
 
             std::for_each(v.begin(), v.end(), [new_state](Item i) { i->next_state = new_state->_id; });
 
-            new_state->ResetItems(v);
+            new_state->ResetItems(copylist);
 
             rets.push_back(new_state);
 

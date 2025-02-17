@@ -7,7 +7,7 @@ StateData::StateData(int id)
 
 StateData::~StateData() {
     for (Item item : _items) {
-        //delete item;
+        // delete item;
     }
 }
 
@@ -61,7 +61,7 @@ StateData::print() {
     printf(">>>>> state %d start\n", this->_id);
     for (Item item : _items) {
         Rule r = Rules[item->id];
-        
+
         r->print();
         printf("%d", item->dot);
         printf("\n");
@@ -121,16 +121,21 @@ StateCollection::has(ItemList list) {
         }
         return l->id < r->id;
     };
-  
+
     std::sort(list.begin(), list.end(), j);
     for (State v : stateList) {
         std::sort(v->_items.begin(), v->_items.end(), j);
 
         if (list.size() == v->_items.size()) {
+            bool equal = true;
             for (int i = 0; i < list.size(); i++) {
-                if (list[i]->id == v->_items[i]->id && list[i]->dot == v->_items[i]->dot) {
-                    return v;
+                if (list[i]->id != v->_items[i]->id || list[i]->dot != v->_items[i]->dot) {
+                    equal = false;
+                    break;
                 }
+            }
+            if (equal) {
+                return v;
             }
         }
     }

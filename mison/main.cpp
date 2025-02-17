@@ -10,8 +10,8 @@ using std::string;
 
 int
 main(int argc, char* argv[]) {
-    const char* fpath = "C:\\Users\\peter\\Desktop\\mimidb\\mison\\test.rule";
-    //argv[1];
+    const char* fpath = "/Users/peter/Desktop/mimidb/mison/test.rule";
+    // argv[1];
     const char* foutput = "output.txt";
 
     Symtab::Init();
@@ -32,8 +32,8 @@ main(int argc, char* argv[]) {
     }
 
     printf("type map: {%zd}, rules: {%zd}\n", typeMap.size(), Rules.size());
-    for(auto iter=typeMap.begin();iter!=typeMap.end();iter++){
-        std::cout<<iter->first<<" "<<iter->second<<std::endl;
+    for (auto iter = typeMap.begin(); iter != typeMap.end(); iter++) {
+        std::cout << iter->first << " " << iter->second << std::endl;
     }
     SemaParser parser{ typeMap };
 
