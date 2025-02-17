@@ -130,11 +130,13 @@ SemaParser::generateTable(void) {
     _gotoTable   = std::unique_ptr<GotoTable>(new GotoTable(_stateList->Size(), Symtab::nsym - Symtab::ntoken()));
     _actionTable = std::unique_ptr<ActionTable>(new ActionTable(_stateList->Size(), Symtab::ntoken()));
 
-    for (int stateId{}; stateId < _stateList->Size(); stateId++) {
-        for (Item r : _stateList->GetRules(stateId)) {
+    for (int stateId{0}; stateId < _stateList->Size(); stateId++) {
+        for (Item r : _stateList->GetState(stateId)->_closures) {
             if (r->IsDotEnd()) {
                 // find rule id
                 // add r1 in action
+                _actionTable->AddRule(stateId, token, r->id, ItemRoot(r));
+                /*
                 for (int ruleId{}; ruleId < Rules.size(); ruleId++) {
                     Rule c = Rules[ruleId];
                     if (c->left == Rules[r->id]->left && SymbolListEqual(c->right, Rules[r->id]->right)) {
@@ -142,7 +144,7 @@ SemaParser::generateTable(void) {
                             _actionTable->AddRule(stateId, token, ruleId, ItemRoot(r));
                         }
                     }
-                }
+                }*/
             } else {
                 Symbol token = ItemRight(r, r->dot);
                 if (token->clazz == nterm) {
