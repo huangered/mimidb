@@ -41,9 +41,9 @@ public:
     void GenerateParseTable(void);
 
 private:
-    void handleState(int stateId);
+    std::vector<State> handleState(State state);
     void generateTable(void);
-    void expandRules(State state);
+    std::vector<State> expandRules(State state);
     State searchSameState(const ItemList& newStateRules);
 
     // code generate

@@ -48,7 +48,7 @@ FirstSet::Gen() {
 
         for (Rule rule : Rules) {
             std::set<int> tokSet;
-            int left_id = rule->left;
+            int left_id = rule->left->id;
 
             if (_firstSet.count(left_id) == 0) {
                 _firstSet[left_id] = {};

@@ -4,6 +4,16 @@
 
 RuleList Rules;
 
+void
+RuleData::print() {
+    
+    printf("%d , %s -> ", this->id, left->name.c_str());
+    for (Symbol s : right) {
+        printf("%s ", s->name.c_str());
+    }
+}
+
+
 bool
 ItemData::IsDotEnd() {
     return dot == Rules[id]->right.size();
@@ -65,3 +75,4 @@ ItemData::operator==(const ItemData& other) {
 
     return dot == other.dot;
 }
+

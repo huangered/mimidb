@@ -4,9 +4,10 @@
 #include "rule.hpp"
 
 class StateData {
-private:
+public:
     int _id;
     ItemList _items;
+    ItemList _closures;
 
 public:
     StateData(int id);
@@ -23,12 +24,15 @@ public:
     bool MatchItem(const ItemList& items);
 
     int GetId();
+
+    void print();
 };
 
 typedef StateData* State;
 typedef std::vector<State> StateList;
 
 class StateCollection {
+    int stateId;
     StateList stateList;
 
 public:
@@ -39,6 +43,10 @@ public:
     void Add(int stateId, Item item);
     ItemList GetRules(int stateId);
     State GetState(int stateId);
+
+    State has(ItemList list);
+
+    int GetNextId();
 };
 
 #endif // !_state_hpp_

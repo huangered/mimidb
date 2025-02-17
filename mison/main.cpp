@@ -10,8 +10,9 @@ using std::string;
 
 int
 main(int argc, char* argv[]) {
-    const char* fpath   = argv[1];
-    const char* foutput = argv[2];
+    const char* fpath = "C:\\Users\\peter\\Desktop\\mimidb\\mison\\test.rule";
+    //argv[1];
+    const char* foutput = "output.txt";
 
     Symtab::Init();
     FILE* f         = OpenFile(fpath, "r");
@@ -25,6 +26,10 @@ main(int argc, char* argv[]) {
     assert(lex);
     std::map<string, string> typeMap = lex->GetTypeMap();
     Rules                            = lex->GetRules();
+
+    for (Rule r : Rules) {
+        r->print();
+    }
 
     printf("type map: {%zd}, rules: {%zd}\n", typeMap.size(), Rules.size());
     for(auto iter=typeMap.begin();iter!=typeMap.end();iter++){

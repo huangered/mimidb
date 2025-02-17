@@ -1,0 +1,60 @@
+%code {
+#include <vector>
+#include "node.hpp"
+
+int yylex();
+
+}
+
+%union { 
+    Node node;
+    std::vector<Node>* list;
+    char* str;
+}
+
+@param { Node }
+
+@token add
+@token n
+@token t_start_rule
+
+%
+
+@type <str> E T
+
+%
+
+E : E add E
+;
+
+E : n
+;
+
+@start E
+
+%
+
+{
+
+Node makeLex(Node codeNode, Node unionNode, Node paramNode, std::vector<Node>* tokens, std::vector<Node>* types,
+                    std::vector<Node>* rules, char* startRule, Node other);
+
+Node makeToken(Node token);
+
+Node makeToken(Node typeNode, Node token);
+
+Node makeRule(Node n, std::vector<Node>* l);
+
+Node makeRuleRight(std::vector<Node>* n, Node m);
+
+Node makeType(Node typeNode, std::vector<Node>* nodes);
+
+Node makeCode(Node block);
+
+Node makeUnion(Node block);
+
+Node makeParam(Node param);
+
+char* makeStartRule(Node startRule);
+
+}

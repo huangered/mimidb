@@ -6,6 +6,9 @@
 #include "symtab.hpp"
 #include <algorithm>
 #include <numeric>
+#include <set>
+#include <vector>
+#include <stack>
 static std::string join(const SymbolList& v);
 static std::string join2(const std::vector<int>& v);
 
@@ -63,16 +66,32 @@ SemaParser::GenerateParseTable(void) {
     _firstSet->Gen();
     _firstSet->Print();
     printf("----------%d\n", _stateList->Size());
-    for (int i{}; i < _stateList->Size(); i++) {
-        printf("---------%d\n", i);
-        if (_stateList->IsEmpty(i)) {
-            break;
-        }
 
-        handleState(i);
+    std::set<State> state_set;
+    std::stack<State> state_stack;
+
+    state_set.insert(_stateList->GetState(0));
+    state_stack.push(_stateList->GetState(0));
+
+    while (!state_stack.empty()) {
+        State top = state_stack.top();
+        state_stack.pop();
+
+        std::vector<State> rets = handleState(top);
+        for (State s : rets) {
+            if (state_set.count(s) == 0) {
+                state_set.insert(s);
+                state_stack.push(s);
+            }
+        }
     }
 
-#ifdef _log_
+     for (int i{}; i < _stateList->Size(); i++) {
+        State s = _stateList->GetState(i);
+        s->print();
+    }
+
+#ifdef abc
     printf("state list:\n");
     for (int i{}; i < _stateList->Size(); i++) {
         if (_stateList->IsEmpty(i)) {
@@ -82,7 +101,7 @@ SemaParser::GenerateParseTable(void) {
         for (Item item : _stateList->GetRules(i)) {
             auto r_str = join(ItemRights(item));
             auto t_str = join2(item->tokens);
-            printf("     %s => %s [ %s ] (%d) ", Symtab::GetName(ItemLeft(item)).c_str(), r_str.c_str(), t_str.c_str(),
+            printf("     %s => %s [ %s ] (%d) ", ItemLeft(item)->name.c_str(), r_str.c_str(), t_str.c_str(),
                    item->dot);
 
             if (!item->IsDotEnd()) {
@@ -97,58 +116,14 @@ SemaParser::GenerateParseTable(void) {
 }
 
 // === private part ===
-void
-SemaParser::handleState(int stateId) {
-    printf("handle state %d\n", stateId);
-    State state = _stateList->GetState(stateId);
+std::vector<State>
+SemaParser::handleState(State state) {
+    std::vector<State> rets;
+    printf("Handle state %d\n", state->GetId());
     // 1. 扩展规则
-    expandRules(state);
+    rets = expandRules(state);
     // 2. 构建新状态
-    std::map<int, Symbol> tokens;
-    for (Item item : state->GetItems()) {
-        if (!item->IsDotEnd()) {
-            Symbol token      = item->GetTokenAfterDot();
-            tokens[token->id] = token;
-        }
-    }
-
-    for (auto iter = tokens.begin(); iter != tokens.end(); iter++) {
-        Symbol token = iter->second;
-
-        ItemList movedRules;
-        ItemList newStateRules;
-        for (Item item : state->GetItems()) {
-            if (!item->IsDotEnd() && ItemRight(item, item->dot)->id == token->id) {
-                movedRules.push_back(item);
-
-                Item n = item->Clone();
-                n->dot++;
-                newStateRules.push_back(n);
-            }
-        }
-
-        // 寻找相同的状态集合。
-        State sameState = searchSameState(newStateRules);
-
-        if (sameState == nullptr) {
-            // 没找到
-            _maxState++;
-            std::for_each(movedRules.begin(), movedRules.end(), [&](Item r) { r->next_state = _maxState; });
-            if (_stateList->Size() <= _maxState) {
-                for (int i = _stateList->Size(); i <= _maxState; i++) {
-                    _stateList->Add(new StateData(i));
-                }
-            }
-            for (Item newItem : newStateRules) {
-                _stateList->GetState(_maxState)->Add(newItem);
-            };
-        } else {
-            // 找到了
-            for (Item item : movedRules) {
-                item->next_state = sameState->GetId();
-            }
-        }
-    }
+    return rets;
 }
 
 void
@@ -186,75 +161,116 @@ SemaParser::generateTable(void) {
     _gotoTable->Print();
 }
 
-void
+struct ItemLess {
+    bool
+    operator()(const Item l, const Item r) const {
+        if (l->id == r->id) {
+            return l->dot < r->dot;
+        }
+        return l->id < r->id;
+    }
+};
+
+// 创建closure items
+std::vector<State>
 SemaParser::expandRules(State state) {
-    int count = 0;
+    std::vector<State> rets;
 
-    for (;;) {
-        count = 0;
-        std::set<Item> copied;
+    std::stack<Item> item_stack;
+    std::set<Item, ItemLess> item_set;
 
-        for (Item r : state->GetItems()) {
-            if (r->IsDotEnd()) {
-                continue;
-            }
-            Symbol word = r->GetTokenAfterDot();
-            if (word->clazz == nterm) {
-                // non terminals
-                // update state list
-                auto rule_left_id_eq = [word](Rule rule) -> bool { return ItemLeft(rule) == word->id; };
-                RuleList match;
-                find_all(Rules, match, rule_left_id_eq);
-                for (Rule rule : match) {
-                    SymbolList tokenList    = r->GetStringAfterDot();
-                    std::vector<int> tokens = _firstSet->Find(tokenList, r->GetTokens());
-                    // todo: 这里可以优化这个lazy clone
-                    Item copy = new ItemData{};
-                    copy->id  = rule->id;
-                    copy->dot = 0;
-                    copy->SetTokens(tokens);
-                    // 如果是新rule
-                    auto rule_eq = [copy](Item rule) -> bool { return *rule == *copy; };
-                    ItemList src = state->GetItems();
-                    ItemList dest;
-                    find_all(src, dest, rule_eq);
-                    if (dest.empty()) {
-                        copied.insert(copy);
-                        count++;
-                    } else {
-                        delete copy;
-                    }
+    // init
+    for (Item item : state->_items) {
+        Item copy = item->Clone();
+
+        item_stack.push(copy);
+        item_set.insert(copy);
+    }
+
+    while (!item_stack.empty()) {
+        Item top = item_stack.top();
+        item_stack.pop();
+
+        if (top->IsDotEnd()) {
+            continue;
+        }
+
+        Symbol word = top->GetTokenAfterDot();
+        if (word->clazz == nterm) {
+            // 非终止符，查询rule进行替换
+            auto rule_left_id_eq = [word](Rule rule) -> bool { return ItemLeft(rule)->id == word->id; };
+            RuleList match;
+            find_all(Rules, match, rule_left_id_eq);
+            for (Rule rule : match) {
+                SymbolList tokenList    = top->GetStringAfterDot();
+                std::vector<int> tokens = _firstSet->Find(tokenList, top->GetTokens());
+                // todo: 这里可以优化这个lazy clone
+                Item copy = new ItemData{};
+                copy->id  = rule->id;
+                copy->dot = 0;
+                copy->SetTokens(tokens);
+                // 如果是新rule
+                if (item_set.find(copy) != item_set.end()) {
+                    // 有
+                    delete copy;
+                    continue;
+                } else {
+                    item_stack.push(copy);
+                    item_set.insert(copy);
                 }
             }
         }
-
-        if (count == 0) {
-            break;
-        } else {
-            state->Add(copied);
-        }
     }
-
-    ItemList tmp;
-    std::multimap<group_key, Item, std::less<group_key>> gg;
+     // update closure
+    for (Item i : item_set) {
+        state->_closures.push_back(i);
+    }
 
     // 合并 state 里的 rules
-    for (Item rule : state->GetItems()) {
-        auto check_exist = [rule](Item r) -> bool {
-            return r->dot == rule->dot && ItemLeft(r) == ItemLeft(rule)
-                   && SymbolListEqual(ItemRights(r), ItemRights(rule));
-        };
-
-        auto iter = std::find_if(tmp.begin(), tmp.end(), check_exist);
-        if (iter != tmp.end()) {
-            Item r = *iter;
-            r->AppendTokens(rule->tokens);
+    std::map<int, ItemList> group_map;
+    for (Item rule : item_set) {
+        if (rule->IsDotEnd()) {
+            // this is end;
+            // set to reduce;
+            continue;
+        }
+        Symbol token = rule->GetTokenAfterDot();
+        if (group_map.count(token->id) == 0) {
+            ItemList l = { rule };
+            group_map.insert(std::make_pair(token->id, l));
         } else {
-            tmp.push_back(rule->Clone());
+            group_map[token->id].push_back(rule);
         }
     }
-    state->ResetItems(tmp);
-    std::for_each(tmp.begin(), tmp.end(), [](Item r) { delete r; });
+
+    for (auto i : group_map) {
+        int k      = i.first;
+        ItemList v = i.second;
+        for (Item i : v) {
+            if (!i->IsDotEnd()) {
+                i->dot++;
+            }
+        }
+        State s = this->_stateList->has(v);
+        if (s != nullptr) {
+            // 找到了重复state
+            std::for_each(v.begin(), v.end(), [s](Item i) { i->next_state = s->_id; });
+        } else {
+            // 没找到 state
+            State new_state = new StateData(this->_stateList->GetNextId());
+
+            std::for_each(v.begin(), v.end(), [new_state](Item i) { i->next_state = new_state->_id; });
+
+            new_state->ResetItems(v);
+
+            rets.push_back(new_state);
+
+            //
+            this->_stateList->Add(new_state);
+        }
+    }
+
+    return rets;
 }
 
 State
@@ -301,7 +317,7 @@ SemaParser::funcReplace(const Rule rule) {
             tmp.replace(pos, w.size(), r);
     }
 
-    std::string name = Symtab::GetName(ItemLeft(rule));
+    std::string name = ItemLeft(rule)->name;
 
     while ((pos = tmp.find("$$")) != std::string::npos) {
         name = "(item." + this->_typeMap[name] + ")";
@@ -317,7 +333,7 @@ SemaParser::funcReplace(const Rule rule) {
             tmp.replace(pos, w.size(), r);
     }
 
-    name = Symtab::GetName(ItemLeft(rule));
+    name = ItemLeft(rule)->name;
 
     while ((pos = tmp.find("@@")) != std::string::npos) {
         name = "(item)";

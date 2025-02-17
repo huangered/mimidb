@@ -10,9 +10,12 @@ public:
     bool root;
     int lineId;
     int id;
-    int left;
+    Symbol left;
     SymbolList right;
     std::string funcBlock;
+
+public:
+    void print();
 };
 
 typedef RuleData* Rule;
